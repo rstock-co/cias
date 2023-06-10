@@ -1,0 +1,2 @@
+# cwm
+Crypto wallet manager
