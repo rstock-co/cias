@@ -1,3 +1,5 @@
+import { useState, useMemo } from "react";
+
 import {
     Paper,
     Dialog,
@@ -18,6 +20,7 @@ import { styled } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { generateAllocationTableData } from "../../lib/functions/wallets";
 import { formatAmountDisplay } from "../../lib/functions/wallets";
+import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -44,10 +47,14 @@ const StyledTableRow = styled(TableRow)(({ theme, walletType }) => ({
 }));
 
 const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet }) => {
-    let allocationTableData = [];
-    if (selectedWallet && selectedWallet.address) {
-        allocationTableData = generateAllocationTableData(tableData, selectedWallet);
-    }
+    const [sortBy, setSortBy] = useState("# of contributions");
+
+    const allocationTableData = useMemo(() => {
+        if (selectedWallet && selectedWallet.address) {
+            return generateAllocationTableData(tableData, selectedWallet);
+        }
+        return [];
+    }, [selectedWallet, tableData]);
 
     const totalContributionsAmount = allocationTableData.reduce((acc, row) => acc + row.contributionsAmount, 0);
     const totalContributions = allocationTableData.reduce((acc, row) => acc + row.contributions, 0);
@@ -55,6 +62,20 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet 
     const totalRefunds = allocationTableData.reduce((acc, row) => acc + row.refunds, 0);
     const totalNetAmount = totalContributionsAmount - totalRefundsAmount;
     const totalTransactions = totalContributions + totalRefunds;
+
+    const handleSortByChange = (value) => {
+        setSortBy(value);
+    };
+
+    const sortedAllocationTableData = useMemo(() => {
+        let sortedData = [...allocationTableData];
+        if (sortBy === "# of contributions") {
+            sortedData.sort((a, b) => b.contributions - a.contributions);
+        } else if (sortBy === "Amount") {
+            sortedData.sort((a, b) => b.contributionsAmount - a.contributionsAmount);
+        }
+        return sortedData;
+    }, [allocationTableData, sortBy]);
 
     return (
         <Dialog
@@ -77,6 +98,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet 
                     <div>Total Net Amount: {formatAmountDisplay(totalNetAmount)}</div>
                     <div>Total Transactions: {totalTransactions}</div>
                 </Box>
+                <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label="member table">
                         {/* Render table header */}
@@ -93,7 +115,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet 
                         </TableHead>
                         {/* Render table body */}
                         <TableBody>
-                            {allocationTableData.map((row) => (
+                            {sortedAllocationTableData.map((row) => (
                                 <StyledTableRow key={row.uniqueMemberWallet} walletType={row.walletType}>
                                     <StyledTableCell component="th" scope="row">
                                         {row.uniqueMemberWallet}
