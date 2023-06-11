@@ -30,15 +30,24 @@ const ChainFlowDialog = ({ tableData, dialogOpen, setDialogOpen }) => {
 
     const calculateFlow = (data, chain) => {
         const chainData = data.filter(item => item.chain === chain);
-        const inflow = chainData.filter(item => item.inout === "In").reduce((acc, cur) => acc + Number(cur.amount), 0);
-        const outflow = chainData.filter(item => item.inout === "Out").reduce((acc, cur) => acc + Number(cur.amount), 0);
+        const inTxns = chainData.filter(item => item.inout === "In");
+        const outTxns = chainData.filter(item => item.inout === "Out");
+
+        const inflow = inTxns.reduce((acc, cur) => acc + Number(cur.amount), 0);
+        const outflow = outTxns.reduce((acc, cur) => acc + Number(cur.amount), 0);
         const netFlow = inflow - outflow;
+
+        const txnsIn = inTxns.length;
+        const txnsOut = outTxns.length;
 
         return {
             chain,
             inflow,
             outflow,
-            netFlow
+            netFlow,
+            txnsIn,
+            txnsOut,
+            totalTxns: txnsIn + txnsOut
         };
     };
 
@@ -67,6 +76,9 @@ const ChainFlowDialog = ({ tableData, dialogOpen, setDialogOpen }) => {
                                     <StyledTableCell>Inflow</StyledTableCell>
                                     <StyledTableCell>Outflow</StyledTableCell>
                                     <StyledTableCell>Net</StyledTableCell>
+                                    <StyledTableCell># Txns In</StyledTableCell>
+                                    <StyledTableCell># Txns Out</StyledTableCell>
+                                    <StyledTableCell>Total # Txns</StyledTableCell>
                                 </StyledTableRow>
                             </TableHead>
                             <TableBody>
@@ -76,6 +88,9 @@ const ChainFlowDialog = ({ tableData, dialogOpen, setDialogOpen }) => {
                                         <StyledTableCell>{row.inflow}</StyledTableCell>
                                         <StyledTableCell>{row.outflow}</StyledTableCell>
                                         <StyledTableCell>{row.netFlow}</StyledTableCell>
+                                        <StyledTableCell>{row.txnsIn}</StyledTableCell>
+                                        <StyledTableCell>{row.txnsOut}</StyledTableCell>
+                                        <StyledTableCell>{row.totalTxns}</StyledTableCell>
                                     </StyledTableRow>
                                 ))}
                             </TableBody>

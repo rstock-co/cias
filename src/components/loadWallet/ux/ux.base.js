@@ -62,9 +62,9 @@ const BaseUX = () => {
         setType(event.target.value);
         setFilters(prevFilters => ({ ...prevFilters, type: event.target.value }));
     };
-    const handleFilterWalletChange = (event) => {
-        setFilterWallet(event.target.value);
-        setFilters(prevFilters => ({ ...prevFilters, filterWallet: event.target.value }));
+    const handleFilterWalletChange = (value) => {
+        setFilterWallet(value);
+        setFilters(prevFilters => ({ ...prevFilters, filterWallet: value }));
     };
     const handleChainChange = (event) => {
         setChain(event.target.value);

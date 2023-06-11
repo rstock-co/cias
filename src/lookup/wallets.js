@@ -65,6 +65,34 @@ export const wallets = [
         name: "vc_mem_venturecapitalx",
         address: "0xbA25e33085Ae1122c10f2d8ff9325FA8Bc922E23"
     },
+    {
+        name: "vc_mem_3_???",
+        address: "0x5341de11f6ef17d3b8d213b99fc2435361a1bbf0"
+    },
+    {
+        name: "vc_mem_4_???",
+        address: "0xcfedfa1734528a1ad96a5ee999b034623785c6ae"
+    },
+    {
+        name: "vc_mem_5_???",
+        address: "0x0147a5254391689562ea68a3f6880a63fccbb168"
+    },
+    {
+        name: "vc_mem_6_???",
+        address: "0x61c87d7508f404bbf23ef2dfe04919675155306c"
+    },
+    {
+        name: "vc_mem_7_???",
+        address: "0x1c31fb3359357f6436565ccb3e982bc6bf4189ae"
+    },
+    {
+        name: "vc_mem_8_???",
+        address: "0x47ea95183e049fa7678dcc38d209e0549266b998"
+    },
+    {
+        name: "vc_mem_9_???",
+        address: "0xc03c4eae85c99d775da1945fc636e713fc281fb0"
+    },
 
     // VC INVESTMENTS
     {

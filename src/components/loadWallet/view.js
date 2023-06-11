@@ -102,7 +102,8 @@ const LoadWallet = ({
                     />
                     <FilterWalletSelect
                         wallets={filterWallets} // list of all possible wallets (this must be generated)
-                        selectedWallet={filterWallet}
+                        filteredWallet={filterWallet}
+                        selectedWallet={selectedWallet.address}
                         handleChange={handleFilterWalletChange}
                     />
                     <ChainSelect

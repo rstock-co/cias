@@ -10,7 +10,8 @@ import {
     TableBody,
     TableCell,
     DialogActions,
-    Button
+    Button,
+    Box
 } from "@mui/material";
 
 import { styled } from '@mui/material/styles';
@@ -48,6 +49,13 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet 
         allocationTableData = generateAllocationTableData(tableData, selectedWallet);
     }
 
+    const totalContributionsAmount = allocationTableData.reduce((acc, row) => acc + row.contributionsAmount, 0);
+    const totalContributions = allocationTableData.reduce((acc, row) => acc + row.contributions, 0);
+    const totalRefundsAmount = allocationTableData.reduce((acc, row) => acc + row.refundsAmount, 0);
+    const totalRefunds = allocationTableData.reduce((acc, row) => acc + row.refunds, 0);
+    const totalNetAmount = totalContributionsAmount - totalRefundsAmount;
+    const totalTransactions = totalContributions + totalRefunds;
+
     return (
         <Dialog
             open={dialogOpen}
@@ -61,6 +69,14 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet 
         >
             <DialogTitle>Member Wallet Transactions</DialogTitle>
             <DialogContent style={{ overflowX: 'auto' }}>
+                <Box mb={2}>
+                    <div>Total Contributions Amount: {formatAmountDisplay(totalContributionsAmount)}</div>
+                    <div>Total Contributions: {totalContributions}</div>
+                    <div>Total Refunds Amount: {formatAmountDisplay(totalRefundsAmount)}</div>
+                    <div>Total Refunds: {totalRefunds}</div>
+                    <div>Total Net Amount: {formatAmountDisplay(totalNetAmount)}</div>
+                    <div>Total Transactions: {totalTransactions}</div>
+                </Box>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label="member table">
                         {/* Render table header */}

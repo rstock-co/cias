@@ -1,24 +1,21 @@
-import { TextField, MenuItem } from '@mui/material';
+import { Autocomplete, TextField } from '@mui/material';
 
-export const FilterWalletSelect = ({ wallets, selectedWallet, handleChange }) => {
+export const FilterWalletSelect = ({ wallets, filteredWallet, selectedWallet, handleChange }) => {
     return (
-        <TextField
-            select
-            label="Wallet"
-            value={selectedWallet}
-            onChange={handleChange}
-            variant="outlined"
-            size="small"
-            sx={{ minWidth: 120, backgroundColor: 'white' }}
-        >
-            <MenuItem value="">
-                <em>None</em>
-            </MenuItem>
-            {wallets.map((wallet) => (
-                <MenuItem key={wallet} value={wallet}>
-                    {wallet}
-                </MenuItem>
-            ))}
-        </TextField>
+        <Autocomplete
+            options={wallets.filter(wallet => wallet.toLowerCase() !== selectedWallet.toLowerCase())}
+            value={filteredWallet}
+            sx={{ width: '475px' }}
+            onChange={(event, newValue) => handleChange(newValue || '')}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    label="Wallet"
+                    variant="outlined"
+                    size="small"
+                    sx={{ minWidth: 120, backgroundColor: 'white' }}
+                />
+            )}
+        />
     );
-}
+};
