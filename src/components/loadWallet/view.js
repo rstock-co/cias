@@ -1,9 +1,11 @@
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
-import { Box, Typography, Select, MenuItem } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import { wallets } from '../../lookup/wallets';
 import MemberTable from '../memberTable/view';
+import WalletSelect from './walletSelect';
+import TypeSelect from './typeSelect';
 
 const LoadWallet = ({
     selectedWallet,
@@ -47,44 +49,33 @@ const LoadWallet = ({
             <Typography variant="h3" align="left" gutterBottom>
                 Wallet Lookup
             </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}>
-                <Select
-                    value={selectedWallet.name}
-                    onChange={handleWalletChange}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Without label' }}
-                >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
-                    {wallets.map((wallet) => (
-                        <MenuItem key={wallet.name} value={wallet.name}>{wallet.name}</MenuItem>
-                    ))}
-                </Select>
-                <Select
-                    value={transactionType}
-                    onChange={handleTransactionTypeChange}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Without label' }}
-                >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={"Contribution"}>Contribution</MenuItem>
-                    <MenuItem value={"Receiving"}>Receiving</MenuItem>
-                </Select>
-                {selectedWallet.address && (
-                    <Typography variant="body1" align="left" sx={{ marginLeft: '1rem' }}>
-                        Wallet Address: {selectedWallet.address}
-                    </Typography>
-                )}
-                <Button
-                    variant="contained"
-                    onClick={handleGenerateTable}
-                    sx={{ marginLeft: '1rem' }}
-                >
-                    Generate Member Table
-                </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <WalletSelect
+                        wallets={wallets}
+                        selectedWallet={selectedWallet}
+                        handleWalletChange={handleWalletChange}
+                    />
+                    <TypeSelect
+                        transactionType={transactionType}
+                        handleTransactionTypeChange={handleTransactionTypeChange}
+                    />
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                    {selectedWallet.address && (
+                        <Typography variant="body1" align="right">
+                            Wallet Address: {selectedWallet.address}
+                        </Typography>
+                    )}
+                    <Button
+                        variant="contained"
+                        onClick={handleGenerateTable}
+                        color="warning"
+                        sx={{ marginTop: 2 }}
+                    >
+                        Generate Allocations
+                    </Button>
+                </Box>
             </Box>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -123,6 +114,8 @@ const LoadWallet = ({
             <MemberTable tableData={contributorTableData} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
         </Box>
     );
+
+
 }
 
 

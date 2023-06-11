@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getERC20Txns } from '../../../api/arbitrum/getTxns';
+import { getERC20Txns } from '../../../api/arb';
 import { getAddressByName } from '../../../lookup/wallets';
 import {
     filterIncomming,

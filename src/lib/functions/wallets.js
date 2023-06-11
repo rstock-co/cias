@@ -9,7 +9,7 @@ export const filterOutgoing = (txns, walletAddress) => {
     return txns.filter(txn => txn.from.toLowerCase() === walletAddress.toLowerCase());
 }
 
-const formatAmount = (value) => {
+export const formatAmount = (value) => {
     return value.toLocaleString(undefined, {
         style: 'currency',
         currency: 'USD',
@@ -35,7 +35,7 @@ export const generateContributorTableData = (txn, id) => ({
     txn: formatTxnLink(txn.hash),
     contributor: txn.from,
     walletType: getWalletType(txn.from),
-    amount: formatAmount(txn.value / 1000000),
+    amount: txn.value / 1000000,  // Leave as a number
     currency: txn.tokenSymbol,
 });
 
@@ -45,7 +45,7 @@ export const generateRecieverTableData = (txn, id) => ({
     txn: formatTxnLink(txn.hash),
     reciever: txn.to,
     walletType: getWalletType(txn.to),
-    amount: formatAmount(txn.value / 1000000),
+    amount: txn.value / 1000000,
     currency: txn.tokenSymbol,
 });
 
@@ -54,7 +54,7 @@ export const generateAllocationTable = (contributorTableData) => {
     const memberMap = contributorTableData.reduce((map, { contributor, amount }) => {
         const existingData = map.get(contributor) || { amount: 0, contributions: 0 };
         map.set(contributor, {
-            amount: existingData.amount + amount,
+            amount: existingData.amount + Number(amount), // Convert amount to number before adding
             contributions: existingData.contributions + 1,
         });
         return map;
@@ -62,7 +62,9 @@ export const generateAllocationTable = (contributorTableData) => {
 
     return Array.from(memberMap, ([contributor, { amount, contributions }]) => ({
         contributor,
-        amount: formatAmount(amount),
+        amount, // amount is still a number
         contributions,
     }));
 };
+
+
