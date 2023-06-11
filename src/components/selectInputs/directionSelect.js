@@ -9,7 +9,7 @@ export const DirectionSelect = ({ directions, selectedDirection, handleChange })
             onChange={handleChange}
             variant="outlined"
             size="small"
-            sx={{ minWidth: 120, backgroundColor: 'white' }}
+            sx={{ minWidth: 120, backgroundColor: 'white', borderColor: '#4B0082' }}
         >
             <MenuItem value="">
                 <em>None</em>

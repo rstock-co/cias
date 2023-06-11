@@ -42,13 +42,11 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
             const startDate = new Date(new Date(dateRange.startDate).getTime() + mstOffsetMillis).getTime();
             const endDate = new Date(new Date(dateRange.endDate).getTime() + mstOffsetMillis).getTime();
 
-            const txnTimestamp = Number(txn.timestamp) * 1000; // Make sure the timestamp is a number
-
-            console.log("txn timestamp: ", txnTimestamp)
+            console.log("txn timestamp: ", txn.timeStamp)
             console.log("start timestamp: ", startDate)
             console.log("end timestamp: ", endDate)
 
-            matchesDateRange = txnTimestamp >= startDate && txnTimestamp <= endDate;
+            matchesDateRange = txn.timestamp >= startDate && txn.timestamp <= endDate;
         }
 
 
@@ -126,17 +124,18 @@ export const getWalletType = (txn, selectedWalletAddress) => {
 export const generateTableData = (txn, id, selectedWallet) => {
     const amount = formatAmount(txn.chain, txn.value);
     const walletType = getWalletType(txn, selectedWallet);
+    const timestamp = parseInt(txn.timeStamp) * 1000;
 
     let type = walletType;
     if (selectedWallet === '0xb79E768bEF0Ca0a34E53c3FE2ac26E600ACf8ccA' && txn.to === '0xf534fe3c6061d61458c3f6ca29b2d5ba7855e95d') {
-        type = checkMoveType(walletType, parseInt(txn.timeStamp) * 1000);
+        type = checkMoveType(walletType, timestamp);
     }
 
     return {
         id,
         chain: txn.chain,
-        timestamp: txn.timeStamp,
-        dateTime: convertTime(txn.timeStamp, 'America/Denver'),
+        timestamp,
+        dateTime: convertTime(timestamp, 'America/Denver'),
         txn: formatTxnLink(txn.hash),
         from: txn.from,
         to: txn.to,

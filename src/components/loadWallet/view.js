@@ -69,10 +69,10 @@ const LoadWallet = ({
     }
 
     return (
-        <Box sx={{ bgcolor: '#F3E5F5', pt: 50, p: 5 }}>
+        <Box sx={{ bgcolor: '#F3E5F5', pt: 50, p: 5, pb: 100 }}>
             {selectedWallet.address && (
                 <Typography variant="h3" align="left" gutterBottom>
-                    Wallet Lookup --> <span style={{ fontSize: '30px', color: '#4B0082' }}>{selectedWallet.name}</span> (
+                    Wallet Lookup {' | '}  <span style={{ fontSize: '35px', color: '#4B0082' }}>{selectedWallet.name}</span> {' | '}
                     <span style={{ fontSize: '30px', color: '#FF0000' }}>
                         {selectedWallet.address.substring(0, 4)}
                     </span>
@@ -82,7 +82,7 @@ const LoadWallet = ({
                     <span style={{ fontSize: '30px', color: '#FF0000' }}>
                         {selectedWallet.address.substring(selectedWallet.address.length - 4)}
                     </span>
-                    )
+                    {'  |'}
                 </Typography>
             )}
 
@@ -113,14 +113,19 @@ const LoadWallet = ({
                         selectedDirection={direction}
                         handleChange={handleDirectionChange}
                     />
+
+
+
+                </Box>
+
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '15px' }}>
                     <DateRangeSelect
                         selectedDateRange={dates}
                         handleChange={handleDatesChange}
                     />
 
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', gap: '15px' }}>
 
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                     <Button
                         variant="contained"
                         onClick={handleGenerateAllocations}
@@ -132,6 +137,7 @@ const LoadWallet = ({
                     <Button variant="contained" color="primary" onClick={handleGenerateChainFlow}>
                         Chain Cash Flow
                     </Button>
+                </Box>
                 </Box>
             </Box>
             <TableContainer component={Paper}>

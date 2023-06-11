@@ -6,7 +6,7 @@ import { times } from '../../lookup/vcMoveTimes';
 // convertTime(1684786992, 'America/Denver'); 
 
 export const convertTime = (timestamp, timeZone) => {
-    const date = new Date(timestamp * 1000); // convert seconds to milliseconds
+    const date = new Date(timestamp);
     const zonedDate = utcToZonedTime(date, timeZone);
     return format(zonedDate, "MMMM d, yyyy h:mm a");
 }
