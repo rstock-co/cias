@@ -4,7 +4,7 @@ export const TypeSelect = ({ types, selectedType, handleChange }) => {
     return (
         <TextField
             select
-            label="Transaction"
+            label="Type"
             value={selectedType}
             onChange={handleChange}
             variant="outlined"

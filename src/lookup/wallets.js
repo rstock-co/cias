@@ -123,6 +123,10 @@ export const wallets = [
         name: "futures_trader_???",
         address: "0x1c31fb3359357f6436565ccb3e982bc6bf4189ae"
     },
+    {
+        name: "blackdragon-1",
+        address: "0x6e70661439285c6c16f8aae549070e18bd1baf3b"
+    },
 
     // LAVA (VELA)
     {
@@ -176,6 +180,11 @@ export const wallets = [
         name: "lava_sell",
         address: "0x66a1439457719124d5812a077f8409098ba2ca95"
     },
+    {
+        name: "sersh",
+        address: "0x670ab42a33be7aa7fc591ed1e4df74bf4cc4d6b2"
+    },
+
     // INTERMEDIARY WALLETS
     {
         name: "int_jp_binance",
