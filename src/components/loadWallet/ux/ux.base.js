@@ -10,7 +10,10 @@ const BaseUX = () => {
     const stableEth = getAddressByName("stable_usdc_eth");
     const stableEth2 = getAddressByName("stable_usdt_eth");
     const stableBsc = getAddressByName("stable_busd_bep20");
-    const [selectedWallet, setSelectedWallet] = useState({});
+    const [selectedWallet, setSelectedWallet] = useState({
+        name: "pool_investments",
+        address: "0xb79E768bEF0Ca0a34E53c3FE2ac26E600ACf8ccA"
+    });
 
     // TRANSACTIONS
     const [txns, setTxns] = useState([]);

@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import { wallets } from '../../lookup/wallets';
-import MemberTable from '../memberTable/view';
+import AllocationTable from '../allocationTable/view';
 import ChainFlowDialog from '../chainBalanceTable/view';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect } from '../../components/selectInputs';
 
@@ -36,6 +36,8 @@ const LoadWallet = ({
     setChainDialogOpen,
     isLoading
 } = {}) => {
+
+    console.log("SELECTED WALLET: ", selectedWallet)
 
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -113,9 +115,6 @@ const LoadWallet = ({
                         selectedDirection={direction}
                         handleChange={handleDirectionChange}
                     />
-
-
-
                 </Box>
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '15px' }}>
@@ -182,7 +181,7 @@ const LoadWallet = ({
                     </TableBody>
                 </Table>
             </TableContainer>
-            <MemberTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} />
+            <AllocationTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallet={selectedWallet} />
             <ChainFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
         </Box>
     );

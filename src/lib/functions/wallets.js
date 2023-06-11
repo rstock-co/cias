@@ -147,21 +147,67 @@ export const generateTableData = (txn, id, selectedWallet) => {
     }
 };
 
-export const generateAllocationTable = (contributorTableData) => {
-    const memberMap = contributorTableData.reduce((map, { contributor, amount }) => {
-        const existingData = map.get(contributor) || { amount: 0, contributions: 0 };
-        map.set(contributor, {
-            amount: existingData.amount + Number(amount), // Convert amount to number before adding
-            contributions: existingData.contributions + 1,
-        });
+export const generateAllocationTableData = (tableData, selectedWallet) => {
+    if (!selectedWallet || !selectedWallet.address) {
+        return [];
+    }
+
+    const memberMap = tableData.reduce((map, row) => {
+        const { from, to, walletType, amount } = row;
+        console.log('Processing row: ', row); // Log the entire row being processed
+        console.log('Amount for this row: ', amount); // Log the amount being processed
+        if (walletType !== 'Member') return map;
+
+        const uniqueMemberWallet = from?.toLowerCase();
+
+        if (uniqueMemberWallet && uniqueMemberWallet !== selectedWallet.address.toLowerCase()) {
+            const existingData = map.get(uniqueMemberWallet) || { amount: 0, contributions: 0, refunds: 0, contributionsAmount: 0, refundsAmount: 0 };
+            console.log('Existing data for this member wallet: ', existingData); // Log the existing data before it is updated
+            map.set(uniqueMemberWallet, {
+                amount: existingData.amount + Number(amount),
+                contributions: existingData.contributions + 1,
+                refunds: existingData.refunds,
+                contributionsAmount: existingData.contributionsAmount + Number(amount),
+                refundsAmount: existingData.refundsAmount
+            });
+            console.log('Updated data for this member wallet: ', map.get(uniqueMemberWallet)); // Log the updated data
+        }
+
+        const refundMemberWallet = to?.toLowerCase();
+        if (refundMemberWallet && refundMemberWallet !== uniqueMemberWallet && refundMemberWallet !== selectedWallet.address.toLowerCase()) {
+            const existingData = map.get(refundMemberWallet) || { amount: 0, contributions: 0, refunds: 0, contributionsAmount: 0, refundsAmount: 0 };
+            console.log('Existing data for this member wallet: ', existingData);
+            map.set(refundMemberWallet, {
+                amount: existingData.amount - Number(amount),
+                contributions: existingData.contributions,
+                refunds: existingData.refunds + 1,
+                contributionsAmount: existingData.contributionsAmount,
+                refundsAmount: existingData.refundsAmount + Number(amount)
+            });
+            console.log('Updated data for this member wallet: ', map.get(refundMemberWallet));
+        }
+
         return map;
     }, new Map());
 
-    return Array.from(memberMap, ([contributor, { amount, contributions }]) => ({
-        contributor,
-        amount, // amount is still a number
+    console.log('Final Member Map:', memberMap);
+
+    const allocationTableData = Array.from(memberMap, ([uniqueMemberWallet, { amount, contributions, refunds, contributionsAmount, refundsAmount }]) => ({
+        uniqueMemberWallet,
+        amount,
         contributions,
+        refunds,
+        net: contributions - refunds,
+        contributionsAmount,
+        refundsAmount,
+        netAmount: contributionsAmount - refundsAmount
     }));
+
+    console.log('Final Allocation Table Data:', allocationTableData);
+
+    return allocationTableData;
 };
+
+
 
 

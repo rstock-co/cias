@@ -15,8 +15,8 @@ import {
 
 import { styled } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
-import { generateAllocationTable } from "../../lib/functions/wallets";
-import { formatAmount } from "../../lib/functions/wallets";
+import { generateAllocationTableData } from "../../lib/functions/wallets";
+import { formatAmountDisplay } from "../../lib/functions/wallets";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -42,9 +42,12 @@ const StyledTableRow = styled(TableRow)(({ theme, walletType }) => ({
     },
 }));
 
+const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet }) => {
+    let allocationTableData = [];
+    if (selectedWallet && selectedWallet.address) {
+        allocationTableData = generateAllocationTableData(tableData, selectedWallet);
+    }
 
-const MemberTable = ({ tableData, dialogOpen, setDialogOpen }) => {
-    const memberTableData = generateAllocationTable(tableData);
     return (
         <Dialog
             open={dialogOpen}
@@ -63,32 +66,28 @@ const MemberTable = ({ tableData, dialogOpen, setDialogOpen }) => {
                         {/* Render table header */}
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell></StyledTableCell> {/* Empty cell for aligning with Member Wallet column */}
-                                <StyledTableCell align="center">
-                                    {/* Sum up the total amounts */}
-                                    Total Amount: {formatAmount(memberTableData.reduce((total, row) => total + row.amount, 0))}
-                                </StyledTableCell>
-                                <StyledTableCell align="center">
-                                    {/* Sum up the total transactions */}
-                                    Total Transactions: {memberTableData.reduce((total, row) => total + row.contributions, 0)}
-                                </StyledTableCell>
-                            </TableRow>
-                            <TableRow>
                                 <StyledTableCell>Member Wallet</StyledTableCell>
-                                <StyledTableCell align="center">Total Amount ($)</StyledTableCell>
-                                <StyledTableCell align="center"># of Transactions</StyledTableCell>
+                                <StyledTableCell align="center">Contributions Amount ($)</StyledTableCell>
+                                <StyledTableCell align="center"># of Contributions</StyledTableCell>
+                                <StyledTableCell align="center">Refunds Amount ($)</StyledTableCell>
+                                <StyledTableCell align="center"># of Refunds</StyledTableCell>
+                                <StyledTableCell align="center">Net Amount ($)</StyledTableCell>
+                                <StyledTableCell align="center">Net Transactions</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         {/* Render table body */}
                         <TableBody>
-                            {memberTableData.map((row) => (
-                                <StyledTableRow key={row.contributor} walletType={row.walletType}>
+                            {allocationTableData.map((row) => (
+                                <StyledTableRow key={row.uniqueMemberWallet} walletType={row.walletType}>
                                     <StyledTableCell component="th" scope="row">
-                                        {row.contributor}
+                                        {row.uniqueMemberWallet}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center">{formatAmount(row.amount)}</StyledTableCell>
-
+                                    <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
                                     <StyledTableCell align="center">{row.contributions}</StyledTableCell>
+                                    <StyledTableCell align="center">{formatAmountDisplay(row.refundsAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.refunds}</StyledTableCell>
+                                    <StyledTableCell align="center">{formatAmountDisplay(row.netAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.contributions + row.refunds}</StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
@@ -102,5 +101,4 @@ const MemberTable = ({ tableData, dialogOpen, setDialogOpen }) => {
     );
 };
 
-
-export default MemberTable;
+export default AllocationTable;
