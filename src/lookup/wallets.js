@@ -3,6 +3,11 @@ export const getAddressByName = walletName => {
     return wallet ? wallet.address : null;
 }
 
+export const getNameByAddress = (address) => {
+    const wallet = wallets.find(wallet => wallet.address.toLowerCase() === address.toLowerCase());
+    return wallet ? wallet.name : 'Member';
+}
+
 export const wallets = [
     // TOKENS
     {

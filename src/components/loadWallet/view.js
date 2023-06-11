@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, CircularProgress } from '@mui/material';
 import { Box, Typography } from '@mui/material';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
@@ -9,14 +9,14 @@ import TypeSelect from './typeSelect';
 
 const LoadWallet = ({
     selectedWallet,
-    transactionType,
+    type,
     handleWalletChange,
     handleTransactionTypeChange,
     handleGenerateTable,
-    contributorTableData,
-    recieverTableData,
+    tableData,
     dialogOpen,
-    setDialogOpen
+    setDialogOpen,
+    isLoading
 } = {}) => {
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -44,6 +44,10 @@ const LoadWallet = ({
         },
     }));
 
+    if (isLoading || tableData.length > 900) {
+        return <CircularProgress />;
+    }
+
     return (
         <Box sx={{ bgcolor: '#F3E5F5', pt: 50, p: 5 }}>
             <Typography variant="h3" align="left" gutterBottom>
@@ -57,7 +61,7 @@ const LoadWallet = ({
                         handleWalletChange={handleWalletChange}
                     />
                     <TypeSelect
-                        transactionType={transactionType}
+                        transactionType={type}
                         handleTransactionTypeChange={handleTransactionTypeChange}
                     />
                 </Box>
@@ -82,16 +86,20 @@ const LoadWallet = ({
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>#</StyledTableCell>
+                            <StyledTableCell align="center">Chain</StyledTableCell>
+                            <StyledTableCell align="center">In/Out</StyledTableCell>
                             <StyledTableCell align="left">Date/Time</StyledTableCell>
                             <StyledTableCell align="left">Txn</StyledTableCell>
-                            <StyledTableCell align="left">Contributor</StyledTableCell>
+                            <StyledTableCell align="left">From</StyledTableCell>
+                            <StyledTableCell align="left">To</StyledTableCell>
                             <StyledTableCell align="left">Type</StyledTableCell>
                             <StyledTableCell align="center">Amount&nbsp;($)</StyledTableCell>
                             <StyledTableCell align="center">Currency&nbsp;($)</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {contributorTableData.length > 0 && contributorTableData.map((row) => (
+
+                        {tableData.length > 0 && tableData.length < 900 && tableData.map((row) => (
                             <StyledTableRow
                                 key={row.id}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -100,9 +108,12 @@ const LoadWallet = ({
                                 <StyledTableCell component="th" scope="row">
                                     {row.id}
                                 </StyledTableCell>
+                                <StyledTableCell align="center">{row.chain}</StyledTableCell>
+                                <StyledTableCell align="center">{row.inout}</StyledTableCell>
                                 <StyledTableCell align="left">{row.dateTime}</StyledTableCell>
                                 <StyledTableCell align="left">{row.txn}</StyledTableCell>
-                                <StyledTableCell align="left">{row.contributor}</StyledTableCell>
+                                <StyledTableCell align="left">{row.from}</StyledTableCell>
+                                <StyledTableCell align="left">{row.to}</StyledTableCell>
                                 <StyledTableCell align="left">{row.walletType}</StyledTableCell>
                                 <StyledTableCell align="center">{row.amount}</StyledTableCell>
                                 <StyledTableCell align="center">{row.currency}</StyledTableCell>
@@ -111,7 +122,7 @@ const LoadWallet = ({
                     </TableBody>
                 </Table>
             </TableContainer>
-            <MemberTable tableData={contributorTableData} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
+            <MemberTable tableData={tableData} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
         </Box>
     );
 

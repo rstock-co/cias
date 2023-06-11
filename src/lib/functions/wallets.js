@@ -1,13 +1,17 @@
 import { convertTime } from "./datetime";
-import { wallets } from "../../lookup/wallets";
+import { getNameByAddress } from "../../lookup/wallets";
 
-export const filterIncomming = (txns, walletAddress) => {
-    return txns.filter(txn => txn.to.toLowerCase() === walletAddress.toLowerCase());
+export const filterTxns = (txns, walletAddress, type) => {
+    if (!type) {
+        return txns.filter(txn => txn.value !== "0");
+    }
+    return txns
+        .filter(txn =>
+            txn.hasOwnProperty(type) && txn[type] && txn[type].toLowerCase() === walletAddress.toLowerCase() &&
+            txn.value !== "0"
+        );
 }
 
-export const filterOutgoing = (txns, walletAddress) => {
-    return txns.filter(txn => txn.from.toLowerCase() === walletAddress.toLowerCase());
-}
 
 export const formatAmount = (value) => {
     return value.toLocaleString(undefined, {
@@ -24,31 +28,28 @@ const formatTxnLink = (hash) => (
     </a>
 );
 
-const getWalletType = (address) => {
-    const matchedWallets = wallets.filter((wallet) => wallet.address === address);
-    return matchedWallets.length > 0 ? matchedWallets[0].name : "Member";
-};
+export const getWalletType = (txn, selectedWalletAddress) => {
+    if (txn.from.toLowerCase() === selectedWalletAddress.toLowerCase()) { // 'Out' transaction
+        return getNameByAddress(txn.to);
+    } else if (txn.to.toLowerCase() === selectedWalletAddress.toLowerCase()) { // 'In' transaction
+        return getNameByAddress(txn.from);
+    }
+    return 'Unknown';
+}
 
-export const generateContributorTableData = (txn, id) => ({
+
+export const generateTableData = (txn, id, selectedWallet) => ({
     id,
+    chain: txn.chain,
     dateTime: convertTime(txn.timeStamp, 'America/Denver'),
     txn: formatTxnLink(txn.hash),
-    contributor: txn.from,
-    walletType: getWalletType(txn.from),
-    amount: txn.value / 1000000,  // Leave as a number
+    from: txn.from,
+    to: txn.to,
+    walletType: getWalletType(txn, selectedWallet),
+    inout: txn.from.toLowerCase() === selectedWallet.toLowerCase() ? 'Out' : 'In',
+    amount: txn.chain === 'bsc' ? txn.value / 1000000000000000000 : txn.value / 1000000,  // Leave as a number
     currency: txn.tokenSymbol,
 });
-
-export const generateRecieverTableData = (txn, id) => ({
-    id,
-    dateTime: convertTime(txn.timeStamp, 'America/Denver'),
-    txn: formatTxnLink(txn.hash),
-    reciever: txn.to,
-    walletType: getWalletType(txn.to),
-    amount: txn.value / 1000000,
-    currency: txn.tokenSymbol,
-});
-
 
 export const generateAllocationTable = (contributorTableData) => {
     const memberMap = contributorTableData.reduce((map, { contributor, amount }) => {

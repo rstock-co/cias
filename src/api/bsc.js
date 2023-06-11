@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-export const getNormalTxnsArb = async walletAddress => {
+export const getNormalTxnsBsc = async walletAddress => {
     const requestConfig = {
         params: {
             module: 'account',
             action: 'txlist',
             address: walletAddress,
             startblock: '0',
-            endblock: 'latest',
+            endblock: '99999999',
             page: '1',
             offset: '1000',
             sort: 'asc',
@@ -25,14 +25,14 @@ export const getNormalTxnsArb = async walletAddress => {
 };
 
 // contractAddress is optional, if passed, txns will be filtered by the token (ie. Vela)
-export const getERC20TxnsArb = async (walletAddress, contractAddress) => {
+export const getERC20TxnsBsc = async (walletAddress, contractAddress) => {
     const requestConfig = {
         params: {
             module: 'account',
             action: 'tokentx',
             address: walletAddress,
             startblock: '0',
-            endblock: 'latest',
+            endblock: '99999999',
             page: '1',
             offset: '1000',
             sort: 'asc',

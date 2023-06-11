@@ -1,26 +1,24 @@
 import { useEffect, useState } from 'react';
-import { getERC20Txns } from '../../../api/arb';
+import { getAggregateERC20Txns } from '../../../api/aggregate';
 import { getAddressByName } from '../../../lookup/wallets';
-import {
-    filterIncomming,
-    filterOutgoing,
-    generateContributorTableData,
-    generateRecieverTableData
-} from '../../../lib/functions/wallets';
+import { filterTxns, generateTableData } from '../../../lib/functions/wallets';
 
 const BaseUX = () => {
 
-    const tokenAddress = getAddressByName("stable_usdc_arb");
+    const stableArb = getAddressByName("stable_usdc_arb");
+    const stableEth = getAddressByName("stable_usdc_eth");
+    const stableEth2 = getAddressByName("stable_usdt_eth");
+    const stableBsc = getAddressByName("stable_busd_bep20");
 
     const [txns, setTxns] = useState([]);
 
     const [selectedWallet, setSelectedWallet] = useState({});
-    const [transactionType, setTransactionType] = useState("");
+    const [type, setType] = useState("");
 
-    const [contributorTableData, setContributorTableData] = useState([]);
-    const [recieverTableData, setRecieverTableData] = useState([]);
+    const [tableData, setTableData] = useState([]);
 
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true); 
 
     const handleWalletChange = async (event) => {
         setSelectedWallet({
@@ -30,56 +28,51 @@ const BaseUX = () => {
     };
 
     const handleTransactionTypeChange = (event) => {
-        setTransactionType(event.target.value);
+        setType(event.target.value);
     };
 
     const handleGenerateTable = () => {
         setDialogOpen(true);
     };
 
-
     useEffect(() => {
+
         const fetchTransactions = async () => {
+            setIsLoading(true);  // start loading
             try {
-                const result = await getERC20Txns(selectedWallet.address, tokenAddress);
+                const result = await getAggregateERC20Txns(selectedWallet.address, { stableArb, stableEth, stableEth2, stableBsc });
                 setTxns(result);
             } catch (error) {
                 console.error('Error fetching transactions:', error);
             }
+            setIsLoading(false);  // end loading
         };
 
         fetchTransactions();
 
-    }, [selectedWallet, tokenAddress]);
+    }, [selectedWallet, stableArb, stableEth, stableEth2, stableBsc]);
 
     useEffect(() => {
-        if (txns && txns.length > 0 && selectedWallet && selectedWallet.address) {
-            const inTxns = filterIncomming(txns, selectedWallet.address);
-            const outTxns = filterOutgoing(txns, selectedWallet.address);
 
-            setContributorTableData(inTxns
-                .filter(txn => txn.value !== "0")
-                .map(generateContributorTableData));
-            setRecieverTableData(outTxns
-                .filter(txn => txn.value !== "0")
-                .map(generateRecieverTableData));
+        if (txns && txns.length > 0 && selectedWallet && selectedWallet.address) {
+            const filteredTxns = filterTxns(txns, selectedWallet.address, type);
+            setTableData(filteredTxns.map((txn, index) => generateTableData(txn, index, selectedWallet.address)));
         }
-    }, [txns, selectedWallet]);
+
+    }, [txns, selectedWallet, type]);
 
     console.log("TXNSSSZZZ: ", txns)
-    console.log("Contributor data: ", contributorTableData)
-    console.log("Reciever data: ", recieverTableData)
-
+    console.log("Table data: ", tableData);
     return {
         selectedWallet,
-        transactionType,
+        type,
         handleWalletChange,
         handleTransactionTypeChange,
         handleGenerateTable,
-        contributorTableData,
-        recieverTableData,
+        tableData,
         dialogOpen,
-        setDialogOpen
+        setDialogOpen,
+        isLoading
     }
 
 }

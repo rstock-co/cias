@@ -1,8 +1,9 @@
 # Crypto Wallet Manager
 
 # Links
-[Arbiscan API docs](https://docs.arbiscan.io/)
-
+[Arbiscan API docs](https://docs.arbiscan.io/)  
+[BSC Scan API docs](https://docs.bscscan.com/)
+[Etherscan API docs](https://docs.etherscan.io/)
 
 
 
