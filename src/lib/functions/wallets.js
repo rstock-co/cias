@@ -4,13 +4,6 @@ import { checkMoveType } from "./datetime";
 
 export const filterTxns = (txns, { type, filterWallet, chain, dateRange, direction }) => {
 
-    console.log("==========")
-    console.log("type: ", type)
-    console.log("filterWallet: ", filterWallet)
-    console.log("chain: ", chain)
-    console.log("dateRange: ", dateRange)
-    console.log("direction: ", direction)
-
     // If initial render, return all txns (check if all filter conditions are not set)
     if (type === '' && filterWallet === '' && chain === '' && (dateRange.startDate === '' || dateRange.endDate === '') && type === '' && direction === '') return txns.filter(txn => txn.amount !== 0);
 
@@ -42,13 +35,8 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
             const startDate = new Date(new Date(dateRange.startDate).getTime() + mstOffsetMillis).getTime();
             const endDate = new Date(new Date(dateRange.endDate).getTime() + mstOffsetMillis).getTime();
 
-            console.log("txn timestamp: ", txn.timeStamp)
-            console.log("start timestamp: ", startDate)
-            console.log("end timestamp: ", endDate)
-
             matchesDateRange = txn.timestamp >= startDate && txn.timestamp <= endDate;
         }
-
 
         // (4) filter by direction
         if (direction) {
@@ -60,27 +48,9 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
             matchesType = txn.walletType === type;
         }
 
-        console.log("==========")
-        console.log("matchesFilterWallet: ", matchesFilterWallet)
-        console.log("matchesChain: ", matchesChain)
-        console.log("matchesDateRange: ", matchesDateRange)
-        console.log("matchesDirection: ", matchesDirection)
-        console.log("matchesType: ", matchesType)
-
         return matchesFilterWallet && matchesChain && matchesDateRange && matchesDirection && matchesType;
     });
 };
-
-// export const filterTxns = (txns, walletAddress, type) => {
-//     if (!type) {
-//         return txns.filter(txn => txn.value !== "0");
-//     }
-//     return txns
-//         .filter(txn =>
-//             txn.hasOwnProperty(type) && txn[type] && txn[type].toLowerCase() === walletAddress.toLowerCase() &&
-//             txn.value !== "0"
-//         );
-// }
 
 export const getUniqueWallets = txns => {
     return Array.from(
@@ -112,9 +82,9 @@ const formatTxnLink = (hash) => (
 );
 
 export const getWalletType = (txn, selectedWalletAddress) => {
-    if (txn.from.toLowerCase() === selectedWalletAddress.toLowerCase()) { // 'Out' transaction
+    if (txn.from.toLowerCase() === selectedWalletAddress.toLowerCase()) { 
         return getNameByAddress(txn.to);
-    } else if (txn.to.toLowerCase() === selectedWalletAddress.toLowerCase()) { // 'In' transaction
+    } else if (txn.to.toLowerCase() === selectedWalletAddress.toLowerCase()) { 
         return getNameByAddress(txn.from);
     }
     return 'Unknown';
@@ -154,15 +124,11 @@ export const generateAllocationTableData = (tableData, selectedWallet) => {
 
     const memberMap = tableData.reduce((map, row) => {
         const { from, to, walletType, amount } = row;
-        console.log('Processing row: ', row); // Log the entire row being processed
-        console.log('Amount for this row: ', amount); // Log the amount being processed
         if (walletType !== 'Member') return map;
 
         const uniqueMemberWallet = from?.toLowerCase();
-
         if (uniqueMemberWallet && uniqueMemberWallet !== selectedWallet.address.toLowerCase()) {
             const existingData = map.get(uniqueMemberWallet) || { amount: 0, contributions: 0, refunds: 0, contributionsAmount: 0, refundsAmount: 0 };
-            console.log('Existing data for this member wallet: ', existingData); // Log the existing data before it is updated
             map.set(uniqueMemberWallet, {
                 amount: existingData.amount + Number(amount),
                 contributions: existingData.contributions + 1,
@@ -170,13 +136,11 @@ export const generateAllocationTableData = (tableData, selectedWallet) => {
                 contributionsAmount: existingData.contributionsAmount + Number(amount),
                 refundsAmount: existingData.refundsAmount
             });
-            console.log('Updated data for this member wallet: ', map.get(uniqueMemberWallet)); // Log the updated data
         }
 
         const refundMemberWallet = to?.toLowerCase();
         if (refundMemberWallet && refundMemberWallet !== uniqueMemberWallet && refundMemberWallet !== selectedWallet.address.toLowerCase()) {
             const existingData = map.get(refundMemberWallet) || { amount: 0, contributions: 0, refunds: 0, contributionsAmount: 0, refundsAmount: 0 };
-            console.log('Existing data for this member wallet: ', existingData);
             map.set(refundMemberWallet, {
                 amount: existingData.amount - Number(amount),
                 contributions: existingData.contributions,
@@ -184,13 +148,10 @@ export const generateAllocationTableData = (tableData, selectedWallet) => {
                 contributionsAmount: existingData.contributionsAmount,
                 refundsAmount: existingData.refundsAmount + Number(amount)
             });
-            console.log('Updated data for this member wallet: ', map.get(refundMemberWallet));
         }
 
         return map;
     }, new Map());
-
-    console.log('Final Member Map:', memberMap);
 
     const allocationTableData = Array.from(memberMap, ([uniqueMemberWallet, { amount, contributions, refunds, contributionsAmount, refundsAmount }]) => ({
         uniqueMemberWallet,
@@ -203,11 +164,5 @@ export const generateAllocationTableData = (tableData, selectedWallet) => {
         netAmount: contributionsAmount - refundsAmount
     }));
 
-    console.log('Final Allocation Table Data:', allocationTableData);
-
     return allocationTableData;
 };
-
-
-
-

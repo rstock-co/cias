@@ -9,11 +9,31 @@ export const getNameByAddress = (address) => {
 }
 
 export const wallets = [
+
     // TOKENS
     {
         name: "vela",
         address: "0x088cd8f5eF3652623c22D48b1605DCfE860Cd704"
     },
+
+    // STABLE COIN CONTRACTS
+    {
+        name: "stable_usdc_arb",
+        address: "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"
+    },
+    {
+        name: "stable_usdc_eth",
+        address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    },
+    {
+        name: "stable_usdt_eth",
+        address: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+    },
+    {
+        name: "stable_busd_bep20",
+        address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
+    },
+
     // POOL
     {
         name: "pool_investments",
@@ -35,6 +55,7 @@ export const wallets = [
         name: "pool_trust",
         address: "0x8c78290373623175dfa7a4736bd3a340b670bce9"
     },
+
     // VC MEMBERSHIPS
     {
         name: "vc_mem_blackdragon",
@@ -44,7 +65,38 @@ export const wallets = [
         name: "vc_mem_venturecapitalx",
         address: "0xbA25e33085Ae1122c10f2d8ff9325FA8Bc922E23"
     },
-    // MOVES
+
+    // VC INVESTMENTS
+    {
+        name: "hypercycle",
+        address: "0xED1c9293358d89399A0183D922e6Ef5b701b1503"
+    },
+    {
+        name: "finterest",
+        address: "0x6408769E416D3Db8a0fa4Bc908Da3418fcFfDDEa"
+    },
+    {
+        name: "worlds_beyond",
+        address: "0x493d147402c9C60cd28779B4FBA9C940335007D5"
+    },
+    {
+        name: "games_for_a_living",
+        address: "0x8d64d9cb00a71863f7438f4b3036aed40f5a45a1"
+    },
+    {
+        name: "vVv_equity_raise",
+        address: "0x37c453e88bf69b9deeadfcbda2286b943fac8a1c"
+    },
+    {
+        name: "SUI",
+        address: "0xd5c604aa5e122499f89084f2c3af26a822a22235"
+    },
+    {
+        name: "futures_trader_???",
+        address: "0x1c31fb3359357f6436565ccb3e982bc6bf4189ae"
+    },
+
+    // LAVA (VELA)
     {
         name: "move_lava",
         address: "0xefabc0328fd122f68199b36de51d8629ba2f6b23"
@@ -53,23 +105,6 @@ export const wallets = [
         name: "move_vela_hyper_vlp",
         address: "0xF12C5aa8B0c0Be4365663C08671fC4E8a995670b"
     },
-    {
-        name: "move_hypercycle",
-        address: "0xED1c9293358d89399A0183D922e6Ef5b701b1503"
-    },
-    {
-        name: "move_finterest",
-        address: "0x6408769E416D3Db8a0fa4Bc908Da3418fcFfDDEa"
-    },
-    {
-        name: "move_worlds_beyond",
-        address: "0x493d147402c9C60cd28779B4FBA9C940335007D5"
-    },
-    {
-        name: "move_games_for_a_living",
-        address: "0x8d64d9cb00a71863f7438f4b3036aed40f5a45a1"
-    },
-    // LAVA (VELA)
     {
         name: "lava_main",
         address: "0x8C74dBCBb3f89Efd05316F6593e227ab7EbF959C"
@@ -146,21 +181,4 @@ export const wallets = [
         name: "int_binance_15",
         address: "0x21a31ee1afc51d94c2efccaa2092ad1028285549"
     },
-    // STABLE COIN CONTRACTS
-    {
-        name: "stable_usdc_arb",
-        address: "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"
-    },
-    {
-        name: "stable_usdc_eth",
-        address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-    },
-    {
-        name: "stable_usdt_eth",
-        address: "0xdAC17F958D2ee523a2206206994597C13D831ec7"
-    },
-    {
-        name: "stable_busd_bep20",
-        address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"
-    }
 ];
