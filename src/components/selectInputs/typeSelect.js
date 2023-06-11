@@ -1,12 +1,12 @@
 import { TextField, MenuItem } from '@mui/material';
 
-const TypeSelect = ({ transactionType, handleTransactionTypeChange }) => {
+export const TypeSelect = ({ types, selectedType, handleChange }) => {
     return (
         <TextField
             select
             label="Transaction"
-            value={transactionType}
-            onChange={handleTransactionTypeChange}
+            value={selectedType}
+            onChange={handleChange}
             variant="outlined"
             size="small"
             sx={{ minWidth: 120, backgroundColor: 'white' }}
@@ -14,10 +14,10 @@ const TypeSelect = ({ transactionType, handleTransactionTypeChange }) => {
             <MenuItem value="">
                 <em>None</em>
             </MenuItem>
-            <MenuItem value="Contribution">Contribution</MenuItem>
-            <MenuItem value="Receiving">Receiving</MenuItem>
+            {types.map(type => (
+                <MenuItem key={type} value={type}>{type}</MenuItem>
+            ))}
         </TextField>
     );
 }
 
-export default TypeSelect;

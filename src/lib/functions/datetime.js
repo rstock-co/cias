@@ -15,12 +15,8 @@ export const checkMoveType = (walletType, unixTime) => {
     for (const move of times) {
         const openTime = new Date(move.open).getTime();
         const closeTime = new Date(move.close).getTime();
-        console.log("OPEN: ", openTime)
-        console.log("UNIX: ", unixTime)
-        console.log("CLOSE: ", closeTime)
 
         if (unixTime >= openTime && unixTime <= closeTime) {
-            console.log("REPLACEMENT: ", move.moveName)
             return move.moveName;
         }
     }

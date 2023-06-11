@@ -1,13 +1,12 @@
-// WalletSelect.js
 import { TextField, MenuItem } from '@mui/material';
 
-const WalletSelect = ({ wallets, selectedWallet, handleWalletChange }) => {
+export const DirectionSelect = ({ directions, selectedDirection, handleChange }) => {
     return (
         <TextField
             select
-            label="Wallet"
-            value={selectedWallet.name}
-            onChange={handleWalletChange}
+            label="Direction"
+            value={selectedDirection}
+            onChange={handleChange}
             variant="outlined"
             size="small"
             sx={{ minWidth: 120, backgroundColor: 'white' }}
@@ -15,11 +14,11 @@ const WalletSelect = ({ wallets, selectedWallet, handleWalletChange }) => {
             <MenuItem value="">
                 <em>None</em>
             </MenuItem>
-            {wallets.map((wallet) => (
-                <MenuItem key={wallet.name} value={wallet.name}>{wallet.name}</MenuItem>
+            {directions.map((direction) => (
+                <MenuItem key={direction} value={direction}>
+                    {direction}
+                </MenuItem>
             ))}
         </TextField>
     );
 }
-
-export default WalletSelect;

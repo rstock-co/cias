@@ -1,36 +1,81 @@
 import { useEffect, useState } from 'react';
 import { getAggregateERC20Txns } from '../../../api/aggregate';
 import { getAddressByName } from '../../../lookup/wallets';
-import { filterTxns, generateTableData } from '../../../lib/functions/wallets';
+import { filterTxns, generateTableData, getUniqueWallets, getUniqueTypes } from '../../../lib/functions/wallets';
 
 const BaseUX = () => {
 
+    // WALLET ADDRESSES
     const stableArb = getAddressByName("stable_usdc_arb");
     const stableEth = getAddressByName("stable_usdc_eth");
     const stableEth2 = getAddressByName("stable_usdt_eth");
     const stableBsc = getAddressByName("stable_busd_bep20");
-
-    const [txns, setTxns] = useState([]);
-
     const [selectedWallet, setSelectedWallet] = useState({});
-    const [type, setType] = useState("");
 
+    // TRANSACTIONS
+    const [txns, setTxns] = useState([]);
     const [tableData, setTableData] = useState([]);
 
+    // SELECT INPUT STATE
+    const [type, setType] = useState("");
+    const [filterTypes, setFilterTypes] = useState([]);
+    const [filterWallet, setFilterWallet] = useState("");
+    const [filterWallets, setFilterWallets] = useState([]);
+    const [chain, setChain] = useState("");
+    const [dates, setDates] = useState({
+        startDate: "",
+        endDate: ""
+    });
+    const [direction, setDirection] = useState("")
+
+    // ALL FILTERS FROM SELECT INPUTS
+    const [filters, setFilters] = useState({
+        type: "",
+        chain: "",
+        filterWallet: '',
+        dateRange: { startDate: "", endDate: "" },
+        direction: "",
+
+    });
+
+    // DIALOG BOX STATES
     const [allocationDialogOpen, setAllocationDialogOpen] = useState(false);
     const [chainDialogOpen, setChainDialogOpen] = useState(false);
+
+    // PAGE LOADING
     const [isLoading, setIsLoading] = useState(true); 
 
-    const handleWalletChange = async (event) => {
+    // HANDLERS
+    const handleSelectedWalletChange = async (event) => {
         setSelectedWallet({
             name: event.target.value,
             address: getAddressByName(event.target.value)
         });
     };
 
-    const handleTransactionTypeChange = (event) => {
+    // FILTERS
+
+    const handleTypeChange = (event) => {
         setType(event.target.value);
+        setFilters(prevFilters => ({ ...prevFilters, type: event.target.value }));
     };
+    const handleFilterWalletChange = (event) => {
+        setFilterWallet(event.target.value);
+        setFilters(prevFilters => ({ ...prevFilters, filterWallet: event.target.value }));
+    };
+    const handleChainChange = (event) => {
+        setChain(event.target.value);
+        setFilters(prevFilters => ({ ...prevFilters, chain: event.target.value }));
+    };
+    const handleDatesChange = (dateRange) => {
+        setDates(dateRange);
+        setFilters(prevFilters => ({ ...prevFilters, dateRange }));
+    };
+    const handleDirectionChange = (event) => {
+        setDirection(event.target.value);
+        setFilters(prevFilters => ({ ...prevFilters, direction: event.target.value }));
+    };
+
 
     const handleGenerateAllocations = () => {
         setAllocationDialogOpen(true);
@@ -57,25 +102,60 @@ const BaseUX = () => {
 
     }, [selectedWallet, stableArb, stableEth, stableEth2, stableBsc]);
 
+    // useEffect(() => {
+
+    //     if (txns && txns.length > 0 && selectedWallet && selectedWallet.address) {
+    //         console.log("FILTERS: ", filters)
+    //         const filteredTxns = filterTxns(txns, filters);
+    //         setTableData(filteredTxns.map((txn, index) => generateTableData(txn, index, selectedWallet.address)));
+    //     }
+
+    // }, [txns, selectedWallet, filters]);
+
     useEffect(() => {
-
         if (txns && txns.length > 0 && selectedWallet && selectedWallet.address) {
-            const filteredTxns = filterTxns(txns, selectedWallet.address, type);
-            setTableData(filteredTxns.map((txn, index) => generateTableData(txn, index, selectedWallet.address)));
+            // First generate table data
+            const tableData = txns.map((txn, index) => generateTableData(txn, index, selectedWallet.address));
+
+            // Then filter the table data
+            const filteredTxns = filterTxns(tableData, filters);
+
+            setTableData(filteredTxns);
         }
+    }, [txns, selectedWallet, filters]);
 
-    }, [txns, selectedWallet, type]);
 
-    console.log("TXNSSSZZZ: ", txns)
+    useEffect(() => {
+        if (tableData.length > 0 && tableData.length < 900) {
+            setFilterWallets(getUniqueWallets(tableData));
+            setFilterTypes(getUniqueTypes(tableData));
+        }
+    }, [tableData]);
+
+    console.log("All Txns: ", txns)
     console.log("Table data: ", tableData);
     return {
+
+        tableData,
+
         selectedWallet,
+        handleSelectedWalletChange,
         type,
-        handleWalletChange,
-        handleTransactionTypeChange,
+        filterTypes,
+        handleTypeChange,
+        filterWallet,
+        filterWallets,
+        handleFilterWalletChange,
+        chain,
+        handleChainChange,
+        dates,
+        handleDatesChange,
+        direction,
+        handleDirectionChange,
+
         handleGenerateAllocations,
         handleGenerateChainFlow,
-        tableData,
+
         allocationDialogOpen,
         setAllocationDialogOpen,
         chainDialogOpen,

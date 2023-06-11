@@ -5,18 +5,31 @@ import { styled } from '@mui/material/styles';
 import { wallets } from '../../lookup/wallets';
 import MemberTable from '../memberTable/view';
 import ChainFlowDialog from '../chainBalanceTable/view';
-import WalletSelect from './walletSelect';
-import TypeSelect from './typeSelect';
+import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect } from '../../components/selectInputs';
+
 import { styleRow } from './styles';
 
 const LoadWallet = ({
+    tableData,
+
     selectedWallet,
+    handleSelectedWalletChange,
     type,
-    handleWalletChange,
-    handleTransactionTypeChange,
+    filterTypes,
+    handleTypeChange,
+    filterWallet,
+    filterWallets,
+    handleFilterWalletChange,
+    chain,
+    handleChainChange,
+    dates,
+    handleDatesChange,
+    direction,
+    handleDirectionChange,
+
     handleGenerateAllocations,
     handleGenerateChainFlow,
-    tableData,
+
     allocationDialogOpen,
     setAllocationDialogOpen,
     chainDialogOpen,
@@ -57,27 +70,57 @@ const LoadWallet = ({
 
     return (
         <Box sx={{ bgcolor: '#F3E5F5', pt: 50, p: 5 }}>
-            <Typography variant="h3" align="left" gutterBottom>
-                Wallet Lookup
-            </Typography>
+            {selectedWallet.address && (
+                <Typography variant="h3" align="left" gutterBottom>
+                    Wallet Lookup --> <span style={{ fontSize: '30px', color: '#4B0082' }}>{selectedWallet.name}</span> (
+                    <span style={{ fontSize: '30px', color: '#FF0000' }}>
+                        {selectedWallet.address.substring(0, 4)}
+                    </span>
+                    <span style={{ fontSize: '30px', color: '#4B0082' }}>
+                        {selectedWallet.address.substring(4, selectedWallet.address.length - 4)}
+                    </span>
+                    <span style={{ fontSize: '30px', color: '#FF0000' }}>
+                        {selectedWallet.address.substring(selectedWallet.address.length - 4)}
+                    </span>
+                    )
+                </Typography>
+            )}
+
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <WalletSelect
                         wallets={wallets}
                         selectedWallet={selectedWallet}
-                        handleWalletChange={handleWalletChange}
+                        handleChange={handleSelectedWalletChange}
                     />
                     <TypeSelect
-                        transactionType={type}
-                        handleTransactionTypeChange={handleTransactionTypeChange}
+                        types={filterTypes} // list of all possible types (this must be generated)
+                        selectedType={type}
+                        handleChange={handleTypeChange}
                     />
+                    <FilterWalletSelect
+                        wallets={filterWallets} // list of all possible wallets (this must be generated)
+                        selectedWallet={filterWallet}
+                        handleChange={handleFilterWalletChange}
+                    />
+                    <ChainSelect
+                        chains={['arb', 'eth', 'bsc']}
+                        selectedChain={chain}
+                        handleChange={handleChainChange}
+                    />
+                    <DirectionSelect
+                        directions={['In', 'Out']}
+                        selectedDirection={direction}
+                        handleChange={handleDirectionChange}
+                    />
+                    <DateRangeSelect
+                        selectedDateRange={dates}
+                        handleChange={handleDatesChange}
+                    />
+
+
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                    {selectedWallet.address && (
-                        <Typography variant="body1" align="right">
-                            Wallet Address: {selectedWallet.address}
-                        </Typography>
-                    )}
                     <Button
                         variant="contained"
                         onClick={handleGenerateAllocations}
