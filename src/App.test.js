@@ -1,5 +1,8 @@
 import { render, screen } from '@testing-library/react';
+import config from './config';
 import App from './App';
+
+console.log("=== config ===", config)
 
 test('renders learn react link', () => {
   render(<App />);

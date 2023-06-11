@@ -1,12 +1,13 @@
+export const getAddressByName = walletName => {
+    const wallet = wallets.find(wallet => wallet.name === walletName);
+    return wallet ? wallet.address : null;
+}
+
 export const wallets = [
-    // TEAM
+    // TOKENS
     {
-        name: "team_admin",
-        address: "0xF037e27d60dA261bbB80F11AdEB6a2354ef0Cfc1"
-    },
-    {
-        name: "team_charity",
-        address: "0xE30A3eA5F406962bb39d0DD71fd00A96572730bE"
+        name: "vela",
+        address: "0x088cd8f5eF3652623c22D48b1605DCfE860Cd704"
     },
     // POOL
     {
@@ -146,7 +147,7 @@ export const wallets = [
         address: "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"
     },
     {
-        name: "stable_usde_eth",
+        name: "stable_usdc_eth",
         address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
     },
     {
