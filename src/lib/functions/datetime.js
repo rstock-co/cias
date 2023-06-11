@@ -1,5 +1,9 @@
 import { format } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
+import { times } from '../../lookup/vcMoveTimes';
+
+// Use "America/Denver" for Mountain Standard Time
+// convertTime(1684786992, 'America/Denver'); 
 
 export const convertTime = (timestamp, timeZone) => {
     const date = new Date(timestamp * 1000); // convert seconds to milliseconds
@@ -7,5 +11,20 @@ export const convertTime = (timestamp, timeZone) => {
     return format(zonedDate, "MMMM d, yyyy h:mm a");
 }
 
-// Use "America/Denver" for Mountain Standard Time
-// convertTime(1684786992, 'America/Denver'); 
+export const checkMoveType = (walletType, unixTime) => {
+    for (const move of times) {
+        const openTime = new Date(move.open).getTime();
+        const closeTime = new Date(move.close).getTime();
+        console.log("OPEN: ", openTime)
+        console.log("UNIX: ", unixTime)
+        console.log("CLOSE: ", closeTime)
+
+        if (unixTime >= openTime && unixTime <= closeTime) {
+            console.log("REPLACEMENT: ", move.moveName)
+            return move.moveName;
+        }
+    }
+
+    return walletType;
+};
+

@@ -17,7 +17,8 @@ const BaseUX = () => {
 
     const [tableData, setTableData] = useState([]);
 
-    const [dialogOpen, setDialogOpen] = useState(false);
+    const [allocationDialogOpen, setAllocationDialogOpen] = useState(false);
+    const [chainDialogOpen, setChainDialogOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true); 
 
     const handleWalletChange = async (event) => {
@@ -31,8 +32,12 @@ const BaseUX = () => {
         setType(event.target.value);
     };
 
-    const handleGenerateTable = () => {
-        setDialogOpen(true);
+    const handleGenerateAllocations = () => {
+        setAllocationDialogOpen(true);
+    };
+
+    const handleGenerateChainFlow = () => {
+        setChainDialogOpen(true);
     };
 
     useEffect(() => {
@@ -68,10 +73,13 @@ const BaseUX = () => {
         type,
         handleWalletChange,
         handleTransactionTypeChange,
-        handleGenerateTable,
+        handleGenerateAllocations,
+        handleGenerateChainFlow,
         tableData,
-        dialogOpen,
-        setDialogOpen,
+        allocationDialogOpen,
+        setAllocationDialogOpen,
+        chainDialogOpen,
+        setChainDialogOpen,
         isLoading
     }
 

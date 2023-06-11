@@ -4,20 +4,26 @@ import { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import { wallets } from '../../lookup/wallets';
 import MemberTable from '../memberTable/view';
+import ChainFlowDialog from '../chainBalanceTable/view';
 import WalletSelect from './walletSelect';
 import TypeSelect from './typeSelect';
+import { styleRow } from './styles';
 
 const LoadWallet = ({
     selectedWallet,
     type,
     handleWalletChange,
     handleTransactionTypeChange,
-    handleGenerateTable,
+    handleGenerateAllocations,
+    handleGenerateChainFlow,
     tableData,
-    dialogOpen,
-    setDialogOpen,
+    allocationDialogOpen,
+    setAllocationDialogOpen,
+    chainDialogOpen,
+    setChainDialogOpen,
     isLoading
 } = {}) => {
+
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
@@ -33,16 +39,17 @@ const LoadWallet = ({
         },
     }));
 
-    const StyledTableRow = styled(TableRow)(({ theme, walletType }) => ({
-        backgroundColor: walletType === 'Member' ? 'white' : '#FFF9C4',
+    const StyledTableRow = styled(TableRow)(({ theme, walletType, isRefund }) => ({
+        backgroundColor: isRefund ? '#FFA50030' : walletType === 'Member' ? 'white' : '#FFF9C4',
         '&:nth-of-type(odd)': {
-            backgroundColor: walletType === 'Member' ? theme.palette.action.hover : '#FFF9C4',
+            backgroundColor: isRefund ? '#FFA50030' : walletType === 'Member' ? theme.palette.action.hover : '#FFF9C4',
         },
         // hide last border
         '&:last-child td, &:last-child th': {
             border: 0,
         },
     }));
+
 
     if (isLoading || tableData.length > 900) {
         return <CircularProgress />;
@@ -73,11 +80,14 @@ const LoadWallet = ({
                     )}
                     <Button
                         variant="contained"
-                        onClick={handleGenerateTable}
+                        onClick={handleGenerateAllocations}
                         color="warning"
                         sx={{ marginTop: 2 }}
                     >
                         Generate Allocations
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={handleGenerateChainFlow}>
+                        Chain Cash Flow
                     </Button>
                 </Box>
             </Box>
@@ -102,8 +112,9 @@ const LoadWallet = ({
                         {tableData.length > 0 && tableData.length < 900 && tableData.map((row) => (
                             <StyledTableRow
                                 key={row.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 }, ...styleRow(row, row.walletType) }}
                                 walletType={row.walletType}
+                                refund={row.inout === 'Out' && row.walletType === 'Member'}
                             >
                                 <StyledTableCell component="th" scope="row">
                                     {row.id}
@@ -115,14 +126,15 @@ const LoadWallet = ({
                                 <StyledTableCell align="left">{row.from}</StyledTableCell>
                                 <StyledTableCell align="left">{row.to}</StyledTableCell>
                                 <StyledTableCell align="left">{row.walletType}</StyledTableCell>
-                                <StyledTableCell align="center">{row.amount}</StyledTableCell>
+                                <StyledTableCell align="center">{row.amountDisplay}</StyledTableCell>
                                 <StyledTableCell align="center">{row.currency}</StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
-            <MemberTable tableData={tableData} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
+            <MemberTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} />
+            <ChainFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
         </Box>
     );
 
