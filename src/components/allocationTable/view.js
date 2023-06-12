@@ -19,6 +19,7 @@ import { generateAllocationTableData } from "../../lib/functions/wallets";
 import { formatAmountDisplay } from "../../lib/functions/wallets";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import { StyledTableCell, StyledTableRow } from "./styles";
+import { printDocument } from "../../lib/functions/pdf";
 
 const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet }) => {
     const [sortBy, setSortBy] = useState("# of contributions");
@@ -86,7 +87,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet 
                         <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
                     </Box>
                 </Box>
-                <TableContainer component={Paper}>
+                <TableContainer component={Paper} id="myTable">
                     <Table sx={{ minWidth: 650 }} aria-label="member table">
                         {/* Render table header */}
                         <TableHead>
@@ -122,6 +123,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet 
                 </TableContainer>
             </DialogContent>
             <DialogActions>
+                <Button onClick={printDocument}>Save as PDF</Button>
                 <Button onClick={() => setDialogOpen(false)}>Close</Button>
             </DialogActions>
         </Dialog>
