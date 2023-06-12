@@ -37,19 +37,28 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet 
     const totalNetAmount = totalContributionsAmount - totalRefundsAmount;
     const totalTransactions = totalContributions + totalRefunds;
 
+    const allocationTableDataWithShare = useMemo(() => {
+        return allocationTableData.map((row) => ({
+            ...row,
+            share: row.netAmount / totalNetAmount,
+        }));
+    }, [allocationTableData, totalNetAmount]);
+
     const handleSortByChange = (value) => {
         setSortBy(value);
     };
 
     const sortedAllocationTableData = useMemo(() => {
-        let sortedData = [...allocationTableData];
+        let sortedData = [...allocationTableDataWithShare];
         if (sortBy === "# of contributions") {
             sortedData.sort((a, b) => b.contributions - a.contributions);
         } else if (sortBy === "Amount") {
             sortedData.sort((a, b) => b.contributionsAmount - a.contributionsAmount);
+        } else if (sortBy === "Share") {
+            sortedData.sort((a, b) => b.share - a.share);
         }
         return sortedData;
-    }, [allocationTableData, sortBy]);
+    }, [allocationTableDataWithShare, sortBy]);
 
     return (
         <Dialog
@@ -64,15 +73,19 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet 
         >
             <DialogTitle>Member Wallet Transactions</DialogTitle>
             <DialogContent style={{ overflowX: 'auto' }}>
-                <Box mb={2}>
-                    <div>Total Contributions Amount: {formatAmountDisplay(totalContributionsAmount)}</div>
-                    <div>Total Contributions: {totalContributions}</div>
-                    <div>Total Refunds Amount: {formatAmountDisplay(totalRefundsAmount)}</div>
-                    <div>Total Refunds: {totalRefunds}</div>
-                    <div>Total Net Amount: {formatAmountDisplay(totalNetAmount)}</div>
-                    <div>Total Transactions: {totalTransactions}</div>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <Box mb={2}>
+                        <div>Total Contributions Amount: {formatAmountDisplay(totalContributionsAmount)}</div>
+                        <div>Total Contributions: {totalContributions}</div>
+                        <div>Total Refunds Amount: {formatAmountDisplay(totalRefundsAmount)}</div>
+                        <div>Total Refunds: {totalRefunds}</div>
+                        <div>Total Net Amount: {formatAmountDisplay(totalNetAmount)}</div>
+                        <div>Total Transactions: {totalTransactions}</div>
+                    </Box>
+                    <Box ml="auto">
+                        <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
+                    </Box>
                 </Box>
-                <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label="member table">
                         {/* Render table header */}
@@ -85,6 +98,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet 
                                 <StyledTableCell align="center"># of Refunds</StyledTableCell>
                                 <StyledTableCell align="center">Net Amount ($)</StyledTableCell>
                                 <StyledTableCell align="center">Net Transactions</StyledTableCell>
+                                <StyledTableCell align="center">Share (%)</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         {/* Render table body */}
@@ -100,6 +114,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet 
                                     <StyledTableCell align="center">{row.refunds}</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.netAmount)}</StyledTableCell>
                                     <StyledTableCell align="center">{row.contributions + row.refunds}</StyledTableCell>
+                                    <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
