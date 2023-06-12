@@ -1,13 +1,13 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, CircularProgress } from '@mui/material';
+import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, Button, CircularProgress } from '@mui/material';
 import { Box, Typography } from '@mui/material';
-import { tableCellClasses } from '@mui/material/TableCell';
-import { styled } from '@mui/material/styles';
+import '@fontsource/plus-jakarta-sans';
+
 import { wallets } from '../../lookup/wallets';
 import AllocationTable from '../allocationTable/view';
 import ChainFlowDialog from '../chainBalanceTable/view';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect } from '../../components/selectInputs';
-
-import { styleRow } from './styles';
+import { StyledTableCell, StyledTableRow } from './styles';
+import { styleRow, loadWalletStyles } from './styles';
 
 const LoadWallet = ({
     tableData,
@@ -39,49 +39,22 @@ const LoadWallet = ({
 
     console.log("SELECTED WALLET: ", selectedWallet)
 
-
-    const StyledTableCell = styled(TableCell)(({ theme }) => ({
-        [`&.${tableCellClasses.head}`]: {
-            backgroundColor: theme.palette.common.black,
-            color: theme.palette.common.white,
-            fontWeight: 'bold',
-            fontSize: 16,
-            fontFamily: 'Roboto, sans-serif'
-        },
-        [`&.${tableCellClasses.body}`]: {
-            fontSize: 14,
-            fontFamily: 'Roboto, sans-serif'
-        },
-    }));
-
-    const StyledTableRow = styled(TableRow)(({ theme, walletType, isRefund }) => ({
-        backgroundColor: isRefund ? '#FFA50030' : walletType === 'Member' ? 'white' : '#FFF9C4',
-        '&:nth-of-type(odd)': {
-            backgroundColor: isRefund ? '#FFA50030' : walletType === 'Member' ? theme.palette.action.hover : '#FFF9C4',
-        },
-        // hide last border
-        '&:last-child td, &:last-child th': {
-            border: 0,
-        },
-    }));
-
-
     if (isLoading || tableData.length > 900) {
         return <CircularProgress />;
     }
 
     return (
-        <Box sx={{ bgcolor: '#F3E5F5', pt: 50, p: 5, pb: 100 }}>
+        <Box sx={loadWalletStyles}>
             {selectedWallet.address && (
                 <Typography variant="h3" align="left" gutterBottom>
-                    Wallet Lookup {' | '}  <span style={{ fontSize: '35px', color: '#4B0082' }}>{selectedWallet.name}</span> {' | '}
-                    <span style={{ fontSize: '30px', color: '#FF0000' }}>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '45px', fontWeight: 'bold', color: 'white' }}>Wallet Lookup </span>  <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '35px', color: '#C99AF7' }}>{' | '}{selectedWallet.name}{' | '}</span>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '25px', color: '#4498FF' }}>
                         {selectedWallet.address.substring(0, 4)}
                     </span>
-                    <span style={{ fontSize: '30px', color: '#4B0082' }}>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: 'white' }}>
                         {selectedWallet.address.substring(4, selectedWallet.address.length - 4)}
                     </span>
-                    <span style={{ fontSize: '30px', color: '#FF0000' }}>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: '#4498FF' }}>
                         {selectedWallet.address.substring(selectedWallet.address.length - 4)}
                     </span>
                     {'  |'}
@@ -140,8 +113,10 @@ const LoadWallet = ({
                 </Box>
                 </Box>
             </Box>
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableContainer component={Paper} sx={{ background: 'transparent', backdropFilter: 'blur(5px)' }}>
+
+
+                <Table sx={{ minWidth: 650, backgroundColor: 'transparent' }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>#</StyledTableCell>
