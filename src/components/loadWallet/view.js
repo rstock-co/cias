@@ -48,7 +48,10 @@ const LoadWallet = ({
             {selectedWallet.address && (
                 <Typography variant="h3" align="left" gutterBottom>
                     <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '45px', fontWeight: 'bold', color: 'white' }}>Wallet Lookup </span>  <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '35px', color: '#C99AF7' }}>{' | '}{selectedWallet.name}{' | '}</span>
-                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '25px', color: '#4498FF' }}>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: 'white' }}>
+                        {selectedWallet.address}
+                    </span>
+                    {/* <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '25px', color: '#4498FF' }}>
                         {selectedWallet.address.substring(0, 4)}
                     </span>
                     <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: 'white' }}>
@@ -57,7 +60,7 @@ const LoadWallet = ({
                     <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: '#4498FF' }}>
                         {selectedWallet.address.substring(selectedWallet.address.length - 4)}
                     </span>
-                    {'  |'}
+                    {'  |'} */}
                 </Typography>
             )}
 
