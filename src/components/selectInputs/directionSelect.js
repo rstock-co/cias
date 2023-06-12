@@ -1,4 +1,5 @@
 import { TextField, MenuItem } from '@mui/material';
+import '@fontsource/inter';
 
 export const DirectionSelect = ({ directions, selectedDirection, handleChange }) => {
     return (
@@ -11,11 +12,11 @@ export const DirectionSelect = ({ directions, selectedDirection, handleChange })
             size="small"
             sx={{ minWidth: 120, backgroundColor: 'white', borderColor: '#4B0082' }}
         >
-            <MenuItem value="">
+            <MenuItem value="" sx={{ fontFamily: 'Inter, sans-serif' }}>
                 <em>None</em>
             </MenuItem>
             {directions.map((direction) => (
-                <MenuItem key={direction} value={direction}>
+                <MenuItem key={direction} value={direction} sx={{ fontFamily: 'Inter, sans-serif' }}>
                     {direction}
                 </MenuItem>
             ))}

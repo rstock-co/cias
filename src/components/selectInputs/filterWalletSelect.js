@@ -1,4 +1,5 @@
 import { Autocomplete, TextField } from '@mui/material';
+import '@fontsource/inter';
 
 export const FilterWalletSelect = ({ wallets, filteredWallet, selectedWallet, handleChange }) => {
     return (
@@ -13,7 +14,7 @@ export const FilterWalletSelect = ({ wallets, filteredWallet, selectedWallet, ha
                     label="Wallet"
                     variant="outlined"
                     size="small"
-                    sx={{ minWidth: 120, backgroundColor: 'white' }}
+                    sx={{ minWidth: 120, backgroundColor: 'white', fontFamily: 'Inter, sans-serif' }}
                 />
             )}
         />

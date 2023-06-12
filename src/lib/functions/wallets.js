@@ -76,10 +76,13 @@ export const formatAmountDisplay = (value) => {
 };
 
 const formatTxnLink = (hash) => (
-    <a href={`https://arbiscan.io/tx/${hash}`} target="_blank" rel="noopener noreferrer">
+    <a href={`https://arbiscan.io/tx/${hash}`} target="_blank" rel="noopener noreferrer" className="txnLink">
         Txn
     </a>
 );
+
+
+
 
 export const getWalletType = (txn, selectedWalletAddress) => {
     if (txn.from.toLowerCase() === selectedWalletAddress.toLowerCase()) { 

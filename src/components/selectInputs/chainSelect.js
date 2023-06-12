@@ -7,13 +7,12 @@ export const ChainSelect = ({ chains, selectedChain, handleChange }) => {
         <TextField
             select
             label="Chain"
-            id="ChainSelect"
             value={selectedChain}
             onChange={handleChange}
             variant="outlined"
             size="small"
-            inputProps={sx = {{ fontFamily: 'Inter, sans-serif'
-}} }
+            sx={{ minWidth: 120, backgroundColor: 'white' }}
+
         >
             <MenuItem value="" sx={{ fontFamily: 'Inter, sans-serif' }}>
                 <em>None</em>

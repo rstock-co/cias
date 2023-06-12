@@ -47,7 +47,8 @@ const LoadWallet = ({
         <Box sx={loadWalletStyles}>
             {selectedWallet.address && (
                 <Typography variant="h3" align="left" gutterBottom>
-                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '45px', fontWeight: 'bold', color: 'white' }}>Wallet Lookup </span>  <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '35px', color: '#C99AF7' }}>{' | '}{selectedWallet.name}{' | '}</span>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '40px', fontWeight: 'bold', color: 'white', letterSpacing: '2.5px' }}>WALLET LOOKUP </span>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '35px', color: '#67C3FF' }}>{' | '}{selectedWallet.name}{' | '}</span>
                     <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: 'white' }}>
                         {selectedWallet.address}
                     </span>
@@ -106,11 +107,19 @@ const LoadWallet = ({
                         variant="contained"
                         onClick={handleGenerateAllocations}
                         color="warning"
-                        sx={{ marginTop: 2 }}
+
+                            sx={{
+                                marginTop: 2, fontFamily: 'Plus Jakarta Sans, sans-serif'
+                            }}
                     >
                         Generate Allocations
                     </Button>
-                    <Button variant="contained" color="primary" onClick={handleGenerateChainFlow}>
+                        <Button
+                            variant="contained"
+                            color="warning"
+                            onClick={handleGenerateChainFlow}
+                            sx={{ marginTop: 2, fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                        >
                         Chain Cash Flow
                     </Button>
                 </Box>

@@ -47,3 +47,12 @@ body {
   min-height: 100% !important;
   max-width: 100% !important;
 }
+
+.MuiInputLabel-root {
+  font-size: 13px !important;
+}
+
+.txnLink {
+  color: #C99AF7;
+  font-weight: 'bold';
+}

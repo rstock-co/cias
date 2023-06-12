@@ -2,6 +2,7 @@ import { tableCellClasses } from '@mui/material/TableCell';
 import { styled } from '@mui/material/styles';
 import { TableCell, TableRow } from '@mui/material';
 import '@fontsource/plus-jakarta-sans';
+import '@fontsource/inter';
 
 const styles = {
     refundRow: {
@@ -34,15 +35,25 @@ export const styleRow = (row) => {
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: '#070D3A',
+        background: 'none', // clear any previous backgrounds
+        backgroundImage: 'linear-gradient(to bottom, #0A0216, #1D0F35)',
+        // backgroundColor: '#3447DD',
+        borderColor: '#999999',
         color: theme.palette.common.white,
         fontWeight: 'bold',
         fontSize: 16,
+        letterSpacing: '0.5px', 
         fontFamily: 'Plus Jakarta Sans, sans-serif'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
-        fontFamily: 'Plus Jakarta Sans, sans-serif'
+        color: theme.palette.common.white,
+        // background: 'none', // clear any previous backgrounds
+        backgroundImage: 'linear-gradient(to bottom, #0d0d0d, #000000)',
+        // backgroundColor: '#1d1d1d',
+        borderColor: '#5b5b5b',
+        fontFamily: 'Inter, sans-serif'
+        // fontFamily: 'Plus Jakarta Sans, sans-serif'
     },
 }));
 
@@ -58,7 +69,7 @@ export const StyledTableRow = styled(TableRow)(({ theme, walletType, isRefund })
 }));
 
 export const loadWalletStyles = {
-    background: 'radial-gradient(circle at top center, #3A1768 50vh, #100725 100vh)',
+    background: 'radial-gradient(circle at top center, #0D0F4D 50vh, #070310 100vh)',
     pt: 50,
     p: 5,
     pb: 100,

@@ -1,4 +1,5 @@
 import { Autocomplete, TextField } from '@mui/material';
+import '@fontsource/inter';
 
 export const SortAllocationSelect = ({ sortBy, handleSortByChange }) => {
     const sortOptions = ["# of contributions", "Amount"];
@@ -16,7 +17,7 @@ export const SortAllocationSelect = ({ sortBy, handleSortByChange }) => {
                     label="Sort By"
                     variant="outlined"
                     size="small"
-                    sx={{ minWidth: 120, backgroundColor: 'white' }}
+                    sx={{ minWidth: 120, backgroundColor: 'white', fontFamily: 'Inter, sans-serif' }}
                 />
             )}
         />
