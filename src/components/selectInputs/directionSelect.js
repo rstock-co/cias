@@ -18,7 +18,7 @@ export const DirectionSelect = ({ directions, selectedDirection, handleChange })
             }}
         >
             <MenuItem value="" sx={{ fontFamily: 'Inter, sans-serif' }}>
-                <em>None</em>
+                <em>All</em>
             </MenuItem>
             {directions.map((direction) => (
                 <MenuItem key={direction} value={direction} sx={{ fontFamily: 'Inter, sans-serif' }}>

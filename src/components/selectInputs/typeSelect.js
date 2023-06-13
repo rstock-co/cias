@@ -19,7 +19,7 @@ export const TypeSelect = ({ types, selectedType, handleChange }) => {
             }}
         >
             <MenuItem value="" sx={{ fontFamily: 'Inter, sans-serif' }}>
-                <em>None</em>
+                <em>All</em>
             </MenuItem>
             {types.map(type => (
                 <MenuItem key={type} value={type} sx={{ fontFamily: 'Inter, sans-serif' }}>{type}</MenuItem>

@@ -18,7 +18,7 @@ export const ChainSelect = ({ chains, selectedChain, handleChange }) => {
             }}
         >
             <MenuItem value="" sx={{ fontFamily: 'Inter, sans-serif' }}>
-                <em>None</em>
+                <em>All</em>
             </MenuItem>
             {chains.map((chain) => (
                 <MenuItem key={chain} value={chain} sx={{ fontFamily: 'Inter, sans-serif' }}>
