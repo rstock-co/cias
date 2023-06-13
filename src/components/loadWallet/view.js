@@ -1,4 +1,4 @@
-import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, Button, CircularProgress } from '@mui/material';
+import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
 import { Box, Typography } from '@mui/material';
 import '@fontsource/plus-jakarta-sans';
 
@@ -7,7 +7,7 @@ import AllocationTable from '../allocationTable/view';
 import ChainFlowDialog from '../chainBalanceTable/view';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect } from '../../components/selectInputs';
 import { StyledTableCell, StyledTableRow } from './styles';
-import { styleRow, loadWalletStyles } from './styles';
+import { loadWalletStyles, ColorButton } from './styles'; // styleRow
 
 const LoadWallet = ({
     tableData,
@@ -103,25 +103,22 @@ const LoadWallet = ({
 
                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', gap: '15px' }}>
 
-                    <Button
+                        <ColorButton
                         variant="contained"
-                        onClick={handleGenerateAllocations}
-                        color="warning"
-
+                            onClick={handleGenerateAllocations}
                             sx={{
                                 marginTop: 2, fontFamily: 'Plus Jakarta Sans, sans-serif'
                             }}
                     >
                         Generate Allocations
-                    </Button>
-                        <Button
+                        </ColorButton>
+                        <ColorButton
                             variant="contained"
-                            color="warning"
                             onClick={handleGenerateChainFlow}
                             sx={{ marginTop: 2, fontFamily: 'Plus Jakarta Sans, sans-serif' }}
                         >
                         Chain Cash Flow
-                    </Button>
+                        </ColorButton>
                 </Box>
                 </Box>
             </Box>
@@ -148,22 +145,21 @@ const LoadWallet = ({
                         {tableData.length > 0 && tableData.length < 900 && tableData.map((row) => (
                             <StyledTableRow
                                 key={row.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 }, ...styleRow(row, row.walletType) }}
                                 walletType={row.walletType}
-                                refund={row.inout === 'Out' && row.walletType === 'Member'}
+                                isRefund={row.inout === 'Out' && row.walletType === 'Member'}
                             >
-                                <StyledTableCell component="th" scope="row">
+                                <StyledTableCell component="th" scope="row" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>
                                     {row.id}
                                 </StyledTableCell>
-                                <StyledTableCell align="center">{row.chain}</StyledTableCell>
-                                <StyledTableCell align="center">{row.inout}</StyledTableCell>
-                                <StyledTableCell align="left">{row.dateTime}</StyledTableCell>
-                                <StyledTableCell align="left">{row.txn}</StyledTableCell>
-                                <StyledTableCell align="left">{row.from}</StyledTableCell>
-                                <StyledTableCell align="left">{row.to}</StyledTableCell>
-                                <StyledTableCell align="left">{row.walletType}</StyledTableCell>
-                                <StyledTableCell align="center">{row.amountDisplay}</StyledTableCell>
-                                <StyledTableCell align="center">{row.currency}</StyledTableCell>
+                                <StyledTableCell align="center" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.chain}</StyledTableCell>
+                                <StyledTableCell align="center" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.inout}</StyledTableCell>
+                                <StyledTableCell align="left" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'} >{row.dateTime}</StyledTableCell>
+                                <StyledTableCell align="left" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.txn}</StyledTableCell>
+                                <StyledTableCell align="left" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.from}</StyledTableCell>
+                                <StyledTableCell align="left" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.to}</StyledTableCell>
+                                <StyledTableCell align="left" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.walletType}</StyledTableCell>
+                                <StyledTableCell align="center" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.amountDisplay}</StyledTableCell>
+                                <StyledTableCell align="center" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.currency}</StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>

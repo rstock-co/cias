@@ -1,16 +1,21 @@
-import { TextField, MenuItem } from '@mui/material';
+import { MenuItem } from '@mui/material';
+import { StyledTextField } from './styles';
 import '@fontsource/inter';
 
 export const DirectionSelect = ({ directions, selectedDirection, handleChange }) => {
     return (
-        <TextField
+        <StyledTextField
             select
             label="Direction"
             value={selectedDirection}
             onChange={handleChange}
             variant="outlined"
             size="small"
-            sx={{ minWidth: 120, backgroundColor: 'white', borderColor: '#4B0082' }}
+            InputProps={{
+                classes: {
+                    input: 'custom-input',
+                },
+            }}
         >
             <MenuItem value="" sx={{ fontFamily: 'Inter, sans-serif' }}>
                 <em>None</em>
@@ -20,6 +25,6 @@ export const DirectionSelect = ({ directions, selectedDirection, handleChange })
                     {direction}
                 </MenuItem>
             ))}
-        </TextField>
+        </StyledTextField>
     );
 }

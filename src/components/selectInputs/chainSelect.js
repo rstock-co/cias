@@ -1,18 +1,21 @@
 import '@fontsource/inter';
-
-import { TextField, MenuItem } from '@mui/material';
+import { MenuItem } from '@mui/material';
+import { StyledTextField } from './styles';
 
 export const ChainSelect = ({ chains, selectedChain, handleChange }) => {
     return (
-        <TextField
+        <StyledTextField
             select
             label="Chain"
             value={selectedChain}
             onChange={handleChange}
             variant="outlined"
             size="small"
-            sx={{ minWidth: 120, backgroundColor: 'white' }}
-
+            InputProps={{
+                classes: {
+                    input: 'custom-input',
+                },
+            }}
         >
             <MenuItem value="" sx={{ fontFamily: 'Inter, sans-serif' }}>
                 <em>None</em>
@@ -22,6 +25,6 @@ export const ChainSelect = ({ chains, selectedChain, handleChange }) => {
                     {chain}
                 </MenuItem>
             ))}
-        </TextField>
+        </StyledTextField>
     );
-}
+};

@@ -1,16 +1,21 @@
-import { TextField, MenuItem } from '@mui/material';
+import { MenuItem } from '@mui/material';
+import { StyledTextField } from './styles';
 import '@fontsource/inter';
 
 export const TypeSelect = ({ types, selectedType, handleChange }) => {
     return (
-        <TextField
+        <StyledTextField
             select
             label="Type"
             value={selectedType}
             onChange={handleChange}
             variant="outlined"
             size="small"
-            sx={{ minWidth: 120, backgroundColor: 'white' }}
+            InputProps={{
+                classes: {
+                    input: 'custom-input',
+                },
+            }}
         >
             <MenuItem value="" sx={{ fontFamily: 'Inter, sans-serif' }}>
                 <em>None</em>
@@ -18,7 +23,7 @@ export const TypeSelect = ({ types, selectedType, handleChange }) => {
             {types.map(type => (
                 <MenuItem key={type} value={type} sx={{ fontFamily: 'Inter, sans-serif' }}>{type}</MenuItem>
             ))}
-        </TextField>
+        </StyledTextField>
     );
 }
 
