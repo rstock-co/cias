@@ -13,7 +13,7 @@ export const ChainSelect = ({ chains, selectedChain, handleChange }) => {
             size="small"
             InputProps={{
                 classes: {
-                    input: 'custom-input',
+                    input: selectedChain !== "" ? 'custom-input custom-input-value' : 'custom-input',
                 },
             }}
         >

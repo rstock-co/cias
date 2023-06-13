@@ -77,6 +77,9 @@ export const ColorButton = styled(Button)(({ theme }) => ({
     background: '#04373A',
     color: '#08E2EA',
     border: '1px solid #08E2EA',
+    transform: 'translateY(-2px)',
+    boxShadow: '3.5px 3.5px 0 #095F71',
+    transition: 'box-shadow 0.3s ease-in-out',
     // background: `linear-gradient(to right, #1D5AEF, #11BCE0)`,
     '&:hover': {
         // background: `linear-gradient(to right, #1D5AEF, #11BCE0)`,

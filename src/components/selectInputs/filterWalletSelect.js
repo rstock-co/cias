@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
             },
             '& input': {
                 padding: '10px 14px',
-                background: 'transparent', // linear-gradient(to right, #011D24, #02343C)
                 color: '#6DFAFE',
+                border: 'none', // Hide the inner border
             },
             '&.Mui-focused fieldset': {
                 borderColor: '#096B78',
@@ -35,6 +35,36 @@ const useStyles = makeStyles((theme) => ({
         '& .MuiAutocomplete-root': {
             height: '50px', // Adjust the height as desired
         },
+        '& .MuiInputLabel-root': {
+            fontSize: '13px',
+            color: '#e6c347',
+            fontWeight: 'bold',
+            '&.Mui-focused': {
+                fontSize: '13px', // Adjust the font size when focused
+            },
+            '&.MuiInputLabel-shrink': {
+                fontSize: '20px', // Adjust the font size when value is present
+                top: '-15px',
+                left: '-10px',
+            },
+        },
+    },
+    customInput: {
+        '& fieldset': {
+            borderColor: "#096B78",
+        },
+        '& input': {
+            // background: 'linear-gradient(to right, #011D24, #02343C)',
+        }
+    },
+    customInputValue: {
+        '& fieldset': {
+            borderColor: "#f2db88",
+            boxShadow: '0 0 3px 3px #b09946', // Add the glow when value is present
+        },
+        '& input': {
+            // background: 'linear-gradient(to right, #011D24, #02343C)',
+        }
     },
 }));
 
@@ -64,24 +94,19 @@ export const FilterWalletSelect = ({
                         size="small"
                         InputProps={{
                             ...params.InputProps,
-                            classes: {
-                                input: 'custom-input',
-                            },
                             style: {
                                 lineHeight: 'normal', // Maintain consistent vertical alignment
                             },
                         }}
                         InputLabelProps={{
                             shrink: true,
-                            classes: {
-                                shrink: 'custom-shrink',
-                            },
                         }}
-                        className={classes.root}
+                        className={`${classes.root} ${filteredWallet ? classes.customInputValue : classes.customInput}`}
                     />
                 )}
                 sx={{
                     width: '475px',
+
                     height: '45px', // Adjust the height as desired 
                 }}
             />

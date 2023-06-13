@@ -13,7 +13,7 @@ export const DirectionSelect = ({ directions, selectedDirection, handleChange })
             size="small"
             InputProps={{
                 classes: {
-                    input: 'custom-input',
+                    input: selectedDirection !== "" ? 'custom-input custom-input-value' : 'custom-input',
                 },
             }}
         >

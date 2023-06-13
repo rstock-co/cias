@@ -11,9 +11,10 @@ export const TypeSelect = ({ types, selectedType, handleChange }) => {
             onChange={handleChange}
             variant="outlined"
             size="small"
+            sx={{ width: '180px' }}
             InputProps={{
                 classes: {
-                    input: 'custom-input',
+                    input: selectedType !== "" ? 'custom-input custom-input-value' : 'custom-input',
                 },
             }}
         >
