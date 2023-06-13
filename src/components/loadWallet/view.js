@@ -78,12 +78,6 @@ const LoadWallet = ({
                         selectedType={type}
                         handleChange={handleTypeChange}
                     />
-                    <FilterWalletSelect
-                        wallets={filterWallets} // list of all possible wallets (this must be generated)
-                        filteredWallet={filterWallet}
-                        selectedWallet={selectedWallet.address}
-                        handleChange={handleFilterWalletChange}
-                    />
                     <ChainSelect
                         chains={['arb', 'eth', 'bsc']}
                         selectedChain={chain}
@@ -93,6 +87,12 @@ const LoadWallet = ({
                         directions={['In', 'Out']}
                         selectedDirection={direction}
                         handleChange={handleDirectionChange}
+                    />
+                    <FilterWalletSelect
+                        wallets={filterWallets} // list of all possible wallets (this must be generated)
+                        filteredWallet={filterWallet}
+                        selectedWallet={selectedWallet.address}
+                        handleChange={handleFilterWalletChange}
                     />
                 </Box>
 
