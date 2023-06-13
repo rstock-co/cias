@@ -85,6 +85,14 @@ export const ColorButton = styled(Button)(({ theme }) => ({
     },
 }));
 
+export const textGradientStyle = {
+    background: '-webkit-linear-gradient(left, #11BCE0, #418CFE)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    fontFamily: 'Plus Jakarta Sans, sans-serif',
+    fontSize: '35px',
+    fontWeight: 'bold'
+};
 
 
 

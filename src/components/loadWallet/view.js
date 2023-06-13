@@ -6,7 +6,7 @@ import { wallets } from '../../lookup/wallets';
 import AllocationTable from '../allocationTable/view';
 import ChainFlowDialog from '../chainBalanceTable/view';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect } from '../../components/selectInputs';
-import { StyledTableCell, StyledTableRow } from './styles';
+import { StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
 import { loadWalletStyles, ColorButton } from './styles'; // styleRow
 
 const LoadWallet = ({
@@ -48,7 +48,8 @@ const LoadWallet = ({
             {selectedWallet.address && (
                 <Typography variant="h3" align="left" gutterBottom>
                     <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '40px', fontWeight: 'bold', color: 'white', letterSpacing: '2.5px' }}>WALLET LOOKUP </span>
-                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '35px', color: '#67C3FF' }}>{' | '}{selectedWallet.name}{' | '}</span>
+                    <span style={textGradientStyle} >{' | '}{selectedWallet.name}{' | '}</span>
+                    {/* style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '35px', color: '#67C3FF' }} */}
                     <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: 'white' }}>
                         {selectedWallet.address}
                     </span>
