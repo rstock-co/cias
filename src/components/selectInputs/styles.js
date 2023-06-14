@@ -1,6 +1,6 @@
-import { TextField, Select, createTheme } from '@mui/material';
+import { OutlinedInput, InputLabel, Select, TextField, createTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { makeStyles } from '@mui/styles';
+import { makeStyles, withStyles } from '@mui/styles';
 
 
 // SINGLE SELECTS
@@ -45,79 +45,50 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
     },
 }));
 
-// MULTI SELECTS (main wallet select box)
+// MULTI SELECT (main wallet select box)
 
-export const StyledSelect = styled(Select)(({ theme }) => ({
-    width: "450px",
-    height: "50px",
-    backgroundColor: "#011D24",
-    borderRadius: "10px",
-    padding: "15px 14px",
+export const CustomInputLabel = withStyles({
+    root: {
+        color: '#e6c347', // Set the label color
+        fontWeight: 'bold',
+        fontFamily: 'Inter, sans-serif',
+        fontSize: '17px',
+        letterSpacing: '0.75px',
+        '&.Mui-focused': {
+            color: '#e6c347',
+            fontWeight: 'bold',
+        },
+    },
+})(InputLabel);
+
+export const CustomOutlinedInput = withStyles({
+    root: {
+        color: '#6DFAFE',
+        height: '50px',
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#096B78', // Set the border color
+        },
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#096B78', // Keep the border color on hover
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#096B78', // Keep the border color when focused
+        },
+    },
+})(OutlinedInput);
+
+export const CustomSelect = withStyles({
+    root: {
+        height: '50px',
+        '& .MuiSelect-icon': {
+            color: '#6DFAFE', // Set the select dropdown arrow color
+        },
+    },
     "& .MuiSelect-select": {
         backgroundColor: "#011D24",
         color: "#6DFAFE",
     },
-    "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: "#096B78",
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-        borderColor: "#096B78",
-    },
-    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#096B78 !important',
-    },
-    "& .MuiSelect-icon": {
-        color: "#6DFAFE",
-    },
-    "& .MuiMenuItem-root": {
-        "& .MuiTypography-root": {
-            color: "#000",
-        },
-    },
-    "& .MuiPopover-paper": {
-        backgroundColor: "#02343C",
-    },
-    "& .MuiInputBase-input": {
-        height: "50px",
-        padding: '0 14px',
-        display: 'flex',
-        alignItems: 'center',
-    },
-    "& .MuiCheckbox-root": {
-        color: '#000',
-        '&:hover': {
-            backgroundColor: 'transparent',
-        },
-    },
-    '& .MuiCheckbox-root.Mui-checked': {
-        color: '#000',
-    },
-    '& .MuiCheckbox-colorSecondary.Mui-checked': {
-        color: '#000',
-    },
-    '& .MuiCheckbox-colorSecondary.Mui-checked:hover': {
-        color: '#000',
-    },
-    '& .MuiCheckbox-colorSecondary.Mui-checked .MuiSvgIcon-root': {
-        color: '#000',
-    },
-    '& .MuiIconButton-colorSecondary:hover': {
-        backgroundColor: 'transparent',
-    },
-    "& .PrivateSwitchBase-input": {
-        color: '#000',
-        '&:hover': {
-            backgroundColor: 'transparent',
-        },
-    },
-    "& .PrivateSwitchBase-input.Mui-checked": {
-        color: '#000',
-    },
-    "& .PrivateSwitchBase-input.Mui-checked:hover": {
-        backgroundColor: 'transparent',
-    },
-}));
-
+})(Select);
 
 
 
