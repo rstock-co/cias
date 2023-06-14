@@ -1,11 +1,57 @@
 # Crypto Wallet Manager
 
 # Links
-[Arbiscan API docs](https://docs.arbiscan.io/)  
-[BSC Scan API docs](https://docs.bscscan.com/)
-[Etherscan API docs](https://docs.etherscan.io/)
+[Arbiscan API docs](https://docs.arbiscan.io/)  |  [BSC Scan API docs](https://docs.bscscan.com/)  |  [Etherscan API docs](https://docs.etherscan.io/)
+
+# Features
+- This is a single page app with all data management currently done with React's local state.  Redux is available but unused currently.  There's no backend.
+- You can select as many wallets as you wish for generating allocation tables, via the multi-select box on the far left hand side.  
+    - When a wallet is `added`, the api will fetch txns and append to the existing set of txns.
+    - When wallets are `removed`, the txns are removed from the existing set of txns. 
+- Downloaded transactions for each wallet currently consist of `ERC 20 transfers` for 4 tokens:
+    1. arb(usdc)
+    2. eth(usdc)
+    3. eth(usdt)
+    4. bsc(busd)
+- There are 4 filters for the transaction set:
+    1. Type ( member / non-member) - all non-member wallets are listed to filter by
+    2. Chain (arb / eth / bsc)
+    3. Direction (in / out)
+- `Allocation table` is auto generated and can be saved as a PDF via a button click
+- `Chain cash flow table` summarizes the total amount of $ and txns that went in/out of the currently selected wallets, serving as a completeness check
+
+# Development: Phase 1
+
+## Main Page
+
+#### Next
+- make the main wallet select a multi-select with chips, and the select box gets wider depending on how many chips (chip width x #chips) + 250px.   The title should display all wallets in a vertical stack.  
+
+#### Future
+- Make a small copy icon beside each wallet address, enable to copy and paste to clipboard
+- Get current balances for each of the 3 chains and display in top right
+- need to get all of the investment move wallet addresses and their contribution windows (from Discord / JP's help), so can generate allocations for them
+- Add 'sort by' select box beside filters
+- "Txn" hyperlink needs to conditionally render depending on chain (currently only works for arb)
+- add a `generate distribution` button - 3rd button on main screen - opens a dialog box where you can generate a payout.  Should have an input box for fee%
+make the main wallet select a multi-select with chips, and the select box gets wider depending on how many chips (chip width x #chips) + 250px.   The title should display all wallets in a vertical stack.  The api will be a Promise.all that will not return until all data from all wallets has been aggregated from all chains.
+
+## Allocation Table
+- for the vc investment moves (games for a living, etc) --> need a dropdown select of these moves, and a button that can generate an allocation for that move
+- Make each wallet address clickable and opens another dialog table with a list of their transactions
+- Add another column that has which chains they contributed with and their count in brackets 
+- Make PDF size smaller ask ChatGPT how
+- Make another text block above the table, maybe in middle, that displays all active filters
+
+## Chain Cash Flow Table
+- add current balances and subtract that from net balance, so net should always be zero.
+- conditionally render a row red if net isn't equal to 0. Don't make this active if filters are applied that would result in non-zero result.
+
+# Development: Phase 2
+- `member portfolio summary` --> only for investment wallet:  track contributions by time window and create dialog pop up when you click a wallet address that summarizes all contributions to different investments with a total
 
 
+---------
 
 # Getting Started with Create React App
 
