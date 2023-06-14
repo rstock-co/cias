@@ -81,26 +81,35 @@ const formatTxnLink = (hash) => (
     </a>
 );
 
+export const getWalletType = (txn, selectedWalletAddresses) => {
+    const fromAddress = txn.from.toLowerCase();
+    const toAddress = txn.to.toLowerCase();
 
+    // console.log("Selected Wallet Addresses: ", selectedWalletAddresses);
+    // console.log("From Address: ", fromAddress);
+    // console.log("To Address: ", toAddress);
 
+    const selectedWalletsLowercase = selectedWalletAddresses.map(address => address.toLowerCase());
 
-export const getWalletType = (txn, selectedWalletAddress) => {
-    if (txn.from.toLowerCase() === selectedWalletAddress.toLowerCase()) { 
+    if (selectedWalletsLowercase.includes(fromAddress)) {
         return getNameByAddress(txn.to);
-    } else if (txn.to.toLowerCase() === selectedWalletAddress.toLowerCase()) { 
+    } else if (selectedWalletsLowercase.includes(toAddress)) {
         return getNameByAddress(txn.from);
     }
+
     return 'Unknown';
-}
+};
 
 
-export const generateTableData = (txn, id, selectedWallet) => {
+
+
+export const generateTableData = (txn, id, selectedWallets) => {
     const amount = formatAmount(txn.chain, txn.value);
-    const walletType = getWalletType(txn, selectedWallet);
+    const walletType = getWalletType(txn, selectedWallets);
     const timestamp = parseInt(txn.timeStamp) * 1000;
 
     let type = walletType;
-    if (selectedWallet === '0xb79E768bEF0Ca0a34E53c3FE2ac26E600ACf8ccA' && txn.to === '0xf534fe3c6061d61458c3f6ca29b2d5ba7855e95d') {
+    if (txn.from === '0xb79E768bEF0Ca0a34E53c3FE2ac26E600ACf8ccA' && txn.to === '0xf534fe3c6061d61458c3f6ca29b2d5ba7855e95d') {
         type = checkMoveType(walletType, timestamp);
     }
 
@@ -113,7 +122,7 @@ export const generateTableData = (txn, id, selectedWallet) => {
         from: txn.from,
         to: txn.to,
         walletType: type,
-        inout: txn.from.toLowerCase() === selectedWallet.toLowerCase() ? 'Out' : 'In',
+        inout: selectedWallets.includes(txn.from.toLowerCase()) ? 'Out' : 'In',
         amount,
         amountDisplay: formatAmountDisplay(amount),
         currency: txn.tokenSymbol,

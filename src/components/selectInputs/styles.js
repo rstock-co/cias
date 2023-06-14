@@ -1,6 +1,9 @@
-import { TextField, createTheme } from '@mui/material';
+import { TextField, Select, createTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
+
+
+// SINGLE SELECTS
 
 export const StyledTextField = styled(TextField)(({ theme }) => ({
     minWidth: 120,
@@ -41,6 +44,58 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
         border: 'none',
     },
 }));
+
+// MULTI SELECTS (main wallet select box)
+
+export const StyledSelect = styled(Select)(({ theme }) => ({
+    width: "250px",
+    height: "50px",
+    backgroundColor: "#011D24",
+    color: "#6DFAFE",
+    border: "1px solid #096B78",
+    borderRadius: "10px",
+    padding: "10px 14px",
+    "& .MuiSelect-select": {
+        backgroundColor: "#011D24",
+        color: "#6DFAFE",
+        "&:focus": {
+            backgroundColor: "#011D24",
+        },
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: "#096B78",
+    },
+    '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#096B78',
+    },
+    "& .MuiSelect-icon": {
+        color: "#6DFAFE",
+    },
+    "& .MuiSelect-iconOutlined": {
+        color: "#6DFAFE",
+    },
+    "& .MuiMenuItem-root": {
+        "& .MuiTypography-root": {
+            color: "#6DFAFE",
+        },
+    },
+    "& .MuiPopover-paper": {
+        backgroundColor: "#02343C",
+    },
+    "& .MuiInputBase-input": {
+        height: "50px",
+        padding: '0 14px',
+    },
+    '& .MuiCheckbox-root': {
+        color: '#000',
+        '&.Mui-checked': {
+            color: '#02343C',
+        }
+    },
+}));
+
+
+
 
 // AUTO COMPLETE (FILTER WALLET SELECT)
 

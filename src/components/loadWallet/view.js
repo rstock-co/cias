@@ -12,7 +12,7 @@ import { loadWalletStyles, ColorButton } from './styles'; // styleRow
 const LoadWallet = ({
     tableData,
 
-    selectedWallet,
+    selectedWallets,
     handleSelectedWalletChange,
     type,
     filterTypes,
@@ -37,40 +37,53 @@ const LoadWallet = ({
     isLoading
 } = {}) => {
 
-    console.log("SELECTED WALLET: ", selectedWallet)
+    console.log("SELECTED WALLET: ", selectedWallets)
 
     if (isLoading || tableData.length > 900) {
         return <CircularProgress />;
     }
 
+    const propertyMap = {
+        id: { header: '#', align: 'center' },
+        chain: { header: 'Chain', align: 'center' },
+        inout: { header: 'In/Out', align: 'center' },
+        dateTime: { header: 'Date/Time', align: 'left' },
+        txn: { header: 'Txn', align: 'left' },
+        from: { header: 'From', align: 'left' },
+        to: { header: 'To', align: 'left' },
+        walletType: { header: 'Type', align: 'left' },
+        amountDisplay: { header: 'Amount ($)', align: 'center' },
+        currency: { header: 'Currency ($)', align: 'center' },
+    };
+
     return (
         <Box sx={loadWalletStyles}>
-            {selectedWallet.address && (
-                <Typography variant="h3" align="left" gutterBottom>
+            {selectedWallets.length > 0 && selectedWallets.map((wallet, index) => (
+                <Typography key={index} variant="h3" align="left" gutterBottom>
                     <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '40px', fontWeight: 'bold', color: 'white', letterSpacing: '2.5px' }}>WALLET LOOKUP </span>
-                    <span style={textGradientStyle} >{' | '}{selectedWallet.name}{' | '}</span>
+                    <span style={textGradientStyle} >{' | '}{wallet.name}{' | '}</span>
                     {/* style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '35px', color: '#67C3FF' }} */}
                     <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: 'white' }}>
-                        {selectedWallet.address}
+                        {wallet.address}
                     </span>
                     {/* <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '25px', color: '#4498FF' }}>
-                        {selectedWallet.address.substring(0, 4)}
+                        {wallet.address.substring(0, 4)}
                     </span>
                     <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: 'white' }}>
-                        {selectedWallet.address.substring(4, selectedWallet.address.length - 4)}
+                        {wallet.address.substring(4, wallet.address.length - 4)}
                     </span>
                     <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: '#4498FF' }}>
-                        {selectedWallet.address.substring(selectedWallet.address.length - 4)}
+                        {wallet.address.substring(wallet.address.length - 4)}
                     </span>
                     {'  |'} */}
                 </Typography>
-            )}
+            ))}
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <WalletSelect
                         wallets={wallets}
-                        selectedWallet={selectedWallet}
+                        selectedWallets={selectedWallets}
                         handleChange={handleSelectedWalletChange}
                     />
                     <TypeSelect
@@ -91,7 +104,7 @@ const LoadWallet = ({
                     <FilterWalletSelect
                         wallets={filterWallets} // list of all possible wallets (this must be generated)
                         filteredWallet={filterWallet}
-                        selectedWallet={selectedWallet.address}
+                        selectedWallets={selectedWallets}
                         handleChange={handleFilterWalletChange}
                     />
                 </Box>
@@ -124,55 +137,42 @@ const LoadWallet = ({
                 </Box>
             </Box>
             <TableContainer component={Paper} sx={{ background: 'transparent', backdropFilter: 'blur(5px)' }}>
-
-
                 <Table sx={{ minWidth: 650, backgroundColor: 'transparent' }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell>#</StyledTableCell>
-                            <StyledTableCell align="center">Chain</StyledTableCell>
-                            <StyledTableCell align="center">In/Out</StyledTableCell>
-                            <StyledTableCell align="left">Date/Time</StyledTableCell>
-                            <StyledTableCell align="left">Txn</StyledTableCell>
-                            <StyledTableCell align="left">From</StyledTableCell>
-                            <StyledTableCell align="left">To</StyledTableCell>
-                            <StyledTableCell align="left">Type</StyledTableCell>
-                            <StyledTableCell align="center">Amount&nbsp;($)</StyledTableCell>
-                            <StyledTableCell align="center">Currency&nbsp;($)</StyledTableCell>
+                            {Object.entries(propertyMap).map(([key, value]) => (
+                                <StyledTableCell key={key} align={value.align}>
+                                    {value.header}
+                                </StyledTableCell>
+                            ))}
                         </TableRow>
                     </TableHead>
                     <TableBody>
-
                         {tableData.length > 0 && tableData.length < 900 && tableData.map((row) => (
                             <StyledTableRow
                                 key={row.id}
                                 walletType={row.walletType}
                                 isRefund={row.inout === 'Out' && row.walletType === 'Member'}
                             >
-                                <StyledTableCell component="th" scope="row" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>
-                                    {row.id}
-                                </StyledTableCell>
-                                <StyledTableCell align="center" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.chain}</StyledTableCell>
-                                <StyledTableCell align="center" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.inout}</StyledTableCell>
-                                <StyledTableCell align="left" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'} >{row.dateTime}</StyledTableCell>
-                                <StyledTableCell align="left" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.txn}</StyledTableCell>
-                                <StyledTableCell align="left" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.from}</StyledTableCell>
-                                <StyledTableCell align="left" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.to}</StyledTableCell>
-                                <StyledTableCell align="left" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.walletType}</StyledTableCell>
-                                <StyledTableCell align="center" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.amountDisplay}</StyledTableCell>
-                                <StyledTableCell align="center" walletType={row.walletType} isRefund={row.inout === 'Out' && row.walletType === 'Member'}>{row.currency}</StyledTableCell>
+                                {Object.entries(propertyMap).map(([key, value]) => (
+                                    <StyledTableCell
+                                        key={key}
+                                        align={value.align}
+                                        walletType={row.walletType}
+                                        isRefund={row.inout === 'Out' && row.walletType === 'Member'}
+                                    >
+                                        {row[key]}
+                                    </StyledTableCell>
+                                ))}
                             </StyledTableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
-            <AllocationTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallet={selectedWallet} />
+            <AllocationTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallets={selectedWallets} />
             <ChainFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
         </Box>
     );
-
-
 }
-
 
 export default LoadWallet;

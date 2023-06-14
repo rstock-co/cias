@@ -10,10 +10,12 @@ const BaseUX = () => {
     const stableEth = getAddressByName("stable_usdc_eth");
     const stableEth2 = getAddressByName("stable_usdt_eth");
     const stableBsc = getAddressByName("stable_busd_bep20");
-    const [selectedWallet, setSelectedWallet] = useState({
-        name: "pool_investments",
-        address: "0xb79E768bEF0Ca0a34E53c3FE2ac26E600ACf8ccA"
-    });
+    const [selectedWallets, setSelectedWallets] = useState([
+        {
+            name: "pool_investments",
+            address: "0xb79E768bEF0Ca0a34E53c3FE2ac26E600ACf8ccA",
+        },
+    ]);
 
     // TRANSACTIONS
     const [txns, setTxns] = useState([]);
@@ -48,15 +50,46 @@ const BaseUX = () => {
     // PAGE LOADING
     const [isLoading, setIsLoading] = useState(true); 
 
-    // HANDLERS
-    const handleSelectedWalletChange = async (event) => {
-        setSelectedWallet({
-            name: event.target.value,
-            address: getAddressByName(event.target.value)
-        });
+    // SELECTED WALLETS HANDLER (appends new txn data to existing txn data)
+    const fetchTransactions = async (walletsToFetch) => {
+        setIsLoading(true);  // start loading
+        const newTxns = [];
+        for (const wallet of walletsToFetch) {
+            if (wallet && wallet.address) {
+                try {
+                    const result = await getAggregateERC20Txns(wallet.address, { stableArb, stableEth, stableEth2, stableBsc });
+                    newTxns.push(...result);
+                } catch (error) {
+                    console.error('Error fetching transactions:', error);
+                }
+            }
+        }
+        setIsLoading(false);  // end loading
+        setTxns(prevTxns => [...prevTxns, ...newTxns]);
     };
 
-    // FILTERS
+
+    const handleSelectedWalletChange = event => {
+        const { target: { value } } = event;
+        const selectedWalletNames = typeof value === 'string' ? value.split(',') : value;
+
+        const selectedWallets = selectedWalletNames.map(name => ({
+            name,
+            address: getAddressByName(name)
+        }));
+
+        const walletsToFetch = selectedWallets.filter(wallet => {
+            const isAddressFetched = txns.some(txn => txn.to.toLowerCase() === wallet.address.toLowerCase());
+            return !isAddressFetched;
+        });
+
+        fetchTransactions(walletsToFetch);
+
+        setSelectedWallets(selectedWallets);
+    };
+
+
+    // FILTER HANDLERS
 
     const handleTypeChange = (event) => {
         setType(event.target.value);
@@ -89,43 +122,30 @@ const BaseUX = () => {
     };
 
     useEffect(() => {
+        const walletsToFetch = selectedWallets.filter(wallet => {
+            const isAddressFetched = txns.some(txn => txn.to.toLowerCase() === wallet.address.toLowerCase());
+            return !isAddressFetched;
+        });
 
-        const fetchTransactions = async () => {
-            setIsLoading(true);  // start loading
-            try {
-                const result = await getAggregateERC20Txns(selectedWallet.address, { stableArb, stableEth, stableEth2, stableBsc });
-                setTxns(result);
-            } catch (error) {
-                console.error('Error fetching transactions:', error);
-            }
-            setIsLoading(false);  // end loading
-        };
-
-        fetchTransactions();
-
-    }, [selectedWallet, stableArb, stableEth, stableEth2, stableBsc]);
-
-    // useEffect(() => {
-
-    //     if (txns && txns.length > 0 && selectedWallet && selectedWallet.address) {
-    //         console.log("FILTERS: ", filters)
-    //         const filteredTxns = filterTxns(txns, filters);
-    //         setTableData(filteredTxns.map((txn, index) => generateTableData(txn, index, selectedWallet.address)));
-    //     }
-
-    // }, [txns, selectedWallet, filters]);
+        if (walletsToFetch.length > 0) {
+            fetchTransactions(walletsToFetch);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedWallets, stableArb, stableEth, stableEth2, stableBsc]);
 
     useEffect(() => {
-        if (txns && txns.length > 0 && selectedWallet && selectedWallet.address) {
-            // First generate table data
-            const tableData = txns.map((txn, index) => generateTableData(txn, index, selectedWallet.address));
+        if (txns && txns.length > 0 && selectedWallets && selectedWallets.length > 0) {
+            const selectedWalletAddresses = selectedWallets.map(wallet => wallet.address);
+            const tableData = txns.map((txn, index) => generateTableData(txn, index, selectedWalletAddresses));
 
-            // Then filter the table data
             const filteredTxns = filterTxns(tableData, filters);
-
             setTableData(filteredTxns);
         }
-    }, [txns, selectedWallet, filters]);
+    }, [txns, selectedWallets, filters]);
+
+
+
+
 
 
     useEffect(() => {
@@ -141,7 +161,7 @@ const BaseUX = () => {
 
         tableData,
 
-        selectedWallet,
+        selectedWallets,
         handleSelectedWalletChange,
         type,
         filterTypes,

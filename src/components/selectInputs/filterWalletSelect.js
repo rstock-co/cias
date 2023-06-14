@@ -3,9 +3,9 @@ import { autoCompleteTheme, useStyles } from './styles';
 import '@fontsource/inter';
 
 export const FilterWalletSelect = ({
-    wallets,
+    wallets = [], // ensure wallets has a default value
     filteredWallet,
-    selectedWallet,
+    selectedWallets = [], // ensure selectedWallets has a default value
     handleChange,
 }) => {
     const classes = useStyles();
@@ -14,7 +14,7 @@ export const FilterWalletSelect = ({
         <ThemeProvider theme={autoCompleteTheme}>
             <Autocomplete
                 options={wallets.filter(
-                    (wallet) => wallet.toLowerCase() !== selectedWallet.toLowerCase()
+                    (wallet) => !selectedWallets.includes(wallet.toLowerCase())
                 )}
                 value={filteredWallet}
                 onChange={(event, newValue) => handleChange(newValue || '')}
@@ -38,10 +38,10 @@ export const FilterWalletSelect = ({
                 )}
                 sx={{
                     width: '475px',
-
                     height: '45px', // Adjust the height as desired 
                 }}
             />
         </ThemeProvider>
     );
 };
+
