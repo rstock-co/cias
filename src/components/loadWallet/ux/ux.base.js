@@ -78,15 +78,35 @@ const BaseUX = () => {
             address: getAddressByName(name)
         }));
 
+        const prevSelectedWalletsAddresses = selectedWallets.map(wallet => wallet.address.toLowerCase());
+
+        // Filter out transactions that are associated with the removed wallets
+        const newTxns = txns.filter(txn => {
+            return prevSelectedWalletsAddresses.includes(txn.from.toLowerCase()) ||
+                prevSelectedWalletsAddresses.includes(txn.to.toLowerCase());
+        });
+
+        // Also remove associated transactions from tableData
+        const newTableData = tableData.filter(data => {
+            return prevSelectedWalletsAddresses.includes(data.from.toLowerCase()) ||
+                prevSelectedWalletsAddresses.includes(data.to.toLowerCase());
+        });
+
         const walletsToFetch = selectedWallets.filter(wallet => {
-            const isAddressFetched = txns.some(txn => txn.to.toLowerCase() === wallet.address.toLowerCase());
+            const isAddressFetched = newTxns.some(txn => txn.to.toLowerCase() === wallet.address.toLowerCase());
             return !isAddressFetched;
         });
 
-        fetchTransactions(walletsToFetch);
+        // avoid api call if a wallet is deselected from the multi-select box
+        if (walletsToFetch.length > 0) {
+            fetchTransactions(walletsToFetch);
+        }
 
+        setTxns(newTxns);
+        setTableData(newTableData);
         setSelectedWallets(selectedWallets);
     };
+
 
 
     // FILTER HANDLERS
@@ -121,17 +141,26 @@ const BaseUX = () => {
         setChainDialogOpen(true);
     };
 
+    // inital page load
     useEffect(() => {
-        const walletsToFetch = selectedWallets.filter(wallet => {
-            const isAddressFetched = txns.some(txn => txn.to.toLowerCase() === wallet.address.toLowerCase());
-            return !isAddressFetched;
-        });
-
-        if (walletsToFetch.length > 0) {
-            fetchTransactions(walletsToFetch);
+        if (selectedWallets.length > 0) {
+            fetchTransactions(selectedWallets);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedWallets, stableArb, stableEth, stableEth2, stableBsc]);
+    }, []);
+
+
+    // useEffect(() => {
+    //     const walletsToFetch = selectedWallets.filter(wallet => {
+    //         const isAddressFetched = txns.some(txn => txn.to.toLowerCase() === wallet.address.toLowerCase());
+    //         return !isAddressFetched;
+    //     });
+
+    //     if (walletsToFetch.length > 0) {
+    //         fetchTransactions(walletsToFetch);
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [selectedWallets, stableArb, stableEth, stableEth2, stableBsc]);
 
     useEffect(() => {
         if (txns && txns.length > 0 && selectedWallets && selectedWallets.length > 0) {
