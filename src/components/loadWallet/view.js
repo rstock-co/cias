@@ -16,7 +16,6 @@ const LoadWallet = ({
     tableData,
     handleSelectedWalletChange,
 
-
     filters,
     handleFilterChange,
     handleDateChange,
@@ -80,8 +79,8 @@ const LoadWallet = ({
                 </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 3, marginTop: 5 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 2, marginTop: 5 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
                     <WalletSelect
                         wallets={wallets}
                         selectedWallets={selectedWallets}

@@ -54,6 +54,7 @@ export const CustomInputLabel = withStyles({
         fontFamily: 'Inter, sans-serif',
         fontSize: '17px',
         letterSpacing: '0.75px',
+        left: '-5px',
         '&.Mui-focused': {
             color: '#e6c347',
             fontWeight: 'bold',
@@ -64,7 +65,7 @@ export const CustomInputLabel = withStyles({
 export const CustomOutlinedInput = withStyles({
     root: {
         color: '#6DFAFE',
-        height: '50px',
+        height: '45px',
         '& .MuiOutlinedInput-notchedOutline': {
             borderColor: '#096B78', // Set the border color
         },
@@ -97,7 +98,7 @@ export const CustomSelect = withStyles({
 export const useStyles = makeStyles((theme) => ({
     root: {
         '& .MuiOutlinedInput-root': {
-            borderRadius: '10px',
+            // borderRadius: '10px',
             height: '45px',
             '& fieldset': {
                 border: '1px solid #096B78',
@@ -135,9 +136,9 @@ export const useStyles = makeStyles((theme) => ({
                 fontSize: '13px', // Adjust the font size when focused
             },
             '&.MuiInputLabel-shrink': {
-                fontSize: '20px', // Adjust the font size when value is present
-                top: '-15px',
-                left: '-10px',
+                fontSize: '17px', // Adjust the font size when value is present
+                // top: '-15px',
+                left: '-5px',
             },
         },
     },

@@ -5,7 +5,7 @@ export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
 
     return (
         <div>
-            <FormControl sx={{ m: 1, width: 450 }}>
+            <FormControl sx={{ width: 450 }}>
                 <CustomInputLabel id="demo-multiple-checkbox-label">Select Wallet</CustomInputLabel>
                 <CustomSelect
                     labelId="demo-multiple-checkbox-label"
