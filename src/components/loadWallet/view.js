@@ -17,8 +17,8 @@ const LoadWallet = ({
     handleSelectedWalletChange,
 
     filters,
-    handleFilterChange,
-    handleDateChange,
+    handleValueChange,
+    handleEventChange,
 
     filterTypes,
     filterWallets,
@@ -64,7 +64,7 @@ const LoadWallet = ({
 
                 <DateRangeSelect
                     selectedDateRange={filters.dateRange}
-                    handleChange={handleDateChange('dateRange')}
+                    handleChange={handleValueChange('dateRange')}
                 />
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
@@ -90,26 +90,26 @@ const LoadWallet = ({
                     <TypeSelect
                         types={filterTypes}
                         selectedType={filters.type}
-                        handleChange={handleFilterChange('type')}
+                        handleChange={handleEventChange('type')}
                     />
 
                     <ChainSelect
                         chains={['arb', 'eth', 'bsc']}
                         selectedChain={filters.chain}
-                        handleChange={handleFilterChange('chain')}
+                        handleChange={handleEventChange('chain')}
                     />
 
                     <DirectionSelect
                         directions={['In', 'Out']}
                         selectedDirection={filters.direction}
-                        handleChange={handleFilterChange('direction')}
+                        handleChange={handleEventChange('direction')}
                     />
 
                     <FilterWalletSelect
                         wallets={filterWallets}
                         filteredWallet={filters.filterWallet}
                         selectedWallets={selectedWallets}
-                        handleChange={handleFilterChange('filterWallet')}
+                        handleChange={handleValueChange('filterWallet')}
                     />
 
                 </Box>

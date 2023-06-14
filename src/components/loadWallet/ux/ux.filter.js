@@ -17,14 +17,14 @@ const FilterUX = ({
         direction: "",
     });
 
-    const handleDateChange = curry((filterName, value) =>
+    const handleValueChange = curry((filterName, value) =>
         setFilters(prevFilters => ({
             ...prevFilters,
             [filterName]: value
         }))
     );
 
-    const handleFilterChange = curry((filterName, event) =>
+    const handleEventChange = curry((filterName, event) =>
         setFilters(prevFilters => ({
                 ...prevFilters,
                 [filterName]: event.target.value
@@ -47,8 +47,8 @@ const FilterUX = ({
 
     return {
         filters,
-        handleFilterChange,
-        handleDateChange
+        handleValueChange,
+        handleEventChange
     };
 };
 

@@ -1,6 +1,7 @@
-import { OutlinedInput, InputLabel, Select, TextField, createTheme } from '@mui/material';
+import { OutlinedInput, InputLabel, Select, TextField } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
-import { makeStyles, withStyles } from '@mui/styles';
+import { withStyles } from '@mui/styles';
 
 
 // SINGLE SELECTS
@@ -25,6 +26,9 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
         },
         '&.Mui-focused': {
             boxShadow: '0 0 3px 2px #096B78',
+        },
+        '& .MuiSelect-icon': {
+            color: '#6DFAFE',
         },
     },
     '& .MuiInputLabel-root': {
@@ -80,6 +84,7 @@ export const CustomOutlinedInput = withStyles({
             boxShadow: '0 0 3px 2px #096B78',
         },
     },
+
 })(OutlinedInput);
 
 export const CustomSelect = withStyles({
@@ -95,74 +100,80 @@ export const CustomSelect = withStyles({
     },
 })(Select);
 
-
-
 // AUTO COMPLETE (FILTER WALLET SELECT)
 
-export const useStyles = makeStyles((theme) => ({
-    root: {
-        '& .MuiOutlinedInput-root': {
-            // borderRadius: '10px',
-            height: '45px',
-            '& fieldset': {
-                border: '1px solid #096B78',
-                '&:hover': {
-                    borderColor: '#096B78',
+export const autoCompleteTheme = createTheme({
+    components: {
+        MuiAutocomplete: {
+            styleOverrides: {
+                tag: {
+                    backgroundColor: "#011D24",
+                    color: "#6DFAFE",
+                    borderColor: "#096B78",
+                },
+                clearIndicator: {
+                    color: "#6DFAFE",
+                },
+                popupIndicator: {
+                    color: "#6DFAFE",
+                },
+                popupIndicatorOpen: {
+                    transform: "rotate(180deg)",
                 },
             },
-            '& input': {
-                padding: '10px 14px',
-                color: '#6DFAFE',
-                border: 'none', // Hide the inner border
+        },
+        MuiOutlinedInput: {
+            styleOverrides: {
+                input: {
+                    padding: "10px 14px",
+                    color: "#6DFAFE",
+                    "&::placeholder": {
+                        color: "#6DFAFE",
+                    },
+                },
+                root: {
+                    borderRadius: "10px",
+                    height: "45px",
+                    "&:hover": {
+                        borderColor: "#096B78",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#096B78",
+                        },
+                    },
+                    "&.Mui-focused": {
+                        borderColor: "#096B78",
+                        boxShadow: "none",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            border: "1px solid #096B78",
+                            boxShadow: "0 0 3px 2px #096B78",
+                        },
+                    },
+                },
+                notchedOutline: {
+                    borderColor: "#096B78",
+                },
+                notchedOutlineWithValue: {
+                    borderColor: "#f2db88",
+                    boxShadow: "0 0 3px 3px #b09946",
+                },
             },
-            '&.Mui-focused fieldset': {
-                borderColor: '#096B78',
-                boxShadow: '0 0 3px 2px #096B78',
-            },
         },
-        '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#096B78',
-        },
-        '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#096B78',
-        },
-        '& .MuiAutocomplete-clearIndicator, & .MuiAutocomplete-popupIndicator': {
-            color: '#6DFAFE',
-        },
-        '& .MuiAutocomplete-root': {
-            height: '50px', // Adjust the height as desired
-        },
-        '& .MuiInputLabel-root': {
-            fontSize: '13px',
-            color: '#e6c347',
-            fontWeight: 'bold',
-            '&.Mui-focused': {
-                fontSize: '13px', // Adjust the font size when focused
-            },
-            '&.MuiInputLabel-shrink': {
-                fontSize: '17px', // Adjust the font size when value is present
-                // top: '-15px',
-                left: '-5px',
+        MuiInputLabel: {
+            styleOverrides: {
+                root: {
+                    fontSize: "13px",
+                    color: "#e6c347",
+                    fontWeight: "bold",
+                    "&.Mui-focused": {
+                        fontSize: "13px",
+                        color: "#e6c347", // Update the color to yellow
+                    },
+                    "&.MuiInputLabel-shrink": {
+                        fontSize: "17px",
+                        left: "-5px",
+                    },
+                },
             },
         },
     },
-    customInput: {
-        '& fieldset': {
-            borderColor: "#096B78",
-        },
-        '& input': {
-            // background: 'linear-gradient(to right, #011D24, #02343C)',
-        }
-    },
-    customInputValue: {
-        '& fieldset': {
-            borderColor: "#f2db88",
-            boxShadow: '0 0 3px 3px #b09946', // Add the glow when value is present
-        },
-        '& input': {
-            // background: 'linear-gradient(to right, #011D24, #02343C)',
-        }
-    },
-}));
-
-export const autoCompleteTheme = createTheme();
+});

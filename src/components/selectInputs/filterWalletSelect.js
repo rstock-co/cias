@@ -1,21 +1,26 @@
 import { Autocomplete, TextField, ThemeProvider } from '@mui/material';
-import { autoCompleteTheme, useStyles } from './styles';
+import { autoCompleteTheme } from './styles';
 import '@fontsource/inter';
 
 export const FilterWalletSelect = ({
-    wallets = [], // ensure wallets has a default value
+    wallets = [], 
     filteredWallet,
-    selectedWallets = [], // ensure selectedWallets has a default value
+    selectedWallets = [], 
     handleChange,
 }) => {
-    const classes = useStyles();
-
     return (
         <ThemeProvider theme={autoCompleteTheme}>
             <Autocomplete
-                options={wallets.filter(
-                    (wallet) => !selectedWallets.includes(wallet.toLowerCase())
-                )}
+                options={
+                    wallets.filter(
+                        (wallet) =>
+                            typeof wallet === 'string' &&
+                            !selectedWallets
+                                .filter((selectedWallet) => typeof selectedWallet.address === 'string')
+                                .map((selectedWallet) => selectedWallet.address.toLowerCase())
+                                .includes(wallet.toLowerCase())
+                    )
+                }
                 value={filteredWallet}
                 onChange={(event, newValue) => handleChange(newValue || '')}
                 renderInput={(params) => (
@@ -27,18 +32,25 @@ export const FilterWalletSelect = ({
                         InputProps={{
                             ...params.InputProps,
                             style: {
-                                lineHeight: 'normal', // Maintain consistent vertical alignment
+                                lineHeight: 'normal',
                             },
                         }}
                         InputLabelProps={{
                             shrink: true,
                         }}
-                        className={`${classes.root} ${filteredWallet ? classes.customInputValue : classes.customInput}`}
+                        sx={{
+                            "& .MuiOutlinedInput-root": {
+                                "& fieldset": filteredWallet ? {
+                                    borderColor: "#f2db88",
+                                    boxShadow: "0 0 3px 3px #b09946",
+                                } : {},
+                            },
+                        }}
                     />
                 )}
                 sx={{
                     width: '475px',
-                    height: '45px', // Adjust the height as desired 
+                    height: '45px',
                 }}
             />
         </ThemeProvider>

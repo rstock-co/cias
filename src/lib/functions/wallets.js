@@ -75,6 +75,7 @@ export const formatAmountDisplay = (value) => {
     });
 };
 
+// need to make this function mulit-chain
 const formatTxnLink = (hash) => (
     <a href={`https://arbiscan.io/tx/${hash}`} target="_blank" rel="noopener noreferrer" className="txnLink">
         Txn
@@ -84,10 +85,6 @@ const formatTxnLink = (hash) => (
 export const getWalletType = (txn, selectedWalletAddresses) => {
     const fromAddress = txn.from.toLowerCase();
     const toAddress = txn.to.toLowerCase();
-
-    // console.log("Selected Wallet Addresses: ", selectedWalletAddresses);
-    // console.log("From Address: ", fromAddress);
-    // console.log("To Address: ", toAddress);
 
     const selectedWalletsLowercase = selectedWalletAddresses.map(address => address.toLowerCase());
 
@@ -99,9 +96,6 @@ export const getWalletType = (txn, selectedWalletAddresses) => {
 
     return 'Unknown';
 };
-
-
-
 
 export const generateTableData = (txn, id, selectedWallets) => {
     const selectedWalletsLowercase = selectedWallets.map(address => address.toLowerCase());

@@ -36,6 +36,7 @@
 - "Txn" hyperlink needs to conditionally render depending on chain (currently only works for arb)
 - add a `generate distribution` button - 3rd button on main screen - opens a dialog box where you can generate a payout.  Should have an input box for fee%
 make the main wallet select a multi-select with chips, and the select box gets wider depending on how many chips (chip width x #chips) + 250px.   The title should display all wallets in a vertical stack.  The api will be a Promise.all that will not return until all data from all wallets has been aggregated from all chains.
+- add `uniqueMemberList` to state - could be useful to download this or store into our app the list for allocation purposes, etc
 
 ## Allocation Table
 - for the vc investment moves (games for a living, etc) --> need a dropdown select of these moves, and a button that can generate an allocation for that move
