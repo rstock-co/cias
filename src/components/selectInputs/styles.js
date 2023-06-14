@@ -23,6 +23,9 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
                 boxShadow: '0 0 3px 3px #b09946', // Add the glow when value is present
             },
         },
+        '&.Mui-focused': {
+            boxShadow: '0 0 3px 2px #096B78',
+        },
     },
     '& .MuiInputLabel-root': {
         fontSize: '14px',
@@ -74,6 +77,7 @@ export const CustomOutlinedInput = withStyles({
         },
         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: '#096B78', // Keep the border color when focused
+            boxShadow: '0 0 3px 2px #096B78',
         },
     },
 })(OutlinedInput);
