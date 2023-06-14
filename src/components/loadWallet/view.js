@@ -14,6 +14,8 @@ const LoadWallet = ({
     selectedWallets,
 
     tableData,
+    handleSelectedWalletChange,
+
 
     filters,
     handleFilterChange,
@@ -62,7 +64,7 @@ const LoadWallet = ({
 
                 <DateRangeSelect
                     selectedDateRange={filters.dateRange}
-                    handleChange={(value) => handleFilterChange('dateRange', value)}
+                    handleChange={handleFilterChange('dateRange')}
                 />
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
@@ -82,32 +84,32 @@ const LoadWallet = ({
                     <WalletSelect
                         wallets={wallets}
                         selectedWallets={selectedWallets}
-                        handleChange={(value) => handleFilterChange('selectedWallets', value)}
+                        handleChange={handleSelectedWalletChange}
                     />
 
                     <TypeSelect
                         types={filterTypes}
                         selectedType={filters.type}
-                        handleChange={(value) => handleFilterChange('type', value)}
+                        handleChange={handleFilterChange('type')}
                     />
 
                     <ChainSelect
                         chains={['arb', 'eth', 'bsc']}
                         selectedChain={filters.chain}
-                        handleChange={(value) => handleFilterChange('chain', value)}
+                        handleChange={handleFilterChange('chain')}
                     />
 
                     <DirectionSelect
                         directions={['In', 'Out']}
                         selectedDirection={filters.direction}
-                        handleChange={(value) => handleFilterChange('direction', value)}
+                        handleChange={handleFilterChange('direction')}
                     />
 
                     <FilterWalletSelect
                         wallets={filterWallets}
                         filteredWallet={filters.filterWallet}
                         selectedWallets={selectedWallets}
-                        handleChange={(value) => handleFilterChange('filterWallet', value)}
+                        handleChange={handleFilterChange('filterWallet')}
                     />
 
                 </Box>

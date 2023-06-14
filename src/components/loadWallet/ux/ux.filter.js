@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { filterTxns, generateTableData } from '../../../lib/functions/wallets';
+import { curry } from '../../../lib/functions/fp';
 
 const FilterUX = ({
     txns,
@@ -16,12 +17,14 @@ const FilterUX = ({
         direction: "",
     });
 
-    const handleFilterChange = (filterName, value) => {
-        setFilters(prevFilters => ({
-            ...prevFilters,
-            [filterName]: value
-        }));
-    };
+    const handleFilterChange = curry((filterName, event) =>
+        setFilters(prevFilters => (
+            {
+                ...prevFilters,
+                [filterName]: event.target.value
+            }
+        ))
+    );
 
     useEffect(() => {
         if (txns && txns.length > 0 && selectedWallets && selectedWallets.length > 0) {
