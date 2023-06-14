@@ -19,6 +19,7 @@ const LoadWallet = ({
 
     filters,
     handleFilterChange,
+    handleDateChange,
 
     filterTypes,
     filterWallets,
@@ -64,7 +65,7 @@ const LoadWallet = ({
 
                 <DateRangeSelect
                     selectedDateRange={filters.dateRange}
-                    handleChange={handleFilterChange('dateRange')}
+                    handleChange={handleDateChange('dateRange')}
                 />
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
