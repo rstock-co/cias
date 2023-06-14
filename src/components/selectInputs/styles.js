@@ -48,35 +48,30 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
 // MULTI SELECTS (main wallet select box)
 
 export const StyledSelect = styled(Select)(({ theme }) => ({
-    width: "250px",
+    width: "450px",
     height: "50px",
     backgroundColor: "#011D24",
-    color: "#6DFAFE",
-    border: "1px solid #096B78",
     borderRadius: "10px",
-    padding: "10px 14px",
+    padding: "15px 14px",
     "& .MuiSelect-select": {
         backgroundColor: "#011D24",
         color: "#6DFAFE",
-        "&:focus": {
-            backgroundColor: "#011D24",
-        },
     },
     "& .MuiOutlinedInput-notchedOutline": {
         borderColor: "#096B78",
     },
-    '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#096B78',
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+        borderColor: "#096B78",
+    },
+    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#096B78 !important',
     },
     "& .MuiSelect-icon": {
         color: "#6DFAFE",
     },
-    "& .MuiSelect-iconOutlined": {
-        color: "#6DFAFE",
-    },
     "& .MuiMenuItem-root": {
         "& .MuiTypography-root": {
-            color: "#6DFAFE",
+            color: "#000",
         },
     },
     "& .MuiPopover-paper": {
@@ -85,12 +80,41 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
     "& .MuiInputBase-input": {
         height: "50px",
         padding: '0 14px',
+        display: 'flex',
+        alignItems: 'center',
     },
-    '& .MuiCheckbox-root': {
+    "& .MuiCheckbox-root": {
         color: '#000',
-        '&.Mui-checked': {
-            color: '#02343C',
-        }
+        '&:hover': {
+            backgroundColor: 'transparent',
+        },
+    },
+    '& .MuiCheckbox-root.Mui-checked': {
+        color: '#000',
+    },
+    '& .MuiCheckbox-colorSecondary.Mui-checked': {
+        color: '#000',
+    },
+    '& .MuiCheckbox-colorSecondary.Mui-checked:hover': {
+        color: '#000',
+    },
+    '& .MuiCheckbox-colorSecondary.Mui-checked .MuiSvgIcon-root': {
+        color: '#000',
+    },
+    '& .MuiIconButton-colorSecondary:hover': {
+        backgroundColor: 'transparent',
+    },
+    "& .PrivateSwitchBase-input": {
+        color: '#000',
+        '&:hover': {
+            backgroundColor: 'transparent',
+        },
+    },
+    "& .PrivateSwitchBase-input.Mui-checked": {
+        color: '#000',
+    },
+    "& .PrivateSwitchBase-input.Mui-checked:hover": {
+        backgroundColor: 'transparent',
     },
 }));
 

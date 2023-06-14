@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
     const classes = useStyles();
     return (
-        <FormControl sx={{ width: '250px' }}>
+        <FormControl sx={{ width: '450px' }}>
             <InputLabel id="demo-multiple-checkbox-label" className='MuiInputLabel-root'>Wallet</InputLabel>
             <StyledSelect
                 labelId="demo-multiple-checkbox-label"

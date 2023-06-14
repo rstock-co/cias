@@ -57,29 +57,33 @@ const LoadWallet = ({
     };
 
     return (
+
         <Box sx={loadWalletStyles}>
-            {selectedWallets.length > 0 && selectedWallets.map((wallet, index) => (
-                <Typography key={index} variant="h3" align="left" gutterBottom>
-                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '40px', fontWeight: 'bold', color: 'white', letterSpacing: '2.5px' }}>WALLET LOOKUP </span>
-                    <span style={textGradientStyle} >{' | '}{wallet.name}{' | '}</span>
-                    {/* style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '35px', color: '#67C3FF' }} */}
-                    <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: 'white' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="h3" align="left" gutterBottom>
+                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '40px', fontWeight: 'bold', color: 'white', letterSpacing: '2.5px' }}>
+                        WALLET LOOKUP
+                    </span>
+                </Typography>
+
+                <DateRangeSelect
+                    selectedDateRange={dates}
+                    handleChange={handleDatesChange}
+                />
+
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                    {selectedWallets.map((wallet, index) => (
+                        <Typography key={index} variant="h4" align="left" sx={{ marginTop: index === 0 ? 0 : '10px' }}>
+                            <span style={textGradientStyle}>{wallet.name}{':  '}</span>
+                            <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '20px', color: 'white' }}>
                         {wallet.address}
-                    </span>
-                    {/* <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '25px', color: '#4498FF' }}>
-                        {wallet.address.substring(0, 4)}
-                    </span>
-                    <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: 'white' }}>
-                        {wallet.address.substring(4, wallet.address.length - 4)}
-                    </span>
-                    <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '25px', color: '#4498FF' }}>
-                        {wallet.address.substring(wallet.address.length - 4)}
-                    </span>
-                    {'  |'} */}
+                            </span>
                 </Typography>
             ))}
+                </Box>
+            </Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 3, marginTop: 5 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <WalletSelect
                         wallets={wallets}
@@ -87,7 +91,7 @@ const LoadWallet = ({
                         handleChange={handleSelectedWalletChange}
                     />
                     <TypeSelect
-                        types={filterTypes} // list of all possible types (this must be generated)
+                        types={filterTypes}
                         selectedType={type}
                         handleChange={handleTypeChange}
                     />
@@ -102,40 +106,35 @@ const LoadWallet = ({
                         handleChange={handleDirectionChange}
                     />
                     <FilterWalletSelect
-                        wallets={filterWallets} // list of all possible wallets (this must be generated)
+                        wallets={filterWallets}
                         filteredWallet={filterWallet}
                         selectedWallets={selectedWallets}
                         handleChange={handleFilterWalletChange}
                     />
                 </Box>
 
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '15px' }}>
-                    <DateRangeSelect
-                        selectedDateRange={dates}
-                        handleChange={handleDatesChange}
-                    />
-
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', gap: '15px' }}>
-
-                        <ColorButton
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', gap: '15px', marginTop: '30px' }}>
+                    <ColorButton
                         variant="contained"
-                            onClick={handleGenerateAllocations}
-                            sx={{
-                                marginTop: 2, fontFamily: 'Plus Jakarta Sans, sans-serif'
-                            }}
+                        onClick={handleGenerateAllocations}
+                        sx={{
+                            marginTop: 6, fontFamily: 'Plus Jakarta Sans, sans-serif'
+                        }}
                     >
                         Generate Allocations
-                        </ColorButton>
-                        <ColorButton
-                            variant="contained"
-                            onClick={handleGenerateChainFlow}
-                            sx={{ marginTop: 2, fontFamily: 'Plus Jakarta Sans, sans-serif' }}
-                        >
+                    </ColorButton>
+                    <ColorButton
+                        variant="contained"
+                        onClick={handleGenerateChainFlow}
+                        sx={{ marginTop: 2, fontFamily: 'Plus Jakarta Sans, sans-serif' }}
+                    >
                         Chain Cash Flow
-                        </ColorButton>
-                </Box>
+                    </ColorButton>
                 </Box>
             </Box>
+
+
+
             <TableContainer component={Paper} sx={{ background: 'transparent', backdropFilter: 'blur(5px)' }}>
                 <Table sx={{ minWidth: 650, backgroundColor: 'transparent' }} aria-label="simple table">
                     <TableHead>
@@ -172,6 +171,7 @@ const LoadWallet = ({
             <AllocationTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallets={selectedWallets} />
             <ChainFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
         </Box>
+
     );
 }
 

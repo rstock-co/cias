@@ -93,7 +93,7 @@ export const textGradientStyle = {
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     fontFamily: 'Plus Jakarta Sans, sans-serif',
-    fontSize: '35px',
+    fontSize: '30px',
     fontWeight: 'bold'
 };
 
