@@ -17,6 +17,7 @@
     1. Type ( member / non-member) - all non-member wallets are listed to filter by
     2. Chain (arb / eth / bsc)
     3. Direction (in / out)
+    4. Wallet (pick a single wallet to filter by)
 - `Allocation table` is auto generated and can be saved as a PDF via a button click
 - `Chain cash flow table` summarizes the total amount of $ and txns that went in/out of the currently selected wallets, serving as a completeness check
 

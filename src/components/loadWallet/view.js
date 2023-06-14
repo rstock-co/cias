@@ -10,34 +10,28 @@ import { StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
 import { loadWalletStyles, ColorButton } from './styles'; // styleRow
 
 const LoadWallet = ({
+    isLoading,
+    selectedWallets,
+
     tableData,
 
-    selectedWallets,
-    handleSelectedWalletChange,
-    type,
-    filterTypes,
-    handleTypeChange,
-    filterWallet,
-    filterWallets,
-    handleFilterWalletChange,
-    chain,
-    handleChainChange,
-    dates,
-    handleDatesChange,
-    direction,
-    handleDirectionChange,
+    filters,
+    handleFilterChange,
 
-    handleGenerateAllocations,
-    handleGenerateChainFlow,
+    filterTypes,
+    filterWallets,
 
     allocationDialogOpen,
     setAllocationDialogOpen,
+    handleGenerateAllocations,
+
     chainDialogOpen,
     setChainDialogOpen,
-    isLoading
+    handleGenerateChainFlow,
+
 } = {}) => {
 
-    console.log("SELECTED WALLET: ", selectedWallets)
+    console.log("SELECTED WALLETS: ", selectedWallets)
 
     if (isLoading || tableData.length > 900) {
         return <CircularProgress />;
@@ -67,8 +61,8 @@ const LoadWallet = ({
                 </Typography>
 
                 <DateRangeSelect
-                    selectedDateRange={dates}
-                    handleChange={handleDatesChange}
+                    selectedDateRange={filters.dateRange}
+                    handleChange={(value) => handleFilterChange('dateRange', value)}
                 />
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
@@ -88,29 +82,34 @@ const LoadWallet = ({
                     <WalletSelect
                         wallets={wallets}
                         selectedWallets={selectedWallets}
-                        handleChange={handleSelectedWalletChange}
+                        handleChange={(value) => handleFilterChange('selectedWallets', value)}
                     />
+
                     <TypeSelect
                         types={filterTypes}
-                        selectedType={type}
-                        handleChange={handleTypeChange}
+                        selectedType={filters.type}
+                        handleChange={(value) => handleFilterChange('type', value)}
                     />
+
                     <ChainSelect
                         chains={['arb', 'eth', 'bsc']}
-                        selectedChain={chain}
-                        handleChange={handleChainChange}
+                        selectedChain={filters.chain}
+                        handleChange={(value) => handleFilterChange('chain', value)}
                     />
+
                     <DirectionSelect
                         directions={['In', 'Out']}
-                        selectedDirection={direction}
-                        handleChange={handleDirectionChange}
+                        selectedDirection={filters.direction}
+                        handleChange={(value) => handleFilterChange('direction', value)}
                     />
+
                     <FilterWalletSelect
                         wallets={filterWallets}
-                        filteredWallet={filterWallet}
+                        filteredWallet={filters.filterWallet}
                         selectedWallets={selectedWallets}
-                        handleChange={handleFilterWalletChange}
+                        handleChange={(value) => handleFilterChange('filterWallet', value)}
                     />
+
                 </Box>
 
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', gap: '15px', marginTop: '30px' }}>
