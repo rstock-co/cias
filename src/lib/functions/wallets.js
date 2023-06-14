@@ -104,6 +104,7 @@ export const getWalletType = (txn, selectedWalletAddresses) => {
 
 
 export const generateTableData = (txn, id, selectedWallets) => {
+    const selectedWalletsLowercase = selectedWallets.map(address => address.toLowerCase());
     const amount = formatAmount(txn.chain, txn.value);
     const walletType = getWalletType(txn, selectedWallets);
     const timestamp = parseInt(txn.timeStamp) * 1000;
@@ -122,7 +123,7 @@ export const generateTableData = (txn, id, selectedWallets) => {
         from: txn.from,
         to: txn.to,
         walletType: type,
-        inout: selectedWallets.includes(txn.from.toLowerCase()) ? 'Out' : 'In',
+        inout: txn.from && selectedWalletsLowercase.includes(txn.from.toLowerCase()) ? 'Out' : 'In',
         amount,
         amountDisplay: formatAmountDisplay(amount),
         currency: txn.tokenSymbol,
