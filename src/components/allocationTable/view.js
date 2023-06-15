@@ -21,15 +21,24 @@ import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import { StyledTableCell, StyledTableRow } from "./styles";
 import { printDocument } from "../../lib/functions/pdf";
 
-const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallet }) => {
+const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets }) => {
     const [sortBy, setSortBy] = useState("# of contributions");
 
+    // Change selectedWallet to selectedWallets
     const allocationTableData = useMemo(() => {
-        if (selectedWallet && selectedWallet.address) {
-            return generateAllocationTableData(tableData, selectedWallet);
+        if (selectedWallets && selectedWallets.length) {
+            // Map through the selectedWallets array to create multiple data arrays 
+            const allAllocationData = selectedWallets.map(selectedWallet => {
+                if (selectedWallet.address) {
+                    return generateAllocationTableData(tableData, selectedWallet);
+                }
+                return [];
+            });
+            // Flatten the array of arrays into a single array
+            return [].concat.apply([], allAllocationData);
         }
         return [];
-    }, [selectedWallet, tableData]);
+    }, [selectedWallets, tableData]);
 
     const totalContributionsAmount = allocationTableData.reduce((acc, row) => acc + row.contributionsAmount, 0);
     const totalContributions = allocationTableData.reduce((acc, row) => acc + row.contributions, 0);
