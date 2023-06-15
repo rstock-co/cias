@@ -26,20 +26,23 @@
 ## Main Page
 
 #### Next
-- button for clearing all filters
-- style date pickers
+- sort transactions by date inside generating table data function so when a wallet is added, its txns are blended in by date.
+- add wallet column - so know which wallet a txn is from when multiple wallets are selected
+- add sort by column, so can sort by any column.  
 
-#### Future
-- Make a small copy icon beside each wallet address, enable to copy and paste to clipboard
-- Get current balances for each of the 3 chains and display in top right
+#### To Do
 - need to get all of the investment move wallet addresses and their contribution windows (from Discord / JP's help), so can generate allocations for them
-- Add 'sort by' select box beside filters
 - "Txn" hyperlink needs to conditionally render depending on chain (currently only works for arb)
 - add a `generate distribution` button - 3rd button on main screen - opens a dialog box where you can generate a payout.  Should have an input box for fee%
 make the main wallet select a multi-select with chips, and the select box gets wider depending on how many chips (chip width x #chips) + 250px.   The title should display all wallets in a vertical stack.  The api will be a Promise.all that will not return until all data from all wallets has been aggregated from all chains.
 - add `uniqueMemberList` to state - could be useful to download this or store into our app the list for allocation purposes, etc
+- Make a small copy icon beside each wallet address, enable to copy and paste to clipboard
 
 ## Allocation Table
+#### Next
+- Fix: it's broken right now since adding multiple wallets
+
+#### To Do
 - for the vc investment moves (games for a living, etc) --> need a dropdown select of these moves, and a button that can generate an allocation for that move
 - Make each wallet address clickable and opens another dialog table with a list of their transactions
 - Add another column that has which chains they contributed with and their count in brackets 
