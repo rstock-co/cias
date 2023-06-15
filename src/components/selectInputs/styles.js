@@ -47,7 +47,6 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
             top: '-15px',
             left: '-10px',
             letterSpacing: '1.25px',
-            // translate: 'translate(0, -12px)'
         },
     },
     '& .MuiOutlinedInput-notchedOutline': {
@@ -105,7 +104,7 @@ export const CustomSelect = withStyles({
     },
 })(Select);
 
-// AUTO COMPLETE (FILTER WALLET SELECT)
+// AUTO COMPLETE (FILTER WALLET SELECT) & DATE RANGE PICKERS
 
 export const autoCompleteTheme = createTheme({
     components: {
@@ -153,6 +152,12 @@ export const autoCompleteTheme = createTheme({
                             boxShadow: "0 0 3px 2px #096B78",
                         },
                     },
+
+                },
+                filled: { // this is the new class
+                    '& .MuiOutlinedInput-notchedOutline': {
+                        boxShadow: "0 0 3px 2px #b09946",
+                    },
                 },
                 notchedOutline: {
                     borderColor: "#096B78",
@@ -182,3 +187,17 @@ export const autoCompleteTheme = createTheme({
         },
     },
 });
+
+// DATE RANGE PICKERS - extra styles
+
+export const defaultStyle = {
+    "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: '#096B78',
+    }
+};
+
+export const filledStyle = {
+    "& .MuiOutlinedInput-notchedOutline": {
+        boxShadow: "0 0 3px 2px #b09946",
+    }
+};
