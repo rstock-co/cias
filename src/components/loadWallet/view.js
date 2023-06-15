@@ -19,6 +19,10 @@ const LoadWallet = ({
     filters,
     handleValueChange,
     handleEventChange,
+    handleDateChange,
+    handleClearFilters,
+    isStartDateDefault,
+    isEndDateDefault,
 
     filterTypes,
     filterWallets,
@@ -64,7 +68,9 @@ const LoadWallet = ({
 
                 <DateRangeSelect
                     selectedDateRange={filters.dateRange}
-                    handleChange={handleValueChange('dateRange')}
+                    handleChange={handleDateChange}
+                    isStartDateDefault={isStartDateDefault}
+                    isEndDateDefault={isEndDateDefault}
                 />
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
@@ -115,6 +121,15 @@ const LoadWallet = ({
                 </Box>
 
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', gap: '15px', marginTop: '30px' }}>
+                    <ColorButton
+                        variant="contained"
+                        onClick={handleClearFilters}
+                        sx={{
+                            marginTop: 6, fontFamily: 'Plus Jakarta Sans, sans-serif'
+                        }}
+                    >
+                        Clear All Filters
+                    </ColorButton>
                     <ColorButton
                         variant="contained"
                         onClick={handleGenerateAllocations}
