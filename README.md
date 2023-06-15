@@ -28,7 +28,7 @@
 #### Next
 - sort transactions by date inside generating table data function so when a wallet is added, its txns are blended in by date.
 - add wallet column - so know which wallet a txn is from when multiple wallets are selected
-- add sort by column, so can sort by any column.  
+- add `sort by` select box, so can sort by any column.  
 
 #### To Do
 - need to get all of the investment move wallet addresses and their contribution windows (from Discord / JP's help), so can generate allocations for them

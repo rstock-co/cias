@@ -59,19 +59,21 @@ const LoadWallet = ({
     return (
 
         <Box sx={loadWalletStyles}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h3" align="left" gutterBottom>
-                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '40px', fontWeight: 'bold', color: 'white', letterSpacing: '2.5px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <Typography variant="h3" align="left">
+                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '45px', fontWeight: 'bold', color: 'white', letterSpacing: '2.5px' }}>
                         WALLET LOOKUP
                     </span>
                 </Typography>
 
-                <DateRangeSelect
-                    selectedDateRange={filters.dateRange}
-                    handleChange={handleDateChange}
-                    isStartDateDefault={isStartDateDefault}
-                    isEndDateDefault={isEndDateDefault}
-                />
+                <Box sx={{ marginTop: '15px' }}>
+                    <DateRangeSelect
+                        selectedDateRange={filters.dateRange}
+                        handleChange={handleDateChange}
+                        isStartDateDefault={isStartDateDefault}
+                        isEndDateDefault={isEndDateDefault}
+                    />
+                </Box>
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                     {selectedWallets.map((wallet, index) => (

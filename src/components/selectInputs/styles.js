@@ -86,17 +86,16 @@ export const CustomOutlinedInput = withStyles({
             borderColor: '#096B78', // Keep the border color when focused
             boxShadow: '0 0 3px 2px #096B78',
         },
+        "& .MuiSvgIcon-root": {
+            color: "#6DFAFE !important",
+        },
     },
 
 })(OutlinedInput);
 
 export const CustomSelect = withStyles({
     root: {
-
         height: '50px',
-        '& .MuiSelect-icon': {
-            color: '#6DFAFE', // Set the select dropdown arrow color
-        },
     },
     "& .MuiSelect-select": {
         backgroundColor: "#011D24",
