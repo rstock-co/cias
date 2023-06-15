@@ -8,6 +8,7 @@ import { withStyles } from '@mui/styles';
 
 export const StyledTextField = styled(TextField)(({ theme }) => ({
     minWidth: 120,
+
     '& .MuiOutlinedInput-root': {
         borderRadius: '10px',
         '& .MuiOutlinedInput-input': {
@@ -16,12 +17,14 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
                 background: 'linear-gradient(to right, #011D24, #02343C)',
                 color: "#6DFAFE",
                 border: '1px solid #096B78',
+                borderRadius: "10px",
             },
             '&.custom-input-value': {
                 background: 'linear-gradient(to right, #011D24, #02343C)',
                 color: "#6DFAFE",
                 border: '1px solid #f2db88',
                 boxShadow: '0 0 3px 3px #b09946', // Add the glow when value is present
+                borderRadius: "10px",
             },
         },
         '&.Mui-focused': {
@@ -73,6 +76,7 @@ export const CustomOutlinedInput = withStyles({
     root: {
         color: '#6DFAFE',
         height: '45px',
+        borderRadius: "10px",
         '& .MuiOutlinedInput-notchedOutline': {
             borderColor: '#096B78', // Set the border color
         },
@@ -89,6 +93,7 @@ export const CustomOutlinedInput = withStyles({
 
 export const CustomSelect = withStyles({
     root: {
+
         height: '50px',
         '& .MuiSelect-icon': {
             color: '#6DFAFE', // Set the select dropdown arrow color

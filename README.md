@@ -26,7 +26,8 @@
 ## Main Page
 
 #### Next
-- make the main wallet select a multi-select with chips, and the select box gets wider depending on how many chips (chip width x #chips) + 250px.   The title should display all wallets in a vertical stack.  
+- button for clearing all filters
+- style date pickers
 
 #### Future
 - Make a small copy icon beside each wallet address, enable to copy and paste to clipboard
