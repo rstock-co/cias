@@ -22,7 +22,7 @@ import { StyledTableCell, StyledTableRow } from "./styles";
 import { printDocument } from "../../lib/functions/pdf";
 
 const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets }) => {
-    const [sortBy, setSortBy] = useState("# of contributions");
+    const [sortBy, setSortBy] = useState("Amount");
 
     // Change selectedWallet to selectedWallets
     const allocationTableData = useMemo(() => {
