@@ -1,27 +1,37 @@
 # Crypto Wallet Manager
 
-### aPI Documentation
+### API Documentation
 [Arbiscan API docs](https://docs.arbiscan.io/)  |  [BSC Scan API docs](https://docs.bscscan.com/)  |  [Etherscan API docs](https://docs.etherscan.io/)
 
 # Features
 - This is a single page app with all data management currently done with React's local state.  Redux is available but unused currently.  There's no backend.
-- `Allocation tables` are auto generated with a button click from the data currently in the main table (including filters) and can be saved as a PDF via a button click
-- You can select as many wallets as you wish for generating allocation tables, via the multi-select box on the far left hand side.  
-    - When a wallet is `added`, the api will fetch txns and append to the existing set of txns (+ sort them by date).
-    - When wallets are `removed`, the txns are removed from the existing set of txns. 
+- Use the multi-select on the far left side to add or remove wallets from the current txn data set (used to populate the table on the main screen).
+- `Allocation tables` are auto generated with a button click *from the current txn data set (including currently applied filters)* and can be saved as a PDF via a button click.  
+*NOTE:  This means if multiple wallets are selected, the allocation table will be based off all the wallets aggregated together.*  
+
+#### Data Filtering
+- There are 5 filters for the txn data set:
+    1. Type ( member / non-member) - all non-member wallets are listed to filter by
+    2. Chain (arb / eth / bsc)
+    3. Direction (in / out)
+    4. Wallet (pick a single wallet to filter by)
+    5. Date Range
+- Active filters will be highlighed with a yellow glow when they are "ON"
+- Note:  There is a button to clear all filters.
+
+
+#### Data Fetching
+
+- When a wallet is `added`, the api will fetch txns and append to the existing set of txns (+ sort them by date).
+- When wallets are `removed`, the txns are removed from the existing set of txns. 
 - Transactions are fetched for each selected wallet (see input on far left side) and currently fetch all `ERC 20 transfers` for 4 tokens:
     1. arb(usdc)
     2. eth(usdc)
     3. eth(usdt)
     4. bsc(busd)
 
-- There are 4 filters for the transaction set:
-    1. Type ( member / non-member) - all non-member wallets are listed to filter by
-    2. Chain (arb / eth / bsc)
-    3. Direction (in / out)
-    4. Wallet (pick a single wallet to filter by)
-
-- `Chain cash flow table` summarizes the total amount of $ and txns that went in/out of the currently selected wallets, serving as a completeness check
+#### Data Verification
+- The `Chain cash flow table` summarizes the total amount of $ and txns that went in/out of the current txn data set (including currently applied filters), serving as a quick visual completeness check (net should match current wallet balance for each chain).
 
 # Development: Phase 1
 
