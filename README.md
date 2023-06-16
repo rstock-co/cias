@@ -11,11 +11,11 @@
 
 #### Data Filtering
 - There are 5 filters for the txn data set:
-    1. Type ( member / non-member) - all non-member wallets are listed to filter by
-    2. Chain (arb / eth / bsc)
-    3. Direction (in / out)
-    4. Wallet (pick a single wallet to filter by)
-    5. Date Range
+    1. Type [member, non-member] - note for non-member wallets you can select a specific wallet to filter by
+    2. Chain (arb, eth, bsc)
+    3. Direction (in, out)
+    4. Wallet (pick a wallet from the data set to filter by)
+    5. Date Range (filter to see only data between start and end date)
 - Active filters will be highlighed with a yellow glow when they are "ON"
 - Note:  There is a button to clear all filters.
 
@@ -24,7 +24,7 @@
 
 - When a wallet is `added`, the api will fetch txns and append to the existing set of txns (+ sort them by date).
 - When wallets are `removed`, the txns are removed from the existing set of txns. 
-- Transactions are fetched for each selected wallet (see input on far left side) and currently fetch all `ERC 20 transfers` for 4 tokens:
+- The API fetches and aggregates all `ERC 20 transfers` for 4 tokens accross 3 chains:
     1. arb(usdc)
     2. eth(usdc)
     3. eth(usdt)
