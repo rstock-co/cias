@@ -127,17 +127,14 @@ export const generateTableData = (txn, id, selectedWallets) => {
     }
 };
 
-export const generateAllocationTableData = (tableData, selectedWallet) => {
-    if (!selectedWallet || !selectedWallet.address) {
-        return [];
-    }
-
+export const generateAllocationTableData = (tableData, selectedWallets) => {
+    const lowerCasedSelectedWalletAddresses = selectedWallets.map(wallet => wallet.address.toLowerCase());
     const memberMap = tableData.reduce((map, row) => {
         const { from, to, walletType, amount } = row;
         if (walletType !== 'Member') return map;
 
         const uniqueMemberWallet = from?.toLowerCase();
-        if (uniqueMemberWallet && uniqueMemberWallet !== selectedWallet.address.toLowerCase()) {
+        if (uniqueMemberWallet && !lowerCasedSelectedWalletAddresses.includes(uniqueMemberWallet)) {
             const existingData = map.get(uniqueMemberWallet) || { amount: 0, contributions: 0, refunds: 0, contributionsAmount: 0, refundsAmount: 0 };
             map.set(uniqueMemberWallet, {
                 amount: existingData.amount + Number(amount),
@@ -149,7 +146,7 @@ export const generateAllocationTableData = (tableData, selectedWallet) => {
         }
 
         const refundMemberWallet = to?.toLowerCase();
-        if (refundMemberWallet && refundMemberWallet !== uniqueMemberWallet && refundMemberWallet !== selectedWallet.address.toLowerCase()) {
+        if (refundMemberWallet && refundMemberWallet !== uniqueMemberWallet && !lowerCasedSelectedWalletAddresses.includes(refundMemberWallet)) {
             const existingData = map.get(refundMemberWallet) || { amount: 0, contributions: 0, refunds: 0, contributionsAmount: 0, refundsAmount: 0 };
             map.set(refundMemberWallet, {
                 amount: existingData.amount - Number(amount),

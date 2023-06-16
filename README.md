@@ -26,26 +26,29 @@
 ## Main Page
 
 #### Next
-- add wallet column - so know which wallet a txn is from when multiple wallets are selected
-- add `sort by` select box, so can sort by any column.  
+- Add "filtered total" amount, and filtered # of txns (below the header) for easy verification of allocations.  it changes to "Grand Total" when filters are cleared / empty.
+- "Txn" hyperlink needs to conditionally render depending on chain (currently only works for arb)
 
 #### To Do
 - need to get all of the investment move wallet addresses and their contribution windows (from Discord / JP's help), so can generate allocations for them
-- "Txn" hyperlink needs to conditionally render depending on chain (currently only works for arb)
+
 - add a `generate distribution` button - 3rd button on main screen - opens a dialog box where you can generate a payout.  Should have an input box for fee%
-make the main wallet select a multi-select with chips, and the select box gets wider depending on how many chips (chip width x #chips) + 250px.   The title should display all wallets in a vertical stack.  The api will be a Promise.all that will not return until all data from all wallets has been aggregated from all chains.
 - add `uniqueMemberList` to state - could be useful to download this or store into our app the list for allocation purposes, etc
 - Make a small copy icon beside each wallet address, enable to copy and paste to clipboard
+- add `sort by` select box, so can sort by any column.
 
 ## Allocation Table
 #### Next
-- Fix: it's broken right now since adding multiple wallets
+- Change header to include which wallets the allocation is for
+- Add another popup table that opens when you click on a member wallet, which displays all of their txns for the allocation table (to verify)
+- Add another column that has which chains they contributed with and their count in brackets
+- Add another column for wallets they contributied to with their counts in brackets
 
 #### To Do
 - for the vc investment moves (games for a living, etc) --> need a dropdown select of these moves, and a button that can generate an allocation for that move
 - Make each wallet address clickable and opens another dialog table with a list of their transactions
-- Add another column that has which chains they contributed with and their count in brackets 
-- Make PDF size smaller ask ChatGPT how
+ 
+- Make PDF size smaller
 - Make another text block above the table, maybe in middle, that displays all active filters
 
 ## Chain Cash Flow Table

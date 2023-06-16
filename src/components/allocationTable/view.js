@@ -24,18 +24,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
     const [sortBy, setSortBy] = useState("Amount");
 
     const allocationTableData = useMemo(() => {
-        if (selectedWallets && selectedWallets.length) {
-            // Map through the selectedWallets array to create multiple data arrays 
-            const allAllocationData = selectedWallets.map(selectedWallet => {
-                if (selectedWallet.address) {
-                    return generateAllocationTableData(tableData, selectedWallet);
-                }
-                return [];
-            });
-            // Flatten the array of arrays into a single array
-            return [].concat.apply([], allAllocationData);
-        }
-        return [];
+        return generateAllocationTableData(tableData, selectedWallets);
     }, [selectedWallets, tableData]);
 
     const calculateTotal = (array, propertyName) => array.reduce((acc, row) => acc + row[propertyName], 0);
