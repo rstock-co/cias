@@ -3,7 +3,6 @@ import { createTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import { withStyles } from '@mui/styles';
 
-
 // SINGLE SELECTS
 
 export const StyledTextField = styled(TextField)(({ theme }) => ({

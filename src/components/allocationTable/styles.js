@@ -1,6 +1,8 @@
 import { styled } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { TableRow, TableCell } from "@mui/material";
+import { makeStyles } from '@mui/styles';
+
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -25,3 +27,10 @@ export const StyledTableRow = styled(TableRow)(({ theme, walletType }) => ({
         border: 0,
     },
 }));
+
+// ALLOCATION TABLE
+
+export const totalRowStyle = {
+    fontWeight: 'bold',
+    backgroundColor: '#999999',
+}

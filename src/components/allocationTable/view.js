@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { generateAllocationTableData } from "../../lib/functions/wallets";
 import { formatAmountDisplay } from "../../lib/functions/wallets";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
-import { StyledTableCell, StyledTableRow } from "./styles";
+import { StyledTableCell, StyledTableRow, totalRowStyle } from "./styles";
 import { printDocument } from "../../lib/functions/pdf";
 
 import {
@@ -33,7 +33,6 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
     const totalContributions = calculateTotal(allocationTableData, 'contributions');
     const totalRefundsAmount = calculateTotal(allocationTableData, 'refundsAmount');
     const totalRefunds = calculateTotal(allocationTableData, 'refunds');
-
     const totalNetAmount = totalContributionsAmount - totalRefundsAmount;
     const totalTransactions = totalContributions + totalRefunds;
 
@@ -59,6 +58,8 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         }
         return sortedData;
     }, [allocationTableDataWithShare, sortBy]);
+
+    const totalShare = calculateTotal(allocationTableDataWithShare, "share");
 
     return (
         <Dialog
@@ -104,6 +105,22 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                         </TableHead>
                         {/* Render table body */}
                         <TableBody>
+                            {/* Row for the column sums */}
+                            <TableRow>
+                                <StyledTableCell component="th" scope="row" style={totalRowStyle}>
+                                    Total
+                                </StyledTableCell>
+                                <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999', color: totalShare !== 1 ? "red" : "inherit" }}>
+                                    {(totalShare * 100).toFixed(2)}%
+                                </StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{totalContributions}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalRefundsAmount)}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{totalRefunds}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalNetAmount)}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{totalTransactions}</StyledTableCell>
+                            </TableRow>
+                            {/* Render individual table rows */}
                             {sortedAllocationTableData.map((row) => (
                                 <StyledTableRow key={row.uniqueMemberWallet} walletType={row.walletType}>
                                     <StyledTableCell component="th" scope="row">
