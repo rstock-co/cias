@@ -46,6 +46,7 @@ const LoadWallet = ({
     const propertyMap = {
         id: { header: '#', align: 'center' },
         chain: { header: 'Chain', align: 'center' },
+        wallet: { header: 'Wallet', align: 'center' }, // Add this line
         inout: { header: 'In/Out', align: 'center' },
         dateTime: { header: 'Date/Time', align: 'left' },
         txn: { header: 'Txn', align: 'left' },
@@ -55,6 +56,7 @@ const LoadWallet = ({
         amountDisplay: { header: 'Amount ($)', align: 'center' },
         currency: { header: 'Currency ($)', align: 'center' },
     };
+
 
     return (
 

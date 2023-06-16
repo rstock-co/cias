@@ -1,6 +1,7 @@
 import { getERC20TxnsArb } from "./arb";
 import { getERC20TxnsBsc } from "./bsc";
 import { getERC20TxnsEth } from "./eth";
+import { wallets } from "../lookup/wallets";
 
 export const getAggregateERC20Txns = async (walletAddress, contractAddresses) => {
     const { stableArb, stableEth, stableEth2, stableBsc } = contractAddresses;
@@ -12,11 +13,14 @@ export const getAggregateERC20Txns = async (walletAddress, contractAddresses) =>
             getERC20TxnsBsc(walletAddress, stableBsc)
         ]);
 
-        // Append the chain property to each transaction object.
-        const d1 = data1.map(txn => ({ ...txn, chain: 'arb' }));
-        const d2 = data2.map(txn => ({ ...txn, chain: 'eth' }));
-        const d3 = data3.map(txn => ({ ...txn, chain: 'eth' }));
-        const d4 = data4.map(txn => ({ ...txn, chain: 'bsc' }));
+        // Find wallet name for the given walletAddress
+        const wallet = wallets.find(wallet => wallet.address.toLowerCase() === walletAddress.toLowerCase());
+
+        // Append the chain property and wallet name to each transaction object.
+        const d1 = data1.map(txn => ({ ...txn, chain: 'arb', wallet: wallet ? wallet.name : '' }));
+        const d2 = data2.map(txn => ({ ...txn, chain: 'eth', wallet: wallet ? wallet.name : '' }));
+        const d3 = data3.map(txn => ({ ...txn, chain: 'eth', wallet: wallet ? wallet.name : '' }));
+        const d4 = data4.map(txn => ({ ...txn, chain: 'bsc', wallet: wallet ? wallet.name : '' }));
 
         return [...d1, ...d2, ...d3, ...d4];
     } catch (error) {

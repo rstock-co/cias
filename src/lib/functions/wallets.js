@@ -112,6 +112,7 @@ export const generateTableData = (txn, id, selectedWallets) => {
 
     return {
         id,
+        wallet: txn.wallet,
         chain: txn.chain,
         timestamp,
         dateTime: convertTime(timestamp, 'America/Denver'),
