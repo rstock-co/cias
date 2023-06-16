@@ -41,9 +41,7 @@ const InitUX = () => {
     };
 
     useEffect(() => {
-        if (selectedWallets.length > 0) {
-            fetchTransactions(selectedWallets);
-        }
+        fetchTransactions(selectedWallets);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

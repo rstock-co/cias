@@ -6,7 +6,7 @@
 # Features
 - This is a single page app with all data management currently done with React's local state.  Redux is available but unused currently.  There's no backend.
 - You can select as many wallets as you wish for generating allocation tables, via the multi-select box on the far left hand side.  
-    - When a wallet is `added`, the api will fetch txns and append to the existing set of txns.
+    - When a wallet is `added`, the api will fetch txns and append to the existing set of txns (+ sort them by date).
     - When wallets are `removed`, the txns are removed from the existing set of txns. 
 - Downloaded transactions for each wallet currently consist of `ERC 20 transfers` for 4 tokens:
     1. arb(usdc)
@@ -26,7 +26,6 @@
 ## Main Page
 
 #### Next
-- sort transactions by date inside generating table data function so when a wallet is added, its txns are blended in by date.
 - add wallet column - so know which wallet a txn is from when multiple wallets are selected
 - add `sort by` select box, so can sort by any column.  
 

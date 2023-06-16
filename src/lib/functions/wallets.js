@@ -3,9 +3,10 @@ import { getNameByAddress } from "../../lookup/wallets";
 import { checkMoveType } from "./datetime";
 
 export const filterTxns = (txns, { type, filterWallet, chain, dateRange, direction }) => {
-
     // If initial render, return all txns (check if all filter conditions are not set)
-    if (type === '' && filterWallet === '' && chain === '' && (dateRange.startDate === '' || dateRange.endDate === '') && type === '' && direction === '') return txns.filter(txn => txn.amount !== 0);
+    if (type === '' && filterWallet === '' && chain === '' && (dateRange.startDate === '' || dateRange.endDate === '') && type === '' && direction === '') {
+        return txns.filter(txn => txn.amount !== 0).sort((a, b) => b.timestamp - a.timestamp);
+    }
 
     return txns.filter(txn => {
         let matchesFilterWallet = true;
@@ -49,8 +50,9 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
         }
 
         return matchesFilterWallet && matchesChain && matchesDateRange && matchesDirection && matchesType;
-    });
+    }).sort((a, b) => b.timestamp - a.timestamp); // sort by timestamp
 };
+
 
 export const getUniqueWallets = txns => {
     return Array.from(

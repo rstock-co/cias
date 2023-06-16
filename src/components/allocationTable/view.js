@@ -1,4 +1,9 @@
 import { useState, useMemo } from "react";
+import { generateAllocationTableData } from "../../lib/functions/wallets";
+import { formatAmountDisplay } from "../../lib/functions/wallets";
+import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
+import { StyledTableCell, StyledTableRow } from "./styles";
+import { printDocument } from "../../lib/functions/pdf";
 
 import {
     Paper,
@@ -15,16 +20,9 @@ import {
     Box
 } from "@mui/material";
 
-import { generateAllocationTableData } from "../../lib/functions/wallets";
-import { formatAmountDisplay } from "../../lib/functions/wallets";
-import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
-import { StyledTableCell, StyledTableRow } from "./styles";
-import { printDocument } from "../../lib/functions/pdf";
-
 const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets }) => {
     const [sortBy, setSortBy] = useState("Amount");
 
-    // Change selectedWallet to selectedWallets
     const allocationTableData = useMemo(() => {
         if (selectedWallets && selectedWallets.length) {
             // Map through the selectedWallets array to create multiple data arrays 
@@ -40,10 +38,13 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         return [];
     }, [selectedWallets, tableData]);
 
-    const totalContributionsAmount = allocationTableData.reduce((acc, row) => acc + row.contributionsAmount, 0);
-    const totalContributions = allocationTableData.reduce((acc, row) => acc + row.contributions, 0);
-    const totalRefundsAmount = allocationTableData.reduce((acc, row) => acc + row.refundsAmount, 0);
-    const totalRefunds = allocationTableData.reduce((acc, row) => acc + row.refunds, 0);
+    const calculateTotal = (array, propertyName) => array.reduce((acc, row) => acc + row[propertyName], 0);
+
+    const totalContributionsAmount = calculateTotal(allocationTableData, 'contributionsAmount');
+    const totalContributions = calculateTotal(allocationTableData, 'contributions');
+    const totalRefundsAmount = calculateTotal(allocationTableData, 'refundsAmount');
+    const totalRefunds = calculateTotal(allocationTableData, 'refunds');
+
     const totalNetAmount = totalContributionsAmount - totalRefundsAmount;
     const totalTransactions = totalContributions + totalRefunds;
 

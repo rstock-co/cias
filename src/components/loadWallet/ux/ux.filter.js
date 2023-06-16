@@ -4,7 +4,6 @@ import { curry } from '../../../lib/functions/fp';
 
 const FilterUX = ({
     txns,
-    tableData,
     setTableData,
     selectedWallets,
 
