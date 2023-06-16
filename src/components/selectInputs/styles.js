@@ -153,7 +153,7 @@ export const autoCompleteTheme = createTheme({
                     },
 
                 },
-                filled: { // this is the new class
+                filled: { 
                     '& .MuiOutlinedInput-notchedOutline': {
                         boxShadow: "0 0 3px 2px #b09946",
                     },
@@ -197,6 +197,7 @@ export const defaultStyle = {
 
 export const filledStyle = {
     "& .MuiOutlinedInput-notchedOutline": {
-        boxShadow: "0 0 3px 2px #b09946",
+        boxShadow: '0 0 3px 3px #b09946',
+        border: '1px solid #f2db88',
     }
 };
