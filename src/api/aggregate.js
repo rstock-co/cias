@@ -16,7 +16,7 @@ export const getAggregateERC20Txns = async (walletAddress, contractAddresses) =>
         // Find wallet name for the given walletAddress
         const wallet = wallets.find(wallet => wallet.address.toLowerCase() === walletAddress.toLowerCase());
 
-        // Append the chain property and wallet name to each transaction object.
+        // Append the chain property and wallet name to each transaction object
         const d1 = data1.map(txn => ({ ...txn, chain: 'arb', wallet: wallet ? wallet.name : '' }));
         const d2 = data2.map(txn => ({ ...txn, chain: 'eth', wallet: wallet ? wallet.name : '' }));
         const d3 = data3.map(txn => ({ ...txn, chain: 'eth', wallet: wallet ? wallet.name : '' }));

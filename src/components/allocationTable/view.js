@@ -66,7 +66,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
             onClose={() => setDialogOpen(false)}
             PaperProps={{
                 style: {
-                    width: '80%', // custom width, you can specify any value
+                    width: '50%', // custom width, you can specify any value
                     maxWidth: 'none', // override maxWidth
                 },
             }}
@@ -92,13 +92,14 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                         <TableHead>
                             <TableRow>
                                 <StyledTableCell>Member Wallet</StyledTableCell>
-                                <StyledTableCell align="center">Contributions Amount ($)</StyledTableCell>
-                                <StyledTableCell align="center"># of Contributions</StyledTableCell>
-                                <StyledTableCell align="center">Refunds Amount ($)</StyledTableCell>
-                                <StyledTableCell align="center"># of Refunds</StyledTableCell>
-                                <StyledTableCell align="center">Net Amount ($)</StyledTableCell>
-                                <StyledTableCell align="center">Net Transactions</StyledTableCell>
                                 <StyledTableCell align="center">Share (%)</StyledTableCell>
+                                <StyledTableCell align="center">Contributions ($)</StyledTableCell>
+                                <StyledTableCell align="center"># </StyledTableCell>
+                                <StyledTableCell align="center">Refunds ($)</StyledTableCell>
+                                <StyledTableCell align="center"># </StyledTableCell>
+                                <StyledTableCell align="center">Net ($)</StyledTableCell>
+                                <StyledTableCell align="center"># </StyledTableCell>
+
                             </TableRow>
                         </TableHead>
                         {/* Render table body */}
@@ -108,13 +109,14 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                     <StyledTableCell component="th" scope="row">
                                         {row.uniqueMemberWallet}
                                     </StyledTableCell>
+                                    <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
                                     <StyledTableCell align="center">{row.contributions}</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.refundsAmount)}</StyledTableCell>
                                     <StyledTableCell align="center">{row.refunds}</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.netAmount)}</StyledTableCell>
                                     <StyledTableCell align="center">{row.contributions + row.refunds}</StyledTableCell>
-                                    <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
+
                                 </StyledTableRow>
                             ))}
                         </TableBody>

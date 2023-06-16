@@ -1,7 +1,7 @@
 # Crypto Wallet Manager
 
 ### API Documentation
-[Arbiscan API docs](https://docs.arbiscan.io/)  |  [BSC Scan API docs](https://docs.bscscan.com/)  |  [Etherscan API docs](https://docs.etherscan.io/)
+[Arbiscan API docs](https://docs.arbiscan.io/)  |  [BSCscan API docs](https://docs.bscscan.com/)  |  [Etherscan API docs](https://docs.etherscan.io/)
 
 # Features
 - This is a single page app with all data management currently done with React's local state.  Redux is available but unused currently.  There's no backend.
@@ -56,6 +56,7 @@
 ## Allocation Table
 #### Next
 - Change header to include which wallets the allocation is for
+- add a row at top above table that sums up all the columns
 - Add another popup table that opens when you click on a member wallet, which displays all of their txns for the allocation table (to verify)
 - Add another column that has which chains they contributed with and their count in brackets
 - Add another column for wallets they contributied to with their counts in brackets
@@ -147,5 +148,3 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# cwm
-Crypto wallet manager
