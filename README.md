@@ -37,7 +37,6 @@
 
 #### Currently Working On
 - Improve allocation table: 
-    - move total # txns to left side of allocation table, turn back to just a integer
     - Add another column for wallets they contributied to with their counts in brackets (just one column for total, not cont/refunds)
     - Add another popup table that opens when you click on a member wallet, which displays all of their txns for the allocation table (to verify)
 

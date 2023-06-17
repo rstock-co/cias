@@ -35,3 +35,8 @@ export const totalRowStyle = {
     fontFamily: 'Inter, sans-serif',
     backgroundColor: '#999999',
 }
+
+export const totalRowStyleWithBorder = {
+    ...totalRowStyle,
+    borderRight: "1px solid grey"
+};

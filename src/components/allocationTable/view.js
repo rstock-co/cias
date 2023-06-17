@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { generateAllocationTableData } from "../../lib/functions/wallets";
 import { formatAmountDisplay } from "../../lib/functions/wallets";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
-import { StyledTableCell, StyledTableRow, totalRowStyle } from "./styles";
+import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
 import { printDocument } from "../../lib/functions/pdf";
 import "@fontsource/inter-tight";
 
@@ -158,9 +158,9 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                 <StyledTableCell>Member Wallet</StyledTableCell>
                                 <StyledTableCell align="center">Share (%)</StyledTableCell>
                                 <StyledTableCell align="center">Total Net ($)</StyledTableCell>
-                                <StyledTableCell align="center">Total Txns</StyledTableCell>
+                                <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>Total Txns</StyledTableCell>
                                 <StyledTableCell align="center">Contributions ($)</StyledTableCell>
-                                <StyledTableCell align="center"># of Contributions</StyledTableCell>
+                                <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}># of Contributions</StyledTableCell>
                                 <StyledTableCell align="center">Refunds ($)</StyledTableCell>
                                 <StyledTableCell align="center"># of Refunds</StyledTableCell>
                             </TableRow>
@@ -175,11 +175,11 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                     {(totalShare * 100).toFixed(2)}%
                                 </StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalNetAmount)}</StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyle}>
+                                <StyledTableCell align="center" style={totalRowStyleWithBorder}>
                                     {totalTransactions}
                                 </StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyle}>{formatChainMap(totalContributionsChainMap)}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(totalContributionsChainMap)}</StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalRefundsAmount)}</StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{formatChainMap(totalRefundsChainMap)}</StyledTableCell>
                             </TableRow>
@@ -190,9 +190,9 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                     </StyledTableCell>
                                     <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.netAmount)}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.net}</StyledTableCell>
+                                    <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{row.net}</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
-                                    <StyledTableCell align="center">{formatChainData(row.contributionsChainMap)}</StyledTableCell>
+                                    <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }} >{formatChainData(row.contributionsChainMap)}</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.refundsAmount)}</StyledTableCell>
                                     <StyledTableCell align="center">{formatChainData(row.refundsChainMap)}</StyledTableCell>
 
