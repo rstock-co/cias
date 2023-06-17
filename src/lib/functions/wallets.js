@@ -189,12 +189,12 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
         return {
             uniqueMemberWallet,
             amount,
+            net: contributions + refunds,
+            netAmount: contributionsAmount - refundsAmount,
             contributions,
             refunds,
-            net: contributions - refunds,
             contributionsAmount,
             refundsAmount,
-            netAmount: contributionsAmount - refundsAmount,
             contributionsChainMap: contributionsChainArray,
             refundsChainMap: refundsChainArray,
             chainMap: [...contributionsChainArray, ...refundsChainArray]
@@ -203,4 +203,3 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
 
     return allocationTableData;
 };
-

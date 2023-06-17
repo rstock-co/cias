@@ -47,6 +47,13 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         return Object.entries(result).map(([chain, count]) => `${chain}(${count})`);
     };
 
+    const formatChainData = (chainData) => {
+        if (Array.isArray(chainData)) {
+            return chainData.join(", ");
+        }
+        return "";
+    };
+
     const calculateTotal = (array, propertyName) => {
         if (propertyName === "contributionsChainMap" || propertyName === "refundsChainMap") {
             return array.reduce((acc, row) => mergeChainMaps(acc, row[propertyName]), []);
@@ -60,13 +67,12 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
     const totalRefundsAmount = calculateTotal(allocationTableData, 'refundsAmount');
     const totalRefunds = calculateTotal(allocationTableData, 'refunds');
     const totalNetAmount = totalContributionsAmount - totalRefundsAmount;
-    const totalTransactions = mergeChainMaps(totalContributions, totalRefunds);
+    const totalTransactions = totalContributions + totalRefunds;
 
     const allocationTableDataWithShare = useMemo(() => {
         return allocationTableData.map((row) => ({
             ...row,
             share: row.netAmount / totalNetAmount,
-            totalTransactions: mergeChainMaps(row.contributionsChainMap, row.refundsChainMap),
         }));
     }, [allocationTableData, totalNetAmount]);
 
@@ -86,12 +92,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
 
     const totalShare = calculateTotal(allocationTableDataWithShare, "share");
 
-    const formatChainData = (chainData) => {
-        if (Array.isArray(chainData)) {
-            return chainData.join(", ");
-        }
-        return "";
-    };
+
 
     return (
         <Dialog
@@ -113,7 +114,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                         <div>Total Refunds Amount: {formatAmountDisplay(totalRefundsAmount)}</div>
                         <div>Total Refunds: {totalRefunds}</div>
                         <div>Total Net Amount: {formatAmountDisplay(totalNetAmount)}</div>
-                        <div>Total Transactions: {formatChainData(totalTransactions)}</div>
+                        <div>Total Transactions: {totalTransactions}</div>
                     </Box>
                     <Box ml="auto">
                         <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
@@ -126,13 +127,12 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                             <TableRow>
                                 <StyledTableCell>Member Wallet</StyledTableCell>
                                 <StyledTableCell align="center">Share (%)</StyledTableCell>
+                                <StyledTableCell align="center">Total Net ($)</StyledTableCell>
+                                <StyledTableCell align="center">Total Txns</StyledTableCell>
                                 <StyledTableCell align="center">Contributions ($)</StyledTableCell>
-                                <StyledTableCell align="center"># </StyledTableCell>
+                                <StyledTableCell align="center"># of Cont's</StyledTableCell>
                                 <StyledTableCell align="center">Refunds ($)</StyledTableCell>
-                                <StyledTableCell align="center"># </StyledTableCell>
-                                <StyledTableCell align="center">Net ($)</StyledTableCell>
-                                <StyledTableCell align="center"># </StyledTableCell>
-
+                                <StyledTableCell align="center"># of Refunds</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         {/* Render table body */}
@@ -144,14 +144,14 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                 <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999', color: totalShare !== 1 ? "red" : "inherit" }}>
                                     {(totalShare * 100).toFixed(2)}%
                                 </StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalNetAmount)}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>
+                                    {totalTransactions}
+                                </StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{formatChainData(totalContributions)}</StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalRefundsAmount)}</StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{formatChainData(totalRefunds)}</StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalNetAmount)}</StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyle}>
-                                    {formatChainData(totalTransactions) || ""}
-                                </StyledTableCell>
                             </TableRow>
                             {sortedAllocationTableData.map((row) => (
                                 <StyledTableRow key={row.uniqueMemberWallet} walletType={row.walletType}>
@@ -159,14 +159,13 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                         {row.uniqueMemberWallet}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
+                                    <StyledTableCell align="center">{formatAmountDisplay(row.netAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.net}</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
                                     <StyledTableCell align="center">{formatChainData(row.contributionsChainMap)}</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.refundsAmount)}</StyledTableCell>
                                     <StyledTableCell align="center">{formatChainData(row.refundsChainMap)}</StyledTableCell>
-                                    <StyledTableCell align="center">{formatAmountDisplay(row.netAmount)}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        {totalTransactions && formatChainData(row.totalTransactions)}
-                                    </StyledTableCell>
+
                                 </StyledTableRow>
                             ))}
                         </TableBody>
