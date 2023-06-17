@@ -178,14 +178,24 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
         return map;
     }, new Map());
 
+    // Running total of each chain's transactions
+    let totalContributionsChainMap = {};
+    let totalRefundsChainMap = {};
+
     const allocationTableData = Array.from(memberMap, ([uniqueMemberWallet, {
         amount, contributions, refunds, contributionsAmount, refundsAmount,
         contributionsChainMap, refundsChainMap
     }]) => {
         const contributionsChainArray = Object.entries(contributionsChainMap)
-            .map(([chain, count]) => `${chain}(${count})`);
+            .map(([chain, count]) => {
+                totalContributionsChainMap[chain] = (totalContributionsChainMap[chain] || 0) + count;
+                return `${chain}(${count})`;
+            });
         const refundsChainArray = Object.entries(refundsChainMap)
-            .map(([chain, count]) => `${chain}(${count})`);
+            .map(([chain, count]) => {
+                totalRefundsChainMap[chain] = (totalRefundsChainMap[chain] || 0) + count;
+                return `${chain}(${count})`;
+            });
         return {
             uniqueMemberWallet,
             amount,
@@ -201,5 +211,6 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
         }
     });
 
-    return allocationTableData;
+    return { allocationTableData, totalContributionsChainMap, totalRefundsChainMap };
 };
+
