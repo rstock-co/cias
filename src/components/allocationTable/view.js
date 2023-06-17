@@ -23,34 +23,15 @@ import {
 const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets }) => {
     const [sortBy, setSortBy] = useState("Amount");
 
-    let walletNames;
-    if (selectedWallets.length > 1) {
-        walletNames = selectedWallets.map((wallet, index) => `(${index + 1}) ${wallet.name}`).join(', ');
-    } else {
-        walletNames = selectedWallets[0].name;
-    }
+    let walletNames = selectedWallets.length > 1
+        ? selectedWallets.map((wallet, index) => `(${index + 1}) ${wallet.name}`).join(', ')
+        : selectedWallets[0].name;
 
     const dialogTitle = `Allocations for: ${walletNames}${selectedWallets.length > 1 ? ' (aggregated)' : ''}`;
-
-
 
     const allocationTableData = useMemo(() => {
         return generateAllocationTableData(tableData, selectedWallets);
     }, [selectedWallets, tableData]);
-
-    // const mergeChainMaps = (chainMap1 = [], chainMap2 = []) => {
-    //     chainMap1 = Array.isArray(chainMap1) ? chainMap1 : [];
-    //     chainMap2 = Array.isArray(chainMap2) ? chainMap2 : [];
-
-    //     const merged = [...chainMap1, ...chainMap2];
-    //     const result = {};
-    //     merged.forEach(item => {
-    //         const [chain, countStr] = item.split('(');
-    //         const count = Number(countStr.replace(')', ''));
-    //         result[chain] = (result[chain] || 0) + count;
-    //     });
-    //     return Object.entries(result).map(([chain, count]) => `${chain}(${count})`);
-    // };
 
     const mergeChainMaps = (chainMap1 = [], chainMap2 = []) => {
         chainMap1 = Array.isArray(chainMap1) ? chainMap1 : [];
@@ -65,8 +46,6 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         });
         return Object.entries(result).map(([chain, count]) => `${chain}(${count})`);
     };
-
-
 
     const calculateTotal = (array, propertyName) => {
         if (propertyName === "contributionsChainMap" || propertyName === "refundsChainMap") {
@@ -83,8 +62,6 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
     const totalNetAmount = totalContributionsAmount - totalRefundsAmount;
     const totalTransactions = mergeChainMaps(totalContributions, totalRefunds);
 
-    console.log("TOTAL TRANSACTIONS: ", totalTransactions)
-
     const allocationTableDataWithShare = useMemo(() => {
         return allocationTableData.map((row) => ({
             ...row,
@@ -92,7 +69,6 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
             totalTransactions: mergeChainMaps(row.contributionsChainMap, row.refundsChainMap),
         }));
     }, [allocationTableData, totalNetAmount]);
-
 
     const handleSortByChange = (value) => {
         setSortBy(value);
