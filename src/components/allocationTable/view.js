@@ -13,6 +13,7 @@ import {
     DialogContent,
     TableContainer,
     Table,
+    TableCell,
     TableHead,
     TableRow,
     TableBody,
@@ -25,11 +26,19 @@ import {
 const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets }) => {
     const [sortBy, setSortBy] = useState("Amount");
 
-    let walletNames = selectedWallets.length > 1
-        ? selectedWallets.map((wallet, index) => `(${index + 1}) ${wallet.name}`).join(', ')
-        : selectedWallets[0].name;
+    const convertTitle = (snakeCaseString) => {
+        const words = snakeCaseString.split('_');
+        const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+        const capitalCasedString = capitalizedWords.join(' ');
 
-    const dialogTitle = `Allocations for: ${walletNames}${selectedWallets.length > 1 ? ' (aggregated)' : ''}`;
+        return capitalCasedString;
+    };
+
+    const dialogTitle =
+        selectedWallets.length > 1
+            ? `Aggregated Allocation Table for: ${selectedWallets.map((wallet, index) => `${convertTitle(wallet.name)}`).join(', ')} (${selectedWallets.length} wallets)`
+            : `Allocation Table for: '${convertTitle(selectedWallets[0].name)}' Wallet`;
+
 
     const { allocationTableData, totalContributionsChainMap, totalRefundsChainMap } = useMemo(() => {
         return generateAllocationTableData(tableData, selectedWallets);
@@ -137,10 +146,14 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                     {/* sx={{ maxHeight: '600px' }} */}
                     <Table sx={{ minWidth: 650, border: 'none' }} aria-label="member table">
                         {/* Render table header */}
-                        <TableHead sx={{ border: 'none' }}>
-                            <Typography variant="h6" gutterBottom sx={{ fontFamily: 'Inter', fontWeight: 'bold', border: 'none' }}>
-                                {dialogTitle}
-                            </Typography>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell colSpan={8}>
+                                    <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
+                                        {dialogTitle}
+                                    </Typography>
+                                </TableCell>
+                            </TableRow>
                             <TableRow>
                                 <StyledTableCell>Member Wallet</StyledTableCell>
                                 <StyledTableCell align="center">Share (%)</StyledTableCell>

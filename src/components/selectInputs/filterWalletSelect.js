@@ -1,6 +1,6 @@
 import { Autocomplete, TextField, ThemeProvider } from '@mui/material';
 import { autoCompleteTheme } from './styles';
-import '@fontsource/inter';
+import "@fontsource/inter-tight"
 
 export const FilterWalletSelect = ({
     wallets = [], 
