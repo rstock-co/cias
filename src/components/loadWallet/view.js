@@ -1,6 +1,7 @@
 import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
 import { Box, Typography } from '@mui/material';
 import '@fontsource/plus-jakarta-sans';
+import '@fontsource/inter-tight';
 
 import { wallets } from '../../lookup/wallets';
 import AllocationTable from '../allocationTable/view';
@@ -63,7 +64,7 @@ const LoadWallet = ({
         <Box sx={loadWalletStyles}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <Typography variant="h3" align="left">
-                    <span style={{ fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '45px', fontWeight: 'bold', color: 'white', letterSpacing: '2.5px' }}>
+                    <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '45px', fontWeight: 'bold', color: 'white', letterSpacing: '4px' }}>
                         WALLET LOOKUP
                     </span>
                 </Typography>
@@ -81,7 +82,7 @@ const LoadWallet = ({
                     {selectedWallets.map((wallet, index) => (
                         <Typography key={index} variant="h4" align="left" sx={{ marginTop: index === 0 ? 0 : '10px' }}>
                             <span style={textGradientStyle}>{wallet.name}{':  '}</span>
-                            <span style={{ fontFamily: 'Plus Jakarta Sans', fontSize: '20px', color: 'white' }}>
+                            <span style={{ fontFamily: 'Inter Tight', fontSize: '22px', color: 'white' }}>
                         {wallet.address}
                             </span>
                 </Typography>

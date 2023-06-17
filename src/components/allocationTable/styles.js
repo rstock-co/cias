@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { TableRow, TableCell } from "@mui/material";
-import { makeStyles } from '@mui/styles';
+import "@fontsource/inter-tight";
 
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -10,11 +10,11 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
         color: theme.palette.common.white,
         fontWeight: 'bold',
         fontSize: 16,
-        fontFamily: 'Roboto, sans-serif'
+        fontFamily: 'Inter, sans-serif'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
-        fontFamily: 'Roboto, sans-serif'
+        fontFamily: 'Inter Tight, sans-serif'
     },
 }));
 
@@ -32,5 +32,6 @@ export const StyledTableRow = styled(TableRow)(({ theme, walletType }) => ({
 
 export const totalRowStyle = {
     fontWeight: 'bold',
+    fontFamily: 'Inter, sans-serif',
     backgroundColor: '#999999',
 }

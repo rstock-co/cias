@@ -3,7 +3,8 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { TableCell, TableRow } from '@mui/material';
 import '@fontsource/plus-jakarta-sans';
-import '@fontsource/inter';
+import "@fontsource/inter-tight"
+import "@fontsource/inter"
 
 const determineBackground = (walletType, isRefund) => {
     if (isRefund) {
@@ -21,7 +22,7 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletType, isRefund 
     color: theme.palette.common.white,
     backgroundImage: determineBackground(walletType, isRefund),
     borderColor: '#5b5b5b',
-    fontFamily: 'Inter, sans-serif',
+    fontFamily: 'Inter Tight, sans-serif',
     [`&.${tableCellClasses.head}`]: {
         background: 'none',
         backgroundImage: 'linear-gradient(to bottom, #07888A, #0A4963)',  // purple:  #0A0216, #1D0F35)',
@@ -30,7 +31,7 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletType, isRefund 
         fontWeight: 'bold',
         fontSize: 16,
         letterSpacing: '0.5px',
-        fontFamily: 'Plus Jakarta Sans, sans-serif'
+        fontFamily: 'Inter, sans-serif'
     },
     [`&.${tableCellClasses.body}`]: {
         // Place for body-specific styles if necessary

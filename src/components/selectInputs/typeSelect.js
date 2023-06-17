@@ -1,6 +1,6 @@
 import { MenuItem } from '@mui/material';
 import { StyledTextField } from './styles';
-import '@fontsource/inter';
+import '@fontsource/inter-tight';
 
 export const TypeSelect = ({ types, selectedType, handleChange }) => {
     return (
@@ -18,11 +18,11 @@ export const TypeSelect = ({ types, selectedType, handleChange }) => {
                 },
             }}
         >
-            <MenuItem value="" sx={{ fontFamily: 'Inter, sans-serif' }}>
+            <MenuItem value="" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>
                 <em>All</em>
             </MenuItem>
             {types.map(type => (
-                <MenuItem key={type} value={type} sx={{ fontFamily: 'Inter, sans-serif' }}>{type}</MenuItem>
+                <MenuItem key={type} value={type} sx={{ fontFamily: 'Inter Tight, sans-serif' }}>{type}</MenuItem>
             ))}
         </StyledTextField>
     );

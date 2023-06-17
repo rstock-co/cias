@@ -1,5 +1,6 @@
 import { FormControl, MenuItem, Checkbox, ListItemText } from '@mui/material';
 import { CustomInputLabel, CustomSelect, CustomOutlinedInput } from './styles';
+import '@fontsource/inter-tight';
 
 export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
 
@@ -17,9 +18,9 @@ export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
                     renderValue={(selected) => selected.join(', ')}
                 >
                     {wallets.map(wallet => (
-                        <MenuItem key={wallet.name} value={wallet.name} sx={{ fontFamily: 'Inter, sans-serif' }} >
+                        <MenuItem key={wallet.name} value={wallet.name} >
                             <Checkbox checked={selectedWallets.some(sw => sw.name === wallet.name)} />
-                            <ListItemText primary={wallet.name} />
+                            <ListItemText primary={wallet.name} sx={{ fontFamily: 'Inter Tight, sans-serif' }} />
                         </MenuItem>
                     ))}
                 </CustomSelect>

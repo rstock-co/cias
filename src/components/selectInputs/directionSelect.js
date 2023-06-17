@@ -1,6 +1,6 @@
 import { MenuItem } from '@mui/material';
 import { StyledTextField } from './styles';
-import '@fontsource/inter';
+import '@fontsource/inter-tight';
 
 export const DirectionSelect = ({ directions, selectedDirection, handleChange }) => {
     return (
@@ -17,11 +17,11 @@ export const DirectionSelect = ({ directions, selectedDirection, handleChange })
                 },
             }}
         >
-            <MenuItem value="" sx={{ fontFamily: 'Inter, sans-serif' }}>
+            <MenuItem value="" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>
                 <em>All</em>
             </MenuItem>
             {directions.map((direction) => (
-                <MenuItem key={direction} value={direction} sx={{ fontFamily: 'Inter, sans-serif' }}>
+                <MenuItem key={direction} value={direction} sx={{ fontFamily: 'Inter Tight, sans-serif' }}>
                     {direction}
                 </MenuItem>
             ))}

@@ -4,6 +4,7 @@ import { formatAmountDisplay } from "../../lib/functions/wallets";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import { StyledTableCell, StyledTableRow, totalRowStyle } from "./styles";
 import { printDocument } from "../../lib/functions/pdf";
+import "@fontsource/inter-tight";
 
 import {
     Paper,
@@ -17,7 +18,8 @@ import {
     TableBody,
     DialogActions,
     Button,
-    Box
+    Box,
+    Typography
 } from "@mui/material";
 
 const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets }) => {
@@ -111,11 +113,13 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                 style: {
                     width: '75%', // custom width, you can specify any value
                     maxWidth: 'none', // override maxWidth
+                    boxShadow: '0 0 10px 3px #199eb0',
                 },
             }}
         >
             <DialogTitle>{dialogTitle}</DialogTitle>
             <DialogContent style={{ overflowX: 'auto' }}>
+                {/* maxHeight: '800px'  */}
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <Box mb={2}>
                         <div>Total Contributions Amount: {formatAmountDisplay(totalContributionsAmount)}</div>
@@ -129,10 +133,14 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                         <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
                     </Box>
                 </Box>
-                <TableContainer component={Paper} id="myTable">
-                    <Table sx={{ minWidth: 650 }} aria-label="member table">
+                <TableContainer component={Paper} id="myTable" sx={{ border: 'none' }}>
+                    {/* sx={{ maxHeight: '600px' }} */}
+                    <Table sx={{ minWidth: 650, border: 'none' }} aria-label="member table">
                         {/* Render table header */}
-                        <TableHead>
+                        <TableHead sx={{ border: 'none' }}>
+                            <Typography variant="h6" gutterBottom sx={{ fontFamily: 'Inter', fontWeight: 'bold', border: 'none' }}>
+                                {dialogTitle}
+                            </Typography>
                             <TableRow>
                                 <StyledTableCell>Member Wallet</StyledTableCell>
                                 <StyledTableCell align="center">Share (%)</StyledTableCell>

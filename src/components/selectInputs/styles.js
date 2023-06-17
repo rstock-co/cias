@@ -2,6 +2,7 @@ import { OutlinedInput, InputLabel, Select, TextField } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
 import { withStyles } from '@mui/styles';
+import "@fontsource/inter-tight";
 
 // SINGLE SELECTS
 
@@ -10,8 +11,10 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
 
     '& .MuiOutlinedInput-root': {
         borderRadius: '10px',
+        fontFamily: 'Inter Tight, sans-serif',
         '& .MuiOutlinedInput-input': {
             padding: '10px 14px',
+            fontFamily: 'Inter Tight, sans-serif',
             '&.custom-input': {
                 background: 'linear-gradient(to right, #011D24, #02343C)',
                 color: "#6DFAFE",
@@ -73,6 +76,7 @@ export const CustomInputLabel = withStyles({
 export const CustomOutlinedInput = withStyles({
     root: {
         color: '#6DFAFE',
+        fontFamily: 'Inter Tight, sans-serif',
         height: '45px',
         borderRadius: "10px",
         '& .MuiOutlinedInput-notchedOutline': {
@@ -135,6 +139,7 @@ export const autoCompleteTheme = createTheme({
                 },
                 root: {
                     borderRadius: "10px",
+                    fontFamily: 'Inter Tight, sans-serif',
                     height: "45px",
                     "&:hover": {
                         borderColor: "#096B78",
