@@ -37,10 +37,10 @@
 
 #### Currently Working On
 - Improve allocation table: 
-    - Change header to include which wallets the allocation is for
-    - Add another popup table that opens when you click on a member wallet, which displays all of their txns for the allocation table (to verify)
     - Add another column that has which chains they contributed with and their count in brackets
     - Add another column for wallets they contributied to with their counts in brackets
+    - Add another popup table that opens when you click on a member wallet, which displays all of their txns for the allocation table (to verify)
+
 
 ## Main Page
 

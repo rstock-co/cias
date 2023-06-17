@@ -132,47 +132,75 @@ export const generateTableData = (txn, id, selectedWallets) => {
 
 export const generateAllocationTableData = (tableData, selectedWallets) => {
     const lowerCasedSelectedWalletAddresses = selectedWallets.map(wallet => wallet.address.toLowerCase());
+
     const memberMap = tableData.reduce((map, row) => {
-        const { from, to, walletType, amount } = row;
+        const { from, to, walletType, amount, chain } = row;
         if (walletType !== 'Member') return map;
 
         const uniqueMemberWallet = from?.toLowerCase();
         if (uniqueMemberWallet && !lowerCasedSelectedWalletAddresses.includes(uniqueMemberWallet)) {
-            const existingData = map.get(uniqueMemberWallet) || { amount: 0, contributions: 0, refunds: 0, contributionsAmount: 0, refundsAmount: 0 };
+            const existingData = map.get(uniqueMemberWallet) || {
+                amount: 0, contributions: 0, refunds: 0, contributionsAmount: 0,
+                refundsAmount: 0, contributionsChainMap: {}, refundsChainMap: {}
+            };
+
+            let contributionsChainMap = { ...existingData.contributionsChainMap };
+            contributionsChainMap[chain] = (contributionsChainMap[chain] || 0) + 1;
+
             map.set(uniqueMemberWallet, {
+                ...existingData,
                 amount: existingData.amount + Number(amount),
                 contributions: existingData.contributions + 1,
-                refunds: existingData.refunds,
                 contributionsAmount: existingData.contributionsAmount + Number(amount),
-                refundsAmount: existingData.refundsAmount
+                contributionsChainMap
             });
         }
 
         const refundMemberWallet = to?.toLowerCase();
         if (refundMemberWallet && refundMemberWallet !== uniqueMemberWallet && !lowerCasedSelectedWalletAddresses.includes(refundMemberWallet)) {
-            const existingData = map.get(refundMemberWallet) || { amount: 0, contributions: 0, refunds: 0, contributionsAmount: 0, refundsAmount: 0 };
+            const existingData = map.get(refundMemberWallet) || {
+                amount: 0, contributions: 0, refunds: 0, contributionsAmount: 0,
+                refundsAmount: 0, contributionsChainMap: {}, refundsChainMap: {}
+            };
+
+            let refundsChainMap = { ...existingData.refundsChainMap };
+            refundsChainMap[chain] = (refundsChainMap[chain] || 0) + 1;
+
             map.set(refundMemberWallet, {
+                ...existingData,
                 amount: existingData.amount - Number(amount),
-                contributions: existingData.contributions,
                 refunds: existingData.refunds + 1,
-                contributionsAmount: existingData.contributionsAmount,
-                refundsAmount: existingData.refundsAmount + Number(amount)
+                refundsAmount: existingData.refundsAmount + Number(amount),
+                refundsChainMap
             });
         }
 
         return map;
     }, new Map());
 
-    const allocationTableData = Array.from(memberMap, ([uniqueMemberWallet, { amount, contributions, refunds, contributionsAmount, refundsAmount }]) => ({
-        uniqueMemberWallet,
-        amount,
-        contributions,
-        refunds,
-        net: contributions - refunds,
-        contributionsAmount,
-        refundsAmount,
-        netAmount: contributionsAmount - refundsAmount
-    }))          // TO FILTER NET AMOUNTS THAT ARE ZERO, add to this line ".filter(row => row.netAmount !== 0)";
+    const allocationTableData = Array.from(memberMap, ([uniqueMemberWallet, {
+        amount, contributions, refunds, contributionsAmount, refundsAmount,
+        contributionsChainMap, refundsChainMap
+    }]) => {
+        const contributionsChainArray = Object.entries(contributionsChainMap)
+            .map(([chain, count]) => `${chain}(${count})`);
+        const refundsChainArray = Object.entries(refundsChainMap)
+            .map(([chain, count]) => `${chain}(${count})`);
+        return {
+            uniqueMemberWallet,
+            amount,
+            contributions,
+            refunds,
+            net: contributions - refunds,
+            contributionsAmount,
+            refundsAmount,
+            netAmount: contributionsAmount - refundsAmount,
+            contributionsChainMap: contributionsChainArray,
+            refundsChainMap: refundsChainArray,
+            chainMap: [...contributionsChainArray, ...refundsChainArray]
+        }
+    });
 
     return allocationTableData;
 };
+

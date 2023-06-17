@@ -38,21 +38,61 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         return generateAllocationTableData(tableData, selectedWallets);
     }, [selectedWallets, tableData]);
 
-    const calculateTotal = (array, propertyName) => array.reduce((acc, row) => acc + row[propertyName], 0);
+    // const mergeChainMaps = (chainMap1 = [], chainMap2 = []) => {
+    //     chainMap1 = Array.isArray(chainMap1) ? chainMap1 : [];
+    //     chainMap2 = Array.isArray(chainMap2) ? chainMap2 : [];
+
+    //     const merged = [...chainMap1, ...chainMap2];
+    //     const result = {};
+    //     merged.forEach(item => {
+    //         const [chain, countStr] = item.split('(');
+    //         const count = Number(countStr.replace(')', ''));
+    //         result[chain] = (result[chain] || 0) + count;
+    //     });
+    //     return Object.entries(result).map(([chain, count]) => `${chain}(${count})`);
+    // };
+
+    const mergeChainMaps = (chainMap1 = [], chainMap2 = []) => {
+        chainMap1 = Array.isArray(chainMap1) ? chainMap1 : [];
+        chainMap2 = Array.isArray(chainMap2) ? chainMap2 : [];
+
+        const merged = [...chainMap1, ...chainMap2];
+        const result = {};
+        merged.forEach(item => {
+            const [chain, countStr] = item.split('(');
+            const count = Number(countStr.replace(')', ''));
+            result[chain] = (result[chain] || 0) + count;
+        });
+        return Object.entries(result).map(([chain, count]) => `${chain}(${count})`);
+    };
+
+
+
+    const calculateTotal = (array, propertyName) => {
+        if (propertyName === "contributionsChainMap" || propertyName === "refundsChainMap") {
+            return array.reduce((acc, row) => mergeChainMaps(acc, row[propertyName]), []);
+        } else {
+            return array.reduce((acc, row) => acc + row[propertyName], 0);
+        }
+    };
 
     const totalContributionsAmount = calculateTotal(allocationTableData, 'contributionsAmount');
     const totalContributions = calculateTotal(allocationTableData, 'contributions');
     const totalRefundsAmount = calculateTotal(allocationTableData, 'refundsAmount');
     const totalRefunds = calculateTotal(allocationTableData, 'refunds');
     const totalNetAmount = totalContributionsAmount - totalRefundsAmount;
-    const totalTransactions = totalContributions + totalRefunds;
+    const totalTransactions = mergeChainMaps(totalContributions, totalRefunds);
+
+    console.log("TOTAL TRANSACTIONS: ", totalTransactions)
 
     const allocationTableDataWithShare = useMemo(() => {
         return allocationTableData.map((row) => ({
             ...row,
             share: row.netAmount / totalNetAmount,
+            totalTransactions: mergeChainMaps(row.contributionsChainMap, row.refundsChainMap),
         }));
     }, [allocationTableData, totalNetAmount]);
+
 
     const handleSortByChange = (value) => {
         setSortBy(value);
@@ -70,13 +110,20 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
 
     const totalShare = calculateTotal(allocationTableDataWithShare, "share");
 
+    const formatChainData = (chainData) => {
+        if (Array.isArray(chainData)) {
+            return chainData.join(", ");
+        }
+        return "";
+    };
+
     return (
         <Dialog
             open={dialogOpen}
             onClose={() => setDialogOpen(false)}
             PaperProps={{
                 style: {
-                    width: '50%', // custom width, you can specify any value
+                    width: '75%', // custom width, you can specify any value
                     maxWidth: 'none', // override maxWidth
                 },
             }}
@@ -90,7 +137,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                         <div>Total Refunds Amount: {formatAmountDisplay(totalRefundsAmount)}</div>
                         <div>Total Refunds: {totalRefunds}</div>
                         <div>Total Net Amount: {formatAmountDisplay(totalNetAmount)}</div>
-                        <div>Total Transactions: {totalTransactions}</div>
+                        <div>Total Transactions: {formatChainData(totalTransactions)}</div>
                     </Box>
                     <Box ml="auto">
                         <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
@@ -114,7 +161,6 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                         </TableHead>
                         {/* Render table body */}
                         <TableBody>
-                            {/* Row for the column sums */}
                             <TableRow>
                                 <StyledTableCell component="th" scope="row" style={totalRowStyle}>
                                     Total
@@ -123,13 +169,14 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                     {(totalShare * 100).toFixed(2)}%
                                 </StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyle}>{totalContributions}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{formatChainData(totalContributions)}</StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalRefundsAmount)}</StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyle}>{totalRefunds}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{formatChainData(totalRefunds)}</StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalNetAmount)}</StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyle}>{totalTransactions}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>
+                                    {formatChainData(totalTransactions) || ""}
+                                </StyledTableCell>
                             </TableRow>
-                            {/* Render individual table rows */}
                             {sortedAllocationTableData.map((row) => (
                                 <StyledTableRow key={row.uniqueMemberWallet} walletType={row.walletType}>
                                     <StyledTableCell component="th" scope="row">
@@ -137,15 +184,17 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                     </StyledTableCell>
                                     <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.contributions}</StyledTableCell>
+                                    <StyledTableCell align="center">{formatChainData(row.contributionsChainMap)}</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.refundsAmount)}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.refunds}</StyledTableCell>
+                                    <StyledTableCell align="center">{formatChainData(row.refundsChainMap)}</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.netAmount)}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.contributions + row.refunds}</StyledTableCell>
-
+                                    <StyledTableCell align="center">
+                                        {totalTransactions && formatChainData(row.totalTransactions)}
+                                    </StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
+
                     </Table>
                 </TableContainer>
             </DialogContent>
