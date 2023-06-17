@@ -172,7 +172,7 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
         contributionsAmount,
         refundsAmount,
         netAmount: contributionsAmount - refundsAmount
-    }));
+    }))          // TO FILTER NET AMOUNTS THAT ARE ZERO, add to this line ".filter(row => row.netAmount !== 0)";
 
     return allocationTableData;
 };

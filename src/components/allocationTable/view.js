@@ -23,6 +23,17 @@ import {
 const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets }) => {
     const [sortBy, setSortBy] = useState("Amount");
 
+    let walletNames;
+    if (selectedWallets.length > 1) {
+        walletNames = selectedWallets.map((wallet, index) => `(${index + 1}) ${wallet.name}`).join(', ');
+    } else {
+        walletNames = selectedWallets[0].name;
+    }
+
+    const dialogTitle = `Allocations for: ${walletNames}${selectedWallets.length > 1 ? ' (aggregated)' : ''}`;
+
+
+
     const allocationTableData = useMemo(() => {
         return generateAllocationTableData(tableData, selectedWallets);
     }, [selectedWallets, tableData]);
@@ -52,8 +63,6 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         if (sortBy === "# of contributions") {
             sortedData.sort((a, b) => b.contributions - a.contributions);
         } else if (sortBy === "Amount") {
-            sortedData.sort((a, b) => b.contributionsAmount - a.contributionsAmount);
-        } else if (sortBy === "Share") {
             sortedData.sort((a, b) => b.share - a.share);
         }
         return sortedData;
@@ -72,7 +81,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                 },
             }}
         >
-            <DialogTitle>Member Wallet Transactions</DialogTitle>
+            <DialogTitle>{dialogTitle}</DialogTitle>
             <DialogContent style={{ overflowX: 'auto' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     <Box mb={2}>
