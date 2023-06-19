@@ -16,6 +16,10 @@ const InitUX = () => {
             name: "pool_investments",
             address: "0xb79E768bEF0Ca0a34E53c3FE2ac26E600ACf8ccA",
         },
+        {
+            name: "pool_trust",
+            address: "0x8c78290373623175dfa7a4736bd3a340b670bce9"
+        },
     ]);
 
     // TRANSACTIONS

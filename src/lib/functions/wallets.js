@@ -65,6 +65,13 @@ export const getUniqueTypes = (tableData) => {
     return [...new Set(types)].filter(type => type);
 };
 
+export const convertTitle = (snakeCaseString) => {
+    const words = snakeCaseString.split('_');
+    const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+    const capitalCasedString = capitalizedWords.join(' ');
+
+    return capitalCasedString;
+};
 
 export const formatAmount = (chain, value) => chain === 'bsc' ? value / 1e18 : value / 1e6;
 
@@ -130,72 +137,143 @@ export const generateTableData = (txn, id, selectedWallets) => {
     }
 };
 
-export const generateAllocationTableData = (tableData, selectedWallets) => {
-    const lowerCasedSelectedWalletAddresses = selectedWallets.map(wallet => wallet.address.toLowerCase());
+const getInitialWalletData = () => ({
+    amount: 0,
+    contributions: 0,
+    contributionsAmount: 0,
+    contributionsChainMap: {},
+    refunds: 0,
+    refundsAmount: 0,
+    refundsChainMap: {},
+    walletTxns: {},
+});
 
-    const memberMap = tableData.reduce((map, row) => {
+export const calculateTotals = (data) => {
+    let totalTxns = 0;
+    let totalContributionsAmount = 0;
+    let totalRefundsAmount = 0;
+    let aggregatedContributionsChainMap = {};
+    let aggregatedRefundsChainMap = {};
+    let aggregatedTxns = {};
+
+    if (!data || data.length === 0) {
+        return {
+            totalTxns,
+            totalContributionsAmount,
+            totalRefundsAmount,
+            totalNetAmount: 0,
+            aggregatedContributionsChainMap,
+            aggregatedRefundsChainMap,
+            aggregatedTxns,
+        };
+    }
+
+    data.forEach((wallet) => {
+        totalContributionsAmount += wallet.contributionsAmount;
+        totalRefundsAmount += wallet.refundsAmount;
+        totalTxns += 1;
+
+        wallet.contributionsChainMap.forEach((entry) => {
+            let [chain, count] = entry.split('(');
+            count = parseInt(count.slice(0, -1)); // remove the closing parenthesis and convert to int
+            aggregatedContributionsChainMap[chain] = (aggregatedContributionsChainMap[chain] || 0) + count;
+        });
+
+        wallet.refundsChainMap.forEach((entry) => {
+            let [chain, count] = entry.split('(');
+            count = parseInt(count.slice(0, -1)); // remove the closing parenthesis and convert to int
+            aggregatedRefundsChainMap[chain] = (aggregatedRefundsChainMap[chain] || 0) + count;
+        });
+
+        wallet.walletTxns.forEach((entry) => {
+            let [txn, count] = entry.split('(');
+            count = parseInt(count.slice(0, -1)); // remove the closing parenthesis and convert to int
+            aggregatedTxns[txn] = (aggregatedTxns[txn] || 0) + count;
+        });
+    });
+
+    const totals = {
+        totalTxns,
+        totalContributionsAmount,
+        totalRefundsAmount,
+        totalNetAmount: totalContributionsAmount - totalRefundsAmount,
+        aggregatedContributionsChainMap,
+        aggregatedRefundsChainMap,
+        aggregatedTxns,
+    };
+
+    console.log("TOTALS: ", totals);
+    return totals;
+};
+
+
+
+
+
+const generateUniqueMemberWalletMap = (tableData, selectedWallets) => {
+
+    if (tableData.length === 0 || selectedWallets.length === 0) return new Map();
+    const selectedWalletAddresses = selectedWallets.map(wallet => wallet.address.toLowerCase());
+
+    const uniqueMemberWalletMap = tableData.reduce((map, row) => {
+        // data
         const { from, to, walletType, amount, chain } = row;
         if (walletType !== 'Member') return map;
 
-        const uniqueMemberWallet = from?.toLowerCase();
-        if (uniqueMemberWallet && !lowerCasedSelectedWalletAddresses.includes(uniqueMemberWallet)) {
-            const existingData = map.get(uniqueMemberWallet) || {
-                amount: 0, contributions: 0, refunds: 0, contributionsAmount: 0,
-                refundsAmount: 0, contributionsChainMap: {}, refundsChainMap: {}
-            };
+        const fromWallet = from?.toLowerCase();
+        const toWallet = to?.toLowerCase();
 
-            let contributionsChainMap = { ...existingData.contributionsChainMap };
-            contributionsChainMap[chain] = (contributionsChainMap[chain] || 0) + 1;
+        // determine txnType
+        const txnType = fromWallet && toWallet && selectedWalletAddresses.includes(toWallet) ? 'contribution' : 'refund';
 
-            map.set(uniqueMemberWallet, {
-                ...existingData,
-                amount: existingData.amount + Number(amount),
-                contributions: existingData.contributions + 1,
-                contributionsAmount: existingData.contributionsAmount + Number(amount),
-                contributionsChainMap
-            });
-        }
+        // get the unique member's wallet address
+        const uniqueMemberWallet = txnType === 'contribution' ? fromWallet : toWallet;
 
-        const refundMemberWallet = to?.toLowerCase();
-        if (refundMemberWallet && refundMemberWallet !== uniqueMemberWallet && !lowerCasedSelectedWalletAddresses.includes(refundMemberWallet)) {
-            const existingData = map.get(refundMemberWallet) || {
-                amount: 0, contributions: 0, refunds: 0, contributionsAmount: 0,
-                refundsAmount: 0, contributionsChainMap: {}, refundsChainMap: {}
-            };
+        // get the unique member's data - or - create it if it doesn't exist yet
+        const uniqueMemberData = txnType === 'contribution'
+            ? map.get(fromWallet) || getInitialWalletData()
+            : map.get(toWallet) || getInitialWalletData();
 
-            let refundsChainMap = { ...existingData.refundsChainMap };
-            refundsChainMap[chain] = (refundsChainMap[chain] || 0) + 1;
+        // update the chain txn counts
+        const chainMapProperty = txnType === 'contribution' ? 'contributionsChainMap' : 'refundsChainMap';
+        const updatedChainMap = { ...uniqueMemberData[chainMapProperty], [chain]: (uniqueMemberData[chainMapProperty][chain] || 0) + 1 };
 
-            map.set(refundMemberWallet, {
-                ...existingData,
-                amount: existingData.amount - Number(amount),
-                refunds: existingData.refunds + 1,
-                refundsAmount: existingData.refundsAmount + Number(amount),
-                refundsChainMap
-            });
-        }
+        // update wallet counts
+        const counterWallet = txnType === 'contribution'
+            ? selectedWallets.find(w => w.address.toLowerCase() === toWallet)
+            : selectedWallets.find(w => w.address.toLowerCase() === fromWallet);
 
+        if (counterWallet) uniqueMemberData.walletTxns[counterWallet.name] = (uniqueMemberData.walletTxns[counterWallet.name] || 0) + 1;
+
+        map.set(uniqueMemberWallet, {
+            ...uniqueMemberData,
+            amount: uniqueMemberData.amount + Number(amount),
+            [`${txnType}s`]: uniqueMemberData[`${txnType}s`] + 1,
+            [`${txnType}sAmount`]: uniqueMemberData[`${txnType}sAmount`] + Number(amount),
+            [`${txnType}sChainMap`]: updatedChainMap
+        });
+        console.log("MEMBER MAP: ", map)
         return map;
     }, new Map());
 
-    // Running total of each chain's transactions
-    let totalContributionsChainMap = {};
-    let totalRefundsChainMap = {};
+    return uniqueMemberWalletMap;
 
-    const allocationTableData = Array.from(memberMap, ([uniqueMemberWallet, {
+};
+
+export const generateAllocationTableData = (tableData, selectedWallets) => {
+
+    const uniqueMemberWalletsMap = generateUniqueMemberWalletMap(tableData, selectedWallets);
+
+    const allocationTableData = Array.from(uniqueMemberWalletsMap, ([uniqueMemberWallet, {
         amount, contributions, refunds, contributionsAmount, refundsAmount,
-        contributionsChainMap, refundsChainMap
+        contributionsChainMap, refundsChainMap, walletTxns
     }]) => {
         const contributionsChainArray = Object.entries(contributionsChainMap)
-            .map(([chain, count]) => {
-                totalContributionsChainMap[chain] = (totalContributionsChainMap[chain] || 0) + count;
-                return `${chain}(${count})`;
-            });
+            .map(([chain, count]) => `${chain}(${count})`);
         const refundsChainArray = Object.entries(refundsChainMap)
-            .map(([chain, count]) => {
-                totalRefundsChainMap[chain] = (totalRefundsChainMap[chain] || 0) + count;
-                return `${chain}(${count})`;
-            });
+            .map(([chain, count]) => `${chain}(${count})`);
+        const walletTxnsArray = Object.entries(walletTxns)
+            .map(([wallet, count]) => `${wallet}(${count})`);
         return {
             uniqueMemberWallet,
             amount,
@@ -207,10 +285,12 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
             refundsAmount,
             contributionsChainMap: contributionsChainArray,
             refundsChainMap: refundsChainArray,
-            chainMap: [...contributionsChainArray, ...refundsChainArray]
+            walletTxns: walletTxnsArray
         }
     });
 
-    return { allocationTableData, totalContributionsChainMap, totalRefundsChainMap };
+    console.log("ALLO DATA: ", allocationTableData)
+
+    return allocationTableData;
 };
 
