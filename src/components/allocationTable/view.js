@@ -104,7 +104,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
             onClose={() => setDialogOpen(false)}
             PaperProps={{
                 style: {
-                    width: '75%', // custom width, you can specify any value
+                    width: '80%', // custom width, you can specify any value
                     maxWidth: 'none', // override maxWidth
                     boxShadow: '0 0 10px 3px #199eb0',
                 },
@@ -157,7 +157,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                 <StyledTableCell align="center">Refunds ($)</StyledTableCell>
                                 <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
                                     # of Refunds
-                                    <div style={{ width: '105px', whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
+                                    <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
                                 </StyledTableCell>
                             </TableRow>
                         </TableHead>
@@ -167,10 +167,10 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                 <StyledTableCell component="th" scope="row" style={totalRowStyle}>
                                     Total
                                 </StyledTableCell>
-                                <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999', color: totalShare !== 1 ? "red" : "inherit" }}>
+                                <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999' }}>
                                     {(totalShare * 100).toFixed(2)}%
                                 </StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyle}>{totalNetAmount && formatAmountDisplay(totalNetAmount)}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{totalTxns && formatAmountDisplay(totalNetAmount)}</StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>
                                     {totalTxns}
                                 </StyledTableCell >
