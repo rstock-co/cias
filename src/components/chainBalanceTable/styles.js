@@ -8,11 +8,11 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
         color: theme.palette.common.white,
         fontWeight: 'bold',
         fontSize: 16,
-        fontFamily: 'Roboto, sans-serif'
+        fontFamily: 'Inter, sans-serif'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
-        fontFamily: 'Roboto, sans-serif'
+        fontFamily: 'Inter Tight, sans-serif'
     },
 }));
 

@@ -1,7 +1,8 @@
 
 import { Dialog, DialogContent, DialogTitle, Table, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
-import { calculateFlow } from '../../lib/functions/wallets';
+import { calculateFlow, formatAmountDisplay } from '../../lib/functions/wallets';
 import { StyledTableCell, StyledTableRow } from './styles';
+import "@fontsource/inter-tight";
 
 const ChainFlowDialog = ({ tableData, dialogOpen, setDialogOpen }) => {
 
@@ -26,25 +27,25 @@ const ChainFlowDialog = ({ tableData, dialogOpen, setDialogOpen }) => {
                         <Table>
                             <TableHead>
                                 <StyledTableRow>
-                                    <StyledTableCell>Chain</StyledTableCell>
-                                    <StyledTableCell>Inflow</StyledTableCell>
-                                    <StyledTableCell>Outflow</StyledTableCell>
-                                    <StyledTableCell>Net</StyledTableCell>
-                                    <StyledTableCell># Txns In</StyledTableCell>
-                                    <StyledTableCell># Txns Out</StyledTableCell>
-                                    <StyledTableCell>Total # Txns</StyledTableCell>
+                                    <StyledTableCell align="center">Chain</StyledTableCell>
+                                    <StyledTableCell align="center">Inflow</StyledTableCell>
+                                    <StyledTableCell align="center">Outflow</StyledTableCell>
+                                    <StyledTableCell align="center">Net</StyledTableCell>
+                                    <StyledTableCell align="center"># Txns In</StyledTableCell>
+                                    <StyledTableCell align="center"># Txns Out</StyledTableCell>
+                                    <StyledTableCell align="center">Total # Txns</StyledTableCell>
                                 </StyledTableRow>
                             </TableHead>
                             <TableBody>
                                 {chainFlows.map((row, index) => (
                                     <StyledTableRow key={index}>
-                                        <StyledTableCell>{row.chain}</StyledTableCell>
-                                        <StyledTableCell>{row.inflow}</StyledTableCell>
-                                        <StyledTableCell>{row.outflow}</StyledTableCell>
-                                        <StyledTableCell>{row.netFlow}</StyledTableCell>
-                                        <StyledTableCell>{row.txnsIn}</StyledTableCell>
-                                        <StyledTableCell>{row.txnsOut}</StyledTableCell>
-                                        <StyledTableCell>{row.totalTxns}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.chain}</StyledTableCell>
+                                        <StyledTableCell align="center">{formatAmountDisplay(row.inflow)}</StyledTableCell>
+                                        <StyledTableCell align="center">{formatAmountDisplay(row.outflow)}</StyledTableCell>
+                                        <StyledTableCell align="center">{formatAmountDisplay(row.netFlow)}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.txnsIn}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.txnsOut}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.totalTxns}</StyledTableCell>
                                     </StyledTableRow>
                                 ))}
                             </TableBody>
