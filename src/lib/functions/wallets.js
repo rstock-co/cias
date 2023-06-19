@@ -171,7 +171,7 @@ export const calculateTotals = (data) => {
     data.forEach((wallet) => {
         totalContributionsAmount += wallet.contributionsAmount;
         totalRefundsAmount += wallet.refundsAmount;
-        totalTxns += 1;
+        totalTxns += wallet.net;
 
         wallet.contributionsChainMap.forEach((entry) => {
             let [chain, count] = entry.split('(');
