@@ -142,7 +142,9 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                 <StyledTableCell>Member Wallet</StyledTableCell>
                                 <StyledTableCell align="center">Share (%)</StyledTableCell>
                                 <StyledTableCell align="center">Total Net ($)</StyledTableCell>
-                                <StyledTableCell align="center" >Total # Txns</StyledTableCell>
+                                <StyledTableCell align="center" style={selectedWallets.length > 1 ? {} : { borderRight: "1px solid grey" }}>
+                                    Total # Txns
+                                </StyledTableCell>
                                 {selectedWallets.length > 1 && (
                                     <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
                                         # of Txns
@@ -171,12 +173,13 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                     {(totalShare * 100).toFixed(2)}%
                                 </StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{totalTxns && formatAmountDisplay(totalNetAmount)}</StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyle}>
+                                <StyledTableCell align="center" style={selectedWallets.length > 1 ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
                                     {totalTxns}
-                                </StyledTableCell >
+                                </StyledTableCell>
                                 {selectedWallets.length > 1 && (
                                     <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(aggregatedTxns)}</StyledTableCell>
                                 )}
+
                                 <StyledTableCell align="center" style={totalRowStyle}>{totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(aggregatedContributionsChainMap)}</StyledTableCell>
                                 <StyledTableCell align="center" style={totalRowStyle}>{totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)}</StyledTableCell>
@@ -189,7 +192,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                     </StyledTableCell>
                                     <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.netAmount)}</StyledTableCell>
-                                    <StyledTableCell align="center" >{row.net}</StyledTableCell>
+                                    <StyledTableCell align="center" style={{ borderRight: selectedWallets.length > 1 ? "none" : "1px solid #b8b8b8" }}>{row.net}</StyledTableCell>
                                     {selectedWallets.length > 1 && (
                                         <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatChainArray(row.walletTxns)}</StyledTableCell>
                                     )}

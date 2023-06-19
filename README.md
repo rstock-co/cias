@@ -36,8 +36,8 @@
 # Development: Phase 1
 
 #### Currently Working On
-- Improve allocation table: 
-    - Add another column for wallets they contributied to with their counts in brackets (just one column for total, not cont/refunds)
+- Add visuals for easier testing
+    - Enhance the chain flow table
     - Add another popup table that opens when you click on a member wallet, which displays all of their txns for the allocation table (to verify)
 
 

@@ -36,6 +36,10 @@ const LoadWallet = ({
     setChainDialogOpen,
     handleGenerateChainFlow,
 
+    calculateTotalTransactionsByChain,
+    calculateTotalValueByChain,
+    formatChainData
+
 } = {}) => {
 
     console.log("SELECTED WALLETS: ", selectedWallets)
@@ -58,16 +62,29 @@ const LoadWallet = ({
         currency: { header: 'Currency ($)', align: 'center' },
     };
 
+    // const totalTransactionsByChain = calculateTotalTransactionsByChain(tableData);
+    // const totalValueByChain = calculateTotalValueByChain(tableData);
+    // const formattedChainData = formatChainData(totalTransactionsByChain, totalValueByChain);
+
 
     return (
 
         <Box sx={loadWalletStyles}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <Typography variant="h3" align="left">
+                <Box sx={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'column', alignItems: 'flex-start' }}>
+                    <Typography variant="h3" align="left" sx={{ marginBottom: '25px' }}>
                     <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '45px', fontWeight: 'bold', color: 'white', letterSpacing: '4px' }}>
                         WALLET LOOKUP
                     </span>
-                </Typography>
+                    </Typography >
+                    {/* {formattedChainData.map((data, index) => (
+                        <Typography variant="h6" align="left" key={index} >
+                            <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', color: 'white', letterSpacing: '1px' }}>
+                                {data}
+                            </span>
+                        </Typography>
+                    ))} */}
+                </Box>
 
                 <Box sx={{ marginTop: '15px' }}>
                     <DateRangeSelect

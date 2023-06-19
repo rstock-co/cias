@@ -106,6 +106,29 @@ export const getWalletType = (txn, selectedWalletAddresses) => {
     return 'Unknown';
 };
 
+export const calculateFlow = (data, chain) => {
+    const chainData = data.filter(item => item.chain === chain);
+    const inTxns = chainData.filter(item => item.inout === "In");
+    const outTxns = chainData.filter(item => item.inout === "Out");
+
+    const inflow = inTxns.reduce((acc, cur) => acc + Number(cur.amount), 0);
+    const outflow = outTxns.reduce((acc, cur) => acc + Number(cur.amount), 0);
+    const netFlow = inflow - outflow;
+
+    const txnsIn = inTxns.length;
+    const txnsOut = outTxns.length;
+
+    return {
+        chain,
+        inflow,
+        outflow,
+        netFlow,
+        txnsIn,
+        txnsOut,
+        totalTxns: txnsIn + txnsOut
+    };
+};
+
 export const generateTableData = (txn, id, selectedWallets) => {
     const selectedWalletsLowercase = selectedWallets.map(address => address.toLowerCase());
     const amount = formatAmount(txn.chain, txn.value);
@@ -205,10 +228,6 @@ export const calculateTotals = (data) => {
     console.log("TOTALS: ", totals);
     return totals;
 };
-
-
-
-
 
 const generateUniqueMemberWalletMap = (tableData, selectedWallets) => {
 
