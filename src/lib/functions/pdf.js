@@ -19,7 +19,7 @@ import jsPDF from 'jspdf';
 export const printDocument = () => {
     const element = document.getElementById('myTable');
 
-    html2canvas(element, { scale: 1.2, useCORS: true }).then((canvas) => {
+    html2canvas(element, { scale: 2, useCORS: true }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('portrait', 'in', 'tabloid');
         const imgProps = pdf.getImageProperties(imgData);

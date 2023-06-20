@@ -313,3 +313,28 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
     return allocationTableData;
 };
 
+export const shortenAddress = (address, startLength = 4, endLength = 6) => {
+    // Ensure the input is a string
+    if (typeof address !== 'string') {
+        console.log("Input should be a string");
+        return;
+    }
+
+    // Ensure the address starts with '0x'
+    if (!address.startsWith('0x')) {
+        console.log("Address should start with '0x'");
+        return;
+    }
+
+    // Ensure the address is the correct length
+    if (address.length !== 42) {
+        console.log("Address should be 42 characters long");
+        return;
+    }
+
+    // Get the start and end of the address
+    const start = address.substring(0, startLength + 2); // add 2 to account for '0x'
+    const end = address.substring(address.length - endLength);
+
+    return start + '...' + end;
+}

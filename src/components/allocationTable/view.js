@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { generateAllocationTableData, calculateTotals, convertTitle } from "../../lib/functions/wallets";
-import { formatAmountDisplay } from "../../lib/functions/wallets";
+import { formatAmountDisplay, shortenAddress } from "../../lib/functions/wallets";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
 import { printDocument } from "../../lib/functions/pdf";
@@ -188,7 +188,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                             {sortedAllocationTableData.map((row) => (
                                 <StyledTableRow key={row.uniqueMemberWallet} walletType={row.walletType}>
                                     <StyledTableCell component="th" scope="row">
-                                        {row.uniqueMemberWallet}
+                                        {shortenAddress(row.uniqueMemberWallet)}
                                     </StyledTableCell>
                                     <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.netAmount)}</StyledTableCell>
