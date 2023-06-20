@@ -1,5 +1,5 @@
 import { convertTime } from "./datetime";
-import { getNameByAddress } from "../../lookup/wallets";
+import { getNameByAddress } from "../../components/lookup/wallets";
 import { checkMoveType } from "./datetime";
 
 export const filterTxns = (txns, { type, filterWallet, chain, dateRange, direction }) => {

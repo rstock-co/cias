@@ -1,17 +1,21 @@
-import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, CircularProgress } from '@mui/material';
-import { Box, Typography } from '@mui/material';
+import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, Box, Typography } from '@mui/material';
+import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect } from '../../components/selectInputs';
+import { wallets } from '../lookup/wallets';
+import { StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
+import { loadWalletStyles, ColorButton } from './styles';
 import '@fontsource/plus-jakarta-sans';
 import '@fontsource/inter-tight';
 
-import { wallets } from '../../lookup/wallets';
 import AllocationTable from '../allocationTable/view';
 import ChainFlowDialog from '../chainBalanceTable/view';
-import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect } from '../../components/selectInputs';
-import { StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
-import { loadWalletStyles, ColorButton } from './styles'; // styleRow
+import LoadingScreen from './loadingScreen';
+
 
 const LoadWallet = ({
     isLoading,
+    arbStatus,
+    ethStatus,
+    bscStatus,
     selectedWallets,
 
     tableData,
@@ -34,18 +38,25 @@ const LoadWallet = ({
 
     chainDialogOpen,
     setChainDialogOpen,
-    handleGenerateChainFlow,
+    handleGenerateChainFlow
 
-    calculateTotalTransactionsByChain,
-    calculateTotalValueByChain,
-    formatChainData
+    // calculateTotalTransactionsByChain,
+    // calculateTotalValueByChain,
+    // formatChainData
 
 } = {}) => {
 
-    console.log("SELECTED WALLETS: ", selectedWallets)
+    const walletAddress = selectedWallets[selectedWallets.length - 1].address;
 
     if (isLoading || tableData.length > 900) {
-        return <CircularProgress />;
+        return (
+            <LoadingScreen
+                walletAddress={walletAddress}
+                arbStatus={arbStatus}
+                ethStatus={ethStatus}
+                bscStatus={bscStatus}
+            />
+        );
     }
 
     const propertyMap = {

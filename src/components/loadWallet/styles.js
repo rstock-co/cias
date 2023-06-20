@@ -64,14 +64,26 @@ export const StyledTableRow = styled(TableRow)(({ theme, isRefund, walletType })
     },
 }));
 
-
-
 export const loadWalletStyles = {
     background: 'radial-gradient(circle at top center, #02343C 50vh, #01070D 100vh)',  // dark blue #0D0F4D 50vh, #070310 100vh)
     pt: 50,
     p: 5,
     pb: 100,
     position: 'relative',
+};
+
+export const loadScreenStyles = {
+    background: 'radial-gradient(circle at top center, #02343C 50vh, #01070D 100vh)',  // dark blue #0D0F4D 50vh, #070310 100vh)
+    pt: 50,
+    p: 5,
+    pb: 150,
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+    color: '#ffffff',
 };
 
 export const ColorButton = styled(Button)(({ theme }) => ({
