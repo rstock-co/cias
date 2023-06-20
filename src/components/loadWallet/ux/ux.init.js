@@ -99,6 +99,9 @@ const InitUX = () => {
         arbStatus,
         ethStatus,
         bscStatus,
+        setArbStatus,
+        setEthStatus,
+        setBscStatus
     };
 }
 

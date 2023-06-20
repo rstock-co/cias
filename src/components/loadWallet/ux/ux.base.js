@@ -5,7 +5,13 @@ const BaseUX = ({
     txns,
     setTxns,
     setSelectedWallets,
-    fetchTransactions
+    fetchTransactions,
+    arbStatus,
+    ethStatus,
+    bscStatus,
+    setArbStatus,
+    setEthStatus,
+    setBscStatus
 } = {}) => {
 
     // TABLE DATA
@@ -39,6 +45,10 @@ const BaseUX = ({
 
         // avoid api call if a wallet is deselected from the multi-select box
         if (walletsToFetch.length > 0) {
+            setArbStatus({ ...arbStatus, loading: true });
+            setEthStatus({ ...ethStatus, loading: true });
+            setBscStatus({ ...bscStatus, loading: true });
+
             fetchTransactions(walletsToFetch);
         }
 
