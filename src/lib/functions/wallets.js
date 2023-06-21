@@ -1,6 +1,7 @@
 import { convertTime } from "./datetime";
 import { getNameByAddress } from "../../components/lookup/wallets";
 import { checkMoveType } from "./datetime";
+import FormatTxnLink from "../../components/FormatTxnLink";
 
 export const filterTxns = (txns, { type, filterWallet, chain, dateRange, direction }) => {
     // If initial render, return all txns (check if all filter conditions are not set)
@@ -84,13 +85,6 @@ export const formatAmountDisplay = (value) => {
     });
 };
 
-// need to make this function mulit-chain
-const formatTxnLink = (hash) => (
-    <a href={`https://arbiscan.io/tx/${hash}`} target="_blank" rel="noopener noreferrer" className="txnLink">
-        Txn
-    </a>
-);
-
 export const getWalletType = (txn, selectedWalletAddresses) => {
     const fromAddress = txn.from.toLowerCase();
     const toAddress = txn.to.toLowerCase();
@@ -149,7 +143,7 @@ export const generateTableData = (txn, id, selectedWallets) => {
         chain: txn.chain,
         timestamp,
         dateTime: convertTime(timestamp, 'America/Denver'),
-        txn: formatTxnLink(txn.hash),
+        link: <FormatTxnLink hash={txn.hash} chain={txn.chain} />,
         from: txn.from,
         to: txn.to,
         walletType: type,
@@ -225,7 +219,7 @@ export const calculateTotals = (data) => {
         aggregatedTxns,
     };
 
-    console.log("TOTALS: ", totals);
+    // console.log("TOTALS: ", totals);
     return totals;
 };
 
@@ -271,7 +265,7 @@ const generateUniqueMemberWalletMap = (tableData, selectedWallets) => {
             [`${txnType}sAmount`]: uniqueMemberData[`${txnType}sAmount`] + Number(amount),
             [`${txnType}sChainMap`]: updatedChainMap
         });
-        console.log("MEMBER MAP: ", map)
+        // console.log("MEMBER MAP: ", map)
         return map;
     }, new Map());
 
@@ -308,7 +302,7 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
         }
     });
 
-    console.log("ALLO DATA: ", allocationTableData)
+    // console.log("ALLO DATA: ", allocationTableData)
 
     return allocationTableData;
 };

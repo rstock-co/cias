@@ -14,8 +14,8 @@ const InitUX = () => {
     // SET OF SELECTED WALLETS (multi-select)
     const [selectedWallets, setSelectedWallets] = useState([
         {
-            name: "pool_investments",
-            address: "0xb79E768bEF0Ca0a34E53c3FE2ac26E600ACf8ccA",
+            name: "pool_membership",
+            address: "0xab5573F28e6dD9Ec34966b06e4C736481F393FC7"
         },
     ]);
 
@@ -30,7 +30,9 @@ const InitUX = () => {
     const fetchAndSetStatus = async (walletAddress, contractAddress, apiCall, setStatus) => {
         try {
             const result = await apiCall(walletAddress, contractAddress);
-            setStatus({ loading: false, txns: result.length });
+            setStatus === setEthStatus
+                ? setStatus(prevStatus => ({ ...prevStatus, loading: false, txns: prevStatus.txns + result.length }))
+                : setStatus({ loading: false, txns: result.length });
             return result;
         } catch (error) {
             console.error('Error fetching transactions:', error);
@@ -38,6 +40,7 @@ const InitUX = () => {
             throw error;
         }
     };
+
 
     const getAggregateERC20Txns = async (walletAddress, contractAddresses) => {
         const { stableArb, stableEth, stableEth2, stableBsc } = contractAddresses;
