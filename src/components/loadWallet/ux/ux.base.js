@@ -21,12 +21,20 @@ const BaseUX = ({
         const { target: { value } } = event;
         const walletNames = typeof value === 'string' ? value.split(',') : value;
 
+        console.log("=====================")
+
+        console.log("WALLET NAMES: ", walletNames)
+
         const walletAddresses = walletNames.map(name => getAddressByName(name).toLowerCase());
+
+        console.log("WALLET ADDRESSES: ", walletAddresses)
 
         const selectedWallets = walletNames.map((name, i) => ({
             name,
             address: walletAddresses[i]
         }));
+
+        console.log("SELECTED WALLETS: ", selectedWallets)
 
         const filterByWalletAddresses = (addresses, data) => {
             return data.filter(item => {
@@ -36,12 +44,16 @@ const BaseUX = ({
         }
 
         const newTxns = filterByWalletAddresses(walletAddresses, txns);
+        console.log("NEW TXNS: ", newTxns)
         const newTableData = filterByWalletAddresses(walletAddresses, tableData);
+        console.log("NEW TABLE DATA: ", newTableData)
 
         const walletsToFetch = selectedWallets.filter(wallet => {
             const isAddressFetched = newTxns.some(txn => txn.to.toLowerCase() === wallet.address.toLowerCase());
             return !isAddressFetched;
         });
+
+        console.log("WALLETS TO FETCH: ", walletsToFetch)
 
         // avoid api call if a wallet is deselected from the multi-select box
         if (walletsToFetch.length > 0) {

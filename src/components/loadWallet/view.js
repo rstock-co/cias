@@ -65,7 +65,7 @@ const LoadWallet = ({
         wallet: { header: 'Wallet', align: 'center' }, // Add this line
         inout: { header: 'In/Out', align: 'center' },
         dateTime: { header: 'Date/Time', align: 'left' },
-        link: { header: 'Txn', align: 'left' },
+        link: { header: 'Txn', align: 'center' },
         from: { header: 'From', align: 'left' },
         to: { header: 'To', align: 'left' },
         walletType: { header: 'Type', align: 'left' },
