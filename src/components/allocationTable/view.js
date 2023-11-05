@@ -6,8 +6,8 @@ import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder
 import { printDocument } from "../../lib/functions/pdf";
 // import ToggleButton from '@mui/material/ToggleButton';
 // import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Switch from '@mui/material/Switch';
-import { format, startOfMinute, addMinutes, closestTo } from 'date-fns';
+import { FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from '@mui/material';
+import { format, startOfMinute, addMinutes } from 'date-fns';
 import "@fontsource/inter-tight";
 
 import {
@@ -33,6 +33,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
     const [totals, setTotals] = useState({});
     const [showMemberName, setShowMemberName] = useState(false);
     const [showHeaderRow, setShowHeaderRow] = useState(true);
+    const [adjustedNetTotal, setAdjustedNetTotal] = useState("");
 
     useEffect(() => {
         if (!isLoading && tableData.length < 900 && selectedWallets.length > 0) {
@@ -79,6 +80,10 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
     const handleToggleHeaderRow = (event) => {
         setShowHeaderRow(event.target.checked);
     };
+
+    const handleAdjustedNetTotalChange = (event) => {
+        setAdjustedNetTotal(event.target.value);
+    };
   
     const mappedAllocationTableData = useMemo(() => {
         if (!allocationTableData) return [];
@@ -86,8 +91,9 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         return allocationTableData.map(row => ({
             ...row,
             share: row.netAmount / totalNetAmount,
+            adjustedNetAmount: (adjustedNetTotal && totalNetAmount) ? (row.netAmount / totalNetAmount) * adjustedNetTotal : row.netAmount
         }));
-    }, [allocationTableData, totalNetAmount]);
+    }, [allocationTableData, totalNetAmount, adjustedNetTotal]);
 
     const totalShare = mappedAllocationTableData.reduce((acc, row) => acc + row['share'], 0);
 
@@ -113,7 +119,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         ? `Aggregated Allocation Table for: ${selectedWallets.map((wallet, index) => `${convertTitle(wallet.name)}`).join(', ')} (${selectedWallets.length} wallets)`
         : `Allocation Table for: '${convertTitle(selectedWallets[0].name)}' Wallet`;
 
-    // Function to round the date to the nearest 5 minutes
+    // calculate "Generated on" date
     const roundToNearest5Minutes = (date) => {
         const start = startOfMinute(date);
     
@@ -122,13 +128,8 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         return addMinutes(start, roundTo);
     };
     
-    // Get the current date and time
     const now = new Date();
-    
-    // Round the current date/time to the nearest 5 minutes
     const roundedDate = roundToNearest5Minutes(now);
-    
-    // Format the date in the specified format
     const generatedDate = format(roundedDate, "MMMM d, yyyy '@' h:mm aaaa 'MST'");
 
     return (
@@ -178,7 +179,34 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                 inputProps={{ 'aria-label': 'Toggle Member Name' }}
                             />
                         </Box>
-                        <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
+                            <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
+                        </Box>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
+                            <FormControl fullWidth sx={{ m: 1 }}>
+                                <InputLabel htmlFor="outlined-adornment-amount">Adjusted Net Total</InputLabel>
+                                <OutlinedInput
+                                    id="outlined-adornment-amount"
+                                    variant="outlined"
+                                    size="small"
+                                    type="number"
+                                    value={adjustedNetTotal}
+                                    onChange={handleAdjustedNetTotalChange}
+                                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                                    label="Adjust Total Net Investment"
+                                    placeholder="Enter adjusted net investment"
+                                    sx={{ margin: "none", maxWidth: 200, fontFamily: 'Inter Tight, sans-serif' }}
+                                />
+                            </FormControl>
+                        </Box>
+                        {/* <FormControl fullWidth sx={{ m: 1 }}>
+                            <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+                            <OutlinedInput
+                                id="outlined-adornment-amount"
+                                startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                                label="Amount"
+                            />
+                        </FormControl> */}
                     </Box>
                 </Box>
 
@@ -241,7 +269,13 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                     <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999' }}>
                                         {(totalShare * 100).toFixed(2)}%
                                     </StyledTableCell>
-                                    <StyledTableCell align="center" style={totalRowStyle}>{totalTxns && formatAmountDisplay(totalNetAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center" style={totalRowStyle}>
+                                    <StyledTableCell align="center" style={totalRowStyle}>
+                                        {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
+                                    </StyledTableCell>
+
+                                    </StyledTableCell>
+
                                     <StyledTableCell align="center" style={selectedWallets.length > 1 ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
                                         {totalTxns}
                                     </StyledTableCell>
@@ -266,7 +300,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                         </StyledTableCell>
                                     )}
                                     <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
-                                    <StyledTableCell align="center">{formatAmountDisplay(row.netAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center">{formatAmountDisplay(row.adjustedNetAmount)}</StyledTableCell>
                                     <StyledTableCell align="center" style={{ borderRight: selectedWallets.length > 1 ? "none" : "1px solid #b8b8b8" }}>{row.net}</StyledTableCell>
                                     {selectedWallets.length > 1 && (
                                         <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatChainArray(row.walletTxns)}</StyledTableCell>

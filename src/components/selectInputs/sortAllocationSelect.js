@@ -8,7 +8,7 @@ export const SortAllocationSelect = ({ sortBy, handleSortByChange }) => {
         <Autocomplete
             value={sortBy}
             options={sortOptions}
-            sx={{ width: '300px', marginBottom: '20px', fontFamily: 'Inter Tight, sans-serif' }}
+            sx={{ width: '208px', fontFamily: 'Inter Tight, sans-serif' }}
             getOptionLabel={(option) => option}
             onChange={(event, newValue) => handleSortByChange(newValue || "")}
             renderInput={(params) => (
@@ -17,7 +17,7 @@ export const SortAllocationSelect = ({ sortBy, handleSortByChange }) => {
                     label="Sort By"
                     variant="outlined"
                     size="small"
-                    sx={{ minWidth: 120, backgroundColor: 'white', fontFamily: 'Inter Tight, sans-serif' }}
+                    sx={{ maxWidth: 200, backgroundColor: 'white', fontFamily: 'Inter Tight, sans-serif' }}
                 />
             )}
         />
