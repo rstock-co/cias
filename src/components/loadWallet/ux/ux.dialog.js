@@ -5,6 +5,7 @@ const DialogUX = () => {
     // DIALOG BOX STATES
     const [allocationDialogOpen, setAllocationDialogOpen] = useState(false);
     const [chainDialogOpen, setChainDialogOpen] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     // DIALOG HANDLERS
     const handleGenerateAllocations = () => {
@@ -15,6 +16,10 @@ const DialogUX = () => {
         setChainDialogOpen(true);
     };
 
+    const handleCloseSnackbar = () => {
+        setSnackbarOpen(false);
+      };
+
     return {
         allocationDialogOpen,
         setAllocationDialogOpen,
@@ -23,6 +28,10 @@ const DialogUX = () => {
         chainDialogOpen,
         setChainDialogOpen,
         handleGenerateChainFlow,
+
+        snackbarOpen,
+        setSnackbarOpen,
+        handleCloseSnackbar
     }
 }
 
