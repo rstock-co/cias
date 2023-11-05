@@ -261,7 +261,9 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                     </StyledTableCell>
                                     <StyledTableCell align="center" style={totalRowStyle}>
                                     <StyledTableCell align="center" style={totalRowStyle}>
-                                        {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
+                                        <div style={{ marginLeft: '24px' }}>
+                                            {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
+                                        </div>
                                     </StyledTableCell>
 
                                     </StyledTableCell>
