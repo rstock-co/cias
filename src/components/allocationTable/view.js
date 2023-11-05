@@ -4,6 +4,9 @@ import { formatAmountDisplay, shortenAddress } from "../../lib/functions/wallets
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
 import { printDocument } from "../../lib/functions/pdf";
+// import ToggleButton from '@mui/material/ToggleButton';
+// import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Switch from '@mui/material/Switch';
 import "@fontsource/inter-tight";
 
 import {
@@ -27,6 +30,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
     const [sortBy, setSortBy] = useState("Amount");
     const [allocationTableData, setAllocationTableData] = useState([]);
     const [totals, setTotals] = useState({});
+    const [showMemberName, setShowMemberName] = useState(false);
 
     useEffect(() => {
         if (!isLoading && tableData.length < 900 && selectedWallets.length > 0) {
@@ -66,6 +70,18 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         return "";
     };
 
+    // const handleMemberNameToggle = (event, newShow) => {
+    //     if (newShow !== null) {
+    //         setShowMemberName(newShow);
+    //     }
+    // };
+
+    // Function to handle the switch toggle
+    const handleToggleMemberName = (event) => {
+        setShowMemberName(event.target.checked);
+    };
+  
+
     const mappedAllocationTableData = useMemo(() => {
         if (!allocationTableData) return [];
         if (allocationTableData.length === 0) return [];
@@ -98,6 +114,8 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
             ? `Aggregated Allocation Table for: ${selectedWallets.map((wallet, index) => `${convertTitle(wallet.name)}`).join(', ')} (${selectedWallets.length} wallets)`
             : `Allocation Table for: '${convertTitle(selectedWallets[0].name)}' Wallet`;
 
+    console.log('Show Member Name:', showMemberName);
+
     return (
         <Dialog
             open={dialogOpen}
@@ -113,7 +131,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
             <DialogTitle>{dialogTitle}</DialogTitle>
             <DialogContent style={{ overflowX: 'auto' }}>
                 {/* maxHeight: '800px'  */}
-                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
                     <Box mb={2}>
                         <div>Total Contributions Amount: {totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</div>
                         <div>Total Contributions: {formatChainMap(aggregatedContributionsChainMap)}</div>
@@ -122,8 +140,34 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                         <div>Total Net Amount: {totalNetAmount && formatAmountDisplay(totalNetAmount)}</div>
                         <div>Total Transactions: {formatChainMap(aggregatedTxns)}</div>
                     </Box>
-                    <Box ml="auto">
-                        <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
+                    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
+                        <Typography component="div">
+                            Show Member Name
+                        </Typography>
+                        <Switch
+                            checked={showMemberName}
+                            onChange={handleToggleMemberName}
+                            color="primary"
+                            inputProps={{ 'aria-label': 'Toggle Member Name' }}
+                        />
+                        </Box>
+                    {/* <ToggleButtonGroup
+                        value={showMemberName}
+                        exclusive
+                        onChange={handleMemberNameToggle}
+                        aria-label="Member Name Toggle"
+                    >
+                        <ToggleButton value={true} aria-label="Show Member Name">
+                            Show Member Name
+                        </ToggleButton>
+                        <ToggleButton value={false} aria-label="Hide Member Name">
+                            Hide Member Name
+                        </ToggleButton>
+                    </ToggleButtonGroup> */}
+                        <Box ml="auto">
+                            <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
+                        </Box>
                     </Box>
                 </Box>
                 <TableContainer component={Paper} id="myTable" sx={{ border: 'none' }}>
@@ -140,6 +184,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                             </TableRow>
                             <TableRow>
                                 <StyledTableCell>Member Wallet</StyledTableCell>
+                                {showMemberName && (<StyledTableCell>Member Name</StyledTableCell>)}
                                 <StyledTableCell align="center">Share (%)</StyledTableCell>
                                 <StyledTableCell align="center">Total Net ($)</StyledTableCell>
                                 <StyledTableCell align="center" style={selectedWallets.length > 1 ? {} : { borderRight: "1px solid grey" }}>
@@ -169,6 +214,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                 <StyledTableCell component="th" scope="row" style={totalRowStyle}>
                                     Total
                                 </StyledTableCell>
+                                {showMemberName && <StyledTableCell style={totalRowStyle}></StyledTableCell>}
                                 <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999' }}>
                                     {(totalShare * 100).toFixed(2)}%
                                 </StyledTableCell>
@@ -190,6 +236,11 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                     <StyledTableCell component="th" scope="row">
                                         {shortenAddress(row.uniqueMemberWallet)}
                                     </StyledTableCell>
+                                    {showMemberName && (
+                                        <StyledTableCell component="th" scope="row">
+                                            {row.memberName} 
+                                        </StyledTableCell>
+                                    )}
                                     <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.netAmount)}</StyledTableCell>
                                     <StyledTableCell align="center" style={{ borderRight: selectedWallets.length > 1 ? "none" : "1px solid #b8b8b8" }}>{row.net}</StyledTableCell>

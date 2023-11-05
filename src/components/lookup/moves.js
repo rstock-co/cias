@@ -84,7 +84,14 @@ export const moves = [{
     contributionOpen: '2023-09-06T14:17:00-07:00',
     contributionClose: '2023-09-07T20:00:00-07:00',
     contributionWallet: "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca",
+}, {
+    moveName: "Octo Market",
+    token: "???",
+    contributionOpen: '2023-10-08T17:00:00-07:00',
+    contributionClose: '2023-10-12T18:00:00-07:00',
+    contributionWallet: "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca",
 },
+
 
 
 ];
