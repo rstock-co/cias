@@ -14,9 +14,13 @@ const InitUX = () => {
     // SET OF SELECTED WALLETS (multi-select)
     const [selectedWallets, setSelectedWallets] = useState([
         // {
-        //     name: "pool_investments",
-        //     address: "0xb79E768bEF0Ca0a34E53c3FE2ac26E600ACf8ccA"
-        // },
+        //     name: "games_for_a_living",
+        //     address: "0x8d64d9cb00a71863f7438f4b3036aed40f5a45a1"
+        // }
+        {
+            name: "pool_investments",
+            address: "0xb79E768bEF0Ca0a34E53c3FE2ac26E600ACf8ccA"
+        },
         // {
         //     name: "pool_membership",
         //     address: "0xab5573F28e6dD9Ec34966b06e4C736481F393FC7"
@@ -29,10 +33,10 @@ const InitUX = () => {
         //     name: "int_gas",
         //     address: "0xDf12edaae8acb58E09bAb1ADa1aA9e9BcDf5b45a"
         // },
-        {
-            name: "volcano",
-            address: "0x1865fa691B468ef7bFd789EE9D29efbe3dc7d47A"
-        },
+        // {
+        //     name: "volcano",
+        //     address: "0x1865fa691B468ef7bFd789EE9D29efbe3dc7d47A"
+        // },
         // {
         //     name: "serenity_shield",
         //     address: "0x402B7B932A76d1f007dDC5E51A63105F05bb017B"

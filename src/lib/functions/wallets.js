@@ -1,6 +1,6 @@
 import { convertTime } from "./datetime";
 import { getNameByAddress } from "../../components/lookup/wallets";
-import { checkMoveType } from "./datetime";
+import { getVCMoveName } from "./datetime";
 import FormatTxnLink from "../../components/FormatTxnLink";
 
 export const filterTxns = (txns, { type, filterWallet, chain, dateRange, direction }) => {
@@ -132,9 +132,18 @@ export const generateTableData = (txn, id, selectedWallets) => {
     let type = walletType;
 
     // this can be improved later - this is for identifying moves by their contribution window (ie.  Hypercycle, Finterest, Games FAL)
-    // from: investment wallet to: JP's Bybit
-    if (txn.from === '0xb79E768bEF0Ca0a34E53c3FE2ac26E600ACf8ccA' && txn.to === '0xf534fe3c6061d61458c3f6ca29b2d5ba7855e95d') {
-        type = checkMoveType(walletType, timestamp);
+
+    // from: vc investment wallet to: JP's Bybit
+    if (txn.from === '0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca' && txn.to === '0xf534fe3c6061d61458c3f6ca29b2d5ba7855e95d') {
+        type = getVCMoveName(walletType, timestamp);
+    }
+
+    // from: member wallet to: vc investment wallet
+    if (type.startsWith('Member') && txn.to.toLowerCase() === '0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca'.toLowerCase()) {
+        type = `${type} - ${getVCMoveName(walletType, timestamp)}`;
+        const memberPattern = /^Member(.*?)( - Member(.*?))?$/;
+        const match = type.match(memberPattern);
+        if (match) type = `Member${match[1]}`;
     }
 
     return {

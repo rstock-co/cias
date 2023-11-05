@@ -8,11 +8,11 @@ import "@fontsource/inter"
 
 const determineBackground = (walletType, isRefund) => {
     if (isRefund) {
-        return 'linear-gradient(to bottom, #0A0216, #1D0F35)'; // purple: #532491, #0A051D // like buttons: #11BCE0, #1D5AEF
-    } else if (walletType === 'Member') {
+        return 'linear-gradient(to bottom, #0A0216, #1D0F35)';
+    } else if (walletType && walletType.startsWith('Member')) {
         return 'linear-gradient(to bottom, #0d0d0d, #000000)';
     } else {
-        return 'linear-gradient(to bottom, #063142, #01070D)'; // teal: #004C57, #031B27
+        return 'linear-gradient(to bottom, #063142, #01070D)';
     }
 };
 
@@ -54,15 +54,16 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletType, isRefund 
 
 
 export const StyledTableRow = styled(TableRow)(({ theme, isRefund, walletType }) => ({
-    backgroundColor: isRefund ? '#FFA50030' : walletType === 'Member' ? 'white' : '#FFF9C4',
+    backgroundColor: isRefund ? '#FFA50030' : (walletType && walletType.startsWith('Member')) ? 'white' : '#FFF9C4',
     '&:nth-of-type(odd)': {
-        backgroundColor: isRefund ? '#FFA50030' : walletType === 'Member' ? theme.palette.action.hover : '#FFF9C4',
+        backgroundColor: isRefund ? '#FFA50030' : (walletType && walletType.startsWith('Member')) ? theme.palette.action.hover : '#FFF9C4',
     },
     // hide last border
     '&:last-child td, &:last-child th': {
         border: 0,
     },
 }));
+
 
 export const loadWalletStyles = {
     background: 'radial-gradient(circle at top center, #02343C 50vh, #01070D 100vh)',  // dark blue #0D0F4D 50vh, #070310 100vh)
