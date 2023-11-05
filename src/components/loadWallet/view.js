@@ -1,4 +1,5 @@
-import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, Box, Typography } from '@mui/material';
+import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../components/selectInputs';
 import { wallets } from '../lookup/wallets';
 import { moves } from '../lookup/moves';
@@ -39,6 +40,11 @@ const LoadWallet = ({
 
     chainDialogOpen,
     setChainDialogOpen,
+
+    snackbarOpen,
+    setSnackbarOpen,
+    handleCloseSnackbar,
+
     handleGenerateChainFlow,
 
     // calculateTotalTransactionsByChain,
@@ -64,7 +70,7 @@ const LoadWallet = ({
     const propertyMap = {
         id: { header: '#', align: 'center' },
         chain: { header: 'Chain', align: 'center' },
-        wallet: { header: 'Wallet', align: 'center' }, // Add this line
+        wallet: { header: 'Wallet', align: 'center' }, 
         inout: { header: 'In/Out', align: 'center' },
         dateTime: { header: 'Date/Time', align: 'left' },
         link: { header: 'Txn', align: 'center' },
@@ -79,8 +85,22 @@ const LoadWallet = ({
     // const totalValueByChain = calculateTotalValueByChain(tableData);
     // const formattedChainData = formatChainData(totalTransactionsByChain, totalValueByChain);
 
-    console.log("Selected Wallets: ",selectedWallets);
-
+    const copyToClipboard = async (text) => {
+        if (!navigator.clipboard) {
+          console.error('Clipboard API not available');
+          return;
+        }
+      
+        try {
+          await navigator.clipboard.writeText(text);
+          console.log('Text copied to clipboard');
+          setSnackbarOpen(true); // Show snackbar when text is copied
+        } catch (err) {
+          console.error('Failed to copy text: ', err);
+        }
+    };
+      
+      
     return (
 
         <Box sx={loadWalletStyles}>
@@ -211,27 +231,62 @@ const LoadWallet = ({
                     <TableBody>
                         {tableData.length > 0 && tableData.length < 900 && tableData.map((row) => (
                             <StyledTableRow
-                                key={row.id}
-                                walletType={row.walletType}
-                                isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
+                            key={row.id}
+                            walletType={row.walletType}
+                            isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
                             >
-                                {Object.entries(propertyMap).map(([key, value]) => (
+                            {Object.entries(propertyMap).map(([key, value]) => {
+                                if (key === 'from' || key === 'to') {
+                                // Render wallet cell with copy icon
+                                return (
                                     <StyledTableCell
-                                        key={key}
-                                        align={value.align}
-                                        walletType={row.walletType}
-                                        isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
+                                    key={key}
+                                    align={value.align}
+                                    walletType={row.walletType}
+                                    isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
                                     >
-                                        {row[key]}
+                                    {row[key]}
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => copyToClipboard(row[key])} // Call the copy function when the button is clicked
+                                        style={{
+                                            padding: '2px',
+                                            margin: '2px',
+                                            marginLeft: '5px',
+                                        }}
+                                    >
+                                        <ContentCopyIcon 
+                                            style={{ 
+                                            fontSize: '14px', // or you could use a specific size like '16px'
+                                            color: '#1ab4b9',
+                                            }} 
+                                        />
+                                    </IconButton>
                                     </StyledTableCell>
-                                ))}
+                                );
+                                } else {
+                                // Render other cells normally
+                                return (
+                                    <StyledTableCell
+                                    key={key}
+                                    align={value.align}
+                                    walletType={row.walletType}
+                                    isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
+                                    >
+                                    {row[key]}
+                                    </StyledTableCell>
+                                );
+                                }
+                            })}
                             </StyledTableRow>
                         ))}
-                    </TableBody>
+                        </TableBody>
                 </Table>
             </TableContainer>
             <AllocationTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallets={selectedWallets} isLoading={isLoading} move={filters.move} />
             <ChainCashFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
+            <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar} message="Wallet address copied to clipboard" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} sx={{ '& .MuiSnackbarContent-root': { backgroundColor: '#02343C', fontFamily: 'Inter Tight, sans-serif', fontSize: '20px' } }} />
+
         </Box>
 
     );
