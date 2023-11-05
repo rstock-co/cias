@@ -26,11 +26,12 @@ import {
     Typography
 } from "@mui/material";
 
-const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets, isLoading }) => {
+const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets, isLoading, move }) => {
     const [sortBy, setSortBy] = useState("Amount");
     const [allocationTableData, setAllocationTableData] = useState([]);
     const [totals, setTotals] = useState({});
     const [showMemberName, setShowMemberName] = useState(false);
+    const [showHeaderRow, setShowHeaderRow] = useState(true);
 
     useEffect(() => {
         if (!isLoading && tableData.length < 900 && selectedWallets.length > 0) {
@@ -70,18 +71,14 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         return "";
     };
 
-    // const handleMemberNameToggle = (event, newShow) => {
-    //     if (newShow !== null) {
-    //         setShowMemberName(newShow);
-    //     }
-    // };
-
-    // Function to handle the switch toggle
     const handleToggleMemberName = (event) => {
         setShowMemberName(event.target.checked);
     };
-  
 
+    const handleToggleHeaderRow = (event) => {
+        setShowHeaderRow(event.target.checked);
+    };
+  
     const mappedAllocationTableData = useMemo(() => {
         if (!allocationTableData) return [];
         if (allocationTableData.length === 0) return [];
@@ -109,10 +106,11 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         setSortBy(value);
     };
 
-    const dialogTitle =
-        selectedWallets.length > 1
-            ? `Aggregated Allocation Table for: ${selectedWallets.map((wallet, index) => `${convertTitle(wallet.name)}`).join(', ')} (${selectedWallets.length} wallets)`
-            : `Allocation Table for: '${convertTitle(selectedWallets[0].name)}' Wallet`;
+    const dialogTitle = move
+    ? `Allocation Table for: '${move}' Investment`
+    : selectedWallets.length > 1
+        ? `Aggregated Allocation Table for: ${selectedWallets.map((wallet, index) => `${convertTitle(wallet.name)}`).join(', ')} (${selectedWallets.length} wallets)`
+        : `Allocation Table for: '${convertTitle(selectedWallets[0].name)}' Wallet`;
 
     return (
         <Dialog
@@ -138,36 +136,33 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                         <div>Total Net Amount: {totalNetAmount && formatAmountDisplay(totalNetAmount)}</div>
                         <div>Total Transactions: {formatChainMap(aggregatedTxns)}</div>
                     </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
+                    <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                        <Typography component="div">
-                            Show Member Name
-                        </Typography>
-                        <Switch
-                            checked={showMemberName}
-                            onChange={handleToggleMemberName}
-                            color="primary"
-                            inputProps={{ 'aria-label': 'Toggle Member Name' }}
-                        />
+                            <Typography component="div">
+                                Show Header Row (Totals)
+                            </Typography>
+                            <Switch
+                                checked={showHeaderRow}
+                                onChange={handleToggleHeaderRow}
+                                color="primary"
+                                inputProps={{ 'aria-label': 'Toggle Header Row' }}
+                            />
                         </Box>
-                    {/* <ToggleButtonGroup
-                        value={showMemberName}
-                        exclusive
-                        onChange={handleMemberNameToggle}
-                        aria-label="Member Name Toggle"
-                    >
-                        <ToggleButton value={true} aria-label="Show Member Name">
-                            Show Member Name
-                        </ToggleButton>
-                        <ToggleButton value={false} aria-label="Hide Member Name">
-                            Hide Member Name
-                        </ToggleButton>
-                    </ToggleButtonGroup> */}
-                        <Box ml="auto">
-                            <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
+                            <Typography component="div">
+                                Show Member Name
+                            </Typography>
+                            <Switch
+                                checked={showMemberName}
+                                onChange={handleToggleMemberName}
+                                color="primary"
+                                inputProps={{ 'aria-label': 'Toggle Member Name' }}
+                            />
                         </Box>
+                        <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
                     </Box>
                 </Box>
+
                 <TableContainer component={Paper} id="myTable" sx={{ border: 'none' }}>
                     {/* sx={{ maxHeight: '600px' }} */}
                     <Table sx={{ minWidth: 650, border: 'none' }} aria-label="member table">
@@ -208,27 +203,29 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                         </TableHead>
                         {/* Render table body */}
                         <TableBody>
-                            <TableRow>
-                                <StyledTableCell component="th" scope="row" style={totalRowStyle}>
-                                    Total
-                                </StyledTableCell>
-                                {showMemberName && <StyledTableCell style={totalRowStyle}></StyledTableCell>}
-                                <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999' }}>
-                                    {(totalShare * 100).toFixed(2)}%
-                                </StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyle}>{totalTxns && formatAmountDisplay(totalNetAmount)}</StyledTableCell>
-                                <StyledTableCell align="center" style={selectedWallets.length > 1 ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
-                                    {totalTxns}
-                                </StyledTableCell>
-                                {selectedWallets.length > 1 && (
-                                    <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(aggregatedTxns)}</StyledTableCell>
-                                )}
+                            {showHeaderRow && (
+                                <TableRow>
+                                    <StyledTableCell component="th" scope="row" style={totalRowStyle}>
+                                        Total
+                                    </StyledTableCell>
+                                    {showMemberName && <StyledTableCell style={totalRowStyle}></StyledTableCell>}
+                                    <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999' }}>
+                                        {(totalShare * 100).toFixed(2)}%
+                                    </StyledTableCell>
+                                    <StyledTableCell align="center" style={totalRowStyle}>{totalTxns && formatAmountDisplay(totalNetAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center" style={selectedWallets.length > 1 ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
+                                        {totalTxns}
+                                    </StyledTableCell>
+                                    {selectedWallets.length > 1 && (
+                                        <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(aggregatedTxns)}</StyledTableCell>
+                                    )}
 
-                                <StyledTableCell align="center" style={totalRowStyle}>{totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(aggregatedContributionsChainMap)}</StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyle}>{totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)}</StyledTableCell>
-                                <StyledTableCell align="center" style={totalRowStyle}>{formatChainMap(aggregatedRefundsChainMap)}</StyledTableCell>
-                            </TableRow>
+                                    <StyledTableCell align="center" style={totalRowStyle}>{totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(aggregatedContributionsChainMap)}</StyledTableCell>
+                                    <StyledTableCell align="center" style={totalRowStyle}>{totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center" style={totalRowStyle}>{formatChainMap(aggregatedRefundsChainMap)}</StyledTableCell>
+                                </TableRow>
+                            )}
                             {sortedAllocationTableData.map((row) => (
                                 <StyledTableRow key={row.uniqueMemberWallet} walletType={row.walletType}>
                                     <StyledTableCell component="th" scope="row">
