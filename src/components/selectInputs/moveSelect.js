@@ -11,6 +11,7 @@ export const MoveSelect = ({ moves, selectedMove, handleChange }) => {
             onChange={handleChange}
             variant="outlined"
             size="small"
+            sx={{ minWidth: 200 }} 
             InputProps={{
                 classes: {
                     input: selectedMove !== "" ? 'custom-input custom-input-value' : 'custom-input',

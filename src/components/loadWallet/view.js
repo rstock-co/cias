@@ -143,7 +143,7 @@ const LoadWallet = ({
                     <Box sx={{ marginTop: '70px' }}>
                         <MoveSelect
                             moves={moves.map(move => move.moveName)}
-                            selectedType={filters.move}
+                            selectedMove={filters.move}
                             handleChange={handleEventChange('move')}
                         />
                     </Box>
