@@ -8,7 +8,6 @@
 
 3. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-4. Data will be fetched for the wallet that is
 
 ### API Documentation
 [Arbiscan API docs](https://docs.arbiscan.io/)  |  [BSCscan API docs](https://docs.bscscan.com/)  |  [Etherscan API docs](https://docs.etherscan.io/)
@@ -16,12 +15,12 @@
 # Overview
 - All data management is currently done with React's local state.  
 - There's no Redux or backend, 
-- Data is fetched from APIs everytime you run the app.
+- Data is fetched from APIs everytime you run the app (or reload your browser).
 
 ### Usage
-1. Use the multi-select on the far left-hand side to add or remove wallets from the current data set.
-2. Use the rest of the select boxes to filter the data set by date range, chain, type, move, etc.  There is a 'Clear All Filters' button to reset.
-3. Use the 'Generate Allocations' button to generate an allocation table FROM THE DATASET on the main page.  This means any filters currently applied will be carried over to the Allocation Table.  If multiple wallets are selected, the allocation table will blend them together.
+1. Use the multi-select on the far left-hand side to add or remove **wallets** from the current data set.
+2. Use the rest of the select boxes to **filter** the data set by date range, chain, type, move, etc.  There is a 'Clear All Filters' button to reset.
+3. Use the `Generate Allocations` button to generate an allocation table FROM THE DATASET on the main page.  This means any filters currently applied will be carried over to the Allocation Table.  If multiple wallets are selected, the allocation table will blend them together.
 4. Save the Allocation Table as a PDF by clicking the button on the bottom right-hand side.
 
 #### Data Filtering
