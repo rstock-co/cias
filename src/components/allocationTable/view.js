@@ -136,7 +136,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
             onClose={() => setDialogOpen(false)}
             PaperProps={{
                 style: {
-                    width: '80%', // adjust this for dialog box overall width
+                    width: '60%', // adjust this for dialog box overall width
                     maxWidth: 'none', // need this to override maxWidth
                     boxShadow: '0 0 10px 3px #199eb0',
                 },
@@ -202,25 +202,25 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
 
                 <TableContainer component={Paper} id="myTable" sx={{ border: 'none' }}>
                     {/* sx={{ maxHeight: '600px' }} */}
-                    <Table sx={{ minWidth: 650, border: 'none' }} aria-label="member table">
+                    <Table sx={{ border: 'none', tableLayout: 'fixed' }} aria-label="member table">
                         {/* Render table header */}
                         <TableHead>
-                            <TableRow>
-                                {/* Dynamically adjust the colSpan according to the actual number of columns */}
-                                <TableCell colSpan={showMemberName ? 8 : 7} style={{ borderBottom: 'none' }}>
-                                    <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
-                                        {dialogTitle}
-                                    </Typography>
-                                </TableCell>
-                                <TableCell align="right" style={{ borderBottom: 'none' }}>
-                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '20px', textAlign: 'right' }}>
-                                        Generated On:
-                                    </Typography>
-                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '22px', textAlign: 'right' }}>
-                                        {generatedDate}
-                                    </Typography>
-                                </TableCell>
-                            </TableRow>
+                        <TableRow>
+                            {/* Assuming you have 7 columns, adjust colSpan as needed */}
+                            <TableCell colSpan={showMemberName ? 6 : 5} style={{ borderBottom: 'none' }}>
+                                <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
+                                {dialogTitle}
+                                </Typography>
+                            </TableCell>
+                            <TableCell align="right" colSpan={3} style={{ borderBottom: 'none' }}>
+                                <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '20px', textAlign: 'right' }}>
+                                Generated On:
+                                </Typography>
+                                <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '22px', textAlign: 'right' }}>
+                                {generatedDate}
+                                </Typography>
+                            </TableCell>
+                        </TableRow>
                             <TableRow>
                                 <StyledTableCell>Member Wallet</StyledTableCell>
                                 {showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
@@ -261,9 +261,9 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                     </StyledTableCell>
                                     <StyledTableCell align="center" style={totalRowStyle}>
                                     <StyledTableCell align="center" style={totalRowStyle}>
-                                        <div style={{ marginLeft: '24px' }}>
+                                        {/* <div style={{ marginLeft: '24px' }}> */}
                                             {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
-                                        </div>
+                                        {/* </div> */}
                                     </StyledTableCell>
 
                                     </StyledTableCell>
@@ -277,7 +277,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
 
                                     <StyledTableCell align="center" style={totalRowStyle}>{totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
                                     <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(aggregatedContributionsChainMap)}</StyledTableCell>
-                                    <StyledTableCell align="center" style={totalRowStyle}>{totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)}</StyledTableCell>
+                                    <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalRefundsAmount)}</StyledTableCell>
                                     <StyledTableCell align="center" style={totalRowStyle}>{formatChainMap(aggregatedRefundsChainMap)}</StyledTableCell>
                                 </TableRow>
                             )}
