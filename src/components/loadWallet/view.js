@@ -200,14 +200,14 @@ const LoadWallet = ({
                             <StyledTableRow
                                 key={row.id}
                                 walletType={row.walletType}
-                                isRefund={row.inout === 'Out' && row.walletType === 'Member'}
+                                isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
                             >
                                 {Object.entries(propertyMap).map(([key, value]) => (
                                     <StyledTableCell
                                         key={key}
                                         align={value.align}
                                         walletType={row.walletType}
-                                        isRefund={row.inout === 'Out' && row.walletType === 'Member'}
+                                        isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
                                     >
                                         {row[key]}
                                     </StyledTableCell>

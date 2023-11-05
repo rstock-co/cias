@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
-import { times } from '../../components/lookup/vcMoveTimes';
+import { moves } from '../../components/lookup/moves';
 
 // Use "America/Denver" for Mountain Standard Time
 // convertTime(1684786992, 'America/Denver'); 
@@ -11,12 +11,12 @@ export const convertTime = (timestamp, timeZone) => {
     return format(zonedDate, "MMMM d, yyyy h:mm a");
 }
 
-export const checkMoveType = (walletType, unixTime) => {
-    for (const move of times) {
-        const openTime = new Date(move.open).getTime();
-        const closeTime = new Date(move.close).getTime();
+export const getVCMoveName = (walletType, unixTime) => {
+    for (const move of moves) {
+        const openTime = new Date(move.contributionOpen).getTime();
+        const closeTime = new Date(move.contributionClose).getTime();
 
-        if (unixTime >= openTime && unixTime <= closeTime) {
+        if (unixTime >= openTime && unixTime <= closeTime && move.contributionWallet && typeof move.contributionWallet === 'string' && move.contributionWallet.toLowerCase() === '0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca'.toLowerCase()) {
             return move.moveName;
         }
     }
