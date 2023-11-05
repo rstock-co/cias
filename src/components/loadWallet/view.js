@@ -94,7 +94,7 @@ const LoadWallet = ({
         try {
           await navigator.clipboard.writeText(text);
           console.log('Text copied to clipboard');
-          setSnackbarOpen(true); // Show snackbar when text is copied
+          setSnackbarOpen(true);
         } catch (err) {
           console.error('Failed to copy text: ', err);
         }
@@ -237,7 +237,6 @@ const LoadWallet = ({
                             >
                             {Object.entries(propertyMap).map(([key, value]) => {
                                 if (key === 'from' || key === 'to') {
-                                // Render wallet cell with copy icon
                                 return (
                                     <StyledTableCell
                                     key={key}
@@ -248,16 +247,20 @@ const LoadWallet = ({
                                     {row[key]}
                                     <IconButton
                                         size="small"
-                                        onClick={() => copyToClipboard(row[key])} // Call the copy function when the button is clicked
-                                        style={{
-                                            padding: '2px',
+                                        onClick={() => copyToClipboard(row[key])}
+                                        sx={{
+                                            padding: '5px',
                                             margin: '2px',
                                             marginLeft: '5px',
+                                            backgroundColor: '#012226', // This is a dark turquoise color with some transparency
+                                            "&:hover": {
+                                              backgroundColor: '#004047', // Darker on hover
+                                            }
                                         }}
                                     >
                                         <ContentCopyIcon 
                                             style={{ 
-                                            fontSize: '14px', // or you could use a specific size like '16px'
+                                            fontSize: '14px',
                                             color: '#1ab4b9',
                                             }} 
                                         />
@@ -265,7 +268,6 @@ const LoadWallet = ({
                                     </StyledTableCell>
                                 );
                                 } else {
-                                // Render other cells normally
                                 return (
                                     <StyledTableCell
                                     key={key}
@@ -285,7 +287,7 @@ const LoadWallet = ({
             </TableContainer>
             <AllocationTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallets={selectedWallets} isLoading={isLoading} move={filters.move} />
             <ChainCashFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
-            <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar} message="Wallet address copied to clipboard" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} sx={{ '& .MuiSnackbarContent-root': { backgroundColor: '#02343C', fontFamily: 'Inter Tight, sans-serif', fontSize: '20px' } }} />
+            <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar} message="Wallet address copied to clipboard" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} sx={{ '& .MuiSnackbarContent-root': { backgroundColor: '#105c69', fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', boxShadow: '0 0 10px 3px #4ed3e6' } }} />
 
         </Box>
 
