@@ -252,9 +252,9 @@ const LoadWallet = ({
                                             padding: '5px',
                                             margin: '2px',
                                             marginLeft: '5px',
-                                            backgroundColor: '#012226', // This is a dark turquoise color with some transparency
+                                            backgroundColor: '#012226', 
                                             "&:hover": {
-                                              backgroundColor: '#004047', // Darker on hover
+                                              backgroundColor: '#004047', 
                                             }
                                         }}
                                     >

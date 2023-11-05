@@ -48,15 +48,14 @@
 ---------
 # Development Roadmap
 
-- need to get all of the investment move wallet addresses and their contribution windows (from Discord / JP's help), so can generate allocations for them
+- add a `generate distribution` button - on the Generate Allocation dialog screen - opens dialog box where you can generate a payout.  Should have an input box for fee%
+- `member portfolio summary` --> when the current data is filtered only by a member's wallet, button is rendered in UI to 'Generate Member Portfolio'
+which displays all moves and amounts and allocations for that member in a new dialog box, can download as PDF
+- get all of the investment move wallet addresses and their contribution windows (from Discord / JP's help), so can generate allocations for them
 - make a start up page where you can select your wallet and either normal transactions or token (BEP-20) transacations - need to modify API to add support for BEP-20.
 - add support for tracking move wallets and vc wallets
-- add a `generate distribution` button - on the Generate Allocation dialog screen - opens dialog box where you can generate a payout.  Should have an input box for fee%
-- add a copy button beside the wallet addresses so can click to copy and paste into the "filter by wallet"
-- Make PDF size smaller somehow
-- Save as CSV - would be nice if I need to do additional data work/verify things in Google Sheets
-- `member portfolio summary` --> when the current data is filtered only by a member's wallet, button is rendered in UI to 'Generate Member Portfolio'
-which displays all moves and amounts and allocations for that member in a new dialog box
+- Allocation table:  Make PDF size smaller somehow
+- Allocation table:  add `Save as CSV` - would be nice if I need to do additional data work/verify things in Google Sheets
 
 
 ---------
