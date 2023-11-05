@@ -65,7 +65,6 @@ const InitUX = () => {
         }
     };
 
-
     const getAggregateERC20Txns = async (walletAddress, contractAddresses) => {
         const { stableArb, stableEth, stableEth2, stableBsc } = contractAddresses;
         try {

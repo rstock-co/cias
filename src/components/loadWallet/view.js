@@ -8,7 +8,7 @@ import '@fontsource/plus-jakarta-sans';
 import '@fontsource/inter-tight';
 
 import AllocationTable from '../allocationTable/view';
-import ChainFlowDialog from '../chainBalanceTable/view';
+import ChainCashFlowDialog from '../chainCashFlow/view';
 import LoadingScreen from './loadingScreen';
 
 
@@ -231,7 +231,7 @@ const LoadWallet = ({
                 </Table>
             </TableContainer>
             <AllocationTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallets={selectedWallets} isLoading={isLoading} move={filters.move} />
-            <ChainFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
+            <ChainCashFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
         </Box>
 
     );
