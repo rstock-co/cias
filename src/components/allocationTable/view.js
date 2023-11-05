@@ -7,6 +7,7 @@ import { printDocument } from "../../lib/functions/pdf";
 // import ToggleButton from '@mui/material/ToggleButton';
 // import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Switch from '@mui/material/Switch';
+import { format, startOfMinute, addMinutes, closestTo } from 'date-fns';
 import "@fontsource/inter-tight";
 
 import {
@@ -112,6 +113,24 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
         ? `Aggregated Allocation Table for: ${selectedWallets.map((wallet, index) => `${convertTitle(wallet.name)}`).join(', ')} (${selectedWallets.length} wallets)`
         : `Allocation Table for: '${convertTitle(selectedWallets[0].name)}' Wallet`;
 
+    // Function to round the date to the nearest 5 minutes
+    const roundToNearest5Minutes = (date) => {
+        const start = startOfMinute(date);
+    
+        const remainder = start.getMinutes() % 5;
+        const roundTo = remainder < 3 ? -remainder : 5 - remainder;
+        return addMinutes(start, roundTo);
+    };
+    
+    // Get the current date and time
+    const now = new Date();
+    
+    // Round the current date/time to the nearest 5 minutes
+    const roundedDate = roundToNearest5Minutes(now);
+    
+    // Format the date in the specified format
+    const generatedDate = format(roundedDate, "MMMM d, yyyy '@' h:mm aaaa 'MST'");
+
     return (
         <Dialog
             open={dialogOpen}
@@ -169,38 +188,48 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                         {/* Render table header */}
                         <TableHead>
                             <TableRow>
-                                <TableCell colSpan={8}>
+                                {/* Dynamically adjust the colSpan according to the actual number of columns */}
+                                <TableCell colSpan={showMemberName ? 8 : 7} style={{ borderBottom: 'none' }}>
                                     <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
                                         {dialogTitle}
+                                    </Typography>
+                                </TableCell>
+                                <TableCell align="right" style={{ borderBottom: 'none' }}>
+                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '20px', textAlign: 'right' }}>
+                                        Generated On:
+                                    </Typography>
+                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '22px', textAlign: 'right' }}>
+                                        {generatedDate}
                                     </Typography>
                                 </TableCell>
                             </TableRow>
                             <TableRow>
                                 <StyledTableCell>Member Wallet</StyledTableCell>
-                                {showMemberName && (<StyledTableCell>Member Name</StyledTableCell>)}
+                                {showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
                                 <StyledTableCell align="center">Share (%)</StyledTableCell>
                                 <StyledTableCell align="center">Total Net ($)</StyledTableCell>
                                 <StyledTableCell align="center" style={selectedWallets.length > 1 ? {} : { borderRight: "1px solid grey" }}>
-                                    Total # Txns
+                                Total # Txns
                                 </StyledTableCell>
                                 {selectedWallets.length > 1 && (
-                                    <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
-                                        # of Txns
-                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Wallet)</div>
-                                    </StyledTableCell>
+                                <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
+                                    # of Txns
+                                    <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Wallet)</div>
+                                </StyledTableCell>
                                 )}
                                 <StyledTableCell align="center">Contributions ($)</StyledTableCell>
                                 <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
-                                    # of Contributions
-                                    <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
+                                # of Contributions
+                                <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
                                 </StyledTableCell>
                                 <StyledTableCell align="center">Refunds ($)</StyledTableCell>
                                 <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
-                                    # of Refunds
-                                    <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
+                                # of Refunds
+                                <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
                                 </StyledTableCell>
                             </TableRow>
                         </TableHead>
+
                         {/* Render table body */}
                         <TableBody>
                             {showHeaderRow && (
