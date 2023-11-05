@@ -26,8 +26,8 @@ const FilterUX = ({
 
     const handleEventChange = curry((filterName, event) =>
         setFilters(prevFilters => ({
-                ...prevFilters,
-                [filterName]: event.target.value
+            ...prevFilters,
+            [filterName]: event.target.value
         }))
     );
 
@@ -62,8 +62,6 @@ const FilterUX = ({
     };
 
     useEffect(() => {
-        console.log('useEffect triggered');
-        console.log('Current filters:', filters);
         if (txns && txns.length > 0 && selectedWallets && selectedWallets.length > 0) {
             const selectedWalletAddresses = selectedWallets.map(wallet => wallet.address);
             const tableData = txns.map((txn, index) => generateTableData(txn, index, selectedWalletAddresses));

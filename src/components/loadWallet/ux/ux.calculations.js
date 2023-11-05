@@ -28,9 +28,6 @@ const CalculationsUX = ({
         });
     }
 
-
-
-
     return {
         calculateTotalTransactionsByChain,
         calculateTotalValueByChain,

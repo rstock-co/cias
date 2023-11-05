@@ -4,7 +4,7 @@ import { calculateFlow, formatAmountDisplay } from '../../lib/functions/wallets'
 import { StyledTableCell, StyledTableRow } from './styles';
 import "@fontsource/inter-tight";
 
-const ChainFlowDialog = ({ tableData, dialogOpen, setDialogOpen }) => {
+const ChainCashFlowDialog = ({ tableData, dialogOpen, setDialogOpen }) => {
 
     const chains = Array.from(new Set(tableData.map(item => item.chain)));
     const chainFlows = chains.map(chain => calculateFlow(tableData, chain));
@@ -57,4 +57,4 @@ const ChainFlowDialog = ({ tableData, dialogOpen, setDialogOpen }) => {
     );
 }
 
-export default ChainFlowDialog;
+export default ChainCashFlowDialog;
