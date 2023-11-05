@@ -90,6 +90,7 @@ export const moves = [{
     contributionOpen: '2023-10-08T17:00:00-07:00',
     contributionClose: '2023-10-12T18:00:00-07:00',
     contributionWallet: "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca",
+    moveWallet: "0xcaa6bb0bca23ece02e97d6285955cc6770a1538f",
 },
 
 
