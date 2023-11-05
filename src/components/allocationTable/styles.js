@@ -10,11 +10,15 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
         color: theme.palette.common.white,
         fontWeight: 'bold',
         fontSize: 16,
-        fontFamily: 'Inter, sans-serif'
+        fontFamily: 'Inter, sans-serif',
+        borderBottom: 'none'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
-        fontFamily: 'Inter Tight, sans-serif'
+        fontFamily: 'Inter Tight, sans-serif',
+        borderBottom: 'none',
+        padding: '11px 23px',  // Adjusted padding
+        lineHeight: '1.5',    // Smaller line height
     },
 }));
 
@@ -34,7 +38,9 @@ export const totalRowStyle = {
     fontWeight: 'bold',
     fontFamily: 'Inter, sans-serif',
     backgroundColor: '#999999',
-}
+    padding: '4px 16px',  // Reduced padding; adjust as needed
+    lineHeight: '1.2',    // Smaller line height; adjust as needed
+};
 
 export const totalRowStyleWithBorder = {
     ...totalRowStyle,
