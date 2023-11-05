@@ -69,8 +69,8 @@ const BaseUX = ({
         setSelectedWallets(selectedWallets);
     };
 
-    console.log("All Txns: ", txns)
-    console.log("Table data: ", tableData);
+    // console.log("All Txns: ", txns)
+    // console.log("Table data: ", tableData);
 
     return {
         tableData,

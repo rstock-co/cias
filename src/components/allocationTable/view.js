@@ -114,8 +114,6 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
             ? `Aggregated Allocation Table for: ${selectedWallets.map((wallet, index) => `${convertTitle(wallet.name)}`).join(', ')} (${selectedWallets.length} wallets)`
             : `Allocation Table for: '${convertTitle(selectedWallets[0].name)}' Wallet`;
 
-    console.log('Show Member Name:', showMemberName);
-
     return (
         <Dialog
             open={dialogOpen}

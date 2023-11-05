@@ -4,4 +4,5 @@ export * from './filterWalletSelect';
 export * from './chainSelect';
 export * from './dateRangePicker';
 export * from './directionSelect';
+export * from './moveSelect';
 

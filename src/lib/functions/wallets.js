@@ -2,11 +2,21 @@ import { convertTime } from "./datetime";
 import { getNameByAddress } from "../../components/lookup/wallets";
 import { getVCMoveName } from "./datetime";
 import FormatTxnLink from "../../components/FormatTxnLink";
+import { moves } from "../../components/lookup/moves";
 
-export const filterTxns = (txns, { type, filterWallet, chain, dateRange, direction }) => {
+export const filterTxns = (txns, { type, filterWallet, chain, dateRange, direction, move }) => {
     // If initial render, return all txns (check if all filter conditions are not set)
-    if (type === '' && filterWallet === '' && chain === '' && (dateRange.startDate === '' || dateRange.endDate === '') && type === '' && direction === '') {
+    if (type === '' && filterWallet === '' && chain === '' && (dateRange.startDate === '' || dateRange.endDate === '') && type === '' && direction === '' && move === '') {
         return txns.filter(txn => txn.amount !== 0).sort((a, b) => b.timestamp - a.timestamp);
+    }
+
+    const checkTimeInRange = (start, end, txn, useOffset) => {
+        const mstOffsetMillis = useOffset ? 7 * 60 * 60 * 1000 : 0;  // Offset in milliseconds for 7 hours (MST)
+        // Create new Date objects in UTC, subtract offset to convert to MST, then get time in milliseconds
+        const startDate = new Date(new Date(start).getTime() + mstOffsetMillis).getTime();
+        const endDate = new Date(new Date(end).getTime() + mstOffsetMillis).getTime();
+
+        return txn.timestamp >= startDate && txn.timestamp <= endDate;
     }
 
     return txns.filter(txn => {
@@ -14,6 +24,7 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
         let matchesChain = true;
         let matchesDateRange = true;
         let matchesDirection = true;
+        let matchesMove = true;
         let matchesType = true;
 
         // (0) filter out transactions where the amount is zero
@@ -31,13 +42,7 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
 
         // (3) filter by date range
         if (dateRange && dateRange.startDate && dateRange.endDate) {
-            const mstOffsetMillis = 7 * 60 * 60 * 1000;  // Offset in milliseconds for 7 hours
-
-            // Create new Date objects in UTC, subtract offset to convert to MST, then get time in milliseconds
-            const startDate = new Date(new Date(dateRange.startDate).getTime() + mstOffsetMillis).getTime();
-            const endDate = new Date(new Date(dateRange.endDate).getTime() + mstOffsetMillis).getTime();
-
-            matchesDateRange = txn.timestamp >= startDate && txn.timestamp <= endDate;
+            matchesDateRange = checkTimeInRange(dateRange.startDate, dateRange.endDate, txn, true);
         }
 
         // (4) filter by direction
@@ -45,12 +50,31 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
             matchesDirection = txn.inout.toLowerCase() === direction.toLowerCase();
         }
 
-        // (5) filter by type
+        // (5) filter by move
+        if (move) {
+            const targetMove = moves.find(m => m.moveName === move);
+            console.log("Target Move: ", targetMove);
+            if (targetMove && targetMove.contributionOpen && targetMove.contributionClose) {
+                console.log("Found Target Move, checking match...");
+                matchesMove = checkTimeInRange(targetMove.contributionOpen, targetMove.contributionClose, txn, false);
+            } else { 
+                matchesMove = false
+            }; 
+        }
+
+        // (6) filter by type
         if (type) {
             matchesType = txn.walletType === type;
         }
 
-        return matchesFilterWallet && matchesChain && matchesDateRange && matchesDirection && matchesType;
+        console.log('After wallet filter:', matchesFilterWallet);
+        console.log('After chain filter:', matchesChain);
+        console.log('After date range filter:', matchesDateRange);
+        console.log('After direction filter:', matchesDirection);
+        console.log('After move filter:', matchesMove);
+        console.log('After type filter:', matchesType);
+
+        return matchesFilterWallet && matchesChain && matchesDateRange && matchesDirection && matchesType && matchesMove;
     }).sort((a, b) => b.timestamp - a.timestamp); // sort by timestamp
 };
 
@@ -129,13 +153,10 @@ export const generateTableData = (txn, id, selectedWallets) => {
     const walletType = getWalletType(txn, selectedWallets);
     const timestamp = parseInt(txn.timeStamp) * 1000;
 
-    console.log('walletType before extracting member name:', walletType);
-
     const extractMemberName = (type) => {
         // Regular expression to match the pattern "Member (name)"
         const memberNamePattern = /Member \((.*?)\)/;
         const match = memberNamePattern.exec(type);
-        console.log('match for member name:', match); // This will log the match or null if no match was found
         return match && match[1] ? match[1] : "Unknown";
       };
     
