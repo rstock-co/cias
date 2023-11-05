@@ -4,8 +4,6 @@ import { formatAmountDisplay, shortenAddress } from "../../lib/functions/wallets
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
 import { printDocument } from "../../lib/functions/pdf";
-// import ToggleButton from '@mui/material/ToggleButton';
-// import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from '@mui/material';
 import { format, startOfMinute, addMinutes } from 'date-fns';
 import "@fontsource/inter-tight";
@@ -138,8 +136,8 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
             onClose={() => setDialogOpen(false)}
             PaperProps={{
                 style: {
-                    width: '80%', // custom width, you can specify any value
-                    maxWidth: 'none', // override maxWidth
+                    width: '80%', // adjust this for dialog box overall width
+                    maxWidth: 'none', // need this to override maxWidth
                     boxShadow: '0 0 10px 3px #199eb0',
                 },
             }}
@@ -199,14 +197,6 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                 />
                             </FormControl>
                         </Box>
-                        {/* <FormControl fullWidth sx={{ m: 1 }}>
-                            <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
-                            <OutlinedInput
-                                id="outlined-adornment-amount"
-                                startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                                label="Amount"
-                            />
-                        </FormControl> */}
                     </Box>
                 </Box>
 

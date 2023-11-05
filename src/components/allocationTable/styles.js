@@ -17,8 +17,8 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
         fontSize: 14,
         fontFamily: 'Inter Tight, sans-serif',
         borderBottom: 'none',
-        padding: '11px 23px',  // Adjusted padding
-        lineHeight: '1.5',    // Smaller line height
+        padding: '13px 22px',  // Adjusted padding
+        lineHeight: '1.1',    // Smaller line height
     },
 }));
 
@@ -38,7 +38,7 @@ export const totalRowStyle = {
     fontWeight: 'bold',
     fontFamily: 'Inter, sans-serif',
     backgroundColor: '#999999',
-    padding: '4px 16px',  // Reduced padding; adjust as needed
+    padding: '4px 22px',  // Reduced padding; adjust as needed
     lineHeight: '1.2',    // Smaller line height; adjust as needed
 };
 
