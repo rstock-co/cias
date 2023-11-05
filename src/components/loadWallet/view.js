@@ -1,6 +1,7 @@
 import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, Box, Typography } from '@mui/material';
-import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect } from '../../components/selectInputs';
+import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../components/selectInputs';
 import { wallets } from '../lookup/wallets';
+import { moves } from '../lookup/moves';
 import { StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
 import { loadWalletStyles, ColorButton } from './styles';
 import '@fontsource/plus-jakarta-sans';
@@ -38,7 +39,7 @@ const LoadWallet = ({
 
     chainDialogOpen,
     setChainDialogOpen,
-    handleGenerateChainFlow
+    handleGenerateChainFlow,
 
     // calculateTotalTransactionsByChain,
     // calculateTotalValueByChain,
@@ -47,6 +48,7 @@ const LoadWallet = ({
 } = {}) => {
 
     const walletAddress = selectedWallets[selectedWallets.length - 1].address;
+    const isPoolInvestmentsWallet = selectedWallets.length === 1 && selectedWallets[0].address.toLowerCase() === "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca".toLowerCase();
 
     if (isLoading || tableData.length > 900) {
         return (
@@ -77,6 +79,7 @@ const LoadWallet = ({
     // const totalValueByChain = calculateTotalValueByChain(tableData);
     // const formattedChainData = formatChainData(totalTransactionsByChain, totalValueByChain);
 
+    console.log("Selected Wallets: ",selectedWallets);
 
     return (
 
@@ -107,18 +110,28 @@ const LoadWallet = ({
                 </Box>
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                    {selectedWallets.map((wallet, index) => (
-                        <Typography key={index} variant="h4" align="left" sx={{ marginTop: index === 0 ? 0 : '10px' }}>
-                            <span style={textGradientStyle}>{wallet.name}{':  '}</span>
-                            <span style={{ fontFamily: 'Inter Tight', fontSize: '22px', color: 'white' }}>
-                        {wallet.address}
-                            </span>
-                </Typography>
-            ))}
+                {selectedWallets.map((wallet, index) => (
+                    <Typography key={index} variant="h4" align="left" sx={{ marginTop: index === 0 ? 0 : '10px' }}>
+                        <span style={textGradientStyle}>{wallet.name}{':  '}</span>
+                        <span style={{ fontFamily: 'Inter Tight', fontSize: '22px', color: 'white' }}>
+                            {wallet.address}
+                        </span>
+                    </Typography>
+                ))}
+
+                {isPoolInvestmentsWallet && 
+                    <Box sx={{ marginTop: '70px' }}>
+                        <MoveSelect
+                            moves={moves.map(move => move.moveName)}
+                            selectedType={filters.move}
+                            handleChange={handleEventChange('move')}
+                        />
+                    </Box>
+                }
                 </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 2, marginTop: 5 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 2 }}>
                 <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
                     <WalletSelect
                         wallets={wallets}

@@ -14,6 +14,7 @@ const FilterUX = ({
         filterWallet: '',
         dateRange: { startDate: "", endDate: "" },
         direction: "",
+        move: "",
     });
 
     const handleValueChange = curry((filterName, value) =>
@@ -54,12 +55,15 @@ const FilterUX = ({
             filterWallet: '',
             dateRange: { startDate: "", endDate: "" },
             direction: "",
+            move: ""
         });
         setIsStartDateDefault(true);
         setIsEndDateDefault(true);
     };
 
     useEffect(() => {
+        console.log('useEffect triggered');
+        console.log('Current filters:', filters);
         if (txns && txns.length > 0 && selectedWallets && selectedWallets.length > 0) {
             const selectedWalletAddresses = selectedWallets.map(wallet => wallet.address);
             const tableData = txns.map((txn, index) => generateTableData(txn, index, selectedWalletAddresses));
