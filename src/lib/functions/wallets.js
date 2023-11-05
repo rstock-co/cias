@@ -129,6 +129,18 @@ export const generateTableData = (txn, id, selectedWallets) => {
     const walletType = getWalletType(txn, selectedWallets);
     const timestamp = parseInt(txn.timeStamp) * 1000;
 
+    console.log('walletType before extracting member name:', walletType);
+
+    const extractMemberName = (type) => {
+        // Regular expression to match the pattern "Member (name)"
+        const memberNamePattern = /Member \((.*?)\)/;
+        const match = memberNamePattern.exec(type);
+        console.log('match for member name:', match); // This will log the match or null if no match was found
+        return match && match[1] ? match[1] : "Unknown";
+      };
+    
+    const memberName = extractMemberName(walletType);
+
     let type = walletType;
 
     // this can be improved later - this is for identifying moves by their contribution window (ie.  Hypercycle, Finterest, Games FAL)
@@ -160,6 +172,7 @@ export const generateTableData = (txn, id, selectedWallets) => {
         amount,
         amountDisplay: formatAmountDisplay(amount),
         currency: txn.tokenSymbol,
+        memberName
     }
 };
 
@@ -239,8 +252,8 @@ const generateUniqueMemberWalletMap = (tableData, selectedWallets) => {
 
     const uniqueMemberWalletMap = tableData.reduce((map, row) => {
         // data
-        const { from, to, walletType, amount, chain } = row;
-        if (walletType !== 'Member') return map;
+        const { from, to, walletType, amount, chain, memberName } = row;
+        if (!walletType.startsWith('Member')) return map;
 
         const fromWallet = from?.toLowerCase();
         const toWallet = to?.toLowerCase();
@@ -269,6 +282,7 @@ const generateUniqueMemberWalletMap = (tableData, selectedWallets) => {
 
         map.set(uniqueMemberWallet, {
             ...uniqueMemberData,
+            memberName,
             amount: uniqueMemberData.amount + Number(amount),
             [`${txnType}s`]: uniqueMemberData[`${txnType}s`] + 1,
             [`${txnType}sAmount`]: uniqueMemberData[`${txnType}sAmount`] + Number(amount),
@@ -288,7 +302,7 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
 
     const allocationTableData = Array.from(uniqueMemberWalletsMap, ([uniqueMemberWallet, {
         amount, contributions, refunds, contributionsAmount, refundsAmount,
-        contributionsChainMap, refundsChainMap, walletTxns
+        contributionsChainMap, refundsChainMap, walletTxns, memberName
     }]) => {
         const contributionsChainArray = Object.entries(contributionsChainMap)
             .map(([chain, count]) => `${chain}(${count})`);
@@ -307,7 +321,8 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
             refundsAmount,
             contributionsChainMap: contributionsChainArray,
             refundsChainMap: refundsChainArray,
-            walletTxns: walletTxnsArray
+            walletTxns: walletTxnsArray,
+            memberName
         }
     });
 
