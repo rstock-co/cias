@@ -203,47 +203,46 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                 <TableContainer component={Paper} id="myTable" sx={{ border: 'none' }}>
                     {/* sx={{ maxHeight: '600px' }} */}
                     <Table sx={{ border: 'none', tableLayout: 'fixed' }} aria-label="member table">
-                        {/* Render table header */}
                         <TableHead>
-                        <TableRow>
-                            {/* Assuming you have 7 columns, adjust colSpan as needed */}
-                            <TableCell colSpan={showMemberName ? 6 : 5} style={{ borderBottom: 'none' }}>
-                                <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
-                                {dialogTitle}
-                                </Typography>
-                            </TableCell>
-                            <TableCell align="right" colSpan={3} style={{ borderBottom: 'none' }}>
-                                <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '20px', textAlign: 'right' }}>
-                                Generated On:
-                                </Typography>
-                                <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '22px', textAlign: 'right' }}>
-                                {generatedDate}
-                                </Typography>
-                            </TableCell>
-                        </TableRow>
+                            <TableRow>
+                                {/* adjust colSpan as needed */}
+                                <TableCell colSpan={showMemberName ? 6 : 5} style={{ borderBottom: 'none' }}>
+                                    <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
+                                        {dialogTitle}
+                                    </Typography>
+                                </TableCell>
+                                <TableCell align="right" colSpan={3} style={{ borderBottom: 'none' }}>
+                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '20px', textAlign: 'right' }}>
+                                        Generated On:
+                                    </Typography>
+                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '22px', textAlign: 'right' }}>
+                                        {generatedDate}
+                                    </Typography>
+                                </TableCell>
+                            </TableRow>
                             <TableRow>
                                 <StyledTableCell>Member Wallet</StyledTableCell>
-                                {showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
+                                    {showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
                                 <StyledTableCell align="center">Share (%)</StyledTableCell>
                                 <StyledTableCell align="center">Total Net ($)</StyledTableCell>
                                 <StyledTableCell align="center" style={selectedWallets.length > 1 ? {} : { borderRight: "1px solid grey" }}>
-                                Total # Txns
+                                    Total # Txns
                                 </StyledTableCell>
                                 {selectedWallets.length > 1 && (
-                                <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
-                                    # of Txns
-                                    <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Wallet)</div>
-                                </StyledTableCell>
+                                    <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
+                                        # of Txns
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Wallet)</div>
+                                    </StyledTableCell>
                                 )}
                                 <StyledTableCell align="center">Contributions ($)</StyledTableCell>
                                 <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
-                                # of Contributions
-                                <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
+                                    # of Contributions
+                                    <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
                                 </StyledTableCell>
                                 <StyledTableCell align="center">Refunds ($)</StyledTableCell>
                                 <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
-                                # of Refunds
-                                <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
+                                    # of Refunds
+                                    <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
                                 </StyledTableCell>
                             </TableRow>
                         </TableHead>
