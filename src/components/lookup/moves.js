@@ -11,7 +11,6 @@ export const moves = [{
     contributionWallet: "0xED1c9293358d89399A0183D922e6Ef5b701b1503",
     vcWallet: "0x2b485b86c843332a2abfd553d5fe7485cee0348c",
     moveWallet: "",
-    vcWallet: "",
     FDV: 75000000,
     TGERelease: 6.55,
     cliffMonths: 6,

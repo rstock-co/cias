@@ -114,8 +114,8 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
     const dialogTitle = move
     ? `Allocation Table for: '${move}' Investment`
     : selectedWallets.length > 1
-        ? `Aggregated Allocation Table for: ${selectedWallets.map((wallet, index) => `${convertTitle(wallet.name)}`).join(', ')} (${selectedWallets.length} wallets)`
-        : `Allocation Table for: '${convertTitle(selectedWallets[0].name)}' Wallet`;
+        ? `Aggregated Allocation Table for: ${selectedWallets.length > 0 && selectedWallets.map((wallet, index) => `${convertTitle(wallet.name)}`).join(', ')} (${selectedWallets.length} wallets)`
+        : `Allocation Table for: '${selectedWallets.length > 0 && convertTitle(selectedWallets[0].name)}' Wallet`;
 
     // calculate "Generated on" date
     const roundToNearest5Minutes = (date) => {
