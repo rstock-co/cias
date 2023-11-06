@@ -136,7 +136,7 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
             onClose={() => setDialogOpen(false)}
             PaperProps={{
                 style: {
-                    width: '60%', // adjust this for dialog box overall width
+                    width: '70%', // adjust this for dialog box overall width
                     maxWidth: 'none', // need this to override maxWidth
                     boxShadow: '0 0 10px 3px #199eb0',
                 },
@@ -260,9 +260,9 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
                                     </StyledTableCell>
                                     <StyledTableCell align="center" style={totalRowStyle}>
                                     <StyledTableCell align="center" style={totalRowStyle}>
-                                        {/* <div style={{ marginLeft: '24px' }}> */}
+                                        <div style={{ marginLeft: '5px' }}>
                                             {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
-                                        {/* </div> */}
+                                        </div>
                                     </StyledTableCell>
 
                                     </StyledTableCell>
