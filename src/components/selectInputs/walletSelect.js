@@ -1,13 +1,15 @@
 import { FormControl, MenuItem, Checkbox, ListItemText } from '@mui/material';
-import { CustomInputLabel, CustomSelect, CustomOutlinedInput } from './styles';
+import { CustomInputLabel, CustomSelect, CustomOutlinedInput, autoCompleteTheme } from './styles';
+import { ThemeProvider } from '@mui/material/styles';
 import '@fontsource/inter-tight';
 
 export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
 
     return (
+        <ThemeProvider theme={autoCompleteTheme}>
         <div>
             <FormControl sx={{ width: 450 }}>
-                <CustomInputLabel id="demo-multiple-checkbox-label">Select Wallet</CustomInputLabel>
+                <CustomInputLabel id="demo-multiple-checkbox-label" shrink={true}>Select Wallet</CustomInputLabel>
                 <CustomSelect
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
@@ -26,5 +28,6 @@ export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
                 </CustomSelect>
             </FormControl>
         </div>
+        </ThemeProvider>
     );
 }
