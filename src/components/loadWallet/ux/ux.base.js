@@ -5,14 +5,6 @@ const BaseUX = ({
     txns,
     setTxns,
     setSelectedWallets,
-    setIsLoading,
-    fetchTransactions,
-    arbStatus,
-    ethStatus,
-    bscStatus,
-    setArbStatus,
-    setEthStatus,
-    setBscStatus
 } = {}) => {
 
     // TABLE DATA
@@ -51,3 +43,4 @@ const BaseUX = ({
 }
 
 export default BaseUX;
+

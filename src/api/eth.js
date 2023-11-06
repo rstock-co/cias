@@ -47,7 +47,10 @@ export const getERC20TxnsEth = async (walletAddress, contractAddress) => {
 
     try {
         const response = await axios.get("https://api.etherscan.io/api", requestConfig);
-        return response.data.result;
+        return response.data.result.map(txn => ({
+            ...txn,
+            chain: 'eth'
+        }));
     } catch (error) {
         console.error('Error fetching internal transactions:', error);
         throw error; // Re-throw the error to be handled by the caller
