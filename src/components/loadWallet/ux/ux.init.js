@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { getERC20TxnsArb } from "../../../api/arb";
 import { getERC20TxnsBsc } from "../../../api/bsc";
 import { getERC20TxnsEth } from "../../../api/eth";
@@ -12,61 +12,17 @@ const InitUX = () => {
     const stableBsc = getAddressByName("stable_busd_bep20");
     const stableBsc2 = getAddressByName("stable_bsc-usd_bep20");
 
-    // SET OF SELECTED WALLETS (multi-select)
-    const [selectedWallets, setSelectedWallets] = useState([
-        // {
-        //     name: "games_for_a_living",
-        //     address: "0x8d64d9cb00a71863f7438f4b3036aed40f5a45a1"
-        // }
-        // {
-        //     name: "pool_investments",
-        //     address: "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca"
-        // },
-        // {
-        //     name: "int_jp_bybit",
-        //     address: "0xF534Fe3c6061D61458C3f6CA29B2d5Ba7855E95D"
-        // },
-        // {
-        //     name: "pool_membership",
-        //     address: "0xab5573F28e6dD9Ec34966b06e4C736481F393FC7"
-        // },
-        // {
-        //     name: "pool_trust",
-        //     address: "0x8c78290373623175dfa7a4736bd3a340b670bce9"
-        // },
-        // {
-        //     name: "int_gas",
-        //     address: "0xDf12edaae8acb58E09bAb1ADa1aA9e9BcDf5b45a"
-        // },
-        // {
-        //     name: "volcano",
-        //     address: "0x1865fa691B468ef7bFd789EE9D29efbe3dc7d47A"
-        // },
-        // {
-        //     name: "serenity_shield",
-        //     address: "0x402B7B932A76d1f007dDC5E51A63105F05bb017B"
-        // },
-        // {
-        //     name: "hypercycle",
-        //     address: "0xED1c9293358d89399A0183D922e6Ef5b701b1503"
-        // },
-        {
-            name: "finterest",
-            address: "0x6408769E416D3Db8a0fa4Bc908Da3418fcFfDDEa"
-        },
-        // {
-        //     name: "worlds_beyond",
-        //     address: "0x493d147402c9C60cd28779B4FBA9C940335007D5"
-        // },
-    ]);
+    // SELECTED WALLETS
+    const [selectedWallets, setSelectedWallets] = useState([]);
+    const [previousWallets, setPreviousWallets] = useState([]);
 
     // TRANSACTIONS
     const [txns, setTxns] = useState([]);
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [arbStatus, setArbStatus] = useState({ loading: true, txns: 0 });
-    const [ethStatus, setEthStatus] = useState({ loading: true, txns: 0 });
-    const [bscStatus, setBscStatus] = useState({ loading: true, txns: 0 });
+    const [isLoading, setIsLoading] = useState(false);
+    const [arbStatus, setArbStatus] = useState({ loading: false, txns: 0 });
+    const [ethStatus, setEthStatus] = useState({ loading: false, txns: 0 });
+    const [bscStatus, setBscStatus] = useState({ loading: false, txns: 0 });
 
     const fetchAndSetStatus = async (walletAddress, contractAddress, apiCall, setStatus) => {
         try {
@@ -126,9 +82,33 @@ const InitUX = () => {
     };
 
     useEffect(() => {
-        fetchTransactions(selectedWallets);
+        // Fetch transactions only for the newly added wallets
+        const newWallets = selectedWallets.filter(
+          wallet => !previousWallets.find(w => w.address === wallet.address)
+        );
+      
+        if (newWallets.length > 0) {
+          setIsLoading(true);
+          fetchTransactions(newWallets)
+            .then(() => {
+              setIsLoading(false);
+            })
+            .catch((error) => {
+              console.error('Error fetching transactions:', error);
+              setIsLoading(false);
+            });
+        }
+      
+        // Update the previousWallets state for the next effect run
+        setPreviousWallets(selectedWallets);
+      
+        // Cleanup function if needed
+        return () => {
+          // Any cleanup logic if necessary
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+      }, [selectedWallets]); // Only re-run the effect if selectedWallets changes
+      
 
     useEffect(() => {
         setIsLoading(arbStatus.loading || ethStatus.loading || bscStatus.loading);

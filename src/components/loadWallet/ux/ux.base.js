@@ -5,6 +5,7 @@ const BaseUX = ({
     txns,
     setTxns,
     setSelectedWallets,
+    setIsLoading,
     fetchTransactions,
     arbStatus,
     ethStatus,
@@ -25,30 +26,23 @@ const BaseUX = ({
             name,
             address: walletAddresses[i]
         }));
-
-        const filterByWalletAddresses = (addresses, data) => data.filter(item => addresses.includes(item.from.toLowerCase()) || addresses.includes(item.to.toLowerCase()))
+    
+        // This function filters the transactions by wallet addresses
+        const filterByWalletAddresses = (addresses, data) =>
+            data.filter(item =>
+                addresses.includes(item.from.toLowerCase()) ||
+                addresses.includes(item.to.toLowerCase()));
+    
+        // Apply the filter to the current transactions and table data
         const newTxns = filterByWalletAddresses(walletAddresses, txns);
         const newTableData = filterByWalletAddresses(walletAddresses, tableData);
-
-        const walletsToFetch = selectedWallets.filter(wallet => {
-            const isAddressFetched = newTxns.some(txn => txn.to.toLowerCase() === wallet.address.toLowerCase());
-            return !isAddressFetched;
-        });
-
-        // avoid api call if a wallet is deselected from the multi-select box
-        if (walletsToFetch.length > 0) {
-            setArbStatus({ ...arbStatus, loading: true });
-            setEthStatus({ ...ethStatus, loading: true });
-            setBscStatus({ ...bscStatus, loading: true });
-
-            fetchTransactions(walletsToFetch);
-        }
-
+    
+        // Update the states with the new filtered data and selected wallets
         setTxns(newTxns);
         setTableData(newTableData);
         setSelectedWallets(selectedWallets);
     };
-
+    
     return {
         tableData,
         setTableData,
