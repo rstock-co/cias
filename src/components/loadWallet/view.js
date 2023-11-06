@@ -15,9 +15,7 @@ import LoadingScreen from './loadingScreen';
 
 const LoadWallet = ({
     isLoading,
-    arbStatus,
-    ethStatus,
-    bscStatus,
+    stableCoins,
     selectedWallets,
 
     tableData,
@@ -53,17 +51,12 @@ const LoadWallet = ({
 
 } = {}) => {
 
-    const walletAddress = selectedWallets.length > 0 ? selectedWallets[selectedWallets.length - 1].address : null;
-
     const isPoolInvestmentsWallet = selectedWallets.length === 1 && selectedWallets[0].address.toLowerCase() === "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca".toLowerCase();
 
     if (isLoading || tableData.length > 900) {
         return (
             <LoadingScreen
-                walletAddress={walletAddress}
-                arbStatus={arbStatus}
-                ethStatus={ethStatus}
-                bscStatus={bscStatus}
+                stableCoins={stableCoins}
             />
         );
     }
