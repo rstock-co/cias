@@ -70,6 +70,10 @@ export const CustomInputLabel = withStyles({
             color: '#e6c347',
             fontWeight: 'bold',
         },
+        '&.MuiInputLabel-shrink': {
+            color: '#e6c347', 
+            fontWeight: "bold",
+        },
     },
 })(InputLabel);
 
@@ -103,6 +107,11 @@ export const CustomSelect = withStyles({
     "& .MuiSelect-select": {
         backgroundColor: "#011D24",
         color: "#6DFAFE",
+        borderColor: '#096B78',
+    },
+    '&.Mui-focused .MuiSelect-select': {
+        color: "#6DFAFE", // Set to the theme's primary text color or another color for when the select has a value
+        borderColor: '#096B78',
     },
 })(Select);
 
