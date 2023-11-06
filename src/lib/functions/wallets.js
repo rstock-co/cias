@@ -91,6 +91,10 @@ export const convertTitle = (snakeCaseString) => {
 export const formatAmount = (chain, value) => chain === 'bsc' ? value / 1e18 : value / 1e6;
 
 export const formatAmountDisplay = (value) => {
+    if (value === undefined || value === null || isNaN(value)) {
+        return "$0.00"; // or however you'd like to format it when there's no value
+    }
+
     return value.toLocaleString(undefined, {
         style: 'currency',
         currency: 'USD',
@@ -98,6 +102,7 @@ export const formatAmountDisplay = (value) => {
         maximumFractionDigits: 2,
     });
 };
+
 
 export const getWalletType = (txn, selectedWalletAddresses) => {
     const fromAddress = txn.from.toLowerCase();

@@ -17,9 +17,13 @@ const InitUX = () => {
         //     name: "games_for_a_living",
         //     address: "0x8d64d9cb00a71863f7438f4b3036aed40f5a45a1"
         // }
+        // {
+        //     name: "pool_investments",
+        //     address: "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca"
+        // },
         {
-            name: "pool_investments",
-            address: "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca"
+            name: "int_jp_bybit",
+            address: "0xF534Fe3c6061D61458C3f6CA29B2d5Ba7855E95D"
         },
         // {
         //     name: "pool_membership",

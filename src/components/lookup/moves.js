@@ -58,10 +58,16 @@ export const moves = [{
     numVestingPeriods: 12,
     vestStartDate: "2023-07-13"
 }, {
-    moveName: "Sei Network",
-    token: "SEI",
+    moveName: "Celestia",
+    token: "TIA",
+    totalContribution: 2640,
+    contributionWallet: "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca",
     contributionOpen: '2023-02-28T19:16:00-07:00',
     contributionClose: '2023-03-02T19:30:00-07:00',
+    vestCycle: "Bi-Annually",
+    numVestingPeriods: 3,
+    vestStartDate: "2023-11-03",
+    FDV: 2400000000,
 }, {
     moveName: "Fluidity",
     token: "HYP",
