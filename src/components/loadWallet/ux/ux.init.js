@@ -10,6 +10,7 @@ const InitUX = () => {
     const stableEth = getAddressByName("stable_usdc_eth");
     const stableEth2 = getAddressByName("stable_usdt_eth");
     const stableBsc = getAddressByName("stable_busd_bep20");
+    const stableBsc2 = getAddressByName("stable_bsc-usd_bep20");
 
     // SET OF SELECTED WALLETS (multi-select)
     const [selectedWallets, setSelectedWallets] = useState([
@@ -21,10 +22,10 @@ const InitUX = () => {
         //     name: "pool_investments",
         //     address: "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca"
         // },
-        {
-            name: "int_jp_bybit",
-            address: "0xF534Fe3c6061D61458C3f6CA29B2d5Ba7855E95D"
-        },
+        // {
+        //     name: "int_jp_bybit",
+        //     address: "0xF534Fe3c6061D61458C3f6CA29B2d5Ba7855E95D"
+        // },
         // {
         //     name: "pool_membership",
         //     address: "0xab5573F28e6dD9Ec34966b06e4C736481F393FC7"
@@ -44,6 +45,18 @@ const InitUX = () => {
         // {
         //     name: "serenity_shield",
         //     address: "0x402B7B932A76d1f007dDC5E51A63105F05bb017B"
+        // },
+        // {
+        //     name: "hypercycle",
+        //     address: "0xED1c9293358d89399A0183D922e6Ef5b701b1503"
+        // },
+        {
+            name: "finterest",
+            address: "0x6408769E416D3Db8a0fa4Bc908Da3418fcFfDDEa"
+        },
+        // {
+        //     name: "worlds_beyond",
+        //     address: "0x493d147402c9C60cd28779B4FBA9C940335007D5"
         // },
     ]);
 
@@ -70,13 +83,14 @@ const InitUX = () => {
     };
 
     const getAggregateERC20Txns = async (walletAddress, contractAddresses) => {
-        const { stableArb, stableEth, stableEth2, stableBsc } = contractAddresses;
+        const { stableArb, stableEth, stableEth2, stableBsc, stableBsc2 } = contractAddresses;
         try {
-            const [data1, data2, data3, data4] = await Promise.all([
+            const [data1, data2, data3, data4, data5] = await Promise.all([
                 fetchAndSetStatus(walletAddress, stableArb, getERC20TxnsArb, setArbStatus),
                 fetchAndSetStatus(walletAddress, stableEth, getERC20TxnsEth, setEthStatus),
                 fetchAndSetStatus(walletAddress, stableEth2, getERC20TxnsEth, setEthStatus),
-                fetchAndSetStatus(walletAddress, stableBsc, getERC20TxnsBsc, setBscStatus)
+                fetchAndSetStatus(walletAddress, stableBsc, getERC20TxnsBsc, setBscStatus),
+                fetchAndSetStatus(walletAddress, stableBsc2, getERC20TxnsBsc, setBscStatus)
             ]);
 
             // Find wallet name for the given walletAddress
@@ -87,8 +101,9 @@ const InitUX = () => {
             const d2 = data2.map(txn => ({ ...txn, chain: 'eth', wallet: wallet ? wallet.name : '' }));
             const d3 = data3.map(txn => ({ ...txn, chain: 'eth', wallet: wallet ? wallet.name : '' }));
             const d4 = data4.map(txn => ({ ...txn, chain: 'bsc', wallet: wallet ? wallet.name : '' }));
+            const d5 = data5.map(txn => ({ ...txn, chain: 'bsc', wallet: wallet ? wallet.name : '' }));
 
-            return [...d1, ...d2, ...d3, ...d4];
+            return [...d1, ...d2, ...d3, ...d4, ...d5];
         } catch (error) {
             console.error('Error fetching aggregate transactions:', error);
             throw error; // Re-throw the error to be handled by the caller
@@ -100,7 +115,7 @@ const InitUX = () => {
         for (const wallet of walletsToFetch) {
             if (wallet && wallet.address) {
                 try {
-                    const result = await getAggregateERC20Txns(wallet.address, { stableArb, stableEth, stableEth2, stableBsc });
+                    const result = await getAggregateERC20Txns(wallet.address, { stableArb, stableEth, stableEth2, stableBsc, stableBsc2 });
                     newTxns.push(...result);
                 } catch (error) {
                     console.error('Error fetching transactions:', error);
