@@ -9,6 +9,7 @@ export const moves = [{
     vcGroup: "???",
     VCFeePercentage: 0,
     contributionWallet: "0xED1c9293358d89399A0183D922e6Ef5b701b1503",
+    vcWallet: "0x2b485b86c843332a2abfd553d5fe7485cee0348c",
     moveWallet: "",
     vcWallet: "",
     FDV: 75000000,
@@ -19,14 +20,17 @@ export const moves = [{
     maxSupply: 2150000000
 }, {
     moveName: "Finterest",
-    token: "HYP",
+    token: "???",
     contributionOpen: '2023-02-10T06:00:00-07:00',
     contributionClose: '2023-02-10T06:49:00-07:00',
+    contributionWallet: "0xED1c9293358d89399A0183D922e6Ef5b701b1503",
+    vcWallet: "0xaa9324d3ac98d65782e7c630f878140d4a127445"
 }, {
     moveName: "Worlds Beyond",
     token: "WBIT",
     contributionOpen: '2023-02-10T06:50:00-07:00',
     contributionClose: '2023-02-13T06:00:00-07:00',
+    contributionWallet: "0x493d147402c9C60cd28779B4FBA9C940335007D5",
 }, {
     moveName: "FilSwan",
     token: "HYP",
