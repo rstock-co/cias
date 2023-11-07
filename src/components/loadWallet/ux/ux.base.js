@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getAddressByName } from '../../lookup/wallets';
+import { getAddressByName } from '../../../lib/lookup/wallets';
 
 const BaseUX = ({
     txns,

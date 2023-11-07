@@ -1,11 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const DialogUX = () => {
+const DialogUX = ({isLoading, tableData = []}) => {
 
     // DIALOG BOX STATES
     const [allocationDialogOpen, setAllocationDialogOpen] = useState(false);
     const [chainDialogOpen, setChainDialogOpen] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [loadingDialogOpen, setLoadingDialogOpen] = useState(false);
+
+    // Loading screen dialog box
+    useEffect(() => {
+        console.log('isLoading:', isLoading, 'tableData.length:', tableData.length);
+        if (isLoading || tableData.length > 900) {
+            setLoadingDialogOpen(true);
+        } else {
+            setLoadingDialogOpen(false);
+        }
+    }, [isLoading, tableData.length]);
+    
 
     // DIALOG HANDLERS
     const handleGenerateAllocations = () => {
@@ -18,7 +30,7 @@ const DialogUX = () => {
 
     const handleCloseSnackbar = () => {
         setSnackbarOpen(false);
-      };
+    };
 
     return {
         allocationDialogOpen,
@@ -31,7 +43,9 @@ const DialogUX = () => {
 
         snackbarOpen,
         setSnackbarOpen,
-        handleCloseSnackbar
+        handleCloseSnackbar,
+
+        loadingDialogOpen
     }
 }
 
