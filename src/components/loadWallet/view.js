@@ -1,8 +1,8 @@
 import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../components/selectInputs';
-import { wallets } from '../lookup/wallets';
-import { moves } from '../lookup/moves';
+import { wallets } from '../../lib/lookup/wallets';
+import { moves } from '../../lib/lookup/moves';
 import { StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
 import { loadWalletStyles, ColorButton } from './styles';
 import '@fontsource/plus-jakarta-sans';
@@ -45,6 +45,8 @@ const LoadWallet = ({
 
     handleGenerateChainFlow,
 
+    loadingDialogOpen,
+
     // calculateTotalTransactionsByChain,
     // calculateTotalValueByChain,
     // formatChainData
@@ -52,14 +54,6 @@ const LoadWallet = ({
 } = {}) => {
 
     const isPoolInvestmentsWallet = selectedWallets.length === 1 && selectedWallets[0].address.toLowerCase() === "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca".toLowerCase();
-
-    if (isLoading || tableData.length > 900) {
-        return (
-            <LoadingScreen
-                stableCoins={stableCoins}
-            />
-        );
-    }
 
     const propertyMap = {
         id: { header: '#', align: 'center' },
@@ -93,8 +87,7 @@ const LoadWallet = ({
           console.error('Failed to copy text: ', err);
         }
     };
-      
-      
+  
     return (
 
         <Box sx={loadWalletStyles}>
@@ -282,7 +275,7 @@ const LoadWallet = ({
             <AllocationTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallets={selectedWallets} isLoading={isLoading} move={filters.move} />
             <ChainCashFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
             <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar} message="Wallet address copied to clipboard" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} sx={{ '& .MuiSnackbarContent-root': { backgroundColor: '#105c69', fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', boxShadow: '0 0 10px 3px #4ed3e6' } }} />
-
+            <LoadingScreen stableCoins={stableCoins} open={loadingDialogOpen} />
         </Box>
 
     );
