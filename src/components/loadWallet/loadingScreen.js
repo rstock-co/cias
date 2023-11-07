@@ -65,7 +65,7 @@ const LoadingScreen = ({ stableCoins, open = false }) => {
               >
                 {loading ? `Loading transactions for ${name}...` : `Loaded ${txns} transactions for ${name}`}
               </Typography>
-              {loading && <CircularProgress size={24} style={{ color: 'white' }} />}
+              {loading && <CircularProgress size={36} style={{ color: 'white' }} />}
             </Box>
           ))}
         </Box>
