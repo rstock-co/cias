@@ -257,7 +257,6 @@ export const calculateTotals = (data) => {
         aggregatedTxns,
     };
 
-    // console.log("TOTALS: ", totals);
     return totals;
 };
 
@@ -304,7 +303,7 @@ const generateUniqueMemberWalletMap = (tableData, selectedWallets) => {
             [`${txnType}sAmount`]: uniqueMemberData[`${txnType}sAmount`] + Number(amount),
             [`${txnType}sChainMap`]: updatedChainMap
         });
-        // console.log("MEMBER MAP: ", map)
+
         return map;
     }, new Map());
 
@@ -341,8 +340,6 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
             memberName
         }
     });
-
-    // console.log("ALLO DATA: ", allocationTableData)
 
     return allocationTableData;
 };

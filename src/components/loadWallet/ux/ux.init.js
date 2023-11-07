@@ -26,7 +26,6 @@ const InitUX = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingLocked, setLoadingLocked] = useState(false);
     
-
     const updateCoinStatus = (coinKey, updates) => {
         setStableCoins(prevCoins => ({
             ...prevCoins,
@@ -51,7 +50,7 @@ const InitUX = () => {
     };
 
     const getAggregateERC20Txns = async (walletAddress) => {
-        // Start loading process for each coin
+        // Set all coins to loading
         Object.keys(stableCoins).forEach(coinKey => updateCoinStatus(coinKey, { loading: true }));
 
         try {
@@ -63,7 +62,7 @@ const InitUX = () => {
             const wallet = wallets.find(wallet => wallet.address.toLowerCase() === walletAddress.toLowerCase());
             const walletName = wallet ? wallet.name : '';
 
-            // Flatten transactions and append the wallet name and coin key as the chain
+            // Flatten transactions and append the wallet name
             const newTxns = transactionsArrays.flat().map(txn => {
                 return {
                     ...txn,
@@ -79,11 +78,11 @@ const InitUX = () => {
     };
 
     const fetchTransactions = async (walletsToFetch) => {
-        const minLoadingTime = 3000; // Minimum loading time in milliseconds
-        const startTime = Date.now(); // Record the start time
+        const minLoadingTime = 3000; // Minimum loading time in milliseconds (to allow the user to view loading screen without flashing too fast)
+        const startTime = Date.now(); 
 
-        setLoadingLocked(true); // Lock loading state changes
-        setIsLoading(true); // Set the loading state to true
+        setLoadingLocked(true); 
+        setIsLoading(true);
 
         const newTxns = [];
         for (const wallet of walletsToFetch) {
@@ -99,53 +98,49 @@ const InitUX = () => {
 
         setTxns(prevTxns => [...prevTxns, ...newTxns]);
 
-        // Calculate how much time has passed
+        // Calculate how much time has passed since the fetch started
         const elapsedTime = Date.now() - startTime;
 
         // If the loading happened too fast, wait until minLoadingTime has passed
         if (elapsedTime < minLoadingTime) {
             setTimeout(() => {
-                setIsLoading(false); // Set the loading state to false
-                setLoadingLocked(false); // Unlock loading state changes
+                setIsLoading(false); 
+                setLoadingLocked(false); 
             }, minLoadingTime - elapsedTime);
         } else {
-            setIsLoading(false); // Set the loading state to false immediately
-            setLoadingLocked(false); // Unlock loading state changes
+            setIsLoading(false); 
+            setLoadingLocked(false); 
         }
     };
 
     useEffect(() => {
         // Fetch transactions only for the newly added wallets
-        const newWallets = selectedWallets.filter(wallet => !previousWallets.find(w => w.address === wallet.address)
-    );
+        const newWallets = selectedWallets.filter(wallet => !previousWallets.find(w => w.address === wallet.address));
 
-    if (newWallets.length > 0) {
-        fetchTransactions(newWallets)
-        .then(() => {
-            // Instead of setting the global loading state here,
-            // we will rely on individual coin statuses
-        })
-        .catch((error) => {
-            console.error('Error fetching transactions:', error);
-            // If there is an error, we should update all coins to not loading
-            Object.keys(stableCoins).forEach(coinKey =>
-            updateCoinStatus(coinKey, { loading: false })
-            );
-        });
-    }
+        if (newWallets.length > 0) {
+            fetchTransactions(newWallets)
+            .then(() => {})
+            .catch((error) => {
+                console.error('Error fetching transactions:', error);
+                // If there is an error, update all coins to not loading
+                Object.keys(stableCoins).forEach(coinKey =>
+                updateCoinStatus(coinKey, { loading: false })
+                );
+            });
+        }
 
-    // Update the previousWallets state for the next effect run
-    setPreviousWallets(selectedWallets);
+        // Update the previousWallets state for the next effect run
+        setPreviousWallets(selectedWallets);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedWallets]);
 
     // manage the global loading state based on individual coin statuses
-    const isAllCoinsNotLoading = (coins) => Object.values(coins).every(coin => !coin.loading);
+    const areAllCoinsNotLoading = (coins) => Object.values(coins).every(coin => !coin.loading);
 
     useEffect(() => {
         if (!loadingLocked) {
-            setIsLoading(!isAllCoinsNotLoading(stableCoins));
+            setIsLoading(!areAllCoinsNotLoading(stableCoins));
         }
     }, [stableCoins, loadingLocked]);
       
