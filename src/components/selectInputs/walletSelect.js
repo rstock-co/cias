@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FormControl, MenuItem, Checkbox, ListItemText, Select } from '@mui/material';
+import { FormControl, MenuItem, Checkbox, ListItemText } from '@mui/material';
 import { CustomInputLabel, CustomSelect, CustomOutlinedInput, autoCompleteTheme } from './styles';
 import { ThemeProvider } from '@mui/material/styles';
 import '@fontsource/inter-tight';
