@@ -1,8 +1,8 @@
 import { convertTime } from "./datetime";
-import { getNameByAddress } from "../../components/lookup/wallets";
+import { getNameByAddress } from "../lookup/wallets";
 import { getVCMoveName } from "./datetime";
-import FormatTxnLink from "../../components/FormatTxnLink";
-import { moves } from "../../components/lookup/moves";
+import FormatTxnLink from "./FormatTxnLink";
+import { moves } from "../lookup/moves";
 
 export const filterTxns = (txns, { type, filterWallet, chain, dateRange, direction, move }) => {
     // If initial render, return all txns (check if all filter conditions are not set)

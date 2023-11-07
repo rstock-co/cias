@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
-import { moves } from '../../components/lookup/moves';
+import { moves } from '../lookup/moves';
 
 // Use "America/Denver" for Mountain Standard Time
 // convertTime(1684786992, 'America/Denver'); 
