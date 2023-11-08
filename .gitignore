@@ -25,3 +25,4 @@ yarn-error.log*
 
 # wallet lookup
 src/components/lookup/wallets.js
+src/components/lookup/moves.js
