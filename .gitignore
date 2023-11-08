@@ -24,5 +24,5 @@ yarn-debug.log*
 yarn-error.log*
 
 # wallet lookup
-src/components/lookup/wallets.js
-src/components/lookup/moves.js
+src/lib/lookup/wallets.js
+src/lib/lookup/moves.js
