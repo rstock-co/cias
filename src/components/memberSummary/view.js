@@ -1,12 +1,20 @@
 
 import { Dialog, DialogContent, DialogTitle, Table, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
 import { formatAmountDisplay } from '../../lib/functions/wallets';
+import { memberWallets } from '../../lib/lookup';
 import { StyledTableCell, StyledTableRow } from './styles';
 import "@fontsource/inter-tight";
 
 const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
 
-    console.log("Member Summary from component: ", memberData);
+    const { memberSummary, memberWallet } = memberData;
+
+// You can then pass memberSummary to the MemberSummary component
+// and use memberWallet wherever you need the wallet address.
+
+
+    const member = memberWallet && memberWallets.find(m => m.address.toLowerCase() === memberWallet.toLowerCase());
+    const memberNameOrWallet = member ? member.name : memberWallet;
 
     return (
         <>
@@ -20,7 +28,7 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
                     },
                 }}
             >
-                <DialogTitle id="chain-flow-dialog-title">Member Summary</DialogTitle>
+                <DialogTitle id="chain-flow-dialog-title">{`Member Summary: ${memberNameOrWallet}`}</DialogTitle>
                 <DialogContent>
                     <TableContainer component={Paper}>
                         <Table>
@@ -37,7 +45,7 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
                                 </StyledTableRow>
                             </TableHead>
                             <TableBody>
-                                {memberData.map((row, index) => (
+                                {memberSummary && memberSummary.map((row, index) => (
                                     <StyledTableRow key={index}>
                                         <StyledTableCell align="center">{row.moveName}</StyledTableCell>
                                         <StyledTableCell align="center">{row.token}</StyledTableCell>

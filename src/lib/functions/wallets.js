@@ -395,7 +395,10 @@ export const generateMemberSummaryTableData = (tableData, memberWallet, moves) =
     }).filter(moveSummary => moveSummary !== null); // Filter out moves with no transactions for the member
 
     console.log('Member summary:', memberSummary);
-    return memberSummary;
+    return {
+        memberSummary, // This is the array of summarized move data
+        memberWallet // This is the original memberWallet address passed into the function
+    };
 };
 
 
