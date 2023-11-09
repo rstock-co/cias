@@ -1,8 +1,7 @@
 import { Table, TableBody, TableContainer, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../components/selectInputs';
-import { wallets } from '../../lib/lookup/wallets';
-import { moves } from '../../lib/lookup/moves';
+import { wallets, moves } from '../../lib/lookup/';
 import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
 import { loadWalletStyles, ColorButton } from './styles';
 import '@fontsource/plus-jakarta-sans';
@@ -202,8 +201,6 @@ const LoadWallet = ({
                 </Box>
             </Box>
 
-
-
             <TableContainer component={Paper} sx={{ maxHeight: '80vh', overflow: 'auto', background: 'transparent', backdropFilter: 'blur(5px)' }}>
                 <Table sx={{ minWidth: 2020, backgroundColor: 'transparent' }} stickyHeader aria-label="simple table">
                     <StyledTableHead sx={{ width: '100%' }}>
@@ -270,8 +267,7 @@ const LoadWallet = ({
                                 })}
                             </StyledTableRow>
                         ))}
-                    </TableBody>
-
+                        </TableBody>
                 </Table>
             </TableContainer>
             <AllocationTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallets={selectedWallets} isLoading={isLoading} move={filters.move} />
