@@ -1,13 +1,12 @@
 
 import { Dialog, DialogContent, DialogTitle, Table, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
-import { calculateFlow, formatAmountDisplay } from '../../lib/functions/wallets';
+import { formatAmountDisplay } from '../../lib/functions/wallets';
 import { StyledTableCell, StyledTableRow } from './styles';
 import "@fontsource/inter-tight";
 
-const MemberSummary = ({ tableData, dialogOpen, setDialogOpen }) => {
+const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
 
-    const chains = Array.from(new Set(tableData.map(item => item.chain)));
-    const chainFlows = chains.map(chain => calculateFlow(tableData, chain));
+    console.log("Member Summary from component: ", memberData);
 
     return (
         <>
@@ -27,25 +26,27 @@ const MemberSummary = ({ tableData, dialogOpen, setDialogOpen }) => {
                         <Table>
                             <TableHead>
                                 <StyledTableRow>
-                                    <StyledTableCell align="center">Chain</StyledTableCell>
-                                    <StyledTableCell align="center">Inflow</StyledTableCell>
-                                    <StyledTableCell align="center">Outflow</StyledTableCell>
-                                    <StyledTableCell align="center">Net</StyledTableCell>
-                                    <StyledTableCell align="center"># Txns In</StyledTableCell>
-                                    <StyledTableCell align="center"># Txns Out</StyledTableCell>
+                                    <StyledTableCell align="center">Move</StyledTableCell>
+                                    <StyledTableCell align="center">Token</StyledTableCell>
+                                    <StyledTableCell align="center">Total Net ($)</StyledTableCell>
                                     <StyledTableCell align="center">Total # Txns</StyledTableCell>
+                                    <StyledTableCell align="center">Contributions ($)</StyledTableCell>
+                                    <StyledTableCell align="center"># of Contributions</StyledTableCell>
+                                    <StyledTableCell align="center">Refunds ($)</StyledTableCell>
+                                    <StyledTableCell align="center"># of Refunds</StyledTableCell>
                                 </StyledTableRow>
                             </TableHead>
                             <TableBody>
-                                {chainFlows.map((row, index) => (
+                                {memberData.map((row, index) => (
                                     <StyledTableRow key={index}>
-                                        <StyledTableCell align="center">{row.chain}</StyledTableCell>
-                                        <StyledTableCell align="center">{formatAmountDisplay(row.inflow)}</StyledTableCell>
-                                        <StyledTableCell align="center">{formatAmountDisplay(row.outflow)}</StyledTableCell>
-                                        <StyledTableCell align="center">{formatAmountDisplay(row.netFlow)}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.txnsIn}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.txnsOut}</StyledTableCell>
-                                        <StyledTableCell align="center">{row.totalTxns}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.moveName}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.token}</StyledTableCell>
+                                        <StyledTableCell align="center">{formatAmountDisplay(row.netTotal)}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.transactionsCount}</StyledTableCell>
+                                        <StyledTableCell align="center">{formatAmountDisplay(row.contributionsTotal)}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.contributionsCount}</StyledTableCell>
+                                        <StyledTableCell align="center">{formatAmountDisplay(row.refundsTotal)}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.refundsCount}</StyledTableCell>
                                     </StyledTableRow>
                                 ))}
                             </TableBody>

@@ -4,18 +4,18 @@ import { getVCMoveName } from "./datetime";
 import FormatTxnLink from "./FormatTxnLink";
 import { moves } from "../lookup/moves";
 
+const filterByDateRange = (start, end, txn, useOffset) => {
+    const mstOffsetMillis = useOffset ? 7 * 60 * 60 * 1000 : 0;  // Offset in milliseconds for 7 hours (MST)
+    const startDate = new Date(new Date(start).getTime() + mstOffsetMillis).getTime();
+    const endDate = new Date(new Date(end).getTime() + mstOffsetMillis).getTime();
+
+    return txn.timestamp >= startDate && txn.timestamp <= endDate;
+};
+
 export const filterTxns = (txns, { type, filterWallet, chain, dateRange, direction, move }) => {
     // If initial render, return all txns (check if all filter conditions are not set)
     if (type === '' && filterWallet === '' && chain === '' && (dateRange.startDate === '' || dateRange.endDate === '') && type === '' && direction === '' && move === '') {
         return txns.filter(txn => txn.amount !== 0).sort((a, b) => b.timestamp - a.timestamp);
-    }
-
-    const filterByDateRange = (start, end, txn, useOffset) => {
-        const mstOffsetMillis = useOffset ? 7 * 60 * 60 * 1000 : 0;  // Offset in milliseconds for 7 hours (MST)
-        const startDate = new Date(new Date(start).getTime() + mstOffsetMillis).getTime();
-        const endDate = new Date(new Date(end).getTime() + mstOffsetMillis).getTime();
-
-        return txn.timestamp >= startDate && txn.timestamp <= endDate;
     }
 
     return txns.filter(txn => {
@@ -348,6 +348,56 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
 
     return allocationTableData;
 };
+
+
+export const generateMemberSummaryTableData = (tableData, memberWallet, moves) => {
+    console.log('Starting to generate member summary table data...');
+
+    // Ensure the member wallet address is in lowercase for case-insensitive comparison
+    const memberWalletLower = memberWallet.toLowerCase();
+
+    const memberSummary = moves.map(move => {
+        console.log(`Processing move: ${move.moveName}`);
+
+        // Filter transactions for each move based on the date range
+        const transactions = tableData.filter(txn => {
+            const matchesMove = move.contributionOpen && move.contributionClose &&
+                                filterByDateRange(move.contributionOpen, move.contributionClose, txn);
+            console.log(`Transaction ${txn.id} matches date range for move ${move.moveName}: ${matchesMove}`);
+            return matchesMove;
+        });
+
+        // Filter transactions for contributions and refunds specifically for the member wallet (case-insensitive)
+        const contributions = transactions.filter(txn => txn.from.toLowerCase() === memberWalletLower);
+        const refunds = transactions.filter(txn => txn.to.toLowerCase() === memberWalletLower);
+
+        const totalContributions = contributions.reduce((acc, txn) => acc + parseFloat(txn.amount), 0);
+        const totalRefunds = refunds.reduce((acc, txn) => acc + parseFloat(txn.amount), 0);
+
+        console.log(`Move: ${move.moveName}, Contributions: ${contributions.length}, Refunds: ${refunds.length}`);
+
+        // If there are no contributions or refunds for the move, return null (to be filtered out later)
+        if (contributions.length === 0 && refunds.length === 0) {
+            console.log(`No transactions for move: ${move.moveName}. This move will be excluded from the summary.`);
+            return null;
+        }
+
+        return {
+            moveName: move.moveName,
+            token: move.token,
+            contributionsCount: contributions.length,
+            contributionsTotal: totalContributions,
+            refundsCount: refunds.length,
+            refundsTotal: totalRefunds,
+            transactionsCount: contributions.length + refunds.length,
+            netTotal: totalContributions - totalRefunds
+        };
+    }).filter(moveSummary => moveSummary !== null); // Filter out moves with no transactions for the member
+
+    console.log('Member summary:', memberSummary);
+    return memberSummary;
+};
+
 
 export const shortenAddress = (address, startLength = 4, endLength = 6) => {
     // Ensure the input is a string

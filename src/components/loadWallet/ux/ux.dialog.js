@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { generateMemberSummaryTableData } from '../../../lib/functions/wallets';
+import { moves } from '../../../lib/lookup';
 
 const DialogUX = ({isLoading, tableData = []}) => {
 
@@ -8,6 +10,7 @@ const DialogUX = ({isLoading, tableData = []}) => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [loadingDialogOpen, setLoadingDialogOpen] = useState(false);
     const [memberSummaryDialogOpen, setMemberSummaryDialogOpen] = useState(false);
+    const [memberSummaryData, setMemberSummaryData] = useState([]);
 
     // Loading screen dialog box
     useEffect(() => {
@@ -33,8 +36,11 @@ const DialogUX = ({isLoading, tableData = []}) => {
         setSnackbarOpen(false);
     };
 
-    const handleMemberSummary = () => {
-        setChainDialogOpen(true);
+    const handleMemberSummary = (memberWallet) => {
+        // Here you generate the data for the MemberSummary dialog
+        const data = generateMemberSummaryTableData(tableData, memberWallet, moves);
+        setMemberSummaryData(data);
+        setMemberSummaryDialogOpen(true); // Open the dialog
     };
 
     return {
@@ -55,6 +61,8 @@ const DialogUX = ({isLoading, tableData = []}) => {
         memberSummaryDialogOpen, 
         setMemberSummaryDialogOpen,
         handleMemberSummary,
+
+        memberSummaryData
     }
 }
 

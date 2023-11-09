@@ -52,6 +52,8 @@ const LoadWallet = ({
     setMemberSummaryDialogOpen,
     handleMemberSummary,
 
+    memberSummaryData
+
     // calculateTotalTransactionsByChain,
     // calculateTotalValueByChain,
     // formatChainData
@@ -260,23 +262,23 @@ const LoadWallet = ({
                                                 </IconButton>
                                                 {isMember && !isSelectedAddress && (
                                                     <IconButton
-                                                    size="small"
-                                                    onClick={handleMemberSummary} 
-                                                    sx={{
-                                                        padding: '3px',
-                                                        margin: '1px',
-                                                        marginLeft: '0px',
-                                                        "&:hover": {
-                                                            backgroundColor: '#012226', 
-                                                        }
-                                                    }}
-                                                >
-                                                    <PersonIcon 
-                                                        style={{ 
-                                                            fontSize: '14px',
-                                                            color: '#1ab4b9',
-                                                        }} 
-                                                    />
+                                                        size="small"
+                                                        onClick={() => handleMemberSummary(row[key])} // Pass the member wallet address
+                                                        sx={{
+                                                            padding: '3px',
+                                                            margin: '1px',
+                                                            marginLeft: '0px',
+                                                            "&:hover": {
+                                                                backgroundColor: '#012226', 
+                                                            }
+                                                        }}
+                                                    >
+                                                        <PersonIcon 
+                                                            style={{ 
+                                                                fontSize: '14px',
+                                                                color: '#1ab4b9',
+                                                            }} 
+                                                        />
                                                     </IconButton>
                                                 )}
                                             </StyledTableCell>
@@ -303,7 +305,7 @@ const LoadWallet = ({
             <ChainCashFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
             <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar} message="Wallet address copied to clipboard" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} sx={{ '& .MuiSnackbarContent-root': { backgroundColor: '#105c69', fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', boxShadow: '0 0 10px 3px #4ed3e6' } }} />
             <LoadingScreen stableCoins={stableCoins} open={loadingDialogOpen} />
-            <MemberSummaryDialog tableData={tableData} dialogOpen={memberSummaryDialogOpen} setDialogOpen={setMemberSummaryDialogOpen} />
+            <MemberSummaryDialog memberData={memberSummaryData} dialogOpen={memberSummaryDialogOpen} setDialogOpen={setMemberSummaryDialogOpen} />
         </Box>
 
     );
