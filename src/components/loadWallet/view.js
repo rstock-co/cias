@@ -11,6 +11,7 @@ import '@fontsource/inter-tight';
 import AllocationTable from '../allocationTable/view';
 import ChainCashFlowDialog from '../chainCashFlow/view';
 import LoadingScreen from './loadingScreen';
+import MemberSummaryDialog from '../memberSummary/view';
 
 
 const LoadWallet = ({
@@ -46,6 +47,10 @@ const LoadWallet = ({
     handleGenerateChainFlow,
 
     loadingDialogOpen,
+
+    memberSummaryDialogOpen, 
+    setMemberSummaryDialogOpen,
+    handleMemberSummary,
 
     // calculateTotalTransactionsByChain,
     // calculateTotalValueByChain,
@@ -256,7 +261,7 @@ const LoadWallet = ({
                                                 {isMember && !isSelectedAddress && (
                                                     <IconButton
                                                     size="small"
-                                                    onClick={() => {}}
+                                                    onClick={handleMemberSummary} 
                                                     sx={{
                                                         padding: '3px',
                                                         margin: '1px',
@@ -298,6 +303,7 @@ const LoadWallet = ({
             <ChainCashFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
             <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar} message="Wallet address copied to clipboard" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} sx={{ '& .MuiSnackbarContent-root': { backgroundColor: '#105c69', fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', boxShadow: '0 0 10px 3px #4ed3e6' } }} />
             <LoadingScreen stableCoins={stableCoins} open={loadingDialogOpen} />
+            <MemberSummaryDialog tableData={tableData} dialogOpen={memberSummaryDialogOpen} setDialogOpen={setMemberSummaryDialogOpen} />
         </Box>
 
     );

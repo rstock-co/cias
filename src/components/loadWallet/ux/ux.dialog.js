@@ -7,6 +7,7 @@ const DialogUX = ({isLoading, tableData = []}) => {
     const [chainDialogOpen, setChainDialogOpen] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [loadingDialogOpen, setLoadingDialogOpen] = useState(false);
+    const [memberSummaryDialogOpen, setMemberSummaryDialogOpen] = useState(false);
 
     // Loading screen dialog box
     useEffect(() => {
@@ -32,6 +33,10 @@ const DialogUX = ({isLoading, tableData = []}) => {
         setSnackbarOpen(false);
     };
 
+    const handleMemberSummary = () => {
+        setChainDialogOpen(true);
+    };
+
     return {
         allocationDialogOpen,
         setAllocationDialogOpen,
@@ -45,7 +50,11 @@ const DialogUX = ({isLoading, tableData = []}) => {
         setSnackbarOpen,
         handleCloseSnackbar,
 
-        loadingDialogOpen
+        loadingDialogOpen,
+
+        memberSummaryDialogOpen, 
+        setMemberSummaryDialogOpen,
+        handleMemberSummary,
     }
 }
 
