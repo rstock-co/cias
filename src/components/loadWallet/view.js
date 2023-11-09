@@ -1,9 +1,9 @@
-import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
+import { Table, TableBody, TableContainer, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../components/selectInputs';
 import { wallets } from '../../lib/lookup/wallets';
 import { moves } from '../../lib/lookup/moves';
-import { StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
+import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
 import { loadWalletStyles, ColorButton } from './styles';
 import '@fontsource/plus-jakarta-sans';
 import '@fontsource/inter-tight';
@@ -204,72 +204,74 @@ const LoadWallet = ({
 
 
 
-            <TableContainer component={Paper} sx={{ background: 'transparent', backdropFilter: 'blur(5px)' }}>
-                <Table sx={{ minWidth: 650, backgroundColor: 'transparent' }} aria-label="simple table">
-                    <TableHead>
+            <TableContainer component={Paper} sx={{ maxHeight: '80vh', overflow: 'auto', background: 'transparent', backdropFilter: 'blur(5px)' }}>
+                <Table sx={{ minWidth: 2020, backgroundColor: 'transparent' }} stickyHeader aria-label="simple table">
+                    <StyledTableHead sx={{ width: '100%' }}>
                         <TableRow>
                             {Object.entries(propertyMap).map(([key, value]) => (
                                 <StyledTableCell key={key} align={value.align}>
                                     {value.header}
                                 </StyledTableCell>
-                            ))}
+                            ))}                 
                         </TableRow>
-                    </TableHead>
+                    </StyledTableHead>
+           
                     <TableBody>
                         {tableData.length > 0 && tableData.length < 900 && tableData.map((row) => (
                             <StyledTableRow
-                            key={row.id}
-                            walletType={row.walletType}
-                            isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
+                                key={row.id}
+                                walletType={row.walletType}
+                                isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
                             >
-                            {Object.entries(propertyMap).map(([key, value]) => {
-                                if (key === 'from' || key === 'to') {
-                                return (
-                                    <StyledTableCell
-                                    key={key}
-                                    align={value.align}
-                                    walletType={row.walletType}
-                                    isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
-                                    >
-                                    {row[key]}
-                                    <IconButton
-                                        size="small"
-                                        onClick={() => copyToClipboard(row[key])}
-                                        sx={{
-                                            padding: '5px',
-                                            margin: '2px',
-                                            marginLeft: '5px',
-                                            // backgroundColor: '#012226', 
-                                            "&:hover": {
-                                              backgroundColor: '#012226', 
-                                            }
-                                        }}
-                                    >
-                                        <ContentCopyIcon 
-                                            style={{ 
-                                            fontSize: '14px',
-                                            color: '#1ab4b9',
-                                            }} 
-                                        />
-                                    </IconButton>
-                                    </StyledTableCell>
-                                );
-                                } else {
-                                return (
-                                    <StyledTableCell
-                                    key={key}
-                                    align={value.align}
-                                    walletType={row.walletType}
-                                    isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
-                                    >
-                                    {row[key]}
-                                    </StyledTableCell>
-                                );
-                                }
-                            })}
+                                {Object.entries(propertyMap).map(([key, value]) => {
+                                    if (key === 'from' || key === 'to') {
+                                        return (
+                                            <StyledTableCell
+                                                key={key}
+                                                align={value.align}
+                                                walletType={row.walletType}
+                                                isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
+                                            >
+                                                {row[key]}
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() => copyToClipboard(row[key])}
+                                                    sx={{
+                                                        padding: '5px',
+                                                        margin: '2px',
+                                                        marginLeft: '5px',
+                                                        // backgroundColor: '#012226', 
+                                                        "&:hover": {
+                                                            backgroundColor: '#012226', 
+                                                        }
+                                                    }}
+                                                >
+                                                    <ContentCopyIcon 
+                                                        style={{ 
+                                                            fontSize: '14px',
+                                                            color: '#1ab4b9',
+                                                        }} 
+                                                    />
+                                                </IconButton>
+                                            </StyledTableCell>
+                                        );
+                                    } else {
+                                        return (
+                                            <StyledTableCell
+                                                key={key}
+                                                align={value.align}
+                                                walletType={row.walletType}
+                                                isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
+                                            >
+                                                {row[key]}
+                                            </StyledTableCell>
+                                        );
+                                    }
+                                })}
                             </StyledTableRow>
                         ))}
-                        </TableBody>
+                    </TableBody>
+
                 </Table>
             </TableContainer>
             <AllocationTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallets={selectedWallets} isLoading={isLoading} move={filters.move} />

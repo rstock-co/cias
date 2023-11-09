@@ -1,7 +1,7 @@
 import { tableCellClasses } from '@mui/material/TableCell';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import { TableCell, TableRow } from '@mui/material';
+import { TableHead, TableCell, TableRow } from '@mui/material';
 import '@fontsource/plus-jakarta-sans';
 import "@fontsource/inter-tight"
 import "@fontsource/inter"
@@ -16,10 +16,36 @@ const determineBackground = (walletType, isRefund) => {
     }
 };
 
+export const StyledTableHead = styled(TableHead)(({ theme }) => ({
+    // Removed 'display: 'flex'' to allow default table behavior
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'var(--body-bg)', // Define this variable or replace with a specific value
+    zIndex: 7,
+    position: 'sticky',
+    top: 0,
+    fontWeight: 700,
+    // Removed 'overflow: 'hidden'' which is not typically necessary for a table head
+    // Span styles within the TableHead
+    '& span': {
+      opacity: 0,
+      transform: 'translateY(-100%)',
+      transition: theme.transitions.create(['opacity', 'transform'], {
+        duration: theme.transitions.duration.standard,
+      }),
+    },
+    '& .MuiTableCell-head': { // This targets Material-UI's TableCell with the 'head' class
+        padding: '8px 16px', // Example of reduced padding; adjust as needed
+        // If you have a specific height in mind, you can set it here:
+        height: '40px', // Or any other value that suits your design
+    },
+}));
+
+
 export const StyledTableCell = styled(TableCell)(({ theme, walletType, isRefund }) => ({
     position: 'relative',
     fontSize: 14,
-    color: theme.palette.common.white,
+    color: "#e6e6e6",
     backgroundImage: determineBackground(walletType, isRefund),
     borderColor: '#5b5b5b',
     fontFamily: 'Inter Tight, sans-serif',
@@ -34,7 +60,10 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletType, isRefund 
         fontFamily: 'Inter, sans-serif'
     },
     [`&.${tableCellClasses.body}`]: {
-        // Place for body-specific styles if necessary
+        // Set the height and line height for body cells
+        height: '35px',
+        padding: '4px 16px', // Adjust padding to reduce height, keep horizontal padding the same for alignment
+        lineHeight: '35px', // Set line height to 'normal' to ensure text fits within the new height
     },
     '&::before': {
         content: isRefund ? '""' : 'none',

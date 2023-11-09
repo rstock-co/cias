@@ -10,7 +10,7 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
         return txns.filter(txn => txn.amount !== 0).sort((a, b) => b.timestamp - a.timestamp);
     }
 
-    const checkTimeInRange = (start, end, txn, useOffset) => {
+    const filterByDateRange = (start, end, txn, useOffset) => {
         const mstOffsetMillis = useOffset ? 7 * 60 * 60 * 1000 : 0;  // Offset in milliseconds for 7 hours (MST)
         const startDate = new Date(new Date(start).getTime() + mstOffsetMillis).getTime();
         const endDate = new Date(new Date(end).getTime() + mstOffsetMillis).getTime();
@@ -39,9 +39,9 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
             matchesChain = txn.chain === chain;
         }
 
-        // (3) filter by date range
+        // (3) filter by date picker date range
         if (dateRange && dateRange.startDate && dateRange.endDate) {
-            matchesDateRange = checkTimeInRange(dateRange.startDate, dateRange.endDate, txn, true);
+            matchesDateRange = filterByDateRange(dateRange.startDate, dateRange.endDate, txn, true);
         }
 
         // (4) filter by direction
@@ -49,11 +49,11 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
             matchesDirection = txn.inout.toLowerCase() === direction.toLowerCase();
         }
 
-        // (5) filter by move
+        // (5) filter by move date range
         if (move) {
             const targetMove = moves.find(m => m.moveName === move);
             if (targetMove && targetMove.contributionOpen && targetMove.contributionClose) {
-                matchesMove = checkTimeInRange(targetMove.contributionOpen, targetMove.contributionClose, txn, false);
+                matchesMove = filterByDateRange(targetMove.contributionOpen, targetMove.contributionClose, txn, false);
             } else { 
                 matchesMove = false
             }; 
@@ -159,7 +159,7 @@ export const generateTableData = (txn, id, selectedWallets) => {
 
     let type = walletType;
 
-    // this can be improved later - this is for identifying moves by their contribution window (ie.  Hypercycle, Finterest, Games FAL)
+    // this can be improved later - this is for identifying moves by their contribution window (ie.  Hypercycle, Finterest, Games for a Living)
 
     // from: vc investment wallet to: JP's Bybit
     if (txn.from === '0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca' && txn.to === '0xf534fe3c6061d61458c3f6ca29b2d5ba7855e95d') {
