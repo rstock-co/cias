@@ -8,7 +8,7 @@ import { moves } from '../lookup/moves';
 export const convertTime = (timestamp, timeZone) => {
     const date = new Date(timestamp);
     const zonedDate = utcToZonedTime(date, timeZone);
-    return format(zonedDate, "MMMM d, yyyy h:mm a");
+    return format(zonedDate, "MMM d, yyyy h:mm a");
 }
 
 export const getVCMoveName = (walletType, unixTime) => {

@@ -61,7 +61,7 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
 
         // (6) filter by type
         if (type) {
-            matchesType = txn.walletType === type;
+            matchesType = type === "Member" ? txn.walletType.startsWith(type) : txn.walletType === type;
         }
 
         return matchesFilterWallet && matchesChain && matchesDateRange && matchesDirection && matchesType && matchesMove;
@@ -76,9 +76,14 @@ export const getUniqueWallets = txns => {
 };
 
 export const getUniqueTypes = (tableData) => {
-    const types = tableData.map(row => row.walletType);
+    const types = tableData.map(row => {
+        // If the walletType starts with "Member", treat it as "Member"
+        return row.walletType.startsWith("Member") ? "Member" : row.walletType;
+    });
+    // Create a set to get unique values, then convert it back to an array
     return [...new Set(types)].filter(type => type);
 };
+
 
 export const convertTitle = (snakeCaseString) => {
     const words = snakeCaseString.split('_');

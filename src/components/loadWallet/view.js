@@ -1,5 +1,6 @@
 import { Table, TableBody, TableContainer, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import PersonIcon from '@mui/icons-material/Person';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../components/selectInputs';
 import { wallets, moves } from '../../lib/lookup/';
 import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
@@ -63,7 +64,7 @@ const LoadWallet = ({
         link: { header: 'Txn', align: 'center' },
         from: { header: 'From', align: 'left' },
         to: { header: 'To', align: 'left' },
-        walletType: { header: 'Type', align: 'left' },
+        walletType: { header: 'Description', align: 'left' },
         amountDisplay: { header: 'Amount ($)', align: 'center' },
         currency: { header: 'Currency ($)', align: 'center' },
     };
@@ -222,6 +223,8 @@ const LoadWallet = ({
                             >
                                 {Object.entries(propertyMap).map(([key, value]) => {
                                     if (key === 'from' || key === 'to') {
+                                        const isMember = row.walletType.startsWith('Member');
+                                        const isSelectedAddress = selectedWallets.some(wallet => wallet.address === row[key]);
                                         return (
                                             <StyledTableCell
                                                 key={key}
@@ -229,15 +232,15 @@ const LoadWallet = ({
                                                 walletType={row.walletType}
                                                 isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
                                             >
+                                                
                                                 {row[key]}
                                                 <IconButton
                                                     size="small"
                                                     onClick={() => copyToClipboard(row[key])}
                                                     sx={{
                                                         padding: '5px',
-                                                        margin: '2px',
-                                                        marginLeft: '5px',
-                                                        // backgroundColor: '#012226', 
+                                                        margin: '1px',
+                                                        marginLeft: '3px',
                                                         "&:hover": {
                                                             backgroundColor: '#012226', 
                                                         }
@@ -250,6 +253,27 @@ const LoadWallet = ({
                                                         }} 
                                                     />
                                                 </IconButton>
+                                                {isMember && !isSelectedAddress && (
+                                                    <IconButton
+                                                    size="small"
+                                                    onClick={() => {}}
+                                                    sx={{
+                                                        padding: '3px',
+                                                        margin: '1px',
+                                                        marginLeft: '0px',
+                                                        "&:hover": {
+                                                            backgroundColor: '#012226', 
+                                                        }
+                                                    }}
+                                                >
+                                                    <PersonIcon 
+                                                        style={{ 
+                                                            fontSize: '14px',
+                                                            color: '#1ab4b9',
+                                                        }} 
+                                                    />
+                                                    </IconButton>
+                                                )}
                                             </StyledTableCell>
                                         );
                                     } else {
