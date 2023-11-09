@@ -44,6 +44,9 @@ export const getVCMoveName = (walletType, unixTime) => {
     return walletType;
 };
 
+export const isPoolInvestmentsWallet = (selectedWallets) => 
+    selectedWallets.length === 1 && selectedWallets[0].address.toLowerCase() === "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca".toLowerCase();
+
 
 
 

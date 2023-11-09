@@ -3,7 +3,7 @@ import { generateAllocationTableData, calculateTotals } from "../../lib/function
 import { formatTitle, formatAmountDisplay, shortenAddress } from "../../lib/functions/format";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
-import { printDocument } from "../../lib/functions/pdf";
+import { printDocument } from "../../lib/functions/actions";
 import { FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from '@mui/material';
 import { format, startOfMinute, addMinutes } from 'date-fns';
 import "@fontsource/inter-tight";

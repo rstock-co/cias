@@ -75,3 +75,7 @@ export const formatTime = (timestamp, timeZone) => {    // formatTime(1684786992
     return format(zonedDate, "MMM d, yyyy h:mm a");
 }
 
+export const lowercase = (string) => {
+    return string.toLowerCase();
+}
+

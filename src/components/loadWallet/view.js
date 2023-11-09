@@ -1,8 +1,11 @@
 import { Table, TableBody, TableContainer, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import PersonIcon from '@mui/icons-material/Person';
+import { propertyMap } from '../../lib/data/loadWallet';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../components/selectInputs';
 import { wallets, moves } from '../../lib/lookup/';
+import { isPoolInvestmentsWallet } from '../../lib/functions/wallets';
+import { copyToClipboard } from '../../lib/functions/actions';
 import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
 import { loadWalletStyles, ColorButton } from './styles';
 import '@fontsource/plus-jakarta-sans';
@@ -60,40 +63,11 @@ const LoadWallet = ({
 
 } = {}) => {
 
-    const isPoolInvestmentsWallet = selectedWallets.length === 1 && selectedWallets[0].address.toLowerCase() === "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca".toLowerCase();
-
-    const propertyMap = {
-        id: { header: '#', align: 'center' },
-        chain: { header: 'Chain', align: 'center' },
-        wallet: { header: 'Wallet', align: 'center' }, 
-        inout: { header: 'In/Out', align: 'center' },
-        dateTime: { header: 'Date/Time', align: 'left' },
-        link: { header: 'Txn', align: 'center' },
-        from: { header: 'From', align: 'left' },
-        to: { header: 'To', align: 'left' },
-        walletType: { header: 'Description', align: 'left' },
-        amountDisplay: { header: 'Amount ($)', align: 'center' },
-        currency: { header: 'Currency ($)', align: 'center' },
-    };
-
     // const totalTransactionsByChain = calculateTotalTransactionsByChain(tableData);
     // const totalValueByChain = calculateTotalValueByChain(tableData);
     // const formattedChainData = formatChainData(totalTransactionsByChain, totalValueByChain);
 
-    const copyToClipboard = async (text) => {
-        if (!navigator.clipboard) {
-          console.error('Clipboard API not available');
-          return;
-        }
-      
-        try {
-          await navigator.clipboard.writeText(text);
-          console.log('Text copied to clipboard');
-          setSnackbarOpen(true);
-        } catch (err) {
-          console.error('Failed to copy text: ', err);
-        }
-    };
+
   
     return (
 
@@ -133,7 +107,7 @@ const LoadWallet = ({
                     </Typography>
                 ))}
 
-                {isPoolInvestmentsWallet && 
+                {isPoolInvestmentsWallet(selectedWallets) && 
                     <Box sx={{ marginTop: '70px' }}>
                         <MoveSelect
                             moves={moves.map(move => move.moveName)}
@@ -243,7 +217,7 @@ const LoadWallet = ({
                                                 {row[key]}
                                                 <IconButton
                                                     size="small"
-                                                    onClick={() => copyToClipboard(row[key])}
+                                                    onClick={() => copyToClipboard(row[key], setSnackbarOpen)}
                                                     sx={{
                                                         padding: '5px',
                                                         margin: '1px',

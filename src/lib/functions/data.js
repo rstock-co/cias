@@ -1,6 +1,6 @@
-import { formatAmountDecimals, formatAmountDisplay } from "./format";
+import { FormatTxnLink, formatAmountDecimals, formatAmountDisplay, formatTime } from "./format";
 import { filterByDateRange } from "./filters";
-import { getWalletType } from "./wallets";
+import { getWalletType, getVCMoveName } from "./wallets";
 
 export const generateTableData = (txn, id, selectedWallets) => {
     const selectedWalletsLowercase = selectedWallets.map(address => address.toLowerCase());
@@ -39,7 +39,7 @@ export const generateTableData = (txn, id, selectedWallets) => {
         wallet: txn.wallet,
         chain: txn.chain,
         timestamp,
-        dateTime: convertTime(timestamp, 'America/Denver'),
+        dateTime: formatTime(timestamp, 'America/Denver'),
         link: <FormatTxnLink hash={txn.hash} chain={txn.chain} />,
         from: txn.from,
         to: txn.to,

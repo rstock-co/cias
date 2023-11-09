@@ -1,17 +1,3 @@
-// import html2pdf from "html2pdf.js";
-
-// export const printDocument = () => {
-//     const element = document.getElementById('myTable');
-//     const opt = {
-//         margin: 1,
-//         filename: 'allocation_table.pdf',
-//         image: { type: 'jpeg', quality: 0.98 },
-//         html2canvas: { scale: 2, windowWidth: element.scrollWidth, windowHeight: element.scrollHeight },
-//         jsPDF: { unit: 'in', format: 'tabloid', orientation: 'landscape' }
-//     };
-
-//     html2pdf().from(element).set(opt).save();
-// }
 
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -36,3 +22,35 @@ export const printDocument = () => {
         pdf.save('download.pdf');
     });
 }
+
+// import html2pdf from "html2pdf.js";
+
+// export const printDocument = () => {
+//     const element = document.getElementById('myTable');
+//     const opt = {
+//         margin: 1,
+//         filename: 'allocation_table.pdf',
+//         image: { type: 'jpeg', quality: 0.98 },
+//         html2canvas: { scale: 2, windowWidth: element.scrollWidth, windowHeight: element.scrollHeight },
+//         jsPDF: { unit: 'in', format: 'tabloid', orientation: 'landscape' }
+//     };
+
+//     html2pdf().from(element).set(opt).save();
+// }
+
+
+export const copyToClipboard = async (text, handler) => {
+    if (!navigator.clipboard) {
+      console.error('Clipboard API not available');
+      return;
+    }
+  
+    try {
+      await navigator.clipboard.writeText(text);
+      console.log('Text copied to clipboard');
+      handler(true);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+};
+
