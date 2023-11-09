@@ -1,6 +1,6 @@
 
 import { Dialog, DialogContent, DialogTitle, Table, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
-import { formatAmountDisplay } from '../../lib/functions/wallets';
+import { formatAmountDisplay } from '../../lib/functions/format';
 import { memberWallets } from '../../lib/lookup';
 import { StyledTableCell, StyledTableRow } from './styles';
 import "@fontsource/inter-tight";

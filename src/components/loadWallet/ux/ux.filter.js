@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { filterTxns, generateTableData } from '../../../lib/functions/wallets';
+import { generateTableData } from '../../../lib/functions/data';
+import { filterTxns } from '../../../lib/functions/filters';
 import { curry } from '../../../lib/functions/fp';
 
 const FilterUX = ({

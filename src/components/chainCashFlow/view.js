@@ -1,13 +1,14 @@
 
 import { Dialog, DialogContent, DialogTitle, Table, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
-import { calculateFlow, formatAmountDisplay } from '../../lib/functions/wallets';
+import { generateChainFlowTableData } from '../../lib/functions/data';
+import { formatAmountDisplay } from '../../lib/functions/format';
 import { StyledTableCell, StyledTableRow } from './styles';
 import "@fontsource/inter-tight";
 
 const ChainCashFlowDialog = ({ tableData, dialogOpen, setDialogOpen }) => {
 
     const chains = Array.from(new Set(tableData.map(item => item.chain)));
-    const chainFlows = chains.map(chain => calculateFlow(tableData, chain));
+    const formattedData = chains.map(chain => generateChainFlowTableData(tableData, chain));
 
     return (
         <>
@@ -37,7 +38,7 @@ const ChainCashFlowDialog = ({ tableData, dialogOpen, setDialogOpen }) => {
                                 </StyledTableRow>
                             </TableHead>
                             <TableBody>
-                                {chainFlows.map((row, index) => (
+                                {formattedData.map((row, index) => (
                                     <StyledTableRow key={index}>
                                         <StyledTableCell align="center">{row.chain}</StyledTableCell>
                                         <StyledTableCell align="center">{formatAmountDisplay(row.inflow)}</StyledTableCell>

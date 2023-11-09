@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import { generateAllocationTableData, calculateTotals, convertTitle } from "../../lib/functions/wallets";
-import { formatAmountDisplay, shortenAddress } from "../../lib/functions/wallets";
+import { generateAllocationTableData, calculateTotals } from "../../lib/functions/data";
+import { formatTitle, formatAmountDisplay, shortenAddress } from "../../lib/functions/format";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
 import { printDocument } from "../../lib/functions/pdf";
@@ -114,8 +114,8 @@ const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets
     const dialogTitle = move
     ? `Allocation Table for: '${move}' Investment`
     : selectedWallets.length > 1
-        ? `Aggregated Allocation Table for: ${selectedWallets.length > 0 && selectedWallets.map((wallet, index) => `${convertTitle(wallet.name)}`).join(', ')} (${selectedWallets.length} wallets)`
-        : `Allocation Table for: '${selectedWallets.length > 0 && convertTitle(selectedWallets[0].name)}' Wallet`;
+        ? `Aggregated Allocation Table for: ${selectedWallets.length > 0 && selectedWallets.map((wallet, index) => `${formatTitle(wallet.name)}`).join(', ')} (${selectedWallets.length} wallets)`
+        : `Allocation Table for: '${selectedWallets.length > 0 && formatTitle(selectedWallets[0].name)}' Wallet`;
 
     // calculate "Generated on" date
     const roundToNearest5Minutes = (date) => {
