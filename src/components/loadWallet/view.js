@@ -8,14 +8,12 @@ import { isPoolInvestmentsWallet } from '../../lib/functions/wallets';
 import { copyToClipboard } from '../../lib/functions/actions';
 import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
 import { loadWalletStyles, ColorButton } from './styles';
-import '@fontsource/plus-jakarta-sans';
-import '@fontsource/inter-tight';
-
-import AllocationTable from '../allocationTable/view';
+import AllocationTable from '../allocationTable/';
 import ChainCashFlowDialog from '../chainCashFlow/view';
 import LoadingScreen from './loadingScreen';
 import MemberSummaryDialog from '../memberSummary/view';
-
+import '@fontsource/plus-jakarta-sans';
+import '@fontsource/inter-tight';
 
 const LoadWallet = ({
     // ux.init
@@ -35,7 +33,8 @@ const LoadWallet = ({
     chainDialogOpen, setChainDialogOpen, handleGenerateChainFlow,
     snackbarOpen, setSnackbarOpen, handleCloseSnackbar,
     loadingDialogOpen,
-    memberSummaryDialogOpen, setMemberSummaryDialogOpen, handleMemberSummary, memberSummaryData
+    memberSummaryDialogOpen, setMemberSummaryDialogOpen, handleMemberSummary, memberSummaryData,
+    dialogKey
 
     // ux.calculations
     // totalTransactionsByChain, totalValueByChain, formattedChainData
@@ -247,7 +246,7 @@ const LoadWallet = ({
             </Table>
         </TableContainer>
 
-        <AllocationTable tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallets={selectedWallets} isLoading={isLoading} move={filters.move} />
+        <AllocationTable key={dialogKey} tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallets={selectedWallets} isLoading={isLoading} move={filters.move} />
 
         <ChainCashFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
 
@@ -258,6 +257,5 @@ const LoadWallet = ({
         <MemberSummaryDialog memberData={memberSummaryData} dialogOpen={memberSummaryDialogOpen} setDialogOpen={setMemberSummaryDialogOpen} />
     </Box>
 );
-
 
 export default LoadWallet;

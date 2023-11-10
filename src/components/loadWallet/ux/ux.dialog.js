@@ -11,6 +11,7 @@ const DialogUX = ({isLoading, tableData = []}) => {
     const [loadingDialogOpen, setLoadingDialogOpen] = useState(false);
     const [memberSummaryDialogOpen, setMemberSummaryDialogOpen] = useState(false);
     const [memberSummaryData, setMemberSummaryData] = useState([]);
+    const [dialogKey, setDialogKey] = useState(0);
 
     // Loading screen dialog box
     useEffect(() => {
@@ -25,6 +26,7 @@ const DialogUX = ({isLoading, tableData = []}) => {
 
     // DIALOG HANDLERS
     const handleGenerateAllocations = () => {
+        setDialogKey(prevKey => prevKey + 1); // Increment key to force remount
         setAllocationDialogOpen(true);
     };
 
@@ -60,7 +62,9 @@ const DialogUX = ({isLoading, tableData = []}) => {
         memberSummaryDialogOpen, 
         setMemberSummaryDialogOpen,
         handleMemberSummary,
-        memberSummaryData
+        memberSummaryData,
+
+        dialogKey
     }
 }
 

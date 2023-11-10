@@ -1,4 +1,5 @@
-import { FormatTxnLink, formatAmountDecimals, formatAmountDisplay, formatTime } from "./format";
+import { FormatTxnLink, formatAmountDecimals, formatAmountDisplay } from "./format";
+import { formatTime } from "./time";
 import { filterByDateRange } from "./filters";
 import { getWalletType, getVCMoveName } from "./wallets";
 

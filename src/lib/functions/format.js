@@ -1,6 +1,3 @@
-import { format } from 'date-fns';
-import { utcToZonedTime } from 'date-fns-tz';
-
 export const FormatTxnLink = ({ hash, chain }) => {
     const chainUrls = {
         arb: `https://arbiscan.io/tx/${hash}`,
@@ -40,7 +37,6 @@ export const formatAmountDisplay = (value) => {
     });
 };
 
-
 export const shortenAddress = (address, startLength = 4, endLength = 6) => {
     // Ensure the input is a string
     if (typeof address !== 'string') {
@@ -67,15 +63,30 @@ export const shortenAddress = (address, startLength = 4, endLength = 6) => {
     return start + '...' + end;
 }
 
-// Use "America/Denver" for Mountain Standard Time
-
-export const formatTime = (timestamp, timeZone) => {    // formatTime(1684786992, 'America/Denver'); 
-    const date = new Date(timestamp);
-    const zonedDate = utcToZonedTime(date, timeZone);
-    return format(zonedDate, "MMM d, yyyy h:mm a");
-}
-
 export const lowercase = (string) => {
     return string.toLowerCase();
 }
+
+export const formatChainData = (chainData) => {
+    if (Array.isArray(chainData)) {
+        return chainData.join(", ");
+    }
+    return "";
+};
+
+export const formatChainMap = (chainMap) => {
+    if (chainMap) {
+        return Object.entries(chainMap)
+            .map(([chain, count]) => `${chain}(${count})`)
+            .join(", ");
+    }
+    return "";
+};
+
+export const formatChainArray = (chainMap) => {
+    if (chainMap) {
+        return chainMap.join(", ");
+    }
+    return "";
+};
 
