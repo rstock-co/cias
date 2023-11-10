@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
+import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableCell, TableHead, 
+         TableRow, TableBody, DialogActions, Button, Box, Typography } from "@mui/material";
 import { generateAllocationTableData, calculateTotals } from "../../lib/functions/data";
 import { formatTitle, formatAmountDisplay, shortenAddress } from "../../lib/functions/format";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
@@ -7,23 +9,6 @@ import { printDocument } from "../../lib/functions/actions";
 import { FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from '@mui/material';
 import { format, startOfMinute, addMinutes } from 'date-fns';
 import "@fontsource/inter-tight";
-
-import {
-    Paper,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    TableContainer,
-    Table,
-    TableCell,
-    TableHead,
-    TableRow,
-    TableBody,
-    DialogActions,
-    Button,
-    Box,
-    Typography
-} from "@mui/material";
 
 const AllocationTable = ({ tableData, dialogOpen, setDialogOpen, selectedWallets, isLoading, move }) => {
     const [sortBy, setSortBy] = useState("Amount");

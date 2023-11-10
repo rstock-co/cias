@@ -1,4 +1,4 @@
-import { moves } from "../lookup/moves";
+import { moves } from "../data/moves";
 
 export const filterByDateRange = (start, end, txn, useOffset) => {
     const mstOffsetMillis = useOffset ? 7 * 60 * 60 * 1000 : 0;  // Offset in milliseconds for 7 hours (MST)

@@ -1,5 +1,5 @@
-import { getNameByAddress } from "../lookup/wallets";
-import { moves } from "../lookup/moves";
+import { getNameByAddress } from "../data/wallets";
+import { moves } from "../data/moves";
 
 export const getUniqueWallets = txns => {
     return Array.from(

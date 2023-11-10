@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { generateMemberSummaryTableData } from '../../../lib/functions/data';
-import { moves } from '../../../lib/lookup';
+import { moves } from '../../../lib/data';
 
 const DialogUX = ({isLoading, tableData = []}) => {
 

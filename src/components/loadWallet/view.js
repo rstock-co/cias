@@ -1,9 +1,9 @@
 import { Table, TableBody, TableContainer, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
+import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../components/selectInputs';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import PersonIcon from '@mui/icons-material/Person';
-import { propertyMap } from '../../lib/data/loadWallet';
-import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../components/selectInputs';
-import { wallets, moves } from '../../lib/lookup/';
+import { propertyMap } from './data';
+import { wallets, moves } from '../../lib/data';
 import { isPoolInvestmentsWallet } from '../../lib/functions/wallets';
 import { copyToClipboard } from '../../lib/functions/actions';
 import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
@@ -67,8 +67,6 @@ const LoadWallet = ({
     // const totalValueByChain = calculateTotalValueByChain(tableData);
     // const formattedChainData = formatChainData(totalTransactionsByChain, totalValueByChain);
 
-
-  
     return (
 
         <Box sx={loadWalletStyles}>

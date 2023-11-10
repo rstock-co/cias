@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getERC20TxnsArb } from "../../../api/arb";
 import { getERC20TxnsBsc } from "../../../api/bsc";
 import { getERC20TxnsEth } from "../../../api/eth";
-import { wallets, getAddressByName } from "../../../lib/lookup/wallets";
+import { wallets, getAddressByName } from "../../../lib/data/wallets";
 
 const InitUX = () => {
 
