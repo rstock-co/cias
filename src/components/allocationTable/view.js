@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableCell, TableHead, 
          TableRow, TableBody, DialogActions, Button, Box, Typography } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray } from "../../lib/functions/format";

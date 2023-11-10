@@ -1,6 +1,7 @@
 import { FormatTxnLink, formatAmountDecimals, formatAmountDisplay } from "./format";
 import { formatTime } from "./time";
 import { filterByDateRange } from "./filters";
+import { extractMemberName } from "./format";
 import { getWalletType, getVCMoveName } from "./wallets";
 
 export const generateTableData = (txn, id, selectedWallets) => {
@@ -8,14 +9,6 @@ export const generateTableData = (txn, id, selectedWallets) => {
     const amount = formatAmountDecimals(txn.chain, txn.value);
     const walletType = getWalletType(txn, selectedWallets);
     const timestamp = parseInt(txn.timeStamp) * 1000;
-
-    const extractMemberName = (type) => {
-        // Regular expression to match the pattern "Member (name)"
-        const memberNamePattern = /Member \((.*?)\)/;
-        const match = memberNamePattern.exec(type);
-        return match && match[1] ? match[1] : "Unknown";
-      };
-    
     const memberName = extractMemberName(walletType);
 
     let type = walletType;
@@ -169,7 +162,6 @@ const generateUniqueMemberWalletMap = (tableData, selectedWallets) => {
     }, new Map());
 
     return uniqueMemberWalletMap;
-
 };
 
 export const generateAllocationTableData = (tableData, selectedWallets) => {
@@ -213,7 +205,6 @@ export const generateMemberSummaryTableData = (tableData, memberWallet, moves) =
     const memberWalletLower = memberWallet.toLowerCase();
 
     const memberSummary = moves.map(move => {
-        console.log(`Processing move: ${move.moveName}`);
 
         // Filter transactions for each move based on the date range
         const transactions = tableData.filter(txn => {
@@ -222,16 +213,12 @@ export const generateMemberSummaryTableData = (tableData, memberWallet, moves) =
             return matchesMove;
         });
 
-        console.log("Matching txns: ", transactions)
-
         // Filter transactions for contributions and refunds specifically for the member wallet (case-insensitive)
         const contributions = transactions.filter(txn => txn.from.toLowerCase() === memberWalletLower);
         const refunds = transactions.filter(txn => txn.to.toLowerCase() === memberWalletLower);
 
         const totalContributions = contributions.reduce((acc, txn) => acc + parseFloat(txn.amount), 0);
         const totalRefunds = refunds.reduce((acc, txn) => acc + parseFloat(txn.amount), 0);
-
-        console.log(`Move: ${move.moveName}, Contributions: ${contributions.length}, Refunds: ${refunds.length}`);
 
         // If there are no contributions or refunds for the move, return null (to be filtered out later)
         if (contributions.length === 0 && refunds.length === 0) {
@@ -251,7 +238,6 @@ export const generateMemberSummaryTableData = (tableData, memberWallet, moves) =
         };
     }).filter(moveSummary => moveSummary !== null); // Filter out moves with no transactions for the member
 
-    console.log('Member summary:', memberSummary);
     return {
         memberSummary, // This is the array of summarized move data
         memberWallet // This is the original memberWallet address passed into the function
@@ -280,3 +266,23 @@ export const generateChainFlowTableData = (data, chain) => {
         totalTxns: txnsIn + txnsOut
     };
 };
+
+export const calculateTotalTransactionsByChain = (tableData) => {
+    const chains = ['arb', 'bsc', 'eth'];
+    let result = {};
+    chains.forEach(chain => {
+        result[chain] = tableData.filter(row => row.chain.toLowerCase() === chain).length;
+    });
+    return result;
+}
+
+export const calculateTotalValueByChain = (tableData) => {
+    const chains = ['arb', 'bsc', 'eth'];
+    let result = {};
+    chains.forEach(chain => {
+        result[chain] = tableData.reduce((total, row) => {
+            return row.chain.toLowerCase() === chain ? total + parseFloat(row.amount) : total;
+        }, 0);
+    });
+    return result;
+}

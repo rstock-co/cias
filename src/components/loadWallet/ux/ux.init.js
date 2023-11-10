@@ -1,19 +1,10 @@
 import { useEffect, useState } from 'react';
-import { getERC20TxnsArb } from "../../../api/arb";
-import { getERC20TxnsBsc } from "../../../api/bsc";
-import { getERC20TxnsEth } from "../../../api/eth";
-import { wallets, getAddressByName } from "../../../lib/data/wallets";
+import { wallets } from "../../../lib/data/wallets";
+import { stableCoinsToFetch } from '../data';
 
 const InitUX = () => {
 
-    // STABLE COINS TO FETCH
-    const [stableCoins, setStableCoins] = useState({
-        stableArb: { address: getAddressByName("stable_usdc_arb"), name: "USDC(Arb)", apiCall: getERC20TxnsArb, chain: "arb", loading: false, txns: 0 },
-        stableEth: { address: getAddressByName("stable_usdc_eth"), name: "USDC(Eth)", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },
-        stableEth2: { address: getAddressByName("stable_usdt_eth"), name: "USDT(Eth)", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },
-        stableBsc: { address: getAddressByName("stable_busd_bep20"), name: "BUSD(Bep20)", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
-        stableBsc2: { address: getAddressByName("stable_bsc-usd_bep20"), name: "BSC-USD(Bep20)", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
-    });
+    const [stableCoins, setStableCoins] = useState(stableCoinsToFetch);
 
     // SELECTED WALLETS
     const [selectedWallets, setSelectedWallets] = useState([]);

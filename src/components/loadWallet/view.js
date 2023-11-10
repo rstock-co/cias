@@ -37,7 +37,7 @@ const LoadWallet = ({
     dialogKey
 
     // ux.calculations
-    // totalTransactionsByChain, totalValueByChain, formattedChainData
+    // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
 } = {}) => (
 

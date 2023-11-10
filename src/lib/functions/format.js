@@ -14,7 +14,7 @@ export const FormatTxnLink = ({ hash, chain }) => {
     );
 };
 
-export const formatTitle = (snakeCaseString) => {
+export const formatSankeToCapital = (snakeCaseString) => {
     const words = snakeCaseString.split('_');
     const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
     const capitalCasedString = capitalizedWords.join(' ');
@@ -22,11 +22,22 @@ export const formatTitle = (snakeCaseString) => {
     return capitalCasedString;
 };
 
+export const generateTitle = (selectedWallets, move) => {
+    if (selectedWallets.length === 0) return 'No wallets selected'; 
+    
+    if (move) return `Allocation Table for: '${move}' Investment`;
+
+    return selectedWallets.length > 1
+        ? `Aggregated Allocation Table for: ${selectedWallets.map(wallet => 
+            formatSankeToCapital(wallet.name)).join(', ')} (${selectedWallets.length} wallets)`
+        : `Allocation Table for: '${formatSankeToCapital(selectedWallets[0].name)}' Wallet`;
+}
+
 export const formatAmountDecimals = (chain, value) => chain === 'bsc' ? value / 1e18 : value / 1e6;
 
 export const formatAmountDisplay = (value) => {
     if (value === undefined || value === null || isNaN(value)) {
-        return "$0.00"; // or however you'd like to format it when there's no value
+        return "$0.00"; 
     }
 
     return value.toLocaleString(undefined, {
@@ -74,6 +85,12 @@ export const formatChainData = (chainData) => {
     return "";
 };
 
+export const formatChainDataString = (transactions, values) => {
+    return Object.entries(transactions).map(([chain, count]) => {
+        return `${chain.toUpperCase()}: ${count} transactions, $${values[chain].toFixed(2)} total`;
+    });
+}
+
 export const formatChainMap = (chainMap) => {
     if (chainMap) {
         return Object.entries(chainMap)
@@ -88,5 +105,12 @@ export const formatChainArray = (chainMap) => {
         return chainMap.join(", ");
     }
     return "";
+};
+
+export const extractMemberName = (type) => {
+    // Regular expression to match the pattern "Member (name)"
+    const memberNamePattern = /Member \((.*?)\)/;
+    const match = memberNamePattern.exec(type);
+    return match && match[1] ? match[1] : "Unknown";
 };
 
