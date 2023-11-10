@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { wallets } from "../../../lib/data/wallets";
+import { allWallets as wallets } from "../../../lib/data/wallets";
 import { stableCoinsToFetch } from '../data';
 
 const InitUX = () => {

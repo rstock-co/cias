@@ -1,4 +1,4 @@
-import { getAddressByName } from "../../lib/data";
+import { getAddressByName } from "../../lib/functions/wallets";
 import { getERC20TxnsArb } from "../../api/arb";
 import { getERC20TxnsBsc } from "../../api/bsc";
 import { getERC20TxnsEth } from "../../api/eth";

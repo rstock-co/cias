@@ -3,7 +3,8 @@ import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSel
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import PersonIcon from '@mui/icons-material/Person';
 import { propertyMap } from './data';
-import { wallets, moves } from '../../lib/data';
+import { allWallets as wallets } from "../../lib/data/wallets";
+import { moves } from '../../lib/data';
 import { isPoolInvestmentsWallet } from '../../lib/functions/wallets';
 import { copyToClipboard } from '../../lib/functions/actions';
 import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
