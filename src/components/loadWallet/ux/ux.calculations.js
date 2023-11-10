@@ -28,10 +28,14 @@ const CalculationsUX = ({
         });
     }
 
+    const totalTransactionsByChain = calculateTotalTransactionsByChain(tableData);
+    const totalValueByChain = calculateTotalValueByChain(tableData);
+    const formattedChainData = formatChainData(totalTransactionsByChain, totalValueByChain);
+
     return {
-        calculateTotalTransactionsByChain,
-        calculateTotalValueByChain,
-        formatChainData
+        totalTransactionsByChain,
+        totalValueByChain,
+        formattedChainData
     }
 
 }

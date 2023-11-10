@@ -60,7 +60,6 @@ const DialogUX = ({isLoading, tableData = []}) => {
         memberSummaryDialogOpen, 
         setMemberSummaryDialogOpen,
         handleMemberSummary,
-
         memberSummaryData
     }
 }
