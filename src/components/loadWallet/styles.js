@@ -6,10 +6,10 @@ import '@fontsource/plus-jakarta-sans';
 import "@fontsource/inter-tight"
 import "@fontsource/inter"
 
-const determineBackground = (walletType, isRefund) => {
+const determineBackground = (walletDescription, isRefund) => {
     if (isRefund) {
         return 'linear-gradient(to bottom, #0A0216, #1D0F35)';
-    } else if (walletType && walletType.startsWith('Member')) {
+    } else if (walletDescription && walletDescription.startsWith('Member')) {
         return 'linear-gradient(to bottom, #0d0d0d, #000000)';
     } else {
         return 'linear-gradient(to bottom, #063142, #01070D)';
@@ -42,11 +42,11 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
 }));
 
 
-export const StyledTableCell = styled(TableCell)(({ theme, walletType, isRefund }) => ({
+export const StyledTableCell = styled(TableCell)(({ theme, walletDescription, isRefund }) => ({
     position: 'relative',
     fontSize: 14,
     color: "#e6e6e6",
-    backgroundImage: determineBackground(walletType, isRefund),
+    backgroundImage: determineBackground(walletDescription, isRefund),
     borderColor: '#5b5b5b',
     fontFamily: 'Inter Tight, sans-serif',
     [`&.${tableCellClasses.head}`]: {
@@ -82,10 +82,10 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletType, isRefund 
 }));
 
 
-export const StyledTableRow = styled(TableRow)(({ theme, isRefund, walletType }) => ({
-    backgroundColor: isRefund ? '#FFA50030' : (walletType && walletType.startsWith('Member')) ? 'white' : '#FFF9C4',
+export const StyledTableRow = styled(TableRow)(({ theme, isRefund, walletDescription }) => ({
+    backgroundColor: isRefund ? '#FFA50030' : (walletDescription && walletDescription.startsWith('Member')) ? 'white' : '#FFF9C4',
     '&:nth-of-type(odd)': {
-        backgroundColor: isRefund ? '#FFA50030' : (walletType && walletType.startsWith('Member')) ? theme.palette.action.hover : '#FFF9C4',
+        backgroundColor: isRefund ? '#FFA50030' : (walletDescription && walletDescription.startsWith('Member')) ? theme.palette.action.hover : '#FFF9C4',
     },
     // hide last border
     '&:last-child td, &:last-child th': {

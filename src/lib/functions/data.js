@@ -1,46 +1,52 @@
-import { FormatTxnLink, formatAmountDecimals, formatAmountDisplay } from "./format";
+import { FormatTxnLink, formatAmountDecimals, formatAmountDisplay, extractMemberName } from "./format";
 import { formatTime } from "./time";
 import { filterByDateRange } from "./filters";
-import { extractMemberName } from "./format";
-import { getWalletType, getVCMoveName } from "./wallets";
+import { getWalletDescription, getVCMoveName } from "./wallets";
 import { INVESTMENT_WALLET, BYBIT } from "../data/wallets";
 
 export const generateTableData = (txn, id, selectedWallets) => {
-    const selectedWalletsLowercase = selectedWallets.map(address => address.toLowerCase());
+    const selectedAddresses = selectedWallets.map(address => address.toLowerCase());
+    const to = txn.to.toLowerCase();
+    const from = txn.from.toLowerCase();
+    const walletDescription = getWalletDescription({to, from}, selectedAddresses);
     const amount = formatAmountDecimals(txn.chain, txn.value);
-    const walletType = getWalletType(txn, selectedWallets);
     const timestamp = parseInt(txn.timeStamp) * 1000;
-    const memberName = extractMemberName(walletType);
+    const memberName = extractMemberName(walletDescription);
 
-    let type = walletType;
+    let type = walletDescription;
 
     // this can be improved later - this is for identifying moves by their contribution window (ie.  Hypercycle, Finterest, Games for a Living)
     if (txn.from === INVESTMENT_WALLET && txn.to === BYBIT) {
-        type = getVCMoveName(walletType, timestamp);
+        type = getVCMoveName(walletDescription, timestamp);
     }
 
     // from: member wallet to: vc investment wallet
     if (type.startsWith('Member') && txn.to.toLowerCase() === INVESTMENT_WALLET) {
-        type = `${type} - ${getVCMoveName(walletType, timestamp)}`;
+        type = `${type} - ${getVCMoveName(walletDescription, timestamp)}`;
         const memberPattern = /^Member(.*?)( - Member(.*?))?$/;
         const match = type.match(memberPattern);
         if (match) type = `Member${match[1]}`;
     }
 
     return {
+
+        // display in table
         id,
         wallet: txn.wallet,
-        chain: txn.chain,
-        timestamp,
+        inout: txn.from && selectedAddresses.includes(from) ? 'Out' : 'In',
         dateTime: formatTime(timestamp, 'America/Denver'),
         link: <FormatTxnLink hash={txn.hash} chain={txn.chain} />,
-        from: txn.from,
-        to: txn.to,
-        walletType: type,
-        inout: txn.from && selectedWalletsLowercase.includes(txn.from.toLowerCase()) ? 'Out' : 'In',
-        amount,
+        from,
+        to,
+        walletDescription,
         amountDisplay: formatAmountDisplay(amount),
         currency: txn.tokenSymbol,
+        
+        // non-display
+        chain: txn.chain,
+        timestamp,
+        // walletType: type,
+        amount,
         memberName
     }
 };
@@ -119,9 +125,9 @@ const generateUniqueMemberWalletMap = (tableData, selectedWallets) => {
     const selectedWalletAddresses = selectedWallets.map(wallet => wallet.address.toLowerCase());
 
     const uniqueMemberWalletMap = tableData.reduce((map, row) => {
-        // data
-        const { from, to, walletType, amount, chain, memberName } = row;
-        if (!walletType.startsWith('Member')) return map;
+
+        const { from, to, walletDescription, amount, chain, memberName } = row;
+        if (!walletDescription.startsWith('Member')) return map;
 
         const fromWallet = from?.toLowerCase();
         const toWallet = to?.toLowerCase();

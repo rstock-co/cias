@@ -170,19 +170,19 @@ const LoadWallet = ({
                     {tableData.length > 0 && tableData.length < 900 && tableData.map((row) => (
                         <StyledTableRow
                             key={row.id}
-                            walletType={row.walletType}
-                            isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
+                            walletDescription={row.walletDescription}
+                            isRefund={row.inout === 'Out' && row.walletDescription.startsWith('Member')}
                         >
                             {Object.entries(propertyMap).map(([key, value]) => {
                                 if (key === 'from' || key === 'to') {
-                                    const isMember = row.walletType.startsWith('Member');
+                                    const isMember = row.walletDescription.startsWith('Member');
                                     const isSelectedAddress = selectedWallets.some(wallet => wallet.address === row[key]);
                                     return (
                                         <StyledTableCell
                                             key={key}
                                             align={value.align}
-                                            walletType={row.walletType}
-                                            isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
+                                            walletDescription={row.walletDescription}
+                                            isRefund={row.inout === 'Out' && row.walletDescription.startsWith('Member')}
                                         >
                                             
                                             {row[key]}
@@ -233,8 +233,8 @@ const LoadWallet = ({
                                         <StyledTableCell
                                             key={key}
                                             align={value.align}
-                                            walletType={row.walletType}
-                                            isRefund={row.inout === 'Out' && row.walletType.startsWith('Member')}
+                                            walletDescription={row.walletDescription}
+                                            isRefund={row.inout === 'Out' && row.walletDescription.startsWith('Member')}
                                         >
                                             {row[key]}
                                         </StyledTableCell>

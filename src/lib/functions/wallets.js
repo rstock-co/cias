@@ -1,5 +1,5 @@
 import { moves } from "../data/moves";
-import { allWallets as wallets, memberWallets } from "../data/wallets";
+import { allWallets as wallets, memberWallets, INVESTMENT_WALLET } from "../data/wallets";
 
 export const getUniqueWallets = txns => {
     return Array.from(
@@ -9,23 +9,19 @@ export const getUniqueWallets = txns => {
 
 export const getUniqueTypes = (tableData) => {
     const types = tableData.map(row => {
-        // If the walletType starts with "Member", treat it as "Member"
-        return row.walletType.startsWith("Member") ? "Member" : row.walletType;
+        return row.walletDescription.startsWith("Member") ? "Member" : row.walletDescription;
     });
     // Create a set to get unique values, then convert it back to an array
     return [...new Set(types)].filter(type => type);
 };
 
-export const getWalletType = (txn, selectedWalletAddresses) => {
-    const fromAddress = txn.from.toLowerCase();
-    const toAddress = txn.to.toLowerCase();
+export const getWalletDescription = (txn, addresses) => {
+    const { to, from } = txn;
 
-    const selectedWalletsLowercase = selectedWalletAddresses.map(address => address.toLowerCase());
-
-    if (selectedWalletsLowercase.includes(fromAddress)) {
-        return getNameByAddress(txn.to);
-    } else if (selectedWalletsLowercase.includes(toAddress)) {
-        return getNameByAddress(txn.from);
+    if (addresses.includes(from)) {
+        return getNameByAddress(to);
+    } else if (addresses.includes(to)) {
+        return getNameByAddress(from);
     }
 
     return 'Unknown';
@@ -45,9 +41,7 @@ export const getVCMoveName = (walletType, unixTime) => {
 };
 
 export const isPoolInvestmentsWallet = (selectedWallets) => 
-    selectedWallets.length === 1 && selectedWallets[0].address.toLowerCase() === "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca".toLowerCase();
-
-export const combineWallets = (...walletArrays) => walletArrays.flat();
+    selectedWallets.length === 1 && selectedWallets[0].address.toLowerCase() === INVESTMENT_WALLET;
 
 export const getAddressByName = walletName => {
     const wallet = wallets.find(wallet => wallet.name === walletName);
@@ -56,13 +50,13 @@ export const getAddressByName = walletName => {
 
 export const getNameByAddress = (address) => {
     // Search in the primary wallets list
-    const wallet = wallets.find(wallet => wallet.address.toLowerCase() === address.toLowerCase());
+    const wallet = wallets.find(wallet => wallet.address.toLowerCase() === address);
     if (wallet) {
         return wallet.name;
     }
 
     // If not found, search in the memberWallets list
-    const memberWallet = memberWallets.find(member => member.address.toLowerCase() === address.toLowerCase());
+    const memberWallet = memberWallets.find(member => member.address.toLowerCase() === address);
     if (memberWallet) {
         return `Member (${memberWallet.name})`;
     }

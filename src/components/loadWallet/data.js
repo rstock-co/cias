@@ -22,7 +22,7 @@ export const propertyMap = {
     link: { header: 'Txn', align: 'center' },
     from: { header: 'From', align: 'left' },
     to: { header: 'To', align: 'left' },
-    walletType: { header: 'Description', align: 'left' },
+    walletDescription: { header: 'Description', align: 'left' },
     amountDisplay: { header: 'Amount ($)', align: 'center' },
     currency: { header: 'Currency ($)', align: 'center' },
 };

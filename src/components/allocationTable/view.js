@@ -171,7 +171,7 @@ const AllocationTable = ({
                             </TableRow>
                         )}
                         {sortedAllocationTableData && sortedAllocationTableData.map((row) => (
-                            <StyledTableRow key={row.uniqueMemberWallet} walletType={row.walletType}>
+                            <StyledTableRow key={row.uniqueMemberWallet} walletDescription={row.walletDescription}>
                                 <StyledTableCell component="th" scope="row">
                                     {shortenAddress(row.uniqueMemberWallet)}
                                 </StyledTableCell>

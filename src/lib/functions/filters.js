@@ -8,9 +8,9 @@ export const filterByDateRange = (start, end, txn, useOffset) => {
     return txn.timestamp >= startDate && txn.timestamp <= endDate;
 };
 
-export const filterTxns = (txns, { type, filterWallet, chain, dateRange, direction, move }) => {
+export const filterTxns = (txns, { description, filterWallet, chain, dateRange, direction, move }) => {
     // If initial render, return all txns (check if all filter conditions are not set)
-    if (type === '' && filterWallet === '' && chain === '' && (dateRange.startDate === '' || dateRange.endDate === '') && type === '' && direction === '' && move === '') {
+    if (description === '' && filterWallet === '' && chain === '' && (dateRange.startDate === '' || dateRange.endDate === '') && direction === '' && move === '') {
         return txns.filter(txn => txn.amount !== 0).sort((a, b) => b.timestamp - a.timestamp);
     }
 
@@ -20,7 +20,7 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
         let matchesDateRange = true;
         let matchesDirection = true;
         let matchesMove = true;
-        let matchesType = true;
+        let matchesDescription = true;
 
         // (0) filter out transactions where the amount is zero
         if (txn.amount === 0) return false;
@@ -55,11 +55,11 @@ export const filterTxns = (txns, { type, filterWallet, chain, dateRange, directi
             }; 
         }
 
-        // (6) filter by type
-        if (type) {
-            matchesType = type === "Member" ? txn.walletType.startsWith(type) : txn.walletType === type;
+        // (6) filter by description
+        if (description) {
+            matchesDescription = description === "Member" ? txn.walletDescription.startsWith(description) : txn.walletDescription === description;
         }
 
-        return matchesFilterWallet && matchesChain && matchesDateRange && matchesDirection && matchesType && matchesMove;
+        return matchesFilterWallet && matchesChain && matchesDateRange && matchesDirection && matchesDescription && matchesMove;
     }).sort((a, b) => b.timestamp - a.timestamp); // sort by timestamp
 };
