@@ -1,11 +1,11 @@
 import { moves } from "../data/moves";
 
-export const filterByDateRange = (start, end, txn, useOffset) => {
+export const filterByDateRange = (start, end, timestamp, useOffset) => {
     const mstOffsetMillis = useOffset ? 7 * 60 * 60 * 1000 : 0;  // Offset in milliseconds for 7 hours (MST)
     const startDate = new Date(new Date(start).getTime() + mstOffsetMillis).getTime();
     const endDate = new Date(new Date(end).getTime() + mstOffsetMillis).getTime();
 
-    return txn.timestamp >= startDate && txn.timestamp <= endDate;
+    return timestamp >= startDate && timestamp <= endDate;
 };
 
 export const filterTxns = (txns, { description, filterWallet, chain, dateRange, direction, move }) => {
@@ -37,19 +37,19 @@ export const filterTxns = (txns, { description, filterWallet, chain, dateRange, 
 
         // (3) filter by date picker date range
         if (dateRange && dateRange.startDate && dateRange.endDate) {
-            matchesDateRange = filterByDateRange(dateRange.startDate, dateRange.endDate, txn, true);
+            matchesDateRange = filterByDateRange(dateRange.startDate, dateRange.endDate, txn.timestamp, true);
         }
 
         // (4) filter by direction
         if (direction) {
-            matchesDirection = txn.inout.toLowerCase() === direction.toLowerCase();
+            matchesDirection = txn.flow.toLowerCase() === direction.toLowerCase();
         }
 
         // (5) filter by move date range
         if (move) {
             const targetMove = moves.find(m => m.moveName === move);
             if (targetMove && targetMove.contributionOpen && targetMove.contributionClose) {
-                matchesMove = filterByDateRange(targetMove.contributionOpen, targetMove.contributionClose, txn, false);
+                matchesMove = filterByDateRange(targetMove.contributionOpen, targetMove.contributionClose, txn.timestamp, false);
             } else { 
                 matchesMove = false
             }; 

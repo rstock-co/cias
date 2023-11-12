@@ -1,39 +1,66 @@
-import { FormatTxnLink, formatAmountDecimals, formatAmountDisplay, extractMemberName } from "./format";
+import { FormatTxnLink, formatAmountDecimals, formatAmountDisplay } from "./format";
 import { formatTime } from "./time";
 import { filterByDateRange } from "./filters";
-import { getWalletDescription, getVCMoveName } from "./wallets";
-import { INVESTMENT_WALLET, BYBIT } from "../data/wallets";
+import { getWalletName, getMoveName } from "./wallets";
+import { allWallets as wallets, intermediaryWallets, memberWallets } from "../data/wallets";
 
 export const generateTableData = (txn, id, selectedWallets) => {
     const selectedAddresses = selectedWallets.map(address => address.toLowerCase());
-    const to = txn.to.toLowerCase();
     const from = txn.from.toLowerCase();
-    const walletDescription = getWalletDescription({to, from}, selectedAddresses);
-    const amount = formatAmountDecimals(txn.chain, txn.value);
+    const to = txn.to.toLowerCase();
+    const flow = from && selectedAddresses.includes(from) ? 'Out' : 'In';
+
+/**
+ * Generate the wallet description
+ */
+
+    let walletDescription = '';
     const timestamp = parseInt(txn.timeStamp) * 1000;
-    const memberName = extractMemberName(walletDescription);
+    const moveName = getMoveName(timestamp);
+    const fromMemberName = getWalletName(memberWallets, from);
+    const toMemberName = getWalletName(memberWallets, to);
+    
+    if (flow === 'Out') {
+        const intermediaryWallet = intermediaryWallets.find(wallet => wallet.address.toLowerCase() === to);
 
-    let type = walletDescription;
+        // funding a move
+        if (intermediaryWallet) {
+            walletDescription = `Funding "${moveName}" via "${intermediaryWallet.name}"`;
 
-    // this can be improved later - this is for identifying moves by their contribution window (ie.  Hypercycle, Finterest, Games for a Living)
-    if (txn.from === INVESTMENT_WALLET && txn.to === BYBIT) {
-        type = getVCMoveName(walletDescription, timestamp);
+        // member refund
+        } else if (toMemberName) { 
+            walletDescription = toMemberName ? `Member refund (${toMemberName})` : 'Member refund';
+
+        // internal transfer
+        } else {  
+            walletDescription = `Transfer to ${getWalletName(wallets, to)}`;
+        }
+
+    } else if (flow === 'In') {
+
+        // member contribution
+        if (fromMemberName) {  
+            walletDescription = fromMemberName ? `Member contribution (${fromMemberName})` : 'Member contribution';
+
+        // internal transfer
+        } else {  
+            walletDescription = `Transfer from ${getWalletName(wallets, to)}`;
+        
+        }
     }
 
-    // from: member wallet to: vc investment wallet
-    if (type.startsWith('Member') && txn.to.toLowerCase() === INVESTMENT_WALLET) {
-        type = `${type} - ${getVCMoveName(walletDescription, timestamp)}`;
-        const memberPattern = /^Member(.*?)( - Member(.*?))?$/;
-        const match = type.match(memberPattern);
-        if (match) type = `Member${match[1]}`;
-    }
+/**
+ * End wallet description
+ */
+
+    const amount = formatAmountDecimals(txn.chain, txn.value);
 
     return {
 
         // display in table
         id,
-        wallet: txn.wallet,
-        inout: txn.from && selectedAddresses.includes(from) ? 'Out' : 'In',
+        walletName: txn.walletName,
+        flow,
         dateTime: formatTime(timestamp, 'America/Denver'),
         link: <FormatTxnLink hash={txn.hash} chain={txn.chain} />,
         from,
@@ -45,9 +72,9 @@ export const generateTableData = (txn, id, selectedWallets) => {
         // non-display
         chain: txn.chain,
         timestamp,
-        // walletType: type,
         amount,
-        memberName
+        memberName: fromMemberName || toMemberName,
+        moveName,
     }
 };
 
@@ -251,8 +278,8 @@ export const generateMemberSummaryTableData = (tableData, memberWallet, moves) =
 
 export const generateChainFlowTableData = (data, chain) => {
     const chainData = data.filter(item => item.chain === chain);
-    const inTxns = chainData.filter(item => item.inout === "In");
-    const outTxns = chainData.filter(item => item.inout === "Out");
+    const inTxns = chainData.filter(item => item.flow === "In");
+    const outTxns = chainData.filter(item => item.flow === "Out");
 
     const inflow = inTxns.reduce((acc, cur) => acc + Number(cur.amount), 0);
     const outflow = outTxns.reduce((acc, cur) => acc + Number(cur.amount), 0);

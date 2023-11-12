@@ -107,10 +107,3 @@ export const formatChainArray = (chainMap) => {
     return "";
 };
 
-export const extractMemberName = (type) => {
-    // Regular expression to match the pattern "Member (name)"
-    const memberNamePattern = /Member \((.*?)\)/;
-    const match = memberNamePattern.exec(type);
-    return match && match[1] ? match[1] : "Unknown";
-};
-

@@ -6,8 +6,8 @@ import '@fontsource/plus-jakarta-sans';
 import "@fontsource/inter-tight"
 import "@fontsource/inter"
 
-const determineBackground = (walletDescription, isRefund) => {
-    if (isRefund) {
+const determineBackground = (walletDescription, outFlow) => {
+    if (outFlow) {
         return 'linear-gradient(to bottom, #0A0216, #1D0F35)';
     } else if (walletDescription && walletDescription.startsWith('Member')) {
         return 'linear-gradient(to bottom, #0d0d0d, #000000)';
@@ -42,11 +42,11 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
 }));
 
 
-export const StyledTableCell = styled(TableCell)(({ theme, walletDescription, isRefund }) => ({
+export const StyledTableCell = styled(TableCell)(({ theme, walletDescription, outFlow }) => ({
     position: 'relative',
     fontSize: 14,
     color: "#e6e6e6",
-    backgroundImage: determineBackground(walletDescription, isRefund),
+    backgroundImage: determineBackground(walletDescription, outFlow),
     borderColor: '#5b5b5b',
     fontFamily: 'Inter Tight, sans-serif',
     [`&.${tableCellClasses.head}`]: {
@@ -66,7 +66,7 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletDescription, is
         lineHeight: '35px', // Set line height to 'normal' to ensure text fits within the new height
     },
     '&::before': {
-        content: isRefund ? '""' : 'none',
+        content: outFlow ? '""' : 'none',
         display: 'block',
         position: 'absolute',
         top: 0,
@@ -82,10 +82,10 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletDescription, is
 }));
 
 
-export const StyledTableRow = styled(TableRow)(({ theme, isRefund, walletDescription }) => ({
-    backgroundColor: isRefund ? '#FFA50030' : (walletDescription && walletDescription.startsWith('Member')) ? 'white' : '#FFF9C4',
+export const StyledTableRow = styled(TableRow)(({ theme, outFlow, walletDescription }) => ({
+    backgroundColor: outFlow ? '#FFA50030' : (walletDescription && walletDescription.startsWith('Member')) ? 'white' : '#FFF9C4',
     '&:nth-of-type(odd)': {
-        backgroundColor: isRefund ? '#FFA50030' : (walletDescription && walletDescription.startsWith('Member')) ? theme.palette.action.hover : '#FFF9C4',
+        backgroundColor: outFlow ? '#FFA50030' : (walletDescription && walletDescription.startsWith('Member')) ? theme.palette.action.hover : '#FFF9C4',
     },
     // hide last border
     '&:last-child td, &:last-child th': {

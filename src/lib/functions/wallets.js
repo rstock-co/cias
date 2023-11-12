@@ -1,5 +1,6 @@
 import { moves } from "../data/moves";
 import { allWallets as wallets, memberWallets, INVESTMENT_WALLET } from "../data/wallets";
+import { filterByDateRange } from "./filters";
 
 export const getUniqueWallets = txns => {
     return Array.from(
@@ -15,53 +16,36 @@ export const getUniqueTypes = (tableData) => {
     return [...new Set(types)].filter(type => type);
 };
 
-export const getWalletDescription = (txn, addresses) => {
-    const { to, from } = txn;
+export const getMoveName = (timestamp) => {
+    for (const move of moves) {
+        if (!move.contributionWallet || move.contributionWallet.toLowerCase() !== INVESTMENT_WALLET) continue;
+        if (!move.contributionOpen || !move.contributionClose) continue;
 
-    if (addresses.includes(from)) {
-        return getNameByAddress(to);
-    } else if (addresses.includes(to)) {
-        return getNameByAddress(from);
+        const openTime = new Date(move.contributionOpen).getTime();
+        const closeTime = new Date(move.contributionClose).getTime();
+
+        const matchesMove = filterByDateRange(openTime, closeTime, timestamp, false);
+        if (matchesMove) return move.moveName;
     }
 
     return 'Unknown';
 };
 
-export const getVCMoveName = (walletType, unixTime) => {
-    for (const move of moves) {
-        const openTime = new Date(move.contributionOpen).getTime();
-        const closeTime = new Date(move.contributionClose).getTime();
-
-        if (unixTime >= openTime && unixTime <= closeTime && move.contributionWallet && typeof move.contributionWallet === 'string' && move.contributionWallet.toLowerCase() === '0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca'.toLowerCase()) {
-            return move.moveName;
-        }
-    }
-
-    return walletType;
-};
-
 export const isPoolInvestmentsWallet = (selectedWallets) => 
     selectedWallets.length === 1 && selectedWallets[0].address.toLowerCase() === INVESTMENT_WALLET;
 
-export const getAddressByName = walletName => {
+export const getWalletAddress = walletName => {
     const wallet = wallets.find(wallet => wallet.name === walletName);
     return wallet ? wallet.address : null;
 }
 
-export const getNameByAddress = (address) => {
-    // Search in the primary wallets list
-    const wallet = wallets.find(wallet => wallet.address.toLowerCase() === address);
-    if (wallet) {
-        return wallet.name;
-    }
-
-    // If not found, search in the memberWallets list
-    const memberWallet = memberWallets.find(member => member.address.toLowerCase() === address);
-    if (memberWallet) {
-        return `Member (${memberWallet.name})`;
-    }
-
-    // If not found in memberWallets either, return 'Member'
-    return 'Member';
+export const getWalletName = (walletAddresses, walletAddress) => {
+    const wallet = walletAddresses.find(wallet => wallet.address.toLowerCase() === walletAddress);
+    return wallet && wallet.name;
 };
+
+export const searchWalletName = walletAddress => 
+    getWalletName(wallets, walletAddress) ||
+    getWalletName(memberWallets, walletAddress) ||
+    'Member';
 

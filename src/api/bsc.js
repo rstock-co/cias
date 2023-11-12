@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { BSC_API_KEY } from '../lib/data/keys';
 
 export const getNormalTxnsBsc = async walletAddress => {
     const requestConfig = {
@@ -11,7 +12,7 @@ export const getNormalTxnsBsc = async walletAddress => {
             page: '1',
             offset: '1000',
             sort: 'asc',
-            apikey: '2WIHJW1QBXKFCHJGWPAJRFH4HWWSY8Z6JX',
+            apikey: BSC_API_KEY,
         },
     };
 
@@ -20,7 +21,7 @@ export const getNormalTxnsBsc = async walletAddress => {
         return response.data.result;
     } catch (error) {
         console.error('Error fetching internal transactions:', error);
-        throw error; // Re-throw the error to be handled by the caller
+        throw error; 
     }
 };
 
@@ -36,7 +37,7 @@ export const getERC20TxnsBsc = async (walletAddress, contractAddress) => {
             page: '1',
             offset: '1000',
             sort: 'asc',
-            apikey: '2WIHJW1QBXKFCHJGWPAJRFH4HWWSY8Z6JX',
+            apikey: BSC_API_KEY,
         },
     };
 
@@ -53,7 +54,7 @@ export const getERC20TxnsBsc = async (walletAddress, contractAddress) => {
         }));
     } catch (error) {
         console.error('Error fetching internal transactions:', error);
-        throw error; // Re-throw the error to be handled by the caller
+        throw error; 
     }
 };
 

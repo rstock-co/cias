@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getAddressByName } from '../../../lib/functions/wallets';
+import { getWalletAddress } from '../../../lib/functions/wallets';
 
 const BaseUX = ({
     txns,
@@ -13,7 +13,7 @@ const BaseUX = ({
     const handleSelectedWalletChange = event => {
         const { target: { value } } = event;
         const walletNames = typeof value === 'string' ? value.split(',') : value;
-        const walletAddresses = walletNames.map(name => getAddressByName(name).toLowerCase());
+        const walletAddresses = walletNames.map(name => getWalletAddress(name).toLowerCase());
         const selectedWallets = walletNames.map((name, i) => ({
             name,
             address: walletAddresses[i]

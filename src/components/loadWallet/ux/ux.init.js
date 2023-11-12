@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { allWallets as wallets } from "../../../lib/data/wallets";
 import { stableCoinsToFetch } from '../data';
+import { searchWalletName } from '../../../lib/functions/wallets';
 
 const InitUX = () => {
 
@@ -50,14 +51,13 @@ const InitUX = () => {
             const transactionsArrays = await Promise.all(fetchPromises);
 
             // Find wallet name for the given walletAddress
-            const wallet = wallets.find(wallet => wallet.address.toLowerCase() === walletAddress.toLowerCase());
-            const walletName = wallet ? wallet.name : '';
+            const walletName = searchWalletName(walletAddress);
 
             // Flatten transactions and append the wallet name
             const newTxns = transactionsArrays.flat().map(txn => {
                 return {
                     ...txn,
-                    wallet: walletName
+                    walletName
                 }
             });
 
@@ -82,7 +82,7 @@ const InitUX = () => {
                     const result = await getAggregateERC20Txns(wallet.address);
                     newTxns.push(...result);
                 } catch (error) {
-                    console.error('Error fetching transactions for wallet:', wallet, error);
+                    console.error('Error fetching transactions for wallet:', wallet.name, error);
                 }
             }
         }

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ETH_API_KEY } from '../lib/data/keys';
 
 export const getNormalTxnsEth = async walletAddress => {
     const requestConfig = {
@@ -11,7 +12,7 @@ export const getNormalTxnsEth = async walletAddress => {
             page: '1',
             offset: '1000',
             sort: 'asc',
-            apikey: 'VUB3S8UB35DM3EJWDRD9DH7B4E5EWBJXYY',
+            apikey: ETH_API_KEY,
         },
     };
 
@@ -36,7 +37,7 @@ export const getERC20TxnsEth = async (walletAddress, contractAddress) => {
             page: '1',
             offset: '1000',
             sort: 'asc',
-            apikey: 'VUB3S8UB35DM3EJWDRD9DH7B4E5EWBJXYY',
+            apikey: ETH_API_KEY,
         },
     };
 
@@ -56,4 +57,22 @@ export const getERC20TxnsEth = async (walletAddress, contractAddress) => {
         throw error; // Re-throw the error to be handled by the caller
     }
 };
+
+// DOCS
+
+// API CALL
+// https://docs.arbiscan.io/api-endpoints/accounts#get-a-list-of-normal-transactions-by-address
+
+/**
+ * https://api.arbiscan.io/api
+   ?module=account
+   &action=txlist
+   &address=0x1a97a5a0063d837fd3365e71e5bdc3894e833e6d
+   &startblock=0
+   &endblock=latest
+   &page=1
+   &offset=10
+   &sort=asc
+   &apikey=YourApiKeyToken
+ */
 

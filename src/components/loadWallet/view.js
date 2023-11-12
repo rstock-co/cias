@@ -171,7 +171,7 @@ const LoadWallet = ({
                         <StyledTableRow
                             key={row.id}
                             walletDescription={row.walletDescription}
-                            isRefund={row.inout === 'Out' && row.walletDescription.startsWith('Member')}
+                            outFlow={row.flow === 'Out'}
                         >
                             {Object.entries(propertyMap).map(([key, value]) => {
                                 if (key === 'from' || key === 'to') {
@@ -182,7 +182,7 @@ const LoadWallet = ({
                                             key={key}
                                             align={value.align}
                                             walletDescription={row.walletDescription}
-                                            isRefund={row.inout === 'Out' && row.walletDescription.startsWith('Member')}
+                                            outFlow={row.flow === 'Out'}
                                         >
                                             
                                             {row[key]}
@@ -234,7 +234,7 @@ const LoadWallet = ({
                                             key={key}
                                             align={value.align}
                                             walletDescription={row.walletDescription}
-                                            isRefund={row.inout === 'Out' && row.walletDescription.startsWith('Member')}
+                                            outFlow={row.flow === 'Out'}
                                         >
                                             {row[key]}
                                         </StyledTableCell>
