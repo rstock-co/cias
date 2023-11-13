@@ -27,7 +27,7 @@ const LoadWallet = ({
     filterTypes, filterWallets,
     
     // ux.filter
-    filters, handleValueChange, handleEventChange, handleDateChange, handleClearFilters, isStartDateDefault, isEndDateDefault,
+    filters, handleFilterValueChange, handleFilterChange, handleDateChange, handleClearFilters, isStartDateDefault, isEndDateDefault,
 
     // ux.dialog
     allocationDialogOpen, setAllocationDialogOpen, handleGenerateAllocations,
@@ -83,7 +83,7 @@ const LoadWallet = ({
                     <MoveSelect
                         moves={moves.map(move => move.moveName)}
                         selectedMove={filters.move}
-                        handleChange={handleEventChange('move')}
+                        handleChange={handleFilterChange('move')}
                     />
                 </Box>
             }
@@ -101,26 +101,26 @@ const LoadWallet = ({
                 <TypeSelect
                     types={filterTypes}
                     selectedType={filters.type}
-                    handleChange={handleEventChange('type')}
+                    handleChange={handleFilterChange('type')}
                 />
 
                 <ChainSelect
                     chains={['arb', 'eth', 'bsc']}
                     selectedChain={filters.chain}
-                    handleChange={handleEventChange('chain')}
+                    handleChange={handleFilterChange('chain')}
                 />
 
                 <DirectionSelect
                     directions={['In', 'Out']}
                     selectedDirection={filters.direction}
-                    handleChange={handleEventChange('direction')}
+                    handleChange={handleFilterChange('direction')}
                 />
 
                 <FilterWalletSelect
                     wallets={filterWallets}
                     filteredWallet={filters.filterWallet}
                     selectedWallets={selectedWallets}
-                    handleChange={handleValueChange('filterWallet')}
+                    handleChange={handleFilterValueChange('filterWallet')}
                 />
 
             </Box>

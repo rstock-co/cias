@@ -10,22 +10,23 @@ const FilterUX = ({
 
 } = {}) => {
     const [filters, setFilters] = useState({
-        type: "",
-        chain: "",
         filterWallet: '',
+        chain: "",
         dateRange: { startDate: "", endDate: "" },
         direction: "",
         move: "",
+        type: "",
     });
 
-    const handleValueChange = curry((filterName, value) =>
+    const handleFilterValueChange = curry((filterName, value) => {
+        console.log("filterName:", filterName, "value:", value);
         setFilters(prevFilters => ({
             ...prevFilters,
             [filterName]: value
         }))
-    );
+    });
 
-    const handleEventChange = curry((filterName, event) =>
+    const handleFilterChange = curry((filterName, event) =>
         setFilters(prevFilters => ({
             ...prevFilters,
             [filterName]: event.target.value
@@ -38,7 +39,7 @@ const FilterUX = ({
     const handleDateChange = (newValue) => {
         const formattedStartDate = newValue[0]?.format('YYYY-MM-DD') || '';
         const formattedEndDate = newValue[1]?.format('YYYY-MM-DD') || '';
-        const handler = handleValueChange('dateRange');
+        const handler = handleFilterValueChange('dateRange');
         handler({
             startDate: formattedStartDate,
             endDate: formattedEndDate
@@ -75,8 +76,8 @@ const FilterUX = ({
 
     return {
         filters,
-        handleValueChange,
-        handleEventChange,
+        handleFilterValueChange,
+        handleFilterChange,
         handleDateChange,
         handleClearFilters,
         isStartDateDefault,

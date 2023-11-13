@@ -9,7 +9,7 @@ const DialogUX = ({isLoading, tableData = []}) => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [loadingDialogOpen, setLoadingDialogOpen] = useState(false);
     const [memberSummaryDialogOpen, setMemberSummaryDialogOpen] = useState(false);
-    const [memberSummaryData, setMemberSummaryData] = useState([]);
+    const [memberSummaryData, setMemberSummaryData] = useState({});
     const [dialogKey, setDialogKey] = useState(0);
 
     // Loading screen dialog box
@@ -37,10 +37,10 @@ const DialogUX = ({isLoading, tableData = []}) => {
     };
 
     const handleMemberSummary = (memberWallet) => {
-        const data = generateMemberSummaryTableData(tableData, memberWallet);
-        setMemberSummaryData(data);
-        setMemberSummaryDialogOpen(true); 
-    };
+        const [memberName, ...memberSummary] = generateMemberSummaryTableData(tableData, memberWallet);
+        setMemberSummaryData({ memberName, memberSummary });
+        setMemberSummaryDialogOpen(true);
+    };    
 
     return {
         allocationDialogOpen,

@@ -1,19 +1,12 @@
 
 import { Dialog, DialogContent, DialogTitle, Table, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
 import { formatAmountDisplay } from '../../lib/functions/format';
-import { memberWallets } from '../../lib/data';
 import { StyledTableCell, StyledTableRow } from './styles';
 import "@fontsource/inter-tight";
 
 const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
-
-    const { memberSummary, memberWallet } = memberData;
-
-    const member = memberWallet && memberWallets.find(m => m.address.toLowerCase() === memberWallet.toLowerCase());
-    const memberNameOrWallet = member ? member.name : memberWallet;
-
+    const { memberSummary, memberName } = memberData;
     return (
-    <>
         <Dialog
             open={dialogOpen}
             onClose={() => setDialogOpen(false)}
@@ -24,7 +17,7 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
                 },
             }}
         >
-            <DialogTitle id="chain-flow-dialog-title">{`Member Summary: ${memberNameOrWallet}`}</DialogTitle>
+            <DialogTitle id="chain-flow-dialog-title">{`Member Summary: ${memberName}`}</DialogTitle>
             <DialogContent>
                 <TableContainer component={Paper}>
                     <Table>
@@ -41,8 +34,7 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
-                            {/* {memberSummary && memberSummary.map((row, index) => ( */}
-                            {memberData && memberData.map((row, index) => ( 
+                            {memberSummary && memberSummary.map((row, index) => ( 
                                 <StyledTableRow key={index}>
                                     <StyledTableCell align="center">{row.moveName}</StyledTableCell>
                                     <StyledTableCell align="center">{row.token}</StyledTableCell>
@@ -59,8 +51,7 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
                 </TableContainer>
             </DialogContent>
         </Dialog>
-    </>
-    );
-}
+    )
+};
 
 export default MemberSummary;

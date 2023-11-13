@@ -25,7 +25,7 @@ export const getWalletAddress = walletName => {
 }
 
 export const getWalletName = (walletAddresses, walletAddress) => {
-    const wallet = walletAddresses.find(wallet => wallet.address.toLowerCase() === walletAddress);
+    const wallet = walletAddresses.find(wallet => wallet.address.toLowerCase() === walletAddress.toLowerCase());
     return wallet && wallet.name;
 };
 

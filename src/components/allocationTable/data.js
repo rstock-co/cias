@@ -9,6 +9,16 @@ const getInitialWalletData = () => ({
     walletTxns: {},
 });
 
+const initialTotals = () => ({
+    totalTxns: 0, 
+    totalContributionsAmount: 0, 
+    totalRefundsAmount: 0, 
+    totalNetAmount: 0, 
+    aggregatedContributionsChainMap: {}, 
+    aggregatedRefundsChainMap: {}, 
+    aggregatedTxns: {}
+});
+
 export const generateAllocationTableData = (tableData, selectedWallets) => {
     if (tableData.length === 0 || selectedWallets.length === 0) return [];
     const selectedAddresses = new Set(selectedWallets.map(wallet => wallet.address.toLowerCase()));
@@ -55,16 +65,6 @@ const aggregateCounts = (sourceMap, targetMap) => {
         targetMap[key] = (targetMap[key] || 0) + count;
     });
 };
-
-const initialTotals = () => ({
-    totalTxns: 0, 
-    totalContributionsAmount: 0, 
-    totalRefundsAmount: 0, 
-    totalNetAmount: 0, 
-    aggregatedContributionsChainMap: {}, 
-    aggregatedRefundsChainMap: {}, 
-    aggregatedTxns: {}
-});
 
 export const calculateTotals = (data) => {
     if (!data || data.length === 0) {

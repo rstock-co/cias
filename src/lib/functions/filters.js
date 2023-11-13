@@ -1,5 +1,3 @@
-import { moves } from "../data/moves";
-
 export const filterByDateRange = (start, end, timestamp, useOffset) => {
     const mstOffsetMillis = useOffset ? 7 * 60 * 60 * 1000 : 0;  // Offset in milliseconds for 7 hours (MST)
     const startDate = new Date(new Date(start).getTime() + mstOffsetMillis).getTime();
@@ -8,11 +6,19 @@ export const filterByDateRange = (start, end, timestamp, useOffset) => {
     return timestamp >= startDate && timestamp <= endDate;
 };
 
-export const filterTxns = (txns, { description, filterWallet, chain, dateRange, direction, move }) => {
+export const filterTxns = (txns, { filterWallet, chain, dateRange, direction, move, type }) => {
     // If initial render, return all txns (check if all filter conditions are not set)
-    if (description === '' && filterWallet === '' && chain === '' && (dateRange.startDate === '' || dateRange.endDate === '') && direction === '' && move === '') {
+    if (type === '' && filterWallet === '' && chain === '' && (dateRange.startDate === '' || dateRange.endDate === '') && direction === '' && move === '') {
         return txns.filter(txn => txn.amount !== 0).sort((a, b) => b.timestamp - a.timestamp);
     }
+
+    console.log("filtering txns");
+    console.log("filterWallet:", filterWallet);
+    console.log("chain:", chain);
+    console.log("dateRange:", dateRange);
+    console.log("direction:", direction);
+    console.log("move:", move);
+    console.log("type:", type);
 
     return txns.filter(txn => {
         let matchesFilterWallet = true;
@@ -20,7 +26,7 @@ export const filterTxns = (txns, { description, filterWallet, chain, dateRange, 
         let matchesDateRange = true;
         let matchesDirection = true;
         let matchesMove = true;
-        let matchesDescription = true;
+        let matchesType = true;
 
         // (0) filter out transactions where the amount is zero
         if (txn.amount === 0) return false;
@@ -47,19 +53,14 @@ export const filterTxns = (txns, { description, filterWallet, chain, dateRange, 
 
         // (5) filter by move date range
         if (move) {
-            const targetMove = moves.find(m => m.moveName === move);
-            if (targetMove && targetMove.contributionOpen && targetMove.contributionClose) {
-                matchesMove = filterByDateRange(targetMove.contributionOpen, targetMove.contributionClose, txn.timestamp, false);
-            } else { 
-                matchesMove = false
-            }; 
+            matchesMove = txn.moveName === move;
         }
 
-        // (6) filter by description
-        if (description) {
-            matchesDescription = description === "Member" ? txn.walletDescription.startsWith(description) : txn.walletDescription === description;
+        // (6) filter by type (description)
+        if (type) {
+            matchesType = type === "Member" ? txn.walletDescription.startsWith("Member") : txn.walletDescription === type;
         }
 
-        return matchesFilterWallet && matchesChain && matchesDateRange && matchesDirection && matchesDescription && matchesMove;
+        return matchesFilterWallet && matchesChain && matchesDateRange && matchesDirection && matchesMove && matchesType; 
     }).sort((a, b) => b.timestamp - a.timestamp); // sort by timestamp
 };
