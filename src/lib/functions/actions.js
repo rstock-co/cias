@@ -2,8 +2,8 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-export const printDocument = () => {
-    const element = document.getElementById('myTable');
+export const printAllocationTable = () => {
+    const element = document.getElementById('allocationTable');
 
     html2canvas(element, { scale: 2, useCORS: true }).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
@@ -23,10 +23,31 @@ export const printDocument = () => {
     });
 }
 
+export const printMemberSummaryTable = () => {
+  const element = document.getElementById('memberTable');
+
+  html2canvas(element, { scale: 2, useCORS: true }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('portrait', 'in', 'letter');
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const ratio = imgProps.width / imgProps.height;
+      let imgHeight = pdfHeight - 0.5;  // Subtract padding
+      let imgWidth = imgHeight * ratio;
+      if (imgWidth > pdfWidth - 0.5) {  // Subtract padding
+          imgWidth = pdfWidth - 0.5;  // Subtract padding
+          imgHeight = imgWidth / ratio;
+      }
+      pdf.addImage(imgData, 'PNG', 0.25, 0.25, imgWidth, imgHeight);  // Add padding
+      pdf.save('download.pdf');
+  });
+}
+
 // import html2pdf from "html2pdf.js";
 
-// export const printDocument = () => {
-//     const element = document.getElementById('myTable');
+// export const printAllocationTable = () => {
+//     const element = document.getElementById('allocationTable');
 //     const opt = {
 //         margin: 1,
 //         filename: 'allocation_table.pdf',

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { generateTitle } from "../../../lib/functions/format";
+import { generateAllocationTableTitle } from "../../../lib/functions/format";
 import { roundToNearest5Minutes } from '../../../lib/functions/time';
 import { format } from 'date-fns';
 
@@ -33,7 +33,7 @@ const HeaderUX = ({
         setSortBy(value);
     };
 
-    const dialogTitle = generateTitle(selectedWallets, move);
+    const dialogTitle = generateAllocationTableTitle(selectedWallets, move);
     const generatedDate = format(roundToNearest5Minutes(new Date()), "MMMM d, yyyy '@' h:mm aaaa 'MST'");
 
     return {

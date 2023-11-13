@@ -25,3 +25,18 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
         border: 0,
     },
 }));
+
+
+
+export const totalRowStyle = {
+    fontWeight: 'bold',
+    fontFamily: 'Inter, sans-serif',
+    backgroundColor: '#999999',
+    padding: '4px 22px',  // Reduced padding; adjust as needed
+    lineHeight: '3',    // Smaller line height; adjust as needed
+};
+
+export const totalRowStyleWithBorder = {
+    ...totalRowStyle,
+    borderRight: "1px solid grey"
+};

@@ -1,11 +1,19 @@
 
-import { Dialog, DialogContent, DialogTitle, Table, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
-import { formatAmountDisplay } from '../../lib/functions/format';
-import { StyledTableCell, StyledTableRow } from './styles';
+import { Button, Typography, Dialog, DialogContent, DialogTitle, DialogActions, Table, TableRow, TableCell, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
+import { formatAmountDisplay, generateMemberTableTitle } from '../../lib/functions/format';
+import { StyledTableCell, StyledTableRow, totalRowStyle } from './styles';
+import { calculateTotals, initialTotals } from './data';
+import { roundToNearest5Minutes } from '../../lib/functions/time';
+import { printMemberSummaryTable } from '../../lib/functions/actions';
+import { format } from 'date-fns';
 import "@fontsource/inter-tight";
 
 const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
     const { memberSummary, memberName } = memberData;
+    const totals = memberSummary && memberSummary.length > 0 ? calculateTotals(memberSummary) : initialTotals();
+    const tableTitle = generateMemberTableTitle(memberName);
+    const generatedDate = format(roundToNearest5Minutes(new Date()), "MMMM d, yyyy '@' h:mm aaaa 'MST'");
+    
     return (
         <Dialog
             open={dialogOpen}
@@ -17,11 +25,29 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
                 },
             }}
         >
-            <DialogTitle id="chain-flow-dialog-title">{`Member Summary: ${memberName}`}</DialogTitle>
             <DialogContent>
-                <TableContainer component={Paper}>
+                <TableContainer component={Paper} id="memberTable">
                     <Table>
                         <TableHead>
+                            <TableRow>
+                                {/* adjust colSpan as needed */}
+                                <TableCell colSpan={5} style={{ borderBottom: 'none' }}>
+                                <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '22px', border: 'none' }}>
+                                    Member Summary Table For:
+                                </Typography>
+                                <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
+                                    {memberName}
+                                </Typography>
+                                </TableCell>
+                                <TableCell align="right" colSpan={3} style={{ borderBottom: 'none' }}>
+                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '20px', textAlign: 'right' }}>
+                                        Generated On:
+                                    </Typography>
+                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '22px', textAlign: 'right' }}>
+                                        {generatedDate}
+                                    </Typography>
+                                </TableCell>
+                            </TableRow>
                             <StyledTableRow>
                                 <StyledTableCell align="center">Move</StyledTableCell>
                                 <StyledTableCell align="center">Token</StyledTableCell>
@@ -34,6 +60,16 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
+                            <StyledTableRow>
+                                <StyledTableCell component="th" scope="row" style={totalRowStyle}>Total</StyledTableCell>
+                                <StyledTableCell style={totalRowStyle}></StyledTableCell> {/* Empty cell if needed */}
+                                <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totals.totalNetAmount)}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{totals.totalTransactionsCount}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totals.totalContributionsAmount)}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{totals.totalContributionsCount}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totals.totalRefundsAmount)}</StyledTableCell>
+                                <StyledTableCell align="center" style={totalRowStyle}>{totals.totalRefundsCount}</StyledTableCell>
+                            </StyledTableRow>
                             {memberSummary && memberSummary.map((row, index) => ( 
                                 <StyledTableRow key={index}>
                                     <StyledTableCell align="center">{row.moveName}</StyledTableCell>
@@ -50,6 +86,10 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
                     </Table>
                 </TableContainer>
             </DialogContent>
+            <DialogActions>
+                <Button onClick={printMemberSummaryTable}>Save as PDF</Button>
+                <Button onClick={() => setDialogOpen(false)}>Close</Button>
+            </DialogActions>
         </Dialog>
     )
 };

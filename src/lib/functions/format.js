@@ -22,7 +22,7 @@ export const formatSankeToCapital = (snakeCaseString) => {
     return capitalCasedString;
 };
 
-export const generateTitle = (selectedWallets, move) => {
+export const generateAllocationTableTitle = (selectedWallets, move) => {
     if (selectedWallets.length === 0) return 'No wallets selected'; 
     
     if (move) return `Allocation Table for: '${move}' Investment`;
@@ -31,6 +31,10 @@ export const generateTitle = (selectedWallets, move) => {
         ? `Aggregated Allocation Table for: ${selectedWallets.map(wallet => 
             formatSankeToCapital(wallet.name)).join(', ')} (${selectedWallets.length} wallets)`
         : `Allocation Table for: '${formatSankeToCapital(selectedWallets[0].name)}' Wallet`;
+}
+
+export const generateMemberTableTitle = (memberName) => {
+    return `Member Summary Table for: ${memberName}`;
 }
 
 export const formatAmountDecimals = (chain, value) => chain === 'bsc' ? value / 1e18 : value / 1e6;

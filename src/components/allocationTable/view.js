@@ -3,7 +3,7 @@ import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, Table
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray } from "../../lib/functions/format";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
-import { printDocument } from "../../lib/functions/actions";
+import { printAllocationTable } from "../../lib/functions/actions";
 import { FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from '@mui/material';
 import "@fontsource/inter-tight";
 
@@ -90,7 +90,7 @@ const AllocationTable = ({
                 </Box>
             </Box>
 
-            <TableContainer component={Paper} id="myTable" sx={{ border: 'none' }}>
+            <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none' }}>
                 {/* sx={{ maxHeight: '600px' }} */}
                 <Table sx={{ border: 'none', tableLayout: 'fixed' }} aria-label="member table">
                     <TableHead>
@@ -198,7 +198,7 @@ const AllocationTable = ({
             </TableContainer>
         </DialogContent>
         <DialogActions>
-            <Button onClick={printDocument}>Save as PDF</Button>
+            <Button onClick={printAllocationTable}>Save as PDF</Button>
             <Button onClick={() => setDialogOpen(false)}>Close</Button>
         </DialogActions>
     </Dialog>

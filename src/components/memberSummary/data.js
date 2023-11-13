@@ -1,7 +1,7 @@
 import { getMoveAttribute, getWalletName } from "../../lib/functions/wallets";
 import { memberWallets } from "../../lib/data/wallets";
 
-const initialTotals = () => ({
+export const initialTotals = () => ({
     totalContributionsCount: 0,
     totalRefundsCount: 0,
     totalContributionsAmount: 0,
@@ -30,6 +30,7 @@ export const generateMemberSummaryTableData = (tableData, memberWallet) => {
 
             summary[moveKey][flow === 'In' ? 'contributionsCount' : 'refundsCount'] += 1;
             summary[moveKey][flow === 'In' ? 'contributionsTotal' : 'refundsTotal'] += amount;
+            summary[moveKey].transactionsCount += 1;
             summary[moveKey].netTotal = summary[moveKey].contributionsTotal - summary[moveKey].refundsTotal;
 
             return summary;
