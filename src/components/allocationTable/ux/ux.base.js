@@ -5,66 +5,45 @@ const BaseUX = ({
     tableData, 
     adjustedNetTotal,
     selectedWallets, 
-    isLoading, 
     sortBy,
 } = {}) => {    
 
     const [allocationTableData, setAllocationTableData] = useState([]);
     const [totals, setTotals] = useState({});
+    const [sortedAllocationTableData, setSortedAllocationTableData] = useState([]);
 
     useEffect(() => {
-        if (!isLoading && tableData.length < 900 && selectedWallets.length > 0) {
-            setAllocationTableData(generateAllocationTableData(tableData, selectedWallets))
-        }
-    }, [isLoading, tableData, selectedWallets])
+        const allocationData = generateAllocationTableData(tableData, selectedWallets);
+        setAllocationTableData(allocationData);
+        setTotals(calculateTotals(allocationData));
+    }, [tableData, selectedWallets]);
 
     useEffect(() => {
-        if (allocationTableData.length > 0) {
-            setTotals(calculateTotals(allocationTableData))
-        }
-    }, [allocationTableData])
+        if (allocationTableData.length === 0) return;
 
-    const { totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, aggregatedRefundsChainMap, aggregatedTxns } = Object.keys(totals).length !== 0 ? totals : {};
-
-    const mappedAllocationTableData = useMemo(() => {
-        if (!allocationTableData || allocationTableData.length === 0) return [];
-        return allocationTableData.map(row => {
-            const share = row.netAmount / totalNetAmount;
-            const adjustedNetAmountValue = (adjustedNetTotal && totalNetAmount) ? share * adjustedNetTotal : row.netAmount;
-            return {
-                ...row,
-                share,
-                adjustedNetAmount: adjustedNetAmountValue
-            };
+        const mappedData = allocationTableData.map(row => {
+            const share = row.netAmount / (totals.totalNetAmount || 1);
+            const adjustedNetAmountValue = (adjustedNetTotal && totals.totalNetAmount) ? share * adjustedNetTotal : row.netAmount;
+            return { ...row, share, adjustedNetAmount: adjustedNetAmountValue };
         });
-    }, [allocationTableData, totalNetAmount, adjustedNetTotal]);
-    
-    const totalShare = mappedAllocationTableData.reduce((acc, row) => acc + row['share'], 0);
 
-    const sortedAllocationTableData = useMemo(() => {
-        if (!mappedAllocationTableData) return [];
-        if (mappedAllocationTableData.length === 0) return [];
-        let sortedData = [...mappedAllocationTableData];
+        let sortedData = [...mappedData];
         if (sortBy === "# of contributions") {
             sortedData.sort((a, b) => b.contributions - a.contributions);
         } else if (sortBy === "Amount") {
             sortedData.sort((a, b) => b.share - a.share);
         }
-        return sortedData;
-    }, [mappedAllocationTableData, sortBy]);
+
+        setSortedAllocationTableData(sortedData);
+    }, [allocationTableData, totals, adjustedNetTotal, sortBy]);
+
+    const totalShare = useMemo(() => sortedAllocationTableData.reduce((acc, row) => acc + row.share, 0), [sortedAllocationTableData]);
 
     return {
-        totalTxns,
-        totalContributionsAmount,
-        totalRefundsAmount,
-        totalNetAmount,
-        aggregatedContributionsChainMap,
-        aggregatedRefundsChainMap,
-        aggregatedTxns,
-
+        ...totals,
         totalShare,
         sortedAllocationTableData,
-    }
+    };
 }
 
 export default BaseUX;
