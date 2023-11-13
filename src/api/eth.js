@@ -21,7 +21,7 @@ export const getNormalTxnsEth = async walletAddress => {
         return response.data.result;
     } catch (error) {
         console.error('Error fetching internal transactions:', error);
-        throw error; // Re-throw the error to be handled by the caller
+        throw error; 
     }
 };
 
@@ -54,25 +54,7 @@ export const getERC20TxnsEth = async (walletAddress, contractAddress) => {
         }));
     } catch (error) {
         console.error('Error fetching internal transactions:', error);
-        throw error; // Re-throw the error to be handled by the caller
+        throw error; 
     }
 };
-
-// DOCS
-
-// API CALL
-// https://docs.arbiscan.io/api-endpoints/accounts#get-a-list-of-normal-transactions-by-address
-
-/**
- * https://api.arbiscan.io/api
-   ?module=account
-   &action=txlist
-   &address=0x1a97a5a0063d837fd3365e71e5bdc3894e833e6d
-   &startblock=0
-   &endblock=latest
-   &page=1
-   &offset=10
-   &sort=asc
-   &apikey=YourApiKeyToken
- */
 

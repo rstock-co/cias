@@ -14,7 +14,6 @@ const DialogUX = ({isLoading, tableData = []}) => {
 
     // Loading screen dialog box
     useEffect(() => {
-        console.log('isLoading:', isLoading, 'tableData.length:', tableData.length);
         if (isLoading || tableData.length > 900) {
             setLoadingDialogOpen(true);
         } else {

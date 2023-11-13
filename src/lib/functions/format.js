@@ -79,8 +79,10 @@ export const lowercase = (string) => {
 }
 
 export const formatChainData = (chainData) => {
-    if (Array.isArray(chainData)) {
-        return chainData.join(", ");
+    if (chainData) {
+        return Object.entries(chainData)
+            .map(([chain, count]) => `${chain}(${count})`)
+            .join(", ");
     }
     return "";
 };
@@ -102,8 +104,11 @@ export const formatChainMap = (chainMap) => {
 
 export const formatChainArray = (chainMap) => {
     if (chainMap) {
-        return chainMap.join(", ");
+        return Object.entries(chainMap)
+            .map(([key, value]) => `${key}(${value})`)
+            .join(", ");
     }
     return "";
 };
+
 

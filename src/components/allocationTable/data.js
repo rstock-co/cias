@@ -13,7 +13,7 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
     if (tableData.length === 0 || selectedWallets.length === 0) return [];
     const selectedAddresses = new Set(selectedWallets.map(wallet => wallet.address.toLowerCase()));
 
-    return tableData.reduce((acc, { from, to, flow, walletDescription, amount, chain, memberName }) => {
+    const allocationTableData = tableData.reduce((acc, { from, to, flow, walletDescription, amount, chain, memberName }) => {
         if (!walletDescription.startsWith('Member')) return acc;
 
         const uniqueMemberWallet = flow === 'In' ? from : to;
@@ -44,55 +44,44 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
 
         return acc;
     }, []);
+
+    return allocationTableData;
 };
+
+// Calculate totals for the allocation table header row
+
+const aggregateCounts = (sourceMap, targetMap) => {
+    Object.entries(sourceMap).forEach(([key, count]) => {
+        targetMap[key] = (targetMap[key] || 0) + count;
+    });
+};
+
+const initialTotals = () => ({
+    totalTxns: 0, 
+    totalContributionsAmount: 0, 
+    totalRefundsAmount: 0, 
+    totalNetAmount: 0, 
+    aggregatedContributionsChainMap: {}, 
+    aggregatedRefundsChainMap: {}, 
+    aggregatedTxns: {}
+});
 
 export const calculateTotals = (data) => {
-    let totalTxns = 0;
-    let totalContributionsAmount = 0;
-    let totalRefundsAmount = 0;
-    let aggregatedContributionsChainMap = {};
-    let aggregatedRefundsChainMap = {};
-    let aggregatedTxns = {};
-
     if (!data || data.length === 0) {
-        return {
-            totalTxns,
-            totalContributionsAmount,
-            totalRefundsAmount,
-            totalNetAmount: 0,
-            aggregatedContributionsChainMap,
-            aggregatedRefundsChainMap,
-            aggregatedTxns,
-        };
+        return initialTotals();
     }
 
-    data.forEach((wallet) => {
-        totalContributionsAmount += wallet.contributionsAmount;
-        totalRefundsAmount += wallet.refundsAmount;
-        totalTxns += wallet.net;
+    return data.reduce((totals, wallet) => {
+        totals.totalContributionsAmount += wallet.contributionsAmount;
+        totals.totalRefundsAmount += wallet.refundsAmount;
+        totals.totalNetAmount = totals.totalContributionsAmount - totals.totalRefundsAmount;
+        totals.totalTxns += wallet.net;
 
-        Object.entries(wallet.contributionsChainMap).forEach(([chain, count]) => {
-            aggregatedContributionsChainMap[chain] = (aggregatedContributionsChainMap[chain] || 0) + count;
-        });
+        aggregateCounts(wallet.contributionsChainMap, totals.aggregatedContributionsChainMap);
+        aggregateCounts(wallet.refundsChainMap, totals.aggregatedRefundsChainMap);
+        aggregateCounts(wallet.walletTxns, totals.aggregatedTxns);
 
-        Object.entries(wallet.refundsChainMap).forEach(([chain, count]) => {
-            aggregatedRefundsChainMap[chain] = (aggregatedRefundsChainMap[chain] || 0) + count;
-        });
-
-        Object.entries(wallet.walletTxns).forEach(([txn, count]) => {
-            aggregatedTxns[txn] = (aggregatedTxns[txn] || 0) + count;
-        });
-    });
-
-    const totals = {
-        totalTxns,
-        totalContributionsAmount,
-        totalRefundsAmount,
-        totalNetAmount: totalContributionsAmount - totalRefundsAmount,
-        aggregatedContributionsChainMap,
-        aggregatedRefundsChainMap,
-        aggregatedTxns,
-    };
-
-    return totals;
+        return totals;
+    }, initialTotals());
 };
+

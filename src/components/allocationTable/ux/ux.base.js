@@ -27,15 +27,18 @@ const BaseUX = ({
     const { totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, aggregatedRefundsChainMap, aggregatedTxns } = Object.keys(totals).length !== 0 ? totals : {};
 
     const mappedAllocationTableData = useMemo(() => {
-        if (!allocationTableData) return [];
-        if (allocationTableData.length === 0) return [];
-        return allocationTableData.map(row => ({
-            ...row,
-            share: row.netAmount / totalNetAmount,
-            adjustedNetAmount: (adjustedNetTotal && totalNetAmount) ? (row.netAmount / totalNetAmount) * adjustedNetTotal : row.netAmount
-        }));
+        if (!allocationTableData || allocationTableData.length === 0) return [];
+        return allocationTableData.map(row => {
+            const share = row.netAmount / totalNetAmount;
+            const adjustedNetAmountValue = (adjustedNetTotal && totalNetAmount) ? share * adjustedNetTotal : row.netAmount;
+            return {
+                ...row,
+                share,
+                adjustedNetAmount: adjustedNetAmountValue
+            };
+        });
     }, [allocationTableData, totalNetAmount, adjustedNetTotal]);
-
+    
     const totalShare = mappedAllocationTableData.reduce((acc, row) => acc + row['share'], 0);
 
     const sortedAllocationTableData = useMemo(() => {
