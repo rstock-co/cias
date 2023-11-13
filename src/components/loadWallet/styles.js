@@ -17,7 +17,6 @@ const determineBackground = (walletDescription, outFlow) => {
 };
 
 export const StyledTableHead = styled(TableHead)(({ theme }) => ({
-    // Removed 'display: 'flex'' to allow default table behavior
     alignItems: 'center',
     justifyContent: 'center',
     background: 'var(--body-bg)', // Define this variable or replace with a specific value
@@ -25,8 +24,6 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
     position: 'sticky',
     top: 0,
     fontWeight: 700,
-    // Removed 'overflow: 'hidden'' which is not typically necessary for a table head
-    // Span styles within the TableHead
     '& span': {
       opacity: 0,
       transform: 'translateY(-100%)',
@@ -62,7 +59,7 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletDescription, ou
     [`&.${tableCellClasses.body}`]: {
         // Set the height and line height for body cells
         height: '35px',
-        padding: '4px 16px', // Adjust padding to reduce height, keep horizontal padding the same for alignment
+        padding: '4px 8px', // Adjust padding to reduce height, keep horizontal padding the same for alignment
         lineHeight: '35px', // Set line height to 'normal' to ensure text fits within the new height
     },
     '&::before': {
