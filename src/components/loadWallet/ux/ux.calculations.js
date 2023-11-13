@@ -1,5 +1,5 @@
 import { formatChainDataString } from "../../../lib/functions/format";
-import { calculateTotalTransactionsByChain, calculateTotalValueByChain } from "../../../lib/functions/data";
+import { calculateTotalTransactionsByChain, calculateTotalValueByChain } from "../data";
 
 const CalculationsUX = ({
     tableData

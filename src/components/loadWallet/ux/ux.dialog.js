@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { generateMemberSummaryTableData } from '../../../lib/functions/data';
-import { moves } from '../../../lib/data';
+import { generateMemberSummaryTableData } from '../../memberSummary/data';
 
 const DialogUX = ({isLoading, tableData = []}) => {
 
@@ -39,7 +38,7 @@ const DialogUX = ({isLoading, tableData = []}) => {
     };
 
     const handleMemberSummary = (memberWallet) => {
-        const data = generateMemberSummaryTableData(tableData, memberWallet, moves);
+        const data = generateMemberSummaryTableData(tableData, memberWallet);
         setMemberSummaryData(data);
         setMemberSummaryDialogOpen(true); 
     };

@@ -16,21 +16,6 @@ export const getUniqueTypes = (tableData) => {
     return [...new Set(types)].filter(type => type);
 };
 
-export const getMoveName = (timestamp) => {
-    for (const move of moves) {
-        if (!move.contributionWallet || move.contributionWallet.toLowerCase() !== INVESTMENT_WALLET) continue;
-        if (!move.contributionOpen || !move.contributionClose) continue;
-
-        const openTime = new Date(move.contributionOpen).getTime();
-        const closeTime = new Date(move.contributionClose).getTime();
-
-        const matchesMove = filterByDateRange(openTime, closeTime, timestamp, false);
-        if (matchesMove) return move.moveName;
-    }
-
-    return 'Unknown';
-};
-
 export const isPoolInvestmentsWallet = (selectedWallets) => 
     selectedWallets.length === 1 && selectedWallets[0].address.toLowerCase() === INVESTMENT_WALLET;
 
@@ -49,3 +34,30 @@ export const searchWalletName = walletAddress =>
     getWalletName(memberWallets, walletAddress) ||
     'Member';
 
+// MOVES
+
+export const getMoveName = (timestamp) => {
+    for (const move of moves) {
+        if (!move.contributionWallet || move.contributionWallet.toLowerCase() !== INVESTMENT_WALLET) continue;
+        if (!move.contributionOpen || !move.contributionClose) continue;
+
+        const openTime = new Date(move.contributionOpen).getTime();
+        const closeTime = new Date(move.contributionClose).getTime();
+
+        const matchesMove = filterByDateRange(openTime, closeTime, timestamp, false);
+        if (matchesMove) return move.moveName;
+    }
+
+    return 'Unknown';
+};
+
+export const getMoveAttribute = (moveName, attributeKeys) => {
+    const move = moves.find(m => m.moveName === moveName);
+    if (!move) return null; 
+
+    const result = {};
+    for (const key of attributeKeys) {
+        result[key] = move[key];
+    }
+    return result;
+};

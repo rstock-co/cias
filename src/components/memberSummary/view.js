@@ -41,7 +41,8 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>
-                            {memberSummary && memberSummary.map((row, index) => (
+                            {/* {memberSummary && memberSummary.map((row, index) => ( */}
+                            {memberData && memberData.map((row, index) => ( 
                                 <StyledTableRow key={index}>
                                     <StyledTableCell align="center">{row.moveName}</StyledTableCell>
                                     <StyledTableCell align="center">{row.token}</StyledTableCell>

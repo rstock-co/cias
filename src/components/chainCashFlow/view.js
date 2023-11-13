@@ -1,6 +1,6 @@
 
 import { Dialog, DialogContent, DialogTitle, Table, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
-import { generateChainFlowTableData } from '../../lib/functions/data';
+import { generateChainFlowTableData } from './data';
 import { formatAmountDisplay } from '../../lib/functions/format';
 import { StyledTableCell, StyledTableRow } from './styles';
 import "@fontsource/inter-tight";

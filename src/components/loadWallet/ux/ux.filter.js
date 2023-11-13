@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { generateTableData } from '../../../lib/functions/data';
+import { generateTableData } from '../data';
 import { filterTxns } from '../../../lib/functions/filters';
 import { curry } from '../../../lib/functions/fp';
 
