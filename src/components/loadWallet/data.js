@@ -41,11 +41,11 @@ const generateWalletDescription = (flow, to, from, moveName, fromMemberName, toM
     
     if (flow === 'Out') {
         
-        const intermediaryWallet = teamWallets.find(wallet => wallet.address === to);
+        const teamWallet = teamWallets.find(wallet => wallet.address === to);
     
         // funding a move
-        if (intermediaryWallet) {
-            walletDescription = `Funding "${moveName}" via "${intermediaryWallet.name}"`;
+        if (teamWallet) {
+            walletDescription = `Funding "${moveName}" via "${teamWallet.name}"`;
         }
         // internal transfer
         else if (getWalletName(wallets, to)) {
