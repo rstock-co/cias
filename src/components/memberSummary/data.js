@@ -1,5 +1,7 @@
 import { getMoveAttribute, getWalletName } from "../../lib/functions/wallets";
 import { memberWallets } from "../../lib/data/wallets";
+import { roundToNearest5Minutes } from '../../lib/functions/time';
+import { format } from 'date-fns';
 
 export const initialTotals = () => ({
     totalContributionsCount: 0,
@@ -55,3 +57,15 @@ export const calculateTotals = (summaryTableData) => {
     }, initialTotals());
 };
 
+export const generatedDate = () => {
+    const now = new Date();
+    const currentDate = format(now, "MMMM d, yyyy");
+    const currentTime = format(roundToNearest5Minutes(now), "'@' h:mm aaaa 'MST'");
+    return (
+        <>
+            {currentDate}
+            <br />
+            {currentTime}
+        </>
+    );
+}

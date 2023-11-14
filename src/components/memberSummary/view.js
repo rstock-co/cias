@@ -2,16 +2,14 @@
 import { Button, Typography, Dialog, DialogContent, DialogActions, Table, TableRow, TableCell, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
 import { formatAmountDisplay } from '../../lib/functions/format';
 import { StyledTableCell, StyledTableRow, totalRowStyle } from './styles';
-import { calculateTotals, initialTotals } from './data';
-import { roundToNearest5Minutes } from '../../lib/functions/time';
+import { calculateTotals, initialTotals, generatedDate } from './data';
 import { printMemberSummaryTable } from '../../lib/functions/actions';
-import { format } from 'date-fns';
+
 import "@fontsource/inter-tight";
 
 const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
     const { memberSummary, memberName } = memberData;
     const totals = memberSummary && memberSummary.length > 0 ? calculateTotals(memberSummary) : initialTotals();
-    const generatedDate = format(roundToNearest5Minutes(new Date()), "MMMM d, yyyy '@' h:mm aaaa 'MST'");
     
     return (
         <Dialog
@@ -43,7 +41,7 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
                                         Generated On:
                                     </Typography>
                                     <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '22px', textAlign: 'right' }}>
-                                        {generatedDate}
+                                        {generatedDate()}
                                     </Typography>
                                 </TableCell>
                             </TableRow>

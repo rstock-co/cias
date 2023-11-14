@@ -23,14 +23,15 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
     if (tableData.length === 0 || selectedWallets.length === 0) return [];
     const selectedAddresses = new Set(selectedWallets.map(wallet => wallet.address.toLowerCase()));
 
-    const allocationTableData = tableData.reduce((acc, { from, to, flow, walletDescription, amount, chain, memberName }) => {
+    let allocationTableData = tableData.reduce((acc, { from, to, flow, walletDescription, amount, chain, memberName }) => {
         if (!walletDescription.startsWith('Member')) return acc;
 
         const uniqueMemberWallet = flow === 'In' ? from : to;
         const contributionWallet = flow === 'In' ? to : from;
         const txnType = flow === 'In' ? 'contributions' : 'refunds';
 
-        const data = acc.find(entry => entry.uniqueMemberWallet === uniqueMemberWallet) || {
+        const data = acc.find(entry => entry.uniqueMemberWallet === uniqueMemberWallet) || 
+        {
             ...getInitialWalletData(),
             uniqueMemberWallet,
             memberName
@@ -54,6 +55,9 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
 
         return acc;
     }, []);
+
+    // Filter out entries with a net amount less than $0.50
+    allocationTableData = allocationTableData.filter(entry => Math.abs(entry.netAmount) >= 0.50);
 
     return allocationTableData;
 };

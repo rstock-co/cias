@@ -34,7 +34,19 @@ const HeaderUX = ({
     };
 
     const dialogTitle = generateAllocationTableTitle(selectedWallets, move);
-    const generatedDate = format(roundToNearest5Minutes(new Date()), "MMMM d, yyyy '@' h:mm aaaa 'MST'");
+    
+    const generatedDate = () => {
+        const now = new Date();
+        const currentDate = format(now, "MMMM d, yyyy");
+        const currentTime = format(roundToNearest5Minutes(now), "'@' h:mm aaaa 'MST'");
+        return (
+            <>
+                {currentDate}
+                <br />
+                {currentTime}
+            </>
+        );
+    }
 
     return {
         tableData, 
