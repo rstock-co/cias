@@ -74,10 +74,6 @@ export const shortenAddress = (address, startLength = 4, endLength = 6) => {
     return start + '...' + end;
 }
 
-export const lowercase = (string) => {
-    return string.toLowerCase();
-}
-
 export const formatChainData = (chainData) => {
     if (chainData) {
         return Object.entries(chainData)

@@ -16,7 +16,7 @@ export const generateMemberSummaryTableData = (tableData, memberWallet) => {
     const memberName = getWalletName(memberWallets, memberWallet) || memberWallet;
 
     const memberData = Object.entries(tableData
-        .filter(move => move.from === memberWallet.toLowerCase() || move.to === memberWallet.toLowerCase())
+        .filter(move => move.from === memberWallet || move.to === memberWallet)
         .reduce((summary, txn) => {
             const { moveName, flow, amount } = txn;
             const moveKey = moveName || 'Other Moves';

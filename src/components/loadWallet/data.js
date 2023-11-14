@@ -5,7 +5,7 @@ import { getERC20TxnsEth } from "../../api/eth";
 import { formatAmountDecimals, formatAmountDisplay, FormatTxnLink } from "../../lib/functions/format";
 import { formatTime } from "../../lib/functions/time";
 import { getMoveName, getWalletName } from "../../lib/functions/wallets";
-import { allWallets as wallets, teamWallets, memberWallets } from "../../lib/data/wallets";
+import { allWallets as wallets, teamWallets, memberWallets, ignoreWallets } from "../../lib/data/wallets";
 
 // STABLE COINS TO FETCH
 export const stableCoinsToFetch = { 
@@ -41,7 +41,7 @@ const generateWalletDescription = (flow, to, from, moveName, fromMemberName, toM
     
     if (flow === 'Out') {
         
-        const intermediaryWallet = teamWallets.find(wallet => wallet.address.toLowerCase() === to);
+        const intermediaryWallet = teamWallets.find(wallet => wallet.address === to);
     
         // funding a move
         if (intermediaryWallet) {
@@ -61,7 +61,7 @@ const generateWalletDescription = (flow, to, from, moveName, fromMemberName, toM
     
         // internal transfer
         if (getWalletName(wallets, from)) {
-            walletDescription = `Transfer from ${getWalletName(wallets, to)}`;
+            walletDescription = `Transfer from ${getWalletName(wallets, from)}`;
         }
         // member contribution
         else {  
@@ -82,8 +82,7 @@ const generateWalletDescription = (flow, to, from, moveName, fromMemberName, toM
  * @returns formatted txn data for the table
  */
 
-export const generateTableData = (txn, id, selectedWallets) => {
-    const selectedAddresses = selectedWallets.map(address => address.toLowerCase());
+export const generateTableData = (txn, id, selectedAddresses) => {
     const walletName = txn.walletName;
     const timestamp = parseInt(txn.timeStamp) * 1000;
     const dateTime = formatTime(timestamp, 'America/Denver');
@@ -94,6 +93,10 @@ export const generateTableData = (txn, id, selectedWallets) => {
     const chain = txn.chain;
     const from = txn.from.toLowerCase();
     const to = txn.to.toLowerCase();
+
+    if (ignoreWallets.some(wallet => wallet.address === from.toLowerCase() || wallet.address === to.toLowerCase())) {
+        return null;
+    }
     
     const flow = from && selectedAddresses.includes(from) ? 'Out' : 'In';
     const moveName = getMoveName(timestamp);

@@ -13,7 +13,7 @@ const BaseUX = ({
     const handleSelectedWalletChange = event => {
         const { target: { value } } = event;
         const walletNames = typeof value === 'string' ? value.split(',') : value;
-        const walletAddresses = walletNames.map(name => getWalletAddress(name).toLowerCase());
+        const walletAddresses = walletNames.map(name => getWalletAddress(name));
         const selectedWallets = walletNames.map((name, i) => ({
             name,
             address: walletAddresses[i]

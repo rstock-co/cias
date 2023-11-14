@@ -17,8 +17,8 @@ export const FilterWalletSelect = ({
                             typeof wallet === 'string' &&
                             !selectedWallets
                                 .filter((selectedWallet) => typeof selectedWallet.address === 'string')
-                                .map((selectedWallet) => selectedWallet.address.toLowerCase())
-                                .includes(wallet.toLowerCase())
+                                .map((selectedWallet) => selectedWallet.address)
+                                .includes(wallet)
                     )
                 }
                 value={filteredWallet}

@@ -17,7 +17,7 @@ export const getUniqueTypes = (tableData) => {
 };
 
 export const isPoolInvestmentsWallet = (selectedWallets) => 
-    selectedWallets.length === 1 && selectedWallets[0].address.toLowerCase() === INVESTMENT_WALLET;
+    selectedWallets.length === 1 && selectedWallets[0].address === INVESTMENT_WALLET;
 
 export const getWalletAddress = walletName => {
     const wallet = wallets.find(wallet => wallet.name === walletName);
@@ -25,7 +25,7 @@ export const getWalletAddress = walletName => {
 }
 
 export const getWalletName = (walletAddresses, walletAddress) => {
-    const wallet = walletAddresses.find(wallet => wallet.address.toLowerCase() === walletAddress.toLowerCase());
+    const wallet = walletAddresses.find(wallet => wallet.address === walletAddress);
     return wallet && wallet.name;
 };
 
