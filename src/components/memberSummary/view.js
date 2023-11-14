@@ -17,7 +17,7 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
             onClose={() => setDialogOpen(false)}
             PaperProps={{
                 style: {
-                    width: '50%', // custom width
+                    width: '55%', // custom width
                     maxWidth: 'none', // override maxWidth
                 },
             }}
@@ -29,18 +29,18 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
                             <TableRow>
                                 {/* adjust colSpan as needed */}
                                 <TableCell colSpan={5} style={{ borderBottom: 'none' }}>
-                                <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '22px', border: 'none' }}>
+                                <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'regular', fontSize: '22px', border: 'none' }}>
                                     Member Summary Table For:
                                 </Typography>
-                                <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
+                                <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '28px', border: 'none' }}>
                                     {memberName}
                                 </Typography>
                                 </TableCell>
                                 <TableCell align="right" colSpan={3} style={{ borderBottom: 'none' }}>
-                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '20px', textAlign: 'right' }}>
+                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '16px', textAlign: 'right' }}>
                                         Generated On:
                                     </Typography>
-                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '22px', textAlign: 'right' }}>
+                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '18px', textAlign: 'right' }}>
                                         {generatedDate()}
                                     </Typography>
                                 </TableCell>
