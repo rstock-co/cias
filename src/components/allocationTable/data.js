@@ -45,7 +45,9 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
         data.netAmount = data.contributionsAmount - data.refundsAmount;
 
         if (selectedAddresses.has(contributionWallet)) {
-            const counterWalletName = selectedWallets.find(w => w.address === contributionWallet)?.name;
+            let counterWalletName = selectedWallets.find(w => w.address === contributionWallet)?.name;
+            // Strip off the part within brackets
+            counterWalletName = counterWalletName.replace(/ *\([^)]*\) */g, '');
             data.walletTxns[counterWalletName] = (data.walletTxns[counterWalletName] || 0) + 1;
         }
 

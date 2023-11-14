@@ -22,6 +22,12 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
+export const WideStyledTableCell = styled(StyledTableCell)({
+    padding: '13px 30px',  // Adjusted padding
+    // any other specific styles
+});
+
+
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.action.hover,

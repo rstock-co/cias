@@ -27,11 +27,17 @@ export const generateAllocationTableTitle = (selectedWallets, move) => {
     
     if (move) return `Allocation Table for: '${move}' Investment`;
 
+    const formatWalletName = name => {
+        // Strip off the part within brackets
+        return formatSankeToCapital(name).replace(/ *\([^)]*\) */g, '');
+    };
+
     return selectedWallets.length > 1
         ? `Aggregated Allocation Table for: ${selectedWallets.map(wallet => 
-            formatSankeToCapital(wallet.name)).join(', ')} (${selectedWallets.length} wallets)`
-        : `Allocation Table for: '${formatSankeToCapital(selectedWallets[0].name)}' Wallet`;
-}
+            formatWalletName(wallet.name)).join(', ')} (${selectedWallets.length} wallets)`
+        : `Allocation Table for: '${formatWalletName(selectedWallets[0].name)}' Wallet`;
+};
+
 
 export const formatAmountDecimals = (chain, value) => chain === 'bsc' ? value / 1e18 : value / 1e6;
 
