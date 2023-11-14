@@ -1,6 +1,8 @@
 import React from 'react';
-import { Dialog, DialogContent, Box, CircularProgress, Typography } from '@mui/material';
+import { Dialog, DialogContent, Box, Typography } from '@mui/material';
+import { logos } from './data';
 import "@fontsource/inter-tight";
+import "./logos.css";
 
 const LoadingScreen = ({ stableCoins, open = false }) => {
   return (
@@ -52,7 +54,7 @@ const LoadingScreen = ({ stableCoins, open = false }) => {
             overflowY: 'auto', // Add scroll if the content is too tall
           }}
         >
-          {Object.entries(stableCoins).map(([coinKey, { name, loading, txns }]) => (
+          {Object.entries(stableCoins).map(([coinKey, { name, chain, loading, txns }]) => (
             <Box key={coinKey} sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
               <Typography 
                 variant="body1" 
@@ -65,7 +67,11 @@ const LoadingScreen = ({ stableCoins, open = false }) => {
               >
                 {loading ? `Loading transactions for ${name}...` : `Loaded ${txns} transactions for ${name}`}
               </Typography>
-              {loading && <CircularProgress size={36} style={{ color: 'white' }} />}
+              <img 
+                src={logos[chain]} 
+                className={`${loading ? "spinner" : ""} spinner-${chain.toLowerCase()}`} 
+                alt={`${name} logo`} 
+                style={{ width: '40px', height: '40px' }} />
             </Box>
           ))}
         </Box>

@@ -33,10 +33,6 @@ export const generateAllocationTableTitle = (selectedWallets, move) => {
         : `Allocation Table for: '${formatSankeToCapital(selectedWallets[0].name)}' Wallet`;
 }
 
-export const generateMemberTableTitle = (memberName) => {
-    return `Member Summary Table for: ${memberName}`;
-}
-
 export const formatAmountDecimals = (chain, value) => chain === 'bsc' ? value / 1e18 : value / 1e6;
 
 export const formatAmountDisplay = (value) => {

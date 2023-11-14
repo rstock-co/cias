@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { allWallets as wallets } from "../../../lib/data/wallets";
 import { stableCoinsToFetch } from '../data';
 import { searchWalletName } from '../../../lib/functions/wallets';
 

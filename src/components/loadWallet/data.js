@@ -5,15 +5,18 @@ import { getERC20TxnsEth } from "../../api/eth";
 import { formatAmountDecimals, formatAmountDisplay, FormatTxnLink } from "../../lib/functions/format";
 import { formatTime } from "../../lib/functions/time";
 import { getMoveName, getWalletName } from "../../lib/functions/wallets";
-import { allWallets as wallets, intermediaryWallets, memberWallets } from "../../lib/data/wallets";
+import { allWallets as wallets, teamWallets, memberWallets } from "../../lib/data/wallets";
 
 // STABLE COINS TO FETCH
 export const stableCoinsToFetch = { 
-    stableArb: { address: getWalletAddress("stable_usdc_arb"), name: "USDC(Arb)", apiCall: getERC20TxnsArb, chain: "arb", loading: false, txns: 0 },
-    stableEth: { address: getWalletAddress("stable_usdc_eth"), name: "USDC(Eth)", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },
-    stableEth2: { address: getWalletAddress("stable_usdt_eth"), name: "USDT(Eth)", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },
-    stableBsc: { address: getWalletAddress("stable_busd_bep20"), name: "BUSD(Bep20)", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
-    stableBsc2: { address: getWalletAddress("stable_bsc-usd_bep20"), name: "BSC-USD(Bep20)", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
+    stableArb: { address: getWalletAddress("usdc-e_arb"), name: "USDC.e", apiCall: getERC20TxnsArb, chain: "arb", loading: false, txns: 0 },
+    stableArb2: { address: getWalletAddress("usdc_arb"), name: "USDC", apiCall: getERC20TxnsArb, chain: "arb", loading: false, txns: 0 },
+    stableArb3: { address: getWalletAddress("usdc2_arb"), name: "USDC2", apiCall: getERC20TxnsArb, chain: "arb", loading: false, txns: 0 },
+    stableArb4: { address: getWalletAddress("usdt_arb"), name: "USDT", apiCall: getERC20TxnsArb, chain: "arb", loading: false, txns: 0 },
+    stableEth: { address: getWalletAddress("usdc_eth"), name: "USDC", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },
+    stableEth2: { address: getWalletAddress("usdt_eth"), name: "USDT", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },
+    stableBsc: { address: getWalletAddress("busd_bep20"), name: "BUSD", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
+    stableBsc2: { address: getWalletAddress("bsc-usd_bep20"), name: "BSC-USD", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
 };
 
 // TABLE COLUMNS
@@ -33,41 +36,43 @@ export const propertyMap = {
 
 // TABLE DATA HELPER FUNCTIONS
 
-const generateWalletDescription = (flow, to, moveName, fromMemberName, toMemberName) => {
+const generateWalletDescription = (flow, to, from, moveName, fromMemberName, toMemberName) => {
     let walletDescription = '';
     
     if (flow === 'Out') {
         
-        const intermediaryWallet = intermediaryWallets.find(wallet => wallet.address.toLowerCase() === to);
+        const intermediaryWallet = teamWallets.find(wallet => wallet.address.toLowerCase() === to);
     
         // funding a move
         if (intermediaryWallet) {
             walletDescription = `Funding "${moveName}" via "${intermediaryWallet.name}"`;
-    
+        }
+        // internal transfer
+        else if (getWalletName(wallets, to)) {
+            walletDescription = `Transfer to ${getWalletName(wallets, to)}`;
+        }
         // member refund
-        } else if (toMemberName) { 
+        else { 
             walletDescription = toMemberName ? `Member refund (${toMemberName})` : 'Member refund';
             if (moveName !== "Unknown") walletDescription += ` - ${moveName}`;
-    
-        // internal transfer
-        } else {  
-            walletDescription = `Transfer to ${getWalletName(wallets, to)}`;
         }
     
     } else if (flow === 'In') {
     
-        // member contribution
-        if (fromMemberName) {  
-            walletDescription = fromMemberName ? `Member contribution (${fromMemberName})` : 'Member contribution';
-            if (moveName !== "Unknown") walletDescription += ` - ${moveName}`;
-    
         // internal transfer
-        } else {  
+        if (getWalletName(wallets, from)) {
             walletDescription = `Transfer from ${getWalletName(wallets, to)}`;
         }
+        // member contribution
+        else {  
+            walletDescription = fromMemberName ? `Member contribution (${fromMemberName})` : 'Member contribution';
+            if (moveName !== "Unknown") walletDescription += ` - ${moveName}`;
+        }
     }
+
     return walletDescription;
 };
+
 
 /**
  * Generate the table data for the main table
@@ -95,7 +100,7 @@ export const generateTableData = (txn, id, selectedWallets) => {
     const fromMemberName = getWalletName(memberWallets, from);
     const toMemberName = getWalletName(memberWallets, to);
 
-    const walletDescription = generateWalletDescription(flow, to, moveName, fromMemberName, toMemberName);
+    const walletDescription = generateWalletDescription(flow, to, from, moveName, fromMemberName, toMemberName);
     const memberName = fromMemberName || toMemberName;
 
     return {
@@ -140,3 +145,11 @@ export const calculateTotalValueByChain = (tableData) => {
     });
     return result;
 }
+
+// LOADING SCREEN
+
+export const logos = {
+    arb: 'arb.png',
+    eth: 'eth.png',
+    bsc: 'busd.png',
+};

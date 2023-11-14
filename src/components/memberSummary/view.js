@@ -1,6 +1,6 @@
 
-import { Button, Typography, Dialog, DialogContent, DialogTitle, DialogActions, Table, TableRow, TableCell, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
-import { formatAmountDisplay, generateMemberTableTitle } from '../../lib/functions/format';
+import { Button, Typography, Dialog, DialogContent, DialogActions, Table, TableRow, TableCell, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
+import { formatAmountDisplay } from '../../lib/functions/format';
 import { StyledTableCell, StyledTableRow, totalRowStyle } from './styles';
 import { calculateTotals, initialTotals } from './data';
 import { roundToNearest5Minutes } from '../../lib/functions/time';
@@ -11,7 +11,6 @@ import "@fontsource/inter-tight";
 const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
     const { memberSummary, memberName } = memberData;
     const totals = memberSummary && memberSummary.length > 0 ? calculateTotals(memberSummary) : initialTotals();
-    const tableTitle = generateMemberTableTitle(memberName);
     const generatedDate = format(roundToNearest5Minutes(new Date()), "MMMM d, yyyy '@' h:mm aaaa 'MST'");
     
     return (
