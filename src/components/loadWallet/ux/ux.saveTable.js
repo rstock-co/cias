@@ -1,64 +1,12 @@
 import { useState, useEffect } from 'react';
 
 const SaveTableUX = () => {
-    // DIALOG BOX STATES
+
     const [savedTables, setSavedTables] = useState([]);
-    const [transferTxnsToBlend, setTransferTxnsToBlend] = useState([]);
+    const [transferTxnsToBlend, setTransferTxnsToBlend] = useState({});
     const [isBlended, setIsBlended] = useState(false);
-    
-    const handleToggleChip = (savedTableID, txnId, isBlended, txnAmount) => {
-        setTransferTxnsToBlend(prevTxnsToBlend => {
-          let tableTxns = prevTxnsToBlend.find(item => item.savedTableID === savedTableID);
-          if (!tableTxns) {
-              tableTxns = { savedTableID, txnsToBlend: [], totalAmount: 0 };
-          }
-      
-          if (isBlended) {
-              if (!tableTxns.txnsToBlend.includes(txnId)) {
-                  tableTxns.txnsToBlend.push(txnId);
-                  tableTxns.totalAmount += txnAmount;
-              }
-          } else {
-              if (tableTxns.txnsToBlend.includes(txnId)) {
-                  tableTxns.txnsToBlend = tableTxns.txnsToBlend.filter(id => id !== txnId);
-                  tableTxns.totalAmount -= txnAmount;
-              }
-          }
-      
-          return prevTxnsToBlend.some(item => item.savedTableID === savedTableID) ?
-                 prevTxnsToBlend.map(item => item.savedTableID === savedTableID ? tableTxns : item) :
-                 [...prevTxnsToBlend, tableTxns];
-        });
-      };
-      
-    const isTxnBlended = (savedTableID, txnId) => {
-        const tableTxns = transferTxnsToBlend.find(item => item.savedTableID === savedTableID);
-        return tableTxns ? tableTxns.txnsToBlend.includes(txnId) : false;
-    };
-      
-    const saveTableData = (newData) => {
-        setSavedTables(prevTables => {
-            // Determine the next table ID based on the number of existing tables
-            const nextTableId = prevTables.length + 1;
-
-            const walletNames = newData.selectedWallets.map(wallet => wallet.name);
-            const walletAddresses = newData.selectedWallets.map(wallet => wallet.address);
-
-            // Create a new table object with the required structure
-            const newTable = {
-                id: nextTableId,
-                walletNames,
-                walletAddresses,
-                moveName: newData.moveName || '',
-                tableData: newData.tableData || '',
-                numContributors: newData.numContributors || '',
-                totalContributions: newData.totalContributions || '',
-            };
-
-            // Add the new table object to the array of saved tables
-            return [...prevTables, newTable];
-        });
-    };
+    const [saveTableSnackbarOpen, setSaveTableSnackbarOpen] = useState(false);
+    const [saveTableSnackbarMessage, setSaveTableSnackbarMessage] = useState("");
 
     const saveTablesToLocalStorage = (savedTables) => {
         const data = JSON.stringify(savedTables);
@@ -70,10 +18,10 @@ const SaveTableUX = () => {
         if (data) {
             return JSON.parse(data);
         }
-        return []; // Return an empty array if there's no data
+        return []; 
     };
 
-    // Load tables from local storage when the component mounts
+     // Load tables from local storage when the component mounts
     useEffect(() => {
         const loadedTables = loadTablesFromLocalStorage();
         setSavedTables(loadedTables);
@@ -83,6 +31,39 @@ const SaveTableUX = () => {
     useEffect(() => {
         saveTablesToLocalStorage(savedTables);
     }, [savedTables]);
+    
+    const handleToggleChip = (savedTableID, txnId, isBlended, txnAmount) => {
+        setTransferTxnsToBlend(prevTxnsToBlend => {
+            // Clone the previous state
+            const updatedTxnsToBlend = {...prevTxnsToBlend};
+    
+            // Initialize if not present
+            if (!updatedTxnsToBlend[savedTableID]) {
+                updatedTxnsToBlend[savedTableID] = { txnsToBlend: [], totalAmount: 0 };
+            }
+    
+            const tableTxns = updatedTxnsToBlend[savedTableID];
+    
+            if (isBlended) {
+                if (!tableTxns.txnsToBlend.includes(txnId)) {
+                    tableTxns.txnsToBlend.push(txnId);
+                    tableTxns.totalAmount += txnAmount;
+                }
+            } else {
+                if (tableTxns.txnsToBlend.includes(txnId)) {
+                    tableTxns.txnsToBlend = tableTxns.txnsToBlend.filter(id => id !== txnId);
+                    tableTxns.totalAmount -= txnAmount;
+                }
+            }
+    
+            return updatedTxnsToBlend;
+        });
+    };
+    
+    const isTxnBlended = (savedTableID, txnId) => {
+        const tableTxns = transferTxnsToBlend[savedTableID];
+        return tableTxns ? tableTxns.txnsToBlend.includes(txnId) : false;
+    };
 
     // if the wallet description starts with "Transfer from", then it could have a blend chip rendered beside it
     const getSavedTableIDFromDescription = (walletDescription, savedTables) => {
@@ -94,6 +75,35 @@ const SaveTableUX = () => {
         const matchingTable = savedTables.find(table => table.walletNames.includes(transferTarget));
         return matchingTable ? matchingTable.id : null;
     };
+
+    const saveTableData = (newData) => {
+        setSavedTables(prevTables => {
+            const walletNames = newData.selectedWallets.map(wallet => wallet.name);
+            const walletAddresses = newData.selectedWallets.map(wallet => wallet.address);
+    
+            const newTableIdentifier = `${walletNames.join(',')}-${walletAddresses.join(',')}-${newData.moveName}`;
+            const existingTableIndex = prevTables.findIndex(table => {
+                const existingTableIdentifier = `${table.walletNames.join(',')}-${table.walletAddresses.join(',')}-${table.moveName}`;
+                return newTableIdentifier === existingTableIdentifier;
+            });
+    
+            if (existingTableIndex !== -1) {
+                // Table already exists
+                setSaveTableSnackbarMessage(`Table not saved, was saved as Table # ${existingTableIndex + 1} already`);
+                setSaveTableSnackbarOpen(true);
+                return prevTables;
+            }
+    
+            // Save new table
+            const nextTableId = prevTables.length + 1;
+            const newTable = { id: nextTableId, ...newData };
+    
+            setSaveTableSnackbarMessage(`Table # ${nextTableId} saved`);
+            setSaveTableSnackbarOpen(true);
+    
+            return [...prevTables, newTable];
+        });
+    };
     
     return {
         savedTables,
@@ -104,6 +114,9 @@ const SaveTableUX = () => {
         isBlended,
         setIsBlended,
         getSavedTableIDFromDescription,
+
+        saveTableSnackbarMessage,
+        saveTableSnackbarOpen
     }
 }
 

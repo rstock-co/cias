@@ -42,11 +42,12 @@ const LoadWallet = ({
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
     // ux.saveTable
-    savedTables, saveTableData, handleToggleChip, transferTxnsToBlend, isTxnBlended, isBlended, setIsBlended, getSavedTableIDFromDescription,
+    savedTables, saveTableData, handleToggleChip, transferTxnsToBlend, isTxnBlended, getSavedTableIDFromDescription,
 
 } = {}) => {
     
-    console.log("Txns to blend: ", transferTxnsToBlend)
+    console.log("Txns to blend: ", transferTxnsToBlend);
+    console.log("Saved Tables: ", savedTables);
     return (
 
     <Box sx={loadWalletStyles}>

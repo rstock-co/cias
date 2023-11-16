@@ -22,15 +22,15 @@ export const formatSankeToCapital = (snakeCaseString) => {
     return capitalCasedString;
 };
 
+export const formatWalletName = name => {
+    // Strip off the part within brackets
+    return formatSankeToCapital(name).replace(/ *\([^)]*\) */g, '');
+};
+
 export const generateAllocationTableTitle = (selectedWallets, move) => {
     if (selectedWallets.length === 0) return 'No wallets selected'; 
     
     if (move) return `Allocation Table for: '${move}' Investment`;
-
-    const formatWalletName = name => {
-        // Strip off the part within brackets
-        return formatSankeToCapital(name).replace(/ *\([^)]*\) */g, '');
-    };
 
     return selectedWallets.length > 1
         ? `Aggregated Allocation Table for: ${selectedWallets.map(wallet => 

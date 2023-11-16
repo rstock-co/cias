@@ -58,6 +58,7 @@ const HeaderUX = ({
         move,
         saveTableData,
         savedTables,
+        transferTxnsToBlend,
 
         showMemberName,
         showHeaderRow,

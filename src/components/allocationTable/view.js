@@ -1,5 +1,5 @@
 import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableCell, TableHead, 
-         TableRow, TableBody, DialogActions, Button, Box, Typography } from "@mui/material";
+         TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray } from "../../lib/functions/format";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
@@ -9,7 +9,7 @@ import "@fontsource/inter-tight";
 
 const AllocationTable = ({ 
     // original props
-    dialogOpen, setDialogOpen, selectedWallets, move, saveTableData, savedTables, 
+    dialogOpen, setDialogOpen, selectedWallets, move, saveTableData, savedTables, transferTxnsToBlend,
     
     // props from ux.header
     showMemberName, showHeaderRow, adjustedNetTotal, sortBy, handleToggleMemberName, handleToggleHeaderRow, 
@@ -17,10 +17,13 @@ const AllocationTable = ({
 
     // props from ux.base
     totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
-    aggregatedRefundsChainMap, aggregatedTxns, totalShare, sortedAllocationTableData
+    aggregatedRefundsChainMap, aggregatedTxns, totalShare, sortedAllocationTableData,
+
+    // props from ux.blend
+    isBlendedTable, generateHeaderSummary,
 
 } = {}) => (
-
+<>
     <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
@@ -32,10 +35,13 @@ const AllocationTable = ({
             },
         }}
     >
-        <DialogTitle>{dialogTitle}</DialogTitle>
+        <DialogTitle>
+            {isBlendedTable ? 'Blended Allocation Table' : dialogTitle}
+        </DialogTitle>
         <DialogContent style={{ overflowX: 'auto' }}>
             {/* maxHeight: '800px'  */}
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                {generateHeaderSummary(transferTxnsToBlend, isBlendedTable, selectedWallets, saveTableData)}
                 <Box mb={2}>
                     <div>Total Contributions Amount: {totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</div>
                     <div>Total Contributions: {formatChainMap(aggregatedContributionsChainMap)}</div>
@@ -213,6 +219,16 @@ const AllocationTable = ({
             <Button onClick={() => setDialogOpen(false)}>Close</Button>
         </DialogActions>
     </Dialog>
+
+    <Snackbar
+        open={saveTableSnackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message={saveTableSnackbarMessage}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{ '& .MuiSnackbarContent-root': { backgroundColor: '#105c69', fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', boxShadow: '0 0 10px 3px #4ed3e6' } }}
+    />
+</>
 );
 
 export default AllocationTable;
