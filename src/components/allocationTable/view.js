@@ -9,7 +9,7 @@ import "@fontsource/inter-tight";
 
 const AllocationTable = ({ 
     // original props
-    dialogOpen, setDialogOpen, selectedWallets, 
+    dialogOpen, setDialogOpen, selectedWallets, move, saveTableData, savedTables, 
     
     // props from ux.header
     showMemberName, showHeaderRow, adjustedNetTotal, sortBy, handleToggleMemberName, handleToggleHeaderRow, 
@@ -198,6 +198,17 @@ const AllocationTable = ({
             </TableContainer>
         </DialogContent>
         <DialogActions>
+            <Button 
+                onClick={
+                    () => saveTableData({
+                        selectedWallets,
+                        move,
+                        tableData: sortedAllocationTableData,
+                        numContributors: sortedAllocationTableData.length, 
+                        totalContributions: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
+                    })
+                }
+            >Save Table</Button>
             <Button onClick={printAllocationTable}>Save as PDF</Button>
             <Button onClick={() => setDialogOpen(false)}>Close</Button>
         </DialogActions>

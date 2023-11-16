@@ -8,8 +8,9 @@ const HeaderUX = ({
     dialogOpen, 
     setDialogOpen, 
     selectedWallets, 
-    isLoading, 
-    move 
+    move,
+    saveTableData,
+    savedTables
 } = {}) => {   
 
     const [showMemberName, setShowMemberName] = useState(false);
@@ -53,8 +54,9 @@ const HeaderUX = ({
         dialogOpen, 
         setDialogOpen, 
         selectedWallets, 
-        isLoading, 
         move,
+        saveTableData,
+        savedTables,
 
         showMemberName,
         showHeaderRow,

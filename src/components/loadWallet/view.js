@@ -18,7 +18,7 @@ import '@fontsource/inter-tight';
 
 const LoadWallet = ({
     // ux.init
-    isLoading, stableCoins, selectedWallets,
+    stableCoins, selectedWallets,
     
     // ux.base
     tableData, handleSelectedWalletChange,
@@ -35,12 +35,18 @@ const LoadWallet = ({
     snackbarOpen, setSnackbarOpen, handleCloseSnackbar,
     loadingDialogOpen,
     memberSummaryDialogOpen, setMemberSummaryDialogOpen, handleMemberSummary, memberSummaryData,
-    dialogKey
+    dialogKey,
 
     // ux.calculations
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
-} = {}) => (
+    // ux.saveTable
+    savedTables, saveTableData, 
+
+} = {}) => {
+    
+    console.log("Saved Tables: ", savedTables)
+    return (
 
     <Box sx={loadWalletStyles}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -247,16 +253,43 @@ const LoadWallet = ({
             </Table>
         </TableContainer>
 
-        <AllocationTable key={dialogKey} tableData={tableData} dialogOpen={allocationDialogOpen} setDialogOpen={setAllocationDialogOpen} selectedWallets={selectedWallets} isLoading={isLoading} move={filters.move} />
+        <AllocationTable 
+            key={dialogKey} 
+            tableData={tableData} 
+            dialogOpen={allocationDialogOpen} 
+            setDialogOpen={setAllocationDialogOpen} 
+            selectedWallets={selectedWallets} 
+            move={filters.move} 
+            saveTableData={saveTableData}
+            savedTables={savedTables} 
+        />
 
-        <ChainCashFlowDialog tableData={tableData} dialogOpen={chainDialogOpen} setDialogOpen={setChainDialogOpen} />
+        <ChainCashFlowDialog 
+            tableData={tableData} 
+            dialogOpen={chainDialogOpen} 
+            setDialogOpen={setChainDialogOpen} 
+        />
 
-        <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleCloseSnackbar} message="Wallet address copied to clipboard" anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} sx={{ '& .MuiSnackbarContent-root': { backgroundColor: '#105c69', fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', boxShadow: '0 0 10px 3px #4ed3e6' } }} />
+        <Snackbar 
+            open={snackbarOpen} 
+            autoHideDuration={3000} 
+            onClose={handleCloseSnackbar} 
+            message="Wallet address copied to clipboard" 
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} 
+            sx={{ '& .MuiSnackbarContent-root': { backgroundColor: '#105c69', fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', boxShadow: '0 0 10px 3px #4ed3e6' } }} />
         
-        <LoadingScreen stableCoins={stableCoins} open={loadingDialogOpen} />
+        <LoadingScreen 
+            stableCoins={stableCoins} 
+            open={loadingDialogOpen} 
+        />
         
-        <MemberSummaryDialog memberData={memberSummaryData} dialogOpen={memberSummaryDialogOpen} setDialogOpen={setMemberSummaryDialogOpen} />
+        <MemberSummaryDialog 
+            memberData={memberSummaryData} 
+            dialogOpen={memberSummaryDialogOpen} 
+            setDialogOpen={setMemberSummaryDialogOpen} 
+        />
     </Box>
 );
+                        };
 
 export default LoadWallet;
