@@ -10,7 +10,8 @@ const HeaderUX = ({
     selectedWallets, 
     move,
     saveTableData,
-    savedTables
+    savedTables,
+    transferTxnsToBlend,
 } = {}) => {   
 
     const [showMemberName, setShowMemberName] = useState(false);

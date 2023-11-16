@@ -282,7 +282,8 @@ const LoadWallet = ({
             selectedWallets={selectedWallets} 
             move={filters.move} 
             saveTableData={saveTableData}
-            savedTables={savedTables} 
+            savedTables={savedTables}
+            transferTxnsToBlend={transferTxnsToBlend}
         />
 
         <ChainCashFlowDialog 

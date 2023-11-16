@@ -7,7 +7,7 @@ const ToggleChipButton = ({onToggle, isBlended, txnId }) => (
       onClick={() => onToggle(txnId, !isBlended)}
       style={{
         fontFamily: 'Inter Tight, sans-serif',
-        backgroundColor: isBlended ? '#048241' : '#a84931',
+        backgroundColor: isBlended ? '#048241' : '#c24a2d',
         color: 'white',
         cursor: 'pointer',
         marginLeft: 12, // Left padding from the text
