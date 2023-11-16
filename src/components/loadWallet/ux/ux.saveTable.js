@@ -5,27 +5,32 @@ const SaveTableUX = () => {
     const [savedTables, setSavedTables] = useState([]);
     const [transferTxnsToBlend, setTransferTxnsToBlend] = useState([]);
     const [isBlended, setIsBlended] = useState(false);
-
-    const handleToggleChip = (savedTableID, txnId, isBlended) => {
+    
+    const handleToggleChip = (savedTableID, txnId, isBlended, txnAmount) => {
         setTransferTxnsToBlend(prevTxnsToBlend => {
-          // Find the table object or initialize it
-          const tableTxns = prevTxnsToBlend.find(item => item.savedTableID === savedTableID) || { savedTableID, txnsToBlend: [] };
-      
-          if (isBlended) {
-            // Add the transaction ID to the array if it's not already there
-            tableTxns.txnsToBlend = tableTxns.txnsToBlend.includes(txnId) ? tableTxns.txnsToBlend : [...tableTxns.txnsToBlend, txnId];
-          } else {
-            // Remove the transaction ID from the array
-            tableTxns.txnsToBlend = tableTxns.txnsToBlend.filter(id => id !== txnId);
+          let tableTxns = prevTxnsToBlend.find(item => item.savedTableID === savedTableID);
+          if (!tableTxns) {
+              tableTxns = { savedTableID, txnsToBlend: [], totalAmount: 0 };
           }
       
-          // Update the state with the modified table transactions or add a new table object
+          if (isBlended) {
+              if (!tableTxns.txnsToBlend.includes(txnId)) {
+                  tableTxns.txnsToBlend.push(txnId);
+                  tableTxns.totalAmount += txnAmount;
+              }
+          } else {
+              if (tableTxns.txnsToBlend.includes(txnId)) {
+                  tableTxns.txnsToBlend = tableTxns.txnsToBlend.filter(id => id !== txnId);
+                  tableTxns.totalAmount -= txnAmount;
+              }
+          }
+      
           return prevTxnsToBlend.some(item => item.savedTableID === savedTableID) ?
                  prevTxnsToBlend.map(item => item.savedTableID === savedTableID ? tableTxns : item) :
                  [...prevTxnsToBlend, tableTxns];
         });
-    };
-
+      };
+      
     const isTxnBlended = (savedTableID, txnId) => {
         const tableTxns = transferTxnsToBlend.find(item => item.savedTableID === savedTableID);
         return tableTxns ? tableTxns.txnsToBlend.includes(txnId) : false;
