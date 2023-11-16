@@ -9,7 +9,7 @@ export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
 
     const handleSelectChange = (event) => {
         handleChange(event);
-        setSelectOpen(false); // Close the select when an item is clicked
+        handleClose(); // Close the select when an item is clicked
     };
 
     const handleOpen = () => {

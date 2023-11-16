@@ -1,31 +1,26 @@
-import React, { useState } from 'react';
 import { Chip } from '@mui/material';
+import '@fontsource/inter-tight';
 
-function ToggleChipButton() {
-  const [isAdded, setIsAdded] = useState(false);
-
-  const handleClick = () => {
-    setIsAdded(!isAdded);
-  };
-
-  return (
+const ToggleChipButton = ({onToggle, isBlended, txnId }) => (
     <Chip
-      label={isAdded ? "Added to blend" : "Blend"}
-      onClick={handleClick}
+      label={isBlended ? "Blended" : "Not blended"}
+      onClick={() => onToggle(txnId, !isBlended)}
       style={{
-        backgroundColor: isAdded ? 'green' : 'grey',
+        fontFamily: 'Inter Tight, sans-serif',
+        backgroundColor: isBlended ? '#048241' : '#a84931',
         color: 'white',
         cursor: 'pointer',
-        marginLeft: 8, // Left padding from the text
+        marginLeft: 12, // Left padding from the text
+        marginBottom: 2,
         height: 24, // Slimmer height
         fontSize: '0.8rem', // Adjust font size if needed
         // Adjust internal padding if needed
-        paddingTop: 0,
+        lineHeight: 1,
+        paddingTop: '2px',
         paddingBottom: 0
       }}
     />
   );
-}
 
 export default ToggleChipButton;
 

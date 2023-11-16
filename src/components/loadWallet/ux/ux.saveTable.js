@@ -3,7 +3,34 @@ import { useState, useEffect } from 'react';
 const SaveTableUX = () => {
     // DIALOG BOX STATES
     const [savedTables, setSavedTables] = useState([]);
+    const [transferTxnsToBlend, setTransferTxnsToBlend] = useState([]);
+    const [isBlended, setIsBlended] = useState(false);
 
+    const handleToggleChip = (savedTableID, txnId, isBlended) => {
+        setTransferTxnsToBlend(prevTxnsToBlend => {
+          // Find the table object or initialize it
+          const tableTxns = prevTxnsToBlend.find(item => item.savedTableID === savedTableID) || { savedTableID, txnsToBlend: [] };
+      
+          if (isBlended) {
+            // Add the transaction ID to the array if it's not already there
+            tableTxns.txnsToBlend = tableTxns.txnsToBlend.includes(txnId) ? tableTxns.txnsToBlend : [...tableTxns.txnsToBlend, txnId];
+          } else {
+            // Remove the transaction ID from the array
+            tableTxns.txnsToBlend = tableTxns.txnsToBlend.filter(id => id !== txnId);
+          }
+      
+          // Update the state with the modified table transactions or add a new table object
+          return prevTxnsToBlend.some(item => item.savedTableID === savedTableID) ?
+                 prevTxnsToBlend.map(item => item.savedTableID === savedTableID ? tableTxns : item) :
+                 [...prevTxnsToBlend, tableTxns];
+        });
+    };
+
+    const isTxnBlended = (savedTableID, txnId) => {
+        const tableTxns = transferTxnsToBlend.find(item => item.savedTableID === savedTableID);
+        return tableTxns ? tableTxns.txnsToBlend.includes(txnId) : false;
+    };
+      
     const saveTableData = (newData) => {
         setSavedTables(prevTables => {
             // Determine the next table ID based on the number of existing tables
@@ -53,25 +80,25 @@ const SaveTableUX = () => {
     }, [savedTables]);
 
     // if the wallet description starts with "Transfer from", then it could have a blend chip rendered beside it
-    const shouldDisplayChip = (walletDescription, savedTables) => {
+    const getSavedTableIDFromDescription = (walletDescription, savedTables) => {
         if (!walletDescription.startsWith("Transfer from ")) {
-            return false;
+            return null;
         }
     
-        // Extracting the wallet name from the description
         const transferTarget = walletDescription.substring("Transfer from ".length);
-        console.log("transferTarget: ", transferTarget)
+        const matchingTable = savedTables.find(table => table.walletNames.includes(transferTarget));
+        return matchingTable ? matchingTable.id : null;
+    };
     
-        return savedTables.some(table => 
-            table.walletNames.includes(transferTarget)
-        );
-    }
-       
-
     return {
         savedTables,
         saveTableData,
-        shouldDisplayChip
+        handleToggleChip,
+        transferTxnsToBlend,
+        isTxnBlended,
+        isBlended,
+        setIsBlended,
+        getSavedTableIDFromDescription,
     }
 }
 

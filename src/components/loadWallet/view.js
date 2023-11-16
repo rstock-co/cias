@@ -42,11 +42,11 @@ const LoadWallet = ({
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
     // ux.saveTable
-    savedTables, saveTableData, shouldDisplayChip
+    savedTables, saveTableData, handleToggleChip, transferTxnsToBlend, isTxnBlended, isBlended, setIsBlended, getSavedTableIDFromDescription,
 
 } = {}) => {
     
-    console.log("Saved Tables: ", savedTables)
+    console.log("Txns to blend: ", transferTxnsToBlend)
     return (
 
     <Box sx={loadWalletStyles}>
@@ -236,7 +236,8 @@ const LoadWallet = ({
                                         </StyledTableCell>
                                     );
                                 } else if (key === 'walletDescription') {
-                                    const displayChip = shouldDisplayChip(row.walletDescription, savedTables);
+                                    const savedTableID = getSavedTableIDFromDescription(row.walletDescription, savedTables);
+                                    const displayChip = savedTableID !== null;
                                     return (
                                         <StyledTableCell
                                             key={key}
@@ -245,8 +246,13 @@ const LoadWallet = ({
                                             outFlow={row.flow === 'Out'}
                                         >
                                             {row[key]}
-                                            {/* Render button if description starts with "transfer from" and matches a wallet in saved tables */}
-                                            {displayChip && (<ToggleChipButton />)}
+                                            {displayChip && (
+                                                <ToggleChipButton 
+                                                    onToggle={(txnId, isBlended) => handleToggleChip(savedTableID, txnId, isBlended)}
+                                                    isBlended={isTxnBlended(savedTableID, row.id)}
+                                                    txnId={row.id} 
+                                                />
+                                            )}
                                         </StyledTableCell>
                                     );
                                 } else {
@@ -304,7 +310,7 @@ const LoadWallet = ({
             setDialogOpen={setMemberSummaryDialogOpen} 
         />
     </Box>
-);
-                        };
+    );
+};
 
 export default LoadWallet;
