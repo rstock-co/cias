@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const SaveTableUX = () => {
     // DIALOG BOX STATES
@@ -15,7 +15,6 @@ const SaveTableUX = () => {
             // Create a new table object with the required structure
             const newTable = {
                 id: nextTableId,
-                selectedWallets: newData.selectedWallets, 
                 walletNames,
                 walletAddresses,
                 moveName: newData.moveName || '',
@@ -29,9 +28,50 @@ const SaveTableUX = () => {
         });
     };
 
+    const saveTablesToLocalStorage = (savedTables) => {
+        const data = JSON.stringify(savedTables);
+        localStorage.setItem('savedTables', data);
+    };
+
+    const loadTablesFromLocalStorage = () => {
+        const data = localStorage.getItem('savedTables');
+        if (data) {
+            return JSON.parse(data);
+        }
+        return []; // Return an empty array if there's no data
+    };
+
+    // Load tables from local storage when the component mounts
+    useEffect(() => {
+        const loadedTables = loadTablesFromLocalStorage();
+        setSavedTables(loadedTables);
+    }, []);
+
+    // Save tables to local storage whenever they change
+    useEffect(() => {
+        saveTablesToLocalStorage(savedTables);
+    }, [savedTables]);
+
+    // if the wallet description starts with "Transfer from", then it could have a blend chip rendered beside it
+    const shouldDisplayChip = (walletDescription, savedTables) => {
+        if (!walletDescription.startsWith("Transfer from ")) {
+            return false;
+        }
+    
+        // Extracting the wallet name from the description
+        const transferTarget = walletDescription.substring("Transfer from ".length);
+        console.log("transferTarget: ", transferTarget)
+    
+        return savedTables.some(table => 
+            table.walletNames.includes(transferTarget)
+        );
+    }
+       
+
     return {
         savedTables,
-        saveTableData
+        saveTableData,
+        shouldDisplayChip
     }
 }
 

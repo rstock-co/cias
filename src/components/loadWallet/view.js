@@ -15,6 +15,7 @@ import LoadingScreen from './loadingScreen';
 import MemberSummaryDialog from '../memberSummary/view';
 import '@fontsource/plus-jakarta-sans';
 import '@fontsource/inter-tight';
+import ToggleChipButton from './toggleChipButton';
 
 const LoadWallet = ({
     // ux.init
@@ -41,7 +42,7 @@ const LoadWallet = ({
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
     // ux.saveTable
-    savedTables, saveTableData, 
+    savedTables, saveTableData, shouldDisplayChip
 
 } = {}) => {
     
@@ -232,6 +233,20 @@ const LoadWallet = ({
                                                     />
                                                 </IconButton>
                                             )}
+                                        </StyledTableCell>
+                                    );
+                                } else if (key === 'walletDescription') {
+                                    const displayChip = shouldDisplayChip(row.walletDescription, savedTables);
+                                    return (
+                                        <StyledTableCell
+                                            key={key}
+                                            align={value.align}
+                                            walletDescription={row.walletDescription}
+                                            outFlow={row.flow === 'Out'}
+                                        >
+                                            {row[key]}
+                                            {/* Render button if description starts with "transfer from" and matches a wallet in saved tables */}
+                                            {displayChip && (<ToggleChipButton />)}
                                         </StyledTableCell>
                                     );
                                 } else {
