@@ -72,37 +72,46 @@ const SaveTableUX = () => {
         }
     
         const transferTarget = walletDescription.substring("Transfer from ".length);
-        const matchingTable = savedTables.find(table => table.walletNames.includes(transferTarget));
+        const matchingTable = savedTables.length > 0 && savedTables.find(table => 
+            Array.isArray(table.walletNames) && table.walletNames.includes(transferTarget)
+        );
+    
         return matchingTable ? matchingTable.id : null;
     };
+    
 
     const saveTableData = (newData) => {
         setSavedTables(prevTables => {
-            const walletNames = newData.selectedWallets.map(wallet => wallet.name);
-            const walletAddresses = newData.selectedWallets.map(wallet => wallet.address);
+            const newTableWalletsIdentifier = newData.selectedWallets
+                .map(wallet => `${wallet.name}-${wallet.address}`)
+                .sort()
+                .join(',');
     
-            const newTableIdentifier = `${walletNames.join(',')}-${walletAddresses.join(',')}-${newData.moveName}`;
             const existingTableIndex = prevTables.findIndex(table => {
-                const existingTableIdentifier = `${table.walletNames.join(',')}-${table.walletAddresses.join(',')}-${table.moveName}`;
-                return newTableIdentifier === existingTableIdentifier;
+                const tableWalletsIdentifier = table.selectedWallets
+                    .map(wallet => `${wallet.name}-${wallet.address}`)
+                    .sort()
+                    .join(',');
+                return newTableWalletsIdentifier === tableWalletsIdentifier;
             });
     
             if (existingTableIndex !== -1) {
-                // Table already exists
-                setSaveTableSnackbarMessage(`Table not saved, was saved as Table # ${existingTableIndex + 1} already`);
+                setSaveTableSnackbarMessage(`Table not saved, saved as Table # ${existingTableIndex + 1} already`);
                 setSaveTableSnackbarOpen(true);
                 return prevTables;
             }
     
-            // Save new table
             const nextTableId = prevTables.length + 1;
             const newTable = { id: nextTableId, ...newData };
-    
             setSaveTableSnackbarMessage(`Table # ${nextTableId} saved`);
             setSaveTableSnackbarOpen(true);
     
             return [...prevTables, newTable];
         });
+    };
+    
+    const handleCloseSaveTableSnackbar = () => {
+        setSaveTableSnackbarOpen(false);
     };
     
     return {
@@ -116,7 +125,8 @@ const SaveTableUX = () => {
         getSavedTableIDFromDescription,
 
         saveTableSnackbarMessage,
-        saveTableSnackbarOpen
+        saveTableSnackbarOpen,
+        handleCloseSaveTableSnackbar
     }
 }
 

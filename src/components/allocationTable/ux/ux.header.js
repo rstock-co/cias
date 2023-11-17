@@ -12,6 +12,9 @@ const HeaderUX = ({
     saveTableData,
     savedTables,
     transferTxnsToBlend,
+    saveTableSnackbarMessage,
+    saveTableSnackbarOpen,
+    handleCloseSaveTableSnackbar
 } = {}) => {   
 
     const [showMemberName, setShowMemberName] = useState(false);
@@ -59,6 +62,9 @@ const HeaderUX = ({
         saveTableData,
         savedTables,
         transferTxnsToBlend,
+        saveTableSnackbarMessage,
+        saveTableSnackbarOpen,
+        handleCloseSaveTableSnackbar,
 
         showMemberName,
         showHeaderRow,

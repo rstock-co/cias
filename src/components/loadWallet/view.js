@@ -43,6 +43,7 @@ const LoadWallet = ({
 
     // ux.saveTable
     savedTables, saveTableData, handleToggleChip, transferTxnsToBlend, isTxnBlended, getSavedTableIDFromDescription,
+    saveTableSnackbarOpen, saveTableSnackbarMessage, handleCloseSaveTableSnackbar
 
 } = {}) => {
     
@@ -285,6 +286,9 @@ const LoadWallet = ({
             saveTableData={saveTableData}
             savedTables={savedTables}
             transferTxnsToBlend={transferTxnsToBlend}
+            saveTableSnackbarMessage={saveTableSnackbarMessage}
+            saveTableSnackbarOpen={saveTableSnackbarOpen}
+            handleCloseSaveTableSnackbar={handleCloseSaveTableSnackbar}
         />
 
         <ChainCashFlowDialog 

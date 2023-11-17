@@ -10,6 +10,7 @@ import "@fontsource/inter-tight";
 const AllocationTable = ({ 
     // original props
     dialogOpen, setDialogOpen, selectedWallets, move, saveTableData, savedTables, transferTxnsToBlend,
+    saveTableSnackbarMessage, saveTableSnackbarOpen, handleCloseSaveTableSnackbar,
     
     // props from ux.header
     showMemberName, showHeaderRow, adjustedNetTotal, sortBy, handleToggleMemberName, handleToggleHeaderRow, 
@@ -223,7 +224,7 @@ const AllocationTable = ({
     <Snackbar
         open={saveTableSnackbarOpen}
         autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
+        onClose={handleCloseSaveTableSnackbar}
         message={saveTableSnackbarMessage}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         sx={{ '& .MuiSnackbarContent-root': { backgroundColor: '#105c69', fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', boxShadow: '0 0 10px 3px #4ed3e6' } }}
