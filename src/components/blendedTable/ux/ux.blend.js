@@ -13,7 +13,9 @@ const BlendUX = () => {
                 <Box mb={1} display="flex" alignItems="center">
                     <Button variant="outlined">Action</Button>
                     <strong>Main Wallet: </strong> 
-                    {`${selectedWallets.map(wallet => formatWalletName(wallet.name)).join(', ')} (${selectedWallets.length} wallets)`}
+                    {selectedWallets && Array.isArray(selectedWallets) && selectedWallets.length > 0
+                        ? `${selectedWallets.map(wallet => formatWalletName(wallet.name)).join(', ')} (${selectedWallets.length} wallets)`
+                        : 'No wallets selected'}
                     <span>{`${Object.keys(transferTxnsToBlend).length} Transfer(s)`} (total: {calculateTotalAmount(transferTxnsToBlend)})</span>
                 </Box>
                 {Object.entries(transferTxnsToBlend).map(([id, table], index) => {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { generateTableWalletsIdentifier } from '../../../lib/functions/wallets';
 
-const SaveTableUX = ({selectedWallets}) => {
+const SaveTableUX = () => {
 
     const [savedTables, setSavedTables] = useState([]);
     const [transferTxnsToBlend, setTransferTxnsToBlend] = useState({});

@@ -285,6 +285,7 @@ const LoadWallet = ({
             setDialogOpen={setAllocationDialogOpen} 
             selectedWallets={selectedWallets} 
             move={filters.move} 
+            saveTableData={saveTableData}
             saveTableSnackbarMessage={saveTableSnackbarMessage}
             saveTableSnackbarOpen={saveTableSnackbarOpen}
             handleCloseSaveTableSnackbar={handleCloseSaveTableSnackbar}
@@ -295,9 +296,9 @@ const LoadWallet = ({
             tableData={tableData}
             dialogOpen={blendedAllocationDialogOpen}
             setDialogOpen={setBlendedAllocationDialogOpen} 
+            selectedWallets={selectedWallets} 
             transferTxnsToBlend={transferTxnsToBlend}
             savedTables={savedTables}
-            saveTableData={saveTableData}
         />
 
         <ChainCashFlowDialog 
