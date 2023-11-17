@@ -52,3 +52,13 @@ export const totalRowStyleWithBorder = {
     ...totalRowStyle,
     borderRight: "1px solid grey"
 };
+
+export const chipStyles = {
+    fontFamily: 'Inter Tight, sans-serif',
+    fontWeight: 'bold',
+    background: 'radial-gradient(circle at top center, #02343C 50vh, #01070D 100vh)',
+    boxShadow: '0 0 10px #02343C', // Adjust the color to match the lighter version of your Chip's background
+    '&:hover': {
+        boxShadow: '0 0 15px #02343C', // Make the glow a bit larger on hover
+    },
+};

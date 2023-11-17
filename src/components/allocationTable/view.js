@@ -1,8 +1,8 @@
 import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableCell, TableHead, 
-         TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar } from "@mui/material";
+         TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar, Chip } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray } from "../../lib/functions/format";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
-import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
+import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, chipStyles } from "./styles";
 import { printAllocationTable } from "../../lib/functions/actions";
 import { FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from '@mui/material';
 import "@fontsource/inter-tight";
@@ -35,10 +35,17 @@ return (
             },
         }}
     >
-        <DialogTitle>
-            {dialogTitle}
-            {savedTableId}
-        </DialogTitle>
+        <Box sx={{ display: 'flex', alignItems: 'center', padding: 0 }}>
+            <DialogTitle sx={{ marginRight: 1 }}>
+                {dialogTitle}
+            </DialogTitle>
+            {savedTableId && (
+                <Chip
+                    label={`Saved as Table # ${savedTableId}`}
+                    sx={chipStyles}
+                />
+            )}
+        </Box>
         <DialogContent style={{ overflowX: 'auto' }}>
             {/* maxHeight: '800px'  */}
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
@@ -219,7 +226,7 @@ return (
                 >
                     Save Table
                 </Button>}
-            <Button onClick={printAllocationTable}>Save as PDF</Button>
+            <Button onClick={printAllocationTable}>Download PDF</Button>
             <Button onClick={() => setDialogOpen(false)}>Close</Button>
         </DialogActions>
     </Dialog>
