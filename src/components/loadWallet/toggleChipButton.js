@@ -1,10 +1,10 @@
 import { Chip } from '@mui/material';
 import '@fontsource/inter-tight';
 
-const ToggleChipButton = ({onToggle, isBlended, txnId }) => (
+const ToggleChipButton = ({onToggle, isBlended, txnHash }) => (
     <Chip
       label={isBlended ? "Blended" : "Not blended"}
-      onClick={() => onToggle(txnId, !isBlended)}
+      onClick={() => onToggle(txnHash, !isBlended)}
       style={{
         fontFamily: 'Inter Tight, sans-serif',
         backgroundColor: isBlended ? '#048241' : '#c24a2d',

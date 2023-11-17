@@ -3,6 +3,7 @@ import { Box, Button } from "@mui/material";
 
 const BlendUX = ({ 
     transferTxnsToBlend,  
+    savedTables,
 
     totalContributionsAmount,
     aggregatedContributionsChainMap,
@@ -42,20 +43,33 @@ const BlendUX = ({
         } else {
             return (
                 <>
-                    <Box mb={2} display="flex" alignItems="center">
-                        <Button variant="outlined">Action</Button>
-                        <strong>Main Wallet:</strong> 
-                        {`${selectedWallets.map(wallet => formatWalletName(wallet.name)).join(', ')} (${selectedWallets.length} wallets)`}
-                        <span>{`${Object.keys(transferTxnsToBlend).length} Transfer(s)`} (total: {calculateTotalAmount(transferTxnsToBlend)} from {savedTableData.length} investors)</span>
-                    </Box>
-                    {Object.entries(transferTxnsToBlend).map(([id, table], index) => (
-                        <Box key={id} mb={2} display="flex" alignItems="center">
+                    <Box mb={2} display="flex" flexDirection="column">
+                        <Box mb={1} display="flex" alignItems="center">
                             <Button variant="outlined">Action</Button>
-                            <strong>Blend Wallet # {index + 1}:</strong> 
-                            {`${table.walletName}: ${table.txnsToBlend.length} Transfer(s)`} (total: {formatAmountDisplay(table.totalAmount)} from {savedTableData.length} investors) /n
+                            <strong>Main Wallet: </strong> 
+                            {`${selectedWallets.map(wallet => formatWalletName(wallet.name)).join(', ')} (${selectedWallets.length} wallets)`}
+                            <span>{`${Object.keys(transferTxnsToBlend).length} Transfer(s)`} (total: {calculateTotalAmount(transferTxnsToBlend)} from {savedTableData.length} investors)</span>
                         </Box>
-                    ))}
+                        {Object.entries(transferTxnsToBlend).map(([id, table], index) => {
+                            const matchingTable = savedTables.find(t => t.id.toString() === id);
+                            const walletNames = matchingTable && matchingTable.selectedWallets 
+                                                ? matchingTable.selectedWallets.map(wallet => formatWalletName(wallet.name)).join(', ') 
+                                                : 'Unknown Wallet';
+
+                            return (
+                                <Box key={id} mb={1} display="flex" alignItems="center">
+                                    <Button variant="outlined">Action</Button>
+                                    <strong>Blend Wallet # {index + 1}: </strong> 
+                                    {`${walletNames}: ${table.txnsToBlend.length} Transfer(s)`} (total: {formatAmountDisplay(table.totalAmount)} from {savedTableData.length} investors)
+                                </Box>
+                            );
+                        })}
+                    </Box>
                 </>
+
+
+
+
             );
         }
     };

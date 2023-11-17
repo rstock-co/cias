@@ -43,14 +43,6 @@ const AllocationTable = ({
             {/* maxHeight: '800px'  */}
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
                 {generateHeaderSummary(transferTxnsToBlend, isBlendedTable, selectedWallets, saveTableData)}
-                <Box mb={2}>
-                    <div>Total Contributions Amount: {totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</div>
-                    <div>Total Contributions: {formatChainMap(aggregatedContributionsChainMap)}</div>
-                    <div>Total Refunds Amount: {totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)}</div>
-                    <div>Total Refunds: {formatChainMap(aggregatedRefundsChainMap)}</div>
-                    <div>Total Net Amount: {totalNetAmount && formatAmountDisplay(totalNetAmount)}</div>
-                    <div>Total Transactions: {formatChainMap(aggregatedTxns)}</div>
-                </Box>
                 <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
                         <Typography component="div">
@@ -205,7 +197,8 @@ const AllocationTable = ({
             </TableContainer>
         </DialogContent>
         <DialogActions>
-            <Button 
+            {!isBlendedTable &&
+                <Button 
                 onClick={
                     () => saveTableData({
                         selectedWallets,
@@ -215,7 +208,7 @@ const AllocationTable = ({
                         totalContributions: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
                     })
                 }
-            >Save Table</Button>
+            >Save Table</Button>}
             <Button onClick={printAllocationTable}>Save as PDF</Button>
             <Button onClick={() => setDialogOpen(false)}>Close</Button>
         </DialogActions>

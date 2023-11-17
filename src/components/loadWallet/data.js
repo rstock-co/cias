@@ -85,12 +85,14 @@ const generateWalletDescription = (flow, to, from, moveName, fromMemberName, toM
 export const generateTableData = (txn, id, selectedAddresses) => {
     const walletName = txn.walletName;
     const timestamp = parseInt(txn.timeStamp) * 1000;
+    const hash = txn.hash;
+    const chain = txn.chain;
     const dateTime = formatTime(timestamp, 'America/Denver');
-    const link = <FormatTxnLink hash={txn.hash} chain={txn.chain} />;
-    const amount = formatAmountDecimals(txn.chain, txn.value);
+    const link = <FormatTxnLink hash={hash} chain={chain} />;
+    const amount = formatAmountDecimals(chain, txn.value);
     const amountDisplay = formatAmountDisplay(amount);
     const currency = txn.tokenSymbol;
-    const chain = txn.chain;
+    
     const from = txn.from.toLowerCase();
     const to = txn.to.toLowerCase();
 
@@ -122,6 +124,7 @@ export const generateTableData = (txn, id, selectedAddresses) => {
         
         // not displayed in table
         chain,
+        hash,
         timestamp,
         amount,
         memberName,

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const SaveTableUX = () => {
+const SaveTableUX = ({selectedWallets}) => {
 
     const [savedTables, setSavedTables] = useState([]);
     const [transferTxnsToBlend, setTransferTxnsToBlend] = useState({});
@@ -32,37 +32,40 @@ const SaveTableUX = () => {
         saveTablesToLocalStorage(savedTables);
     }, [savedTables]);
     
-    const handleToggleChip = (savedTableID, txnId, isBlended, txnAmount) => {
+    const handleToggleChip = (savedTableID, txnHash, isBlended, txnAmount) => {
         setTransferTxnsToBlend(prevTxnsToBlend => {
-            // Clone the previous state
-            const updatedTxnsToBlend = {...prevTxnsToBlend};
+            let tableTxns = prevTxnsToBlend[savedTableID];
     
-            // Initialize if not present
-            if (!updatedTxnsToBlend[savedTableID]) {
-                updatedTxnsToBlend[savedTableID] = { txnsToBlend: [], totalAmount: 0 };
+            if (!tableTxns) {
+                // If this is the first transaction to be blended for this table, initialize it
+                tableTxns = {
+                    txnsToBlend: [],
+                    totalAmount: 0,
+                };
             }
     
-            const tableTxns = updatedTxnsToBlend[savedTableID];
-    
             if (isBlended) {
-                if (!tableTxns.txnsToBlend.includes(txnId)) {
-                    tableTxns.txnsToBlend.push(txnId);
+                if (!tableTxns.txnsToBlend.includes(txnHash)) {
+                    tableTxns.txnsToBlend.push(txnHash);
                     tableTxns.totalAmount += txnAmount;
                 }
             } else {
-                if (tableTxns.txnsToBlend.includes(txnId)) {
-                    tableTxns.txnsToBlend = tableTxns.txnsToBlend.filter(id => id !== txnId);
+                if (tableTxns.txnsToBlend.includes(txnHash)) {
+                    tableTxns.txnsToBlend = tableTxns.txnsToBlend.filter(id => id !== txnHash);
                     tableTxns.totalAmount -= txnAmount;
                 }
             }
     
-            return updatedTxnsToBlend;
+            return {
+                ...prevTxnsToBlend,
+                [savedTableID]: tableTxns
+            };
         });
-    };
+    };    
     
-    const isTxnBlended = (savedTableID, txnId) => {
+    const isTxnBlended = (savedTableID, txnHash) => {
         const tableTxns = transferTxnsToBlend[savedTableID];
-        return tableTxns ? tableTxns.txnsToBlend.includes(txnId) : false;
+        return tableTxns ? tableTxns.txnsToBlend.includes(txnHash) : false;
     };
 
     // if the wallet description starts with "Transfer from", then it could have a blend chip rendered beside it
@@ -72,12 +75,18 @@ const SaveTableUX = () => {
         }
     
         const transferTarget = walletDescription.substring("Transfer from ".length);
-        const matchingTable = savedTables.length > 0 && savedTables.find(table => 
-            Array.isArray(table.walletNames) && table.walletNames.includes(transferTarget)
-        );
     
-        return matchingTable ? matchingTable.id : null;
+        for (let table of savedTables) {
+            for (let wallet of table.selectedWallets) {
+                if (wallet.name === transferTarget) {
+                    return table.id; // Return the ID of the matching table
+                }
+            }
+        }
+    
+        return null; // Return null if no matching table is found
     };
+    
     
 
     const saveTableData = (newData) => {

@@ -250,9 +250,9 @@ const LoadWallet = ({
                                             {row[key]}
                                             {displayChip && (
                                                 <ToggleChipButton 
-                                                    onToggle={(txnId, isBlended) => handleToggleChip(savedTableID, txnId, isBlended, row.amount)}
-                                                    isBlended={isTxnBlended(savedTableID, row.id)}
-                                                    txnId={row.id}
+                                                    onToggle={(txnHash, isBlended) => handleToggleChip(savedTableID, txnHash, isBlended, row.amount)}
+                                                    isBlended={isTxnBlended(savedTableID, row.hash)}
+                                                    txnHash={row.hash}
                                                 />
                                             )}
                                         </StyledTableCell>
