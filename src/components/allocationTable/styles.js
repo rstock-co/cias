@@ -55,16 +55,15 @@ export const totalRowStyleWithBorder = {
 
 export const chipStyles = {
     fontFamily: 'Inter Tight, sans-serif',
-    fontWeight: 'bold',
-    backgroundColor: '#094C4F',
+    fontWeight: 'regular',
+    fontSize: '15px',
+    backgroundColor: '#09576C',
     color: '#08E2EA',
     border: '1px solid #08E2EA',
     transform: 'translateY(-2px)',
-    boxShadow: '2px 2px 0 #095F71',
-    transition: 'box-shadow 0.3s ease-in-out',
+    boxShadow: '1.5px 1.5px 0 #095F71',
     '&:hover': {
-        backgroundColor: '#094c4f',
-        boxShadow: '0 0 10px #08E2EA',
+        boxShadow: '1.5px 1.5px 6px #096473',
     },
 };
 
