@@ -4,6 +4,7 @@ import { Box, Button } from "@mui/material";
 const BlendUX = ({ 
     transferTxnsToBlend,  
     savedTables,
+    tableData,
 
     totalContributionsAmount,
     aggregatedContributionsChainMap,
@@ -14,9 +15,19 @@ const BlendUX = ({
 } = {}) => {   
 
     const checkBlendedTable = () => {
-        return Object.values(transferTxnsToBlend).some(table => table.txnsToBlend && table.txnsToBlend.length > 0);
+        // Check if transferTxnsToBlend has any entries
+        if (!transferTxnsToBlend || Object.keys(transferTxnsToBlend).length === 0) {
+            return false;
+        }
+    
+        // Flatten all txnsToBlend into a single array
+        const allBlendedTxnIds = Object.values(transferTxnsToBlend)
+                                       .flatMap(table => table.txnsToBlend);
+    
+        // Check if any transaction hash in tableData matches with the allBlendedTxnIds and starts with "Transfer to"
+        return tableData.some(txn => allBlendedTxnIds.includes(txn.hash) && txn.walletDescription.startsWith("Transfer from"));
     };
-
+    
     const isBlendedTable = checkBlendedTable();
 
     const calculateTotalAmount = (transferTxnsToBlend) => {
