@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { generateMemberSummaryTableData } from '../../memberSummary/data';
 
-const DialogUX = ({isLoading, tableData = []}) => {
+const DialogUX = ({isLoading, tableData = [], isBlendedTable}) => {
 
     // DIALOG BOX STATES
     const [allocationDialogOpen, setAllocationDialogOpen] = useState(false);
+    const [blendedAllocationDialogOpen, setBlendedAllocationDialogOpen] = useState(false);
     const [chainDialogOpen, setChainDialogOpen] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [loadingDialogOpen, setLoadingDialogOpen] = useState(false);
@@ -25,8 +26,14 @@ const DialogUX = ({isLoading, tableData = []}) => {
     // DIALOG HANDLERS
     const handleGenerateAllocations = () => {
         setDialogKey(prevKey => prevKey + 1); // Increment key to force remount
-        setAllocationDialogOpen(true);
+    
+        if (isBlendedTable) {
+            setBlendedAllocationDialogOpen(true);
+        } else {
+            setAllocationDialogOpen(true);
+        }
     };
+    
 
     const handleGenerateChainFlow = () => {
         setChainDialogOpen(true);
@@ -45,6 +52,8 @@ const DialogUX = ({isLoading, tableData = []}) => {
     return {
         allocationDialogOpen,
         setAllocationDialogOpen,
+        blendedAllocationDialogOpen, 
+        setBlendedAllocationDialogOpen,
         handleGenerateAllocations,
 
         chainDialogOpen,

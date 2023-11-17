@@ -61,3 +61,9 @@ export const getMoveAttribute = (moveName, attributeKeys) => {
     }
     return result;
 };
+
+export const generateTableWalletsIdentifier = (wallets) => {
+    return wallets.map(wallet => `${wallet.name}-${wallet.address}`)
+                  .sort()
+                  .join(',');
+};

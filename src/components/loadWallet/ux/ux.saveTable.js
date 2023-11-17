@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { generateTableWalletsIdentifier } from '../../../lib/functions/wallets';
 
 const SaveTableUX = ({selectedWallets}) => {
 
@@ -87,31 +88,28 @@ const SaveTableUX = ({selectedWallets}) => {
         return null; // Return null if no matching table is found
     };
     
-    
-
     const saveTableData = (newData) => {
         setSavedTables(prevTables => {
-            const newTableWalletsIdentifier = newData.selectedWallets
-                .map(wallet => `${wallet.name}-${wallet.address}`)
-                .sort()
-                .join(',');
+            // Generate the identifier for the new table's wallets
+            const newTableWalletsIdentifier = generateTableWalletsIdentifier(newData.selectedWallets);
     
+            // Check if a table with the same wallets already exists
             const existingTableIndex = prevTables.findIndex(table => {
-                const tableWalletsIdentifier = table.selectedWallets
-                    .map(wallet => `${wallet.name}-${wallet.address}`)
-                    .sort()
-                    .join(',');
+                const tableWalletsIdentifier = generateTableWalletsIdentifier(table.selectedWallets);
                 return newTableWalletsIdentifier === tableWalletsIdentifier;
             });
     
             if (existingTableIndex !== -1) {
-                setSaveTableSnackbarMessage(`Table not saved, saved as Table # ${existingTableIndex + 1} already`);
+                // Table already exists
+                setSaveTableSnackbarMessage(`Table not saved, was saved as Table # ${existingTableIndex + 1} already`);
                 setSaveTableSnackbarOpen(true);
                 return prevTables;
             }
     
+            // Save new table
             const nextTableId = prevTables.length + 1;
             const newTable = { id: nextTableId, ...newData };
+    
             setSaveTableSnackbarMessage(`Table # ${nextTableId} saved`);
             setSaveTableSnackbarOpen(true);
     

@@ -90,4 +90,3 @@ export const calculateTotals = (data) => {
         return totals;
     }, initialTotals());
 };
-

@@ -7,15 +7,15 @@ import { allWallets as wallets } from "../../lib/data/wallets";
 import { moves } from '../../lib/data';
 import { isPoolInvestmentsWallet } from '../../lib/functions/wallets';
 import { copyToClipboard } from '../../lib/functions/actions';
-import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle } from './styles';
-import { loadWalletStyles, ColorButton } from './styles';
+import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle, loadWalletStyles, ColorButton } from './styles';
 import AllocationTable from '../allocationTable/';
+import BlendedAllocationTable from '../blendedTable/';
 import ChainCashFlowDialog from '../chainCashFlow/view';
 import LoadingScreen from './loadingScreen';
 import MemberSummaryDialog from '../memberSummary/view';
+import ToggleChipButton from './toggleChipButton';
 import '@fontsource/plus-jakarta-sans';
 import '@fontsource/inter-tight';
-import ToggleChipButton from './toggleChipButton';
 
 const LoadWallet = ({
     // ux.init
@@ -24,6 +24,12 @@ const LoadWallet = ({
     // ux.base
     tableData, handleSelectedWalletChange,
 
+    // ux.saveTable
+    savedTables, saveTableData, handleToggleChip, transferTxnsToBlend, isTxnBlended, getSavedTableIDFromDescription,
+    saveTableSnackbarOpen, saveTableSnackbarMessage, handleCloseSaveTableSnackbar,
+
+    // ux.blend
+
     // ux.select
     filterTypes, filterWallets,
     
@@ -31,7 +37,7 @@ const LoadWallet = ({
     filters, handleFilterValueChange, handleFilterChange, handleDateChange, handleClearFilters, isStartDateDefault, isEndDateDefault,
 
     // ux.dialog
-    allocationDialogOpen, setAllocationDialogOpen, handleGenerateAllocations,
+    allocationDialogOpen, setAllocationDialogOpen, blendedAllocationDialogOpen, setBlendedAllocationDialogOpen, handleGenerateAllocations,
     chainDialogOpen, setChainDialogOpen, handleGenerateChainFlow,
     snackbarOpen, setSnackbarOpen, handleCloseSnackbar,
     loadingDialogOpen,
@@ -40,10 +46,6 @@ const LoadWallet = ({
 
     // ux.calculations
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
-
-    // ux.saveTable
-    savedTables, saveTableData, handleToggleChip, transferTxnsToBlend, isTxnBlended, getSavedTableIDFromDescription,
-    saveTableSnackbarOpen, saveTableSnackbarMessage, handleCloseSaveTableSnackbar
 
 } = {}) => {
     
@@ -283,12 +285,19 @@ const LoadWallet = ({
             setDialogOpen={setAllocationDialogOpen} 
             selectedWallets={selectedWallets} 
             move={filters.move} 
-            saveTableData={saveTableData}
-            savedTables={savedTables}
-            transferTxnsToBlend={transferTxnsToBlend}
             saveTableSnackbarMessage={saveTableSnackbarMessage}
             saveTableSnackbarOpen={saveTableSnackbarOpen}
             handleCloseSaveTableSnackbar={handleCloseSaveTableSnackbar}
+        />
+
+        <BlendedAllocationTable
+            key={dialogKey}
+            tableData={tableData}
+            dialogOpen={blendedAllocationDialogOpen}
+            setDialogOpen={setBlendedAllocationDialogOpen} 
+            transferTxnsToBlend={transferTxnsToBlend}
+            savedTables={savedTables}
+            saveTableData={saveTableData}
         />
 
         <ChainCashFlowDialog 
