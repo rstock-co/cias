@@ -25,7 +25,7 @@ const LoadWallet = ({
     tableData, handleSelectedWalletChange,
 
     // ux.saveTable
-    savedTables, saveTableData, savedTableId, handleToggleChip, transferTxnsToBlend, isTxnBlended, getSavedTableIDFromDescription,
+    savedTables, saveTableData, deleteTableData, savedTableId, handleToggleChip, transferTxnsToBlend, isTxnBlended, getSavedTableIDFromDescription,
     saveTableSnackbarOpen, saveTableSnackbarMessage, handleCloseSaveTableSnackbar,
 
     // ux.blend
@@ -50,6 +50,7 @@ const LoadWallet = ({
     
     console.log("Txns to blend: ", transferTxnsToBlend);
     console.log("Saved Tables: ", savedTables);
+    console.log("Selected Wallets: ", selectedWallets)
     console.log("Saved Table ID: ", savedTableId);
     return (
 
@@ -285,6 +286,7 @@ const LoadWallet = ({
             selectedWallets={selectedWallets} 
             move={filters.move} 
             saveTableData={saveTableData}
+            deleteTableData={deleteTableData}
             savedTableId={savedTableId}
             saveTableSnackbarMessage={saveTableSnackbarMessage}
             saveTableSnackbarOpen={saveTableSnackbarOpen}

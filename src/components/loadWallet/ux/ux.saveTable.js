@@ -8,6 +8,7 @@ const SaveTableUX = ({selectedWallets}) => {
     const [isBlended, setIsBlended] = useState(false);
     const [saveTableSnackbarOpen, setSaveTableSnackbarOpen] = useState(false);
     const [saveTableSnackbarMessage, setSaveTableSnackbarMessage] = useState("");
+    const [savedTableId, setSavedTableId] = useState(null);
 
     const saveTablesToLocalStorage = (savedTables) => {
         const data = JSON.stringify(savedTables);
@@ -22,11 +23,46 @@ const SaveTableUX = ({selectedWallets}) => {
         return []; 
     };
 
-     // Load tables from local storage when the component mounts
+    const findSavedTableId = (existingTables, newWallets) => {
+        const newTableIdentifier = generateTableWalletsIdentifier(newWallets);
+        console.log("New Table Identifier:", newTableIdentifier);
+    
+        const foundTable = existingTables.find(table => {
+            const existingTableIdentifier = generateTableWalletsIdentifier(table.selectedWallets);
+            console.log("Existing Table Identifier:", existingTableIdentifier);
+    
+            return newTableIdentifier === existingTableIdentifier;
+        });
+    
+        if (foundTable) {
+            console.log("Found matching table with ID:", foundTable.id);
+        } else {
+            console.log("No matching table found");
+        }
+    
+        return foundTable ? foundTable.id : null;
+    };
+    
+
     useEffect(() => {
+        // Load tables from local storage
         const loadedTables = loadTablesFromLocalStorage();
         setSavedTables(loadedTables);
     }, []);
+    
+    useEffect(() => {
+        console.log("findSavedTableId called from useEffect...")
+        const newSavedTableId = findSavedTableId(savedTables, selectedWallets);
+        console.log("Saved Table ID from useEffect:", newSavedTableId);
+        setSavedTableId(newSavedTableId);
+    }, [savedTables, selectedWallets]);
+    
+
+    // DEBUGGING, remove later
+    useEffect(() => {
+        console.log("Saved Table ID updated in state:", savedTableId);
+    }, [savedTableId]);
+    
 
     // Save tables to local storage whenever they change
     useEffect(() => {
@@ -88,18 +124,7 @@ const SaveTableUX = ({selectedWallets}) => {
         return null; // Return null if no matching table is found
     };
 
-    const findSavedTableId = (existingTables, newWallets) => {
-        const newTableIdentifier = generateTableWalletsIdentifier(newWallets);
-    
-        const foundTable = existingTables.find(table => {
-            const existingTableIdentifier = generateTableWalletsIdentifier(table.selectedWallets);
-            return newTableIdentifier === existingTableIdentifier;
-        });
-    
-        return foundTable ? foundTable.id : null;
-    };  
-    
-    const savedTableID = findSavedTableId(savedTables, selectedWallets);
+  
     
     const saveTableData = (newData) => {
         setSavedTables(prevTables => {
@@ -134,7 +159,7 @@ const SaveTableUX = ({selectedWallets}) => {
         savedTables,
         saveTableData,
         deleteTableData,
-        savedTableID,
+        savedTableId,
         handleToggleChip,
         transferTxnsToBlend,
         isTxnBlended,
