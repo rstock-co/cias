@@ -9,7 +9,7 @@ import "@fontsource/inter-tight";
 
 const AllocationTable = ({ 
     // original props
-    dialogOpen, setDialogOpen, selectedWallets, move, saveTableData,
+    dialogOpen, setDialogOpen, selectedWallets, move, saveTableData, deleteTableData, savedTableId,
     saveTableSnackbarMessage, saveTableSnackbarOpen, handleCloseSaveTableSnackbar,
     
     // props from ux.header
@@ -20,7 +20,9 @@ const AllocationTable = ({
     totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
     aggregatedRefundsChainMap, aggregatedTxns, totalShare, sortedAllocationTableData,
 
-} = {}) => (
+} = {}) => {
+console.log("Saved Table ID: ", savedTableId)
+return (
 <>
     <Dialog
         open={dialogOpen}
@@ -35,6 +37,7 @@ const AllocationTable = ({
     >
         <DialogTitle>
             {dialogTitle}
+            {savedTableId}
         </DialogTitle>
         <DialogContent style={{ overflowX: 'auto' }}>
             {/* maxHeight: '800px'  */}
@@ -201,17 +204,21 @@ const AllocationTable = ({
             </TableContainer>
         </DialogContent>
         <DialogActions>
-            <Button 
-                onClick={
-                    () => saveTableData({
-                        selectedWallets,
-                        move,
-                        tableData: sortedAllocationTableData,
-                        numContributors: sortedAllocationTableData.length, 
-                        totalContributions: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
-                    })
-                }
-            >Save Table</Button>
+        {savedTableId && <Button onClick={() => deleteTableData(savedTableId)}>Delete Table</Button>}
+            {!savedTableId && 
+                <Button 
+                    onClick={
+                        () => saveTableData({
+                            selectedWallets,
+                            move,
+                            tableData: sortedAllocationTableData,
+                            numContributors: sortedAllocationTableData.length, 
+                            totalContributions: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
+                        })
+                    }
+                >
+                    Save Table
+                </Button>}
             <Button onClick={printAllocationTable}>Save as PDF</Button>
             <Button onClick={() => setDialogOpen(false)}>Close</Button>
         </DialogActions>
@@ -227,5 +234,6 @@ const AllocationTable = ({
     />
 </>
 );
+                }
 
 export default AllocationTable;

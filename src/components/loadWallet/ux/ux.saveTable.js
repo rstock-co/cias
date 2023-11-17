@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { generateTableWalletsIdentifier } from '../../../lib/functions/wallets';
 
-const SaveTableUX = () => {
+const SaveTableUX = ({selectedWallets}) => {
 
     const [savedTables, setSavedTables] = useState([]);
     const [transferTxnsToBlend, setTransferTxnsToBlend] = useState({});
@@ -87,25 +87,22 @@ const SaveTableUX = () => {
     
         return null; // Return null if no matching table is found
     };
+
+    const findSavedTableId = (existingTables, newWallets) => {
+        const newTableIdentifier = generateTableWalletsIdentifier(newWallets);
+    
+        const foundTable = existingTables.find(table => {
+            const existingTableIdentifier = generateTableWalletsIdentifier(table.selectedWallets);
+            return newTableIdentifier === existingTableIdentifier;
+        });
+    
+        return foundTable ? foundTable.id : null;
+    };  
+    
+    const savedTableID = findSavedTableId(savedTables, selectedWallets);
     
     const saveTableData = (newData) => {
         setSavedTables(prevTables => {
-            // Generate the identifier for the new table's wallets
-            const newTableWalletsIdentifier = generateTableWalletsIdentifier(newData.selectedWallets);
-    
-            // Check if a table with the same wallets already exists
-            const existingTableIndex = prevTables.findIndex(table => {
-                const tableWalletsIdentifier = generateTableWalletsIdentifier(table.selectedWallets);
-                return newTableWalletsIdentifier === tableWalletsIdentifier;
-            });
-    
-            if (existingTableIndex !== -1) {
-                // Table already exists
-                setSaveTableSnackbarMessage(`Table not saved, was saved as Table # ${existingTableIndex + 1} already`);
-                setSaveTableSnackbarOpen(true);
-                return prevTables;
-            }
-    
             // Save new table
             const nextTableId = prevTables.length + 1;
             const newTable = { id: nextTableId, ...newData };
@@ -116,6 +113,18 @@ const SaveTableUX = () => {
             return [...prevTables, newTable];
         });
     };
+
+    const deleteTableData = (tableId) => {
+        setSavedTables(prevTables => {
+            // Filter out the table with the specified ID
+            const updatedTables = prevTables.filter(table => table.id !== tableId);
+
+            setSaveTableSnackbarMessage(`Table # ${tableId} deleted`);
+            setSaveTableSnackbarOpen(true);
+    
+            return updatedTables;
+        });
+    };
     
     const handleCloseSaveTableSnackbar = () => {
         setSaveTableSnackbarOpen(false);
@@ -124,6 +133,8 @@ const SaveTableUX = () => {
     return {
         savedTables,
         saveTableData,
+        deleteTableData,
+        savedTableID,
         handleToggleChip,
         transferTxnsToBlend,
         isTxnBlended,

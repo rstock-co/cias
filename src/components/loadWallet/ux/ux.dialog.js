@@ -11,7 +11,6 @@ const DialogUX = ({isLoading, tableData = [], isBlendedTable}) => {
     const [loadingDialogOpen, setLoadingDialogOpen] = useState(false);
     const [memberSummaryDialogOpen, setMemberSummaryDialogOpen] = useState(false);
     const [memberSummaryData, setMemberSummaryData] = useState({});
-    const [dialogKey, setDialogKey] = useState(0);
 
     // Loading screen dialog box
     useEffect(() => {
@@ -25,8 +24,6 @@ const DialogUX = ({isLoading, tableData = [], isBlendedTable}) => {
 
     // DIALOG HANDLERS
     const handleGenerateAllocations = () => {
-        setDialogKey(prevKey => prevKey + 1); // Increment key to force remount
-    
         if (isBlendedTable) {
             setBlendedAllocationDialogOpen(true);
         } else {
@@ -70,8 +67,6 @@ const DialogUX = ({isLoading, tableData = [], isBlendedTable}) => {
         setMemberSummaryDialogOpen,
         handleMemberSummary,
         memberSummaryData,
-
-        dialogKey
     }
 }
 

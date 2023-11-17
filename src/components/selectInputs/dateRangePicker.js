@@ -24,7 +24,6 @@ export const DateRangeSelect = ({
                         textField: {
                             size: "small",
                             error: false,
-                            boxShadow: '0 0 3px 3px #b09946'
                         },
                     }}
                 value={[dayjs(startDate), dayjs(endDate)]}

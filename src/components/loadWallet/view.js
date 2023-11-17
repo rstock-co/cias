@@ -25,7 +25,7 @@ const LoadWallet = ({
     tableData, handleSelectedWalletChange,
 
     // ux.saveTable
-    savedTables, saveTableData, handleToggleChip, transferTxnsToBlend, isTxnBlended, getSavedTableIDFromDescription,
+    savedTables, saveTableData, savedTableId, handleToggleChip, transferTxnsToBlend, isTxnBlended, getSavedTableIDFromDescription,
     saveTableSnackbarOpen, saveTableSnackbarMessage, handleCloseSaveTableSnackbar,
 
     // ux.blend
@@ -42,7 +42,6 @@ const LoadWallet = ({
     snackbarOpen, setSnackbarOpen, handleCloseSnackbar,
     loadingDialogOpen,
     memberSummaryDialogOpen, setMemberSummaryDialogOpen, handleMemberSummary, memberSummaryData,
-    dialogKey,
 
     // ux.calculations
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
@@ -51,6 +50,7 @@ const LoadWallet = ({
     
     console.log("Txns to blend: ", transferTxnsToBlend);
     console.log("Saved Tables: ", savedTables);
+    console.log("Saved Table ID: ", savedTableId);
     return (
 
     <Box sx={loadWalletStyles}>
@@ -63,9 +63,9 @@ const LoadWallet = ({
                 </Typography >
                 {/* {formattedChainData.map((data, index) => (
                     <Typography variant="h6" align="left" key={index} >
-                        <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', color: 'white', letterSpacing: '1px' }}>
+                        {<span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', color: 'white', letterSpacing: '1px' }}>
                             {data}
-                        </span>
+                        </span>}
                     </Typography>
                 ))} */}
             </Box>
@@ -181,8 +181,8 @@ const LoadWallet = ({
                     {tableData.length > 0 && tableData.length < 900 && tableData.map((row) => (
                         <StyledTableRow
                             key={row.id}
-                            walletDescription={row.walletDescription}
-                            outFlow={row.flow === 'Out'}
+                            walletdescription={row.walletDescription}
+                            outflow={row.flow === 'Out'}
                         >
                             {Object.entries(propertyMap).map(([key, value]) => {
                                 if (key === 'from' || key === 'to') {
@@ -192,8 +192,8 @@ const LoadWallet = ({
                                         <StyledTableCell
                                             key={key}
                                             align={value.align}
-                                            walletDescription={row.walletDescription}
-                                            outFlow={row.flow === 'Out'}
+                                            walletdescription={row.walletDescription}
+                                            outflow={row.flow === 'Out'}
                                         >
                                             
                                             {row[key]}
@@ -246,8 +246,8 @@ const LoadWallet = ({
                                         <StyledTableCell
                                             key={key}
                                             align={value.align}
-                                            walletDescription={row.walletDescription}
-                                            outFlow={row.flow === 'Out'}
+                                            walletdescription={row.walletDescription}
+                                            outflow={row.flow === 'Out'}
                                         >
                                             {row[key]}
                                             {displayChip && (
@@ -264,8 +264,8 @@ const LoadWallet = ({
                                         <StyledTableCell
                                             key={key}
                                             align={value.align}
-                                            walletDescription={row.walletDescription}
-                                            outFlow={row.flow === 'Out'}
+                                            walletdescription={row.walletDescription}
+                                            outflow={row.flow === 'Out'}
                                         >
                                             {row[key]}
                                         </StyledTableCell>
@@ -279,20 +279,19 @@ const LoadWallet = ({
         </TableContainer>
 
         <AllocationTable 
-            key={dialogKey} 
             tableData={tableData} 
             dialogOpen={allocationDialogOpen} 
             setDialogOpen={setAllocationDialogOpen} 
             selectedWallets={selectedWallets} 
             move={filters.move} 
             saveTableData={saveTableData}
+            savedTableId={savedTableId}
             saveTableSnackbarMessage={saveTableSnackbarMessage}
             saveTableSnackbarOpen={saveTableSnackbarOpen}
             handleCloseSaveTableSnackbar={handleCloseSaveTableSnackbar}
         />
 
         <BlendedAllocationTable
-            key={dialogKey}
             tableData={tableData}
             dialogOpen={blendedAllocationDialogOpen}
             setDialogOpen={setBlendedAllocationDialogOpen} 

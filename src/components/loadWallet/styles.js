@@ -6,10 +6,10 @@ import '@fontsource/plus-jakarta-sans';
 import "@fontsource/inter-tight"
 import "@fontsource/inter"
 
-const determineBackground = (walletDescription, outFlow) => {
-    if (outFlow) {
+const determineBackground = (walletdescription, outflow) => {
+    if (outflow) {
         return 'linear-gradient(to bottom, #0A0216, #1D0F35)';
-    } else if (walletDescription && walletDescription.startsWith('Member')) {
+    } else if (walletdescription && walletdescription.startsWith('Member')) {
         return 'linear-gradient(to bottom, #0d0d0d, #000000)';
     } else {
         return 'linear-gradient(to bottom, #063142, #01070D)';
@@ -39,11 +39,11 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
 }));
 
 
-export const StyledTableCell = styled(TableCell)(({ theme, walletDescription, outFlow }) => ({
+export const StyledTableCell = styled(TableCell)(({ theme, walletdescription, outflow }) => ({
     position: 'relative',
     fontSize: 14,
     color: "#e6e6e6",
-    backgroundImage: determineBackground(walletDescription, outFlow),
+    backgroundImage: determineBackground(walletdescription, outflow),
     borderColor: '#5b5b5b',
     fontFamily: 'Inter Tight, sans-serif',
     [`&.${tableCellClasses.head}`]: {
@@ -63,7 +63,7 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletDescription, ou
         lineHeight: '35px', // Set line height to 'normal' to ensure text fits within the new height
     },
     '&::before': {
-        content: outFlow ? '""' : 'none',
+        content: outflow ? '""' : 'none',
         display: 'block',
         position: 'absolute',
         top: 0,
@@ -79,10 +79,10 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletDescription, ou
 }));
 
 
-export const StyledTableRow = styled(TableRow)(({ theme, outFlow, walletDescription }) => ({
-    backgroundColor: outFlow ? '#FFA50030' : (walletDescription && walletDescription.startsWith('Member')) ? 'white' : '#FFF9C4',
+export const StyledTableRow = styled(TableRow)(({ theme, outflow, walletdescription }) => ({
+    backgroundColor: outflow ? '#FFA50030' : (walletdescription && walletdescription.startsWith('Member')) ? 'white' : '#FFF9C4',
     '&:nth-of-type(odd)': {
-        backgroundColor: outFlow ? '#FFA50030' : (walletDescription && walletDescription.startsWith('Member')) ? theme.palette.action.hover : '#FFF9C4',
+        backgroundColor: outflow ? '#FFA50030' : (walletdescription && walletdescription.startsWith('Member')) ? theme.palette.action.hover : '#FFF9C4',
     },
     // hide last border
     '&:last-child td, &:last-child th': {

@@ -37,8 +37,8 @@ export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
                         onOpen={handleOpen}
                         onClose={handleClose}
                     >
-                        {wallets.map(wallet => (
-                            <MenuItem key={wallet.name} value={wallet.name}>
+                        {wallets.map((wallet,index) => (
+                            <MenuItem key={index} value={wallet.name}>
                                 <Checkbox checked={selectedWallets.some(sw => sw.name === wallet.name)} />
                                 <ListItemText primary={wallet.name} sx={{ fontFamily: 'Inter Tight, sans-serif' }} />
                             </MenuItem>
