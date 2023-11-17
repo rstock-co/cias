@@ -182,7 +182,7 @@ const LoadWallet = ({
                         <StyledTableRow
                             key={row.id}
                             walletdescription={row.walletDescription}
-                            outflow={row.flow === 'Out'}
+                            outflow={(row.flow === 'Out').toString()}
                         >
                             {Object.entries(propertyMap).map(([key, value]) => {
                                 if (key === 'from' || key === 'to') {
@@ -193,7 +193,7 @@ const LoadWallet = ({
                                             key={key}
                                             align={value.align}
                                             walletdescription={row.walletDescription}
-                                            outflow={row.flow === 'Out'}
+                                            outflow={(row.flow === 'Out').toString()}
                                         >
                                             
                                             {row[key]}
@@ -247,7 +247,7 @@ const LoadWallet = ({
                                             key={key}
                                             align={value.align}
                                             walletdescription={row.walletDescription}
-                                            outflow={row.flow === 'Out'}
+                                            outflow={(row.flow === 'Out').toString()}
                                         >
                                             {row[key]}
                                             {displayChip && (
@@ -265,7 +265,7 @@ const LoadWallet = ({
                                             key={key}
                                             align={value.align}
                                             walletdescription={row.walletDescription}
-                                            outflow={row.flow === 'Out'}
+                                            outflow={(row.flow === 'Out').toString()}
                                         >
                                             {row[key]}
                                         </StyledTableCell>

@@ -7,7 +7,7 @@ import "@fontsource/inter-tight"
 import "@fontsource/inter"
 
 const determineBackground = (walletdescription, outflow) => {
-    if (outflow) {
+    if (outflow === 'true') {
         return 'linear-gradient(to bottom, #0A0216, #1D0F35)';
     } else if (walletdescription && walletdescription.startsWith('Member')) {
         return 'linear-gradient(to bottom, #0d0d0d, #000000)';
@@ -80,9 +80,9 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletdescription, ou
 
 
 export const StyledTableRow = styled(TableRow)(({ theme, outflow, walletdescription }) => ({
-    backgroundColor: outflow ? '#FFA50030' : (walletdescription && walletdescription.startsWith('Member')) ? 'white' : '#FFF9C4',
+    backgroundColor: outflow === 'true' ? '#FFA50030' : (walletdescription && walletdescription.startsWith('Member')) ? 'white' : '#FFF9C4',
     '&:nth-of-type(odd)': {
-        backgroundColor: outflow ? '#FFA50030' : (walletdescription && walletdescription.startsWith('Member')) ? theme.palette.action.hover : '#FFF9C4',
+        backgroundColor: outflow === 'true' ? '#FFA50030' : (walletdescription && walletdescription.startsWith('Member')) ? theme.palette.action.hover : '#FFF9C4',
     },
     // hide last border
     '&:last-child td, &:last-child th': {
