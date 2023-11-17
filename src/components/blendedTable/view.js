@@ -5,6 +5,7 @@ import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
 import { printAllocationTable } from "../../lib/functions/actions";
 import { FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from '@mui/material';
+import TableTabs from "./tableTabs";
 import "@fontsource/inter-tight";
 
 const BlendedAllocationTable = ({ 
@@ -38,6 +39,7 @@ generateHeaderSummary,
    <DialogTitle>
        Blended Allocation Table
    </DialogTitle>
+   <TableTabs />
    <DialogContent style={{ overflowX: 'auto' }}>
        {/* maxHeight: '800px'  */}
        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
