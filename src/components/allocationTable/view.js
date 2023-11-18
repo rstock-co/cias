@@ -14,7 +14,7 @@ const AllocationTable = ({
     
     // props from ux.header
     showMemberName, showHeaderRow, adjustedNetTotal, sortBy, handleToggleMemberName, handleToggleHeaderRow, 
-    handleAdjustedNetTotalChange, handleSortByChange, dialogTitle, generatedDate,
+    handleAdjustedNetTotalChange, handleSortByChange, dialogTitle, generatedDate, generatedDateString,
 
     // props from ux.base
     totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
@@ -218,9 +218,13 @@ return (
                         () => saveTableData({
                             selectedWallets,
                             move,
+                            tableTitle: dialogTitle,
+                            generatedOnDate: generatedDateString,
                             tableData: sortedAllocationTableData,
+                            totals: {totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
+                                aggregatedRefundsChainMap, aggregatedTxns, totalShare},
                             numContributors: sortedAllocationTableData.length, 
-                            totalContributions: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
+                            totalNet: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
                         })
                     }
                 >

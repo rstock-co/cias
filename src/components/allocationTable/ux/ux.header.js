@@ -22,6 +22,7 @@ const HeaderUX = ({
     const [showMemberName, setShowMemberName] = useState(false);
     const [showHeaderRow, setShowHeaderRow] = useState(true);
     const [adjustedNetTotal, setAdjustedNetTotal] = useState("");
+    const [generatedDateString, setGeneratedDateString] = useState("");
     const [sortBy, setSortBy] = useState("Amount");
 
     const handleToggleMemberName = (event) => {
@@ -46,6 +47,7 @@ const HeaderUX = ({
         const now = new Date();
         const currentDate = format(now, "MMMM d, yyyy");
         const currentTime = format(roundToNearest5Minutes(now), "'@' h:mm aaaa 'MST'");
+        setGeneratedDateString(`${currentDate} ${currentTime}`);
         return (
             <>
                 {currentDate}
@@ -81,7 +83,8 @@ const HeaderUX = ({
         handleSortByChange,
 
         dialogTitle,
-        generatedDate
+        generatedDate,
+        generatedDateString
     }
 };
 

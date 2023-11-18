@@ -113,4 +113,23 @@ export const formatChainArray = (chainMap) => {
     return "";
 };
 
+export const extractTitle = (tableTitle) => {
+    // Pattern to match titles inside single quotes and extract them
+    const quotePattern = /'([^']+)'/;
+    let match = tableTitle.match(quotePattern);
 
+    if (match) {
+        // Return the matched group without quotes
+        return match[1];
+    } else {
+        // If no single quotes found, assume the format is "Aggregated Allocation Table for: Volcano, Vela-hyper-vlp (2 wallets)"
+        // Split by "for:", take the second part, replace commas with "|", remove parentheses and trim spaces
+        return tableTitle.split('for:')[1]
+            .replace(/,/g, '|')
+            .replace(/\([^)]+\)/g, '')
+            .trim()
+            .split('|')
+            .map(s => s.trim().replace(/-/g, ' '))
+            .join(' | ');
+    }
+}

@@ -39,12 +39,14 @@ generateHeaderSummary,
    <DialogTitle>
        Blended Allocation Table
    </DialogTitle>
-   <TableTabs />
+
+   <TableTabs savedTables={savedTables} selectedWallets={selectedWallets} />
+   
    <DialogContent style={{ overflowX: 'auto' }}>
        {/* maxHeight: '800px'  */}
        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
 
-           {generateHeaderSummary(transferTxnsToBlend, selectedWallets, savedTables)}
+           {savedTables.length > 0 && generateHeaderSummary(transferTxnsToBlend, selectedWallets, savedTables)}
 
            <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>

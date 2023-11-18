@@ -123,8 +123,6 @@ const SaveTableUX = ({selectedWallets}) => {
     
         return null; // Return null if no matching table is found
     };
-
-  
     
     const saveTableData = (newData) => {
         setSavedTables(prevTables => {
