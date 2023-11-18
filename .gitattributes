@@ -1,0 +1,4 @@
+.gitattributes !filter !diff
+src/lib/data/wallets.js filter=git-crypt diff=git-crypt
+src/lib/data/moves.js filter=git-crypt diff=git-crypt
+src/lib/data/keys.js filter=git-crypt diff=git-crypt
