@@ -1,0 +1,2 @@
+src/lib/wallets.js filter=git-crypt diff=git-crypt
+src/lib/moves.js filter=git-crypt diff=git-crypt

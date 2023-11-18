@@ -24,6 +24,4 @@ yarn-debug.log*
 yarn-error.log*
 
 # wallet data
-src/lib/data/wallets.js
-src/lib/data/moves.js
 src/lib/data/keys.js
