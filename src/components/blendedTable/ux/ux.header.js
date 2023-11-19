@@ -6,8 +6,9 @@ const HeaderUX = ({
     tableData, 
     dialogOpen, 
     setDialogOpen, 
-    savedTables,
     transferTxnsToBlend,
+    savedTables,
+    blendedTableList,
 } = {}) => {   
 
     const [showMemberName, setShowMemberName] = useState(false);
@@ -50,6 +51,7 @@ const HeaderUX = ({
         setDialogOpen, 
         savedTables,
         transferTxnsToBlend,
+        blendedTableList,
 
         showMemberName,
         showHeaderRow,

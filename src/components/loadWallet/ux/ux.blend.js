@@ -1,26 +1,26 @@
-const BlendUX = ({ 
-    transferTxnsToBlend,  
-    tableData,
-} = {}) => {   
+import { useState, useEffect } from 'react';
 
-    const checkBlendedTable = () => {
-        // Check if transferTxnsToBlend has any entries
-        if (!transferTxnsToBlend || Object.keys(transferTxnsToBlend).length === 0) {
-            return false;
-        }
+const BlendUX = ({ transferTxnsToBlend, savedTables } = {}) => {   
+    const [blendedTableList, setBlendedTableList] = useState([]);
+
+    useEffect(() => {
+        // Prepare a set to hold matching savedTable IDs
+        let matchingTableIds = new Set();
     
-        // Flatten all txnsToBlend into a single array
-        const allBlendedTxnIds = Object.values(transferTxnsToBlend)
-                                       .flatMap(table => table.txnsToBlend);
+        // Iterate through each transaction in transferTxnsToBlend
+        Object.entries(transferTxnsToBlend).forEach(([txnHash, txnInfo]) => {
+            // Check if the savedTable matches the transaction's table ID
+            if (savedTables.some(table => table.id === txnInfo.tableID)) {
+                matchingTableIds.add(txnInfo.tableID);
+            }
+        });
     
-        // Check if any transaction hash in tableData matches with the allBlendedTxnIds and starts with "Transfer to"
-        return tableData.some(txn => allBlendedTxnIds.includes(txn.hash) && txn.walletDescription.startsWith("Transfer from"));
-    };
-    
-    const isBlendedTable = checkBlendedTable();
+        // Update the state with the array of matching table IDs
+        setBlendedTableList(Array.from(matchingTableIds));
+    }, [transferTxnsToBlend, savedTables]); // Dependencies for useEffect
 
     return {
-        isBlendedTable,
+        blendedTableList
     };
 }
 

@@ -53,33 +53,19 @@ const SaveTableUX = ({selectedWallets}) => {
     
     const handleToggleChip = (savedTableID, txnHash, isBlended, txnAmount) => {
         setTransferTxnsToBlend(prevTxnsToBlend => {
-            let tableTxns = prevTxnsToBlend[savedTableID];
-    
-            if (!tableTxns) {
-                // If this is the first transaction to be blended for this table, initialize it
-                tableTxns = {
-                    txnsToBlend: [],
-                    totalAmount: 0,
-                };
-            }
-    
+            const newTxnsToBlend = { ...prevTxnsToBlend };
+        
             if (isBlended) {
-                if (!tableTxns.txnsToBlend.includes(txnHash)) {
-                    tableTxns.txnsToBlend.push(txnHash);
-                    tableTxns.totalAmount += txnAmount;
-                }
+                // Add or update the transaction hash with its table ID and amount
+                newTxnsToBlend[txnHash] = { tableID: savedTableID, amount: txnAmount };
             } else {
-                if (tableTxns.txnsToBlend.includes(txnHash)) {
-                    tableTxns.txnsToBlend = tableTxns.txnsToBlend.filter(id => id !== txnHash);
-                    tableTxns.totalAmount -= txnAmount;
-                }
+                // Remove the transaction hash if it exists
+                delete newTxnsToBlend[txnHash];
             }
-    
-            return {
-                ...prevTxnsToBlend,
-                [savedTableID]: tableTxns
-            };
+        
+            return newTxnsToBlend;
         });
+        
     };    
     
     const isTxnBlended = (savedTableID, txnHash) => {

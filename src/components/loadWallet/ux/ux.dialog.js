@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { generateMemberSummaryTableData } from '../../memberSummary/data';
 
-const DialogUX = ({isLoading, tableData = [], isBlendedTable}) => {
+const DialogUX = ({isLoading, tableData = [], blendedTableList}) => {
 
     // DIALOG BOX STATES
     const [allocationDialogOpen, setAllocationDialogOpen] = useState(false);
@@ -24,14 +24,13 @@ const DialogUX = ({isLoading, tableData = [], isBlendedTable}) => {
 
     // DIALOG HANDLERS
     const handleGenerateAllocations = () => {
-        if (isBlendedTable) {
+        if (blendedTableList.length > 0) {
             setBlendedAllocationDialogOpen(true);
         } else {
             setAllocationDialogOpen(true);
         }
     };
     
-
     const handleGenerateChainFlow = () => {
         setChainDialogOpen(true);
     };

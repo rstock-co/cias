@@ -3,13 +3,15 @@ import { StyledTabs, StyledTab } from './styles';
 import { extractTitle } from '../../lib/functions/format';
 import SavedTable from '../savedTable';
 
-const TableTabs = ({savedTables, selectedWallets}) => {
+const TableTabs = ({savedTables, transferTxnsToBlend, selectedWallets, blendedTableList}) => {
     
     const [tabIndex, setTabIndex] = useState(0);
     
     const handleChange = (event, newValue) => {
         setTabIndex(newValue);
     };
+
+    console.log("blendedTableList", blendedTableList)
 
     return (
         <>

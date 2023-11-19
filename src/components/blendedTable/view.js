@@ -10,6 +10,7 @@ const BlendedAllocationTable = ({
     selectedWallets, 
     transferTxnsToBlend, 
     savedTables, 
+    blendedTableList,
 } = {}) => (
 
     <>
@@ -28,7 +29,7 @@ const BlendedAllocationTable = ({
                 Blended Allocation Table
             </DialogTitle>
             <DialogContent style={{ overflowX: 'auto' }}>
-                <TableTabs savedTables={savedTables} selectedWallets={selectedWallets} />
+                <TableTabs savedTables={savedTables} transferTxnsToBlend={transferTxnsToBlend} selectedWallets={selectedWallets} blendedTableList={blendedTableList} />
             </DialogContent>
             
             <DialogActions>

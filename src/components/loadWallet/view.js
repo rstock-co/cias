@@ -29,6 +29,7 @@ const LoadWallet = ({
     saveTableSnackbarOpen, saveTableSnackbarMessage, handleCloseSaveTableSnackbar,
 
     // ux.blend
+    blendedTableList,
 
     // ux.select
     filterTypes, filterWallets,
@@ -46,7 +47,10 @@ const LoadWallet = ({
     // ux.calculations
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
-} = {}) => (
+} = {}) => {
+    
+    console.log("SavedTables: ",savedTables)
+    return(
 
     <Box sx={loadWalletStyles}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -294,6 +298,7 @@ const LoadWallet = ({
             selectedWallets={selectedWallets} 
             transferTxnsToBlend={transferTxnsToBlend}
             savedTables={savedTables}
+            blendedTableList={blendedTableList}
         />
 
         <ChainCashFlowDialog 
@@ -322,5 +327,5 @@ const LoadWallet = ({
         />
     </Box>
 );
-
+                        }
 export default LoadWallet;
