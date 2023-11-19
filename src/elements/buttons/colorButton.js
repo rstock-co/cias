@@ -1,6 +1,6 @@
 import { StyledColorButton } from "./styles";
 
-const ColorButton = ({ onClick, buttonText }) => {
+export const ColorButton = ({ onClick, buttonText }) => {
     return (
         <StyledColorButton
             variant="contained"
@@ -11,5 +11,3 @@ const ColorButton = ({ onClick, buttonText }) => {
         </StyledColorButton>
     );
 };
-
-export default ColorButton;

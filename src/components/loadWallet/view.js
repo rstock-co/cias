@@ -1,19 +1,18 @@
 import { Table, TableBody, TableContainer, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
+import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle, loadWalletStyles } from './styles';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../elements/dropdowns';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import PersonIcon from '@mui/icons-material/Person';
+import { ToggleChipButton, ColorButton } from '../../elements/buttons';
 import { propertyMap } from './data';
-import { allWallets as wallets } from "../../lib/data/wallets";
-import { moves } from '../../lib/data';
+import { allWallets as wallets, moves } from "../../lib/data";
 import { isPoolInvestmentsWallet } from '../../lib/functions/wallets';
 import { copyToClipboard } from '../../lib/functions/actions';
-import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle, loadWalletStyles, ColorButton } from './styles';
 import AllocationTable from '../allocationTable/';
 import BlendedAllocationTable from '../blendedTable/';
 import ChainCashFlowDialog from '../chainCashFlow/view';
 import LoadingScreen from '../loadingScreen/view';
 import MemberSummaryDialog from '../memberSummary/view';
-import ToggleChipButton from '../../elements/buttons/toggleChipButton';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import PersonIcon from '@mui/icons-material/Person';
 import '@fontsource/plus-jakarta-sans';
 import '@fontsource/inter-tight';
 

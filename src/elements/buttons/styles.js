@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Chip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const StyledColorButton = styled(Button)(({ theme }) => ({
@@ -15,3 +15,17 @@ export const StyledColorButton = styled(Button)(({ theme }) => ({
         boxShadow: '0 0 10px #08E2EA', // 0 0 20px #1D5AEF, 0 0 30px #1D5AEF, 0 0 40px #1D5AEF',
     },
 }));
+
+export const StyledChip = styled(Chip)(({ theme, isBlended }) => ({
+    fontFamily: 'Inter Tight, sans-serif',
+    backgroundColor: isBlended ? '#048241' : '#c24a2d',
+    color: 'white',
+    cursor: 'pointer',
+    marginLeft: 12,
+    marginBottom: 2,
+    height: 24,
+    fontSize: '0.8rem',
+    lineHeight: 1,
+    paddingTop: '2px',
+    paddingBottom: 0
+  }));
