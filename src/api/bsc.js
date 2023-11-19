@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { BSC_API_KEY } from '../lib/data/keys';
+import { BSC_API_KEY } from '../lib/data';
 
 export const getNormalTxnsBsc = async walletAddress => {
     const requestConfig = {

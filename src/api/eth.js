@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ETH_API_KEY } from '../lib/data/keys';
+import { ETH_API_KEY } from '../lib/data';
 
 export const getNormalTxnsEth = async walletAddress => {
     const requestConfig = {

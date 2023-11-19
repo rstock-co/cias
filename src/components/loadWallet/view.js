@@ -1,5 +1,5 @@
 import { Table, TableBody, TableContainer, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
-import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../components/dropdowns';
+import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../elements/dropdowns';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import PersonIcon from '@mui/icons-material/Person';
 import { propertyMap } from './data';
@@ -11,9 +11,9 @@ import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle, lo
 import AllocationTable from '../allocationTable/';
 import BlendedAllocationTable from '../blendedTable/';
 import ChainCashFlowDialog from '../chainCashFlow/view';
-import LoadingScreen from './loadingScreen';
+import LoadingScreen from '../loadingScreen/view';
 import MemberSummaryDialog from '../memberSummary/view';
-import ToggleChipButton from './toggleChipButton';
+import ToggleChipButton from '../../elements/buttons/toggleChipButton';
 import '@fontsource/plus-jakarta-sans';
 import '@fontsource/inter-tight';
 

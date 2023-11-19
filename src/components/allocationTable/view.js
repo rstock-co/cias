@@ -2,7 +2,7 @@ import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, Table
          TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar, Chip,
          FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray } from "../../lib/functions/format";
-import { SortAllocationSelect } from "../dropdowns/sortAllocationSelect";
+import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, chipStyles } from "./styles";
 import { printAllocationTable } from "../../lib/functions/actions";
 import "@fontsource/inter-tight";

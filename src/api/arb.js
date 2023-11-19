@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ARB_API_KEY } from '../lib/data/keys';
+import { ARB_API_KEY } from '../lib/data';
 
 export const getNormalTxnsArb = async walletAddress => {
     const requestConfig = {

@@ -150,12 +150,4 @@ export const calculateTotalValueByChain = (tableData) => {
         }, 0);
     });
     return result;
-}
-
-// LOADING SCREEN
-
-export const logos = {
-    arb: 'arb.png',
-    eth: 'eth.png',
-    bsc: 'busd.png',
 };

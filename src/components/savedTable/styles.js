@@ -26,13 +26,6 @@ export const WideStyledTableCell = styled(StyledTableCell)({
     padding: '13px 30px',  // Adjusted padding
 });
 
-export const RightAlignedTableCell = styled(StyledTableCell)({
-    textAlign: 'right', // Align text to the right
-    fontWeight: 'bold',  // Ensure text is bold
-});
-
-
-
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.action.hover,

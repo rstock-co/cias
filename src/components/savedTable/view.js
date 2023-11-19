@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Paper, TableContainer, Table, TableCell, TableHead, TableRow, TableBody, Box, Typography, 
         FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray } from "../../lib/functions/format";
-import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, RightAlignedTableCell } from "./styles";
-import { SortAllocationSelect } from "../dropdowns/sortAllocationSelect";
+import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
+import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import "@fontsource/inter-tight";
 
 const SavedTable = ({ 
