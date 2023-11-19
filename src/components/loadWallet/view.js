@@ -86,7 +86,7 @@ const LoadWallet = ({
                     ))}
 
                     {isPoolInvestmentsWallet(selectedWallets) && 
-                        <Box sx={{ marginTop: '70px' }}>
+                        <Box sx={{ marginTop: '35px' }}>
                             <MoveSelect moves={moves.map(move => move.moveName)} selectedMove={filters.move} handleChange={handleFilterChange('move')} />
                         </Box>}
                 </Box>

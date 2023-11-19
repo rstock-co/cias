@@ -9,6 +9,7 @@ export const StyledColorButton = styled(Button)(({ theme }) => ({
     transform: 'translateY(-2px)',
     boxShadow: '3.5px 3.5px 0 #095D6F',
     transition: 'box-shadow 0.3s ease-in-out',
+    marginTop: 12,
     '&:hover': {
         background: '#0A5067',
         backgroundColor: '#0c546e',
