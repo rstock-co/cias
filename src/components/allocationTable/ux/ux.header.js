@@ -4,19 +4,9 @@ import { roundToNearest5Minutes } from '../../../lib/functions/time';
 import { format } from 'date-fns';
 
 const HeaderUX = ({
-    tableData, 
-    dialogOpen, 
-    setDialogOpen, 
     selectedWallets, 
     move,
-    saveTableData,
-    deleteTableData,
-    savedTables,
-    savedTableId,
-    transferTxnsToBlend,
-    saveTableSnackbarMessage,
-    saveTableSnackbarOpen,
-    handleCloseSaveTableSnackbar
+    ...props
 } = {}) => {   
 
     const [showMemberName, setShowMemberName] = useState(false);
@@ -25,6 +15,7 @@ const HeaderUX = ({
     const [generatedDateString, setGeneratedDateString] = useState("");
     const [generatedDateHTML, setGeneratedDateHTML] = useState("");
     const [sortBy, setSortBy] = useState("Amount");
+    const [isAggregated, setIsAggregated] = useState(false);
 
     const handleToggleMemberName = (event) => {
         setShowMemberName(event.target.checked);
@@ -58,20 +49,14 @@ const HeaderUX = ({
         ))
     }, []); 
 
+    useEffect(() => {     
+        setIsAggregated(selectedWallets.length > 1);
+    }, [selectedWallets]);
+
     return {
-        tableData, 
-        dialogOpen, 
-        setDialogOpen, 
         selectedWallets, 
         move,
-        saveTableData,
-        deleteTableData,
-        savedTables,
-        savedTableId,
-        transferTxnsToBlend,
-        saveTableSnackbarMessage,
-        saveTableSnackbarOpen,
-        handleCloseSaveTableSnackbar,
+        ...props,
 
         showMemberName,
         showHeaderRow,
@@ -85,7 +70,8 @@ const HeaderUX = ({
 
         dialogTitle,
         generatedDateHTML,
-        generatedDateString
+        generatedDateString,
+        isAggregated
     }
 };
 

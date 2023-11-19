@@ -1,7 +1,7 @@
 import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableCell, TableHead, 
          TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar, Chip,
          FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
-import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray } from "../../lib/functions/format";
+import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray, formatAggregatedData } from "../../lib/functions/format";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, chipStyles } from "./styles";
 import { printAllocationTable } from "../../lib/functions/actions";
@@ -12,23 +12,26 @@ const AllocationTable = ({
     dialogOpen, setDialogOpen, selectedWallets, move, saveTableData, deleteTableData, savedTableId,
     saveTableSnackbarMessage, saveTableSnackbarOpen, handleCloseSaveTableSnackbar,
     
-    // props from ux.header
+    // ux.header
     showMemberName, showHeaderRow, adjustedNetTotal, sortBy, handleToggleMemberName, handleToggleHeaderRow, 
-    handleAdjustedNetTotalChange, handleSortByChange, dialogTitle, generatedDateHTML, generatedDateString,
+    handleAdjustedNetTotalChange, handleSortByChange, dialogTitle, generatedDateHTML, generatedDateString, isAggregated,
 
-    // props from ux.base
+    // ux.base
     totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
     aggregatedRefundsChainMap, aggregatedTxns, totalShare, sortedAllocationTableData,
 
-} = {}) => (
-    
+} = {}) => {
+
+    console.log("Aggregated Txns: ", aggregatedTxns)
+    console.log("sortedAllocationTableData: ", sortedAllocationTableData)
+    return (
     <>
         <Dialog
             open={dialogOpen}
             onClose={() => setDialogOpen(false)}
             PaperProps={{
                 style: {
-                    width: selectedWallets.length > 1 ? '80%' : '70%',
+                    width: isAggregated ? '90%' : '70%',
                     maxWidth: 'none', // need this to override maxWidth
                     boxShadow: '0 0 10px 3px #199eb0',
                 },
@@ -47,16 +50,17 @@ const AllocationTable = ({
             </Box>
 
             <DialogContent style={{ overflowX: 'auto' }}>
-                {/* maxHeight: '800px'  */}
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
                     <Box mb={2}>
                         <div>Total Contributions Amount: {totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</div>
                         <div>Total Contributions: {formatChainMap(aggregatedContributionsChainMap)}</div>
                         <div>Total Refunds Amount: {totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)}</div>
                         <div>Total Refunds: {formatChainMap(aggregatedRefundsChainMap)}</div>
-                        <div>Total Net Amount: {totalNetAmount && formatAmountDisplay(totalNetAmount)}</div>
-                        <div>Total Transactions: {formatChainMap(aggregatedTxns)}</div>
+                        <div>Total Net Amount: {totalNetAmount && formatAggregatedData(aggregatedTxns).totalAmounts}</div>
+                        <div>Total Transactions: {formatAggregatedData(aggregatedTxns).txns}</div>
                     </Box>
+
+                    {/* Header inputs and toggles */}
                     <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
                             <Typography component="div">
@@ -104,17 +108,17 @@ const AllocationTable = ({
                 </Box>
 
                 <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none' }}>
-                    {/* sx={{ maxHeight: '600px' }} */}
                     <Table sx={{ border: 'none', tableLayout: 'auto' }} aria-label="member table">
                         <TableHead>
+
+                            {/* Table title and generation date */}
                             <TableRow>
-                                {/* adjust colSpan as needed */}
-                                <TableCell colSpan={showMemberName ? 6 : 5} style={{ borderBottom: 'none' }}>
+                                <TableCell colSpan={showMemberName ? 7 : 6} style={{ borderBottom: 'none' }}>
                                     <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
                                         {dialogTitle}
                                     </Typography>
                                 </TableCell>
-                                <TableCell align="right" colSpan={selectedWallets.length > 1 ? 4 : 3} style={{ borderBottom: 'none' }}>
+                                <TableCell align="right" colSpan={isAggregated ? 3 : 2} style={{ borderBottom: 'none' }}>
                                 <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '16px', textAlign: 'right' }}>
                                     Generated On:
                                 </Typography>
@@ -123,15 +127,23 @@ const AllocationTable = ({
                                 </Typography>
                                 </TableCell>
                             </TableRow>
+
+                            {/* Table header row */}
                             <TableRow>
                                 <StyledTableCell>Member Wallet</StyledTableCell>
                                     {showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
                                 <StyledTableCell align="center">Share (%)</StyledTableCell>
                                 <StyledTableCell align="center">Total Net ($)</StyledTableCell>
-                                <StyledTableCell align="center" style={selectedWallets.length > 1 ? {} : { borderRight: "1px solid grey" }}>
+                                {isAggregated && (
+                                    <WideStyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
+                                        Total Net ($)
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Wallet)</div>
+                                    </WideStyledTableCell>
+                                )}
+                                <StyledTableCell align="center" style={isAggregated ? {} : { borderRight: "1px solid grey" }}>
                                     Total # Txns
                                 </StyledTableCell>
-                                {selectedWallets.length > 1 && (
+                                {isAggregated && (
                                     <WideStyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
                                         # of Txns
                                         <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Wallet)</div>
@@ -150,8 +162,9 @@ const AllocationTable = ({
                             </TableRow>
                         </TableHead>
 
-                        {/* Render table body */}
                         <TableBody>
+
+                            {/* Table totals row (with grey background) */}
                             {showHeaderRow && (
                                 <TableRow>
                                     <StyledTableCell component="th" scope="row" style={totalRowStyle}>
@@ -164,11 +177,14 @@ const AllocationTable = ({
                                     <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999'}}>
                                         {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
                                     </StyledTableCell>
-                                    <StyledTableCell align="center" style={selectedWallets.length > 1 ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
+                                    {isAggregated && (
+                                        <WideStyledTableCell align="center" style={totalRowStyleWithBorder}>{formatAggregatedData(aggregatedTxns).totalAmounts}</WideStyledTableCell>
+                                    )}
+                                    <StyledTableCell align="center" style={isAggregated ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
                                         {totalTxns}
                                     </StyledTableCell>
-                                    {selectedWallets.length > 1 && (
-                                        <WideStyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(aggregatedTxns)}</WideStyledTableCell>
+                                    {isAggregated && (
+                                        <WideStyledTableCell align="center" style={totalRowStyleWithBorder}>{formatAggregatedData(aggregatedTxns).txns}</WideStyledTableCell>
                                     )}
 
                                     <StyledTableCell align="center" style={totalRowStyle}>{totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
@@ -177,10 +193,12 @@ const AllocationTable = ({
                                     <StyledTableCell align="center" style={totalRowStyle}>{formatChainMap(aggregatedRefundsChainMap)}</StyledTableCell>
                                 </TableRow>
                             )}
+
+                            {/* Table data */}
                             {sortedAllocationTableData && sortedAllocationTableData.map((row) => (
-                                <StyledTableRow key={row.uniqueMemberWallet} walletdescription={row.walletDescription}>
+                                <StyledTableRow key={row.memberWallet} walletdescription={row.walletDescription}>
                                     <StyledTableCell component="th" scope="row">
-                                        {shortenAddress(row.uniqueMemberWallet)}
+                                        {shortenAddress(row.memberWallet)}
                                     </StyledTableCell>
                                     {showMemberName && (
                                         <StyledTableCell component="th" scope="row">
@@ -189,9 +207,12 @@ const AllocationTable = ({
                                     )}
                                     <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
                                     <StyledTableCell align="center">{formatAmountDisplay(row.adjustedNetAmount)}</StyledTableCell>
-                                    <StyledTableCell align="center" style={{ borderRight: selectedWallets.length > 1 ? "none" : "1px solid #b8b8b8" }}>{row.net}</StyledTableCell>
-                                    {selectedWallets.length > 1 && (
-                                        <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatChainArray(row.walletTxns)}</WideStyledTableCell>
+                                    {isAggregated && (
+                                        <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).totalAmounts}</WideStyledTableCell>
+                                    )}
+                                    <StyledTableCell align="center" style={{ borderRight: isAggregated ? "none" : "1px solid #b8b8b8" }}>{row.txns}</StyledTableCell>
+                                    {isAggregated && (
+                                        <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).txns}</WideStyledTableCell>
                                     )}
                                     <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
                                     <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }} >{formatChainData(row.contributionsChainMap)}</StyledTableCell>
@@ -205,6 +226,7 @@ const AllocationTable = ({
                 </TableContainer>
             </DialogContent>
 
+            {/* Buttons located below table */}
             <DialogActions>
             {savedTableId && <Button onClick={() => deleteTableData(savedTableId)}>Delete Table</Button>}
                 {!savedTableId && 
@@ -231,6 +253,7 @@ const AllocationTable = ({
 
         </Dialog>
 
+        {/* Information that renders when the 'Save Table' or 'Delete Table' button is clicked */}
         <Snackbar
             open={saveTableSnackbarOpen}
             autoHideDuration={3000}
@@ -241,6 +264,6 @@ const AllocationTable = ({
         />
     </>
 );
-
+                    };
 
 export default AllocationTable;

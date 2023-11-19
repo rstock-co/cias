@@ -1,5 +1,6 @@
 const getInitialWalletData = () => ({
-    amount: 0,
+    txns: 0,
+    netAmount: 0,
     contributions: 0,
     contributionsAmount: 0,
     contributionsChainMap: {},
@@ -19,57 +20,78 @@ const initialTotals = () => ({
     aggregatedTxns: {}
 });
 
+const dataIsNotAvailable = (tableData, selectedWallets) => (tableData.length === 0 || selectedWallets.length === 0);
+const txnIsNotRelevant = walletDescription => !walletDescription.startsWith('Member');
+
+const updateMemberWalletData = (data, flow, amount, chain) => {
+
+    const txnType = flow === 'In' ? 'contributions' : 'refunds';
+    data[txnType]++;
+    data[`${txnType}Amount`] += amount;
+    data[`${txnType}ChainMap`][chain] = (data[`${txnType}ChainMap`][chain] || 0) + 1;
+    data.netAmount += (flow === 'In' ? amount : -amount);
+    data.txns ++;
+};
+
+const updateInvestmentWalletData = (data, investmentWallet, selectedAddresses, selectedWallets, amount, flow) => {
+    if (selectedAddresses.has(investmentWallet)) {
+        let investmentWalletName = selectedWallets.find(w => w.address === investmentWallet)?.name;
+        investmentWalletName = investmentWalletName.replace(/ *\([^)]*\) */g, '');
+        data.walletTxns[investmentWalletName] = data.walletTxns[investmentWalletName] || { count: 0, totalAmount: 0 };
+        data.walletTxns[investmentWalletName].count++;
+        data.walletTxns[investmentWalletName].totalAmount += (flow === 'In' ? amount : -amount);
+    }
+};
+
 export const generateAllocationTableData = (tableData, selectedWallets) => {
-    if (tableData.length === 0 || selectedWallets.length === 0) return [];
+    // Check if data is available
+    if (dataIsNotAvailable(tableData, selectedWallets)) {
+        console.log('Data is not available');
+        return [];
+    }
+
     const selectedAddresses = new Set(selectedWallets.map(wallet => wallet.address.toLowerCase()));
 
-    let allocationTableData = tableData.reduce((acc, { from, to, flow, walletDescription, amount, chain, memberName }) => {
-        if (!walletDescription.startsWith('Member')) return acc;
+    // Debugging: Check the initial state of tableData and selectedWallets
+    console.log('tableData:', tableData);
+    console.log('selectedWallets:', selectedWallets);
 
-        const uniqueMemberWallet = flow === 'In' ? from : to;
-        const contributionWallet = flow === 'In' ? to : from;
-        const txnType = flow === 'In' ? 'contributions' : 'refunds';
-
-        const data = acc.find(entry => entry.uniqueMemberWallet === uniqueMemberWallet) || 
-        {
-            ...getInitialWalletData(),
-            uniqueMemberWallet,
-            memberName
-        };
-
-        data[txnType]++;
-        data[`${txnType}Amount`] += amount;
-        data[`${txnType}ChainMap`][chain] = (data[`${txnType}ChainMap`][chain] || 0) + 1;
-        data.amount += Number(amount);
-        data.net = data.contributions + data.refunds;
-        data.netAmount = data.contributionsAmount - data.refundsAmount;
-
-        if (selectedAddresses.has(contributionWallet)) {
-            let counterWalletName = selectedWallets.find(w => w.address === contributionWallet)?.name;
-            // Strip off the part within brackets
-            counterWalletName = counterWalletName.replace(/ *\([^)]*\) */g, '');
-            data.walletTxns[counterWalletName] = (data.walletTxns[counterWalletName] || 0) + 1;
+    const allocationTableData = tableData.reduce((allocationData, { from, to, flow, walletDescription, amount, chain, memberName }) => {
+        if (txnIsNotRelevant(walletDescription)) {
+            console.log(`Transaction not relevant: ${walletDescription}`);
+            return allocationData;
         }
 
-        if (!acc.find(entry => entry.uniqueMemberWallet === uniqueMemberWallet)) {
-            acc.push(data);
+        const [memberWallet, investmentWallet] = flow === 'In' ? [from, to] : [to, from];
+
+        const memberData = allocationData.find(entry => entry.memberWallet === memberWallet) || {...getInitialWalletData(), memberWallet, memberName};
+
+        updateMemberWalletData(memberData, flow, amount, chain);
+        updateInvestmentWalletData(memberData, investmentWallet, selectedAddresses, selectedWallets, amount, flow);
+
+        if (!allocationData.some(entry => entry.memberWallet === memberWallet)) {
+            allocationData.push(memberData);
         }
 
-        return acc;
-    }, []);
-
-    // Filter out entries with a net amount less than $0.50
-    allocationTableData = allocationTableData.filter(entry => Math.abs(entry.netAmount) >= 0.50);
+        return allocationData;
+    }, [])
 
     return allocationTableData;
 };
 
 // Calculate totals for the allocation table header row
 
-const aggregateCounts = (sourceMap, targetMap) => {
-    Object.entries(sourceMap).forEach(([key, count]) => {
-        targetMap[key] = (targetMap[key] || 0) + count;
-    });
+const aggregateCounts = (sourceData, targetData) => {
+    for (const key in sourceData) {
+        if (typeof sourceData[key] === 'object') {
+            if (typeof targetData[key] !== 'object') {
+                targetData[key] = {};
+            }
+            aggregateCounts(sourceData[key], targetData[key]);
+        } else if (typeof sourceData[key] === 'number') {
+            targetData[key] = (targetData[key] || 0) + sourceData[key];
+        }
+    }
 };
 
 export const calculateTotals = (data) => {
@@ -81,7 +103,7 @@ export const calculateTotals = (data) => {
         totals.totalContributionsAmount += wallet.contributionsAmount;
         totals.totalRefundsAmount += wallet.refundsAmount;
         totals.totalNetAmount = totals.totalContributionsAmount - totals.totalRefundsAmount;
-        totals.totalTxns += wallet.net;
+        totals.totalTxns += wallet.txns;
 
         aggregateCounts(wallet.contributionsChainMap, totals.aggregatedContributionsChainMap);
         aggregateCounts(wallet.refundsChainMap, totals.aggregatedRefundsChainMap);
