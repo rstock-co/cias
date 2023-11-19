@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef }from 'react';
 import { OutlinedInput, InputLabel, Select, TextField } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
@@ -77,28 +78,58 @@ export const CustomInputLabel = withStyles({
     },
 })(InputLabel);
 
-export const CustomOutlinedInput = withStyles({
-    root: {
-        color: '#6DFAFE',
-        fontFamily: 'Inter Tight, sans-serif',
-        height: '45px',
-        borderRadius: "10px",
-        '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#096B78', // Set the border color
-        },
-        '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#096B78', // Keep the border color on hover
-        },
-        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#096B78', // Keep the border color when focused
-            boxShadow: '0 0 3px 2px #096B78',
-        },
-        "& .MuiSvgIcon-root": {
-            color: "#6DFAFE !important",
-        },
+// Define the base styles
+const baseStyles = {
+    color: '#6DFAFE',
+    fontFamily: 'Inter Tight, sans-serif',
+    height: '45px',
+    borderRadius: "10px",
+    '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#096B78', // Set the border color
     },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+        borderColor: '#096B78', // Keep the border color on hover
+    },
+    "& .MuiSvgIcon-root": {
+        color: "#6DFAFE !important",
+    },
+};
 
+// Apply the base styles to OutlinedInput
+const StyledOutlinedInput = withStyles({
+    root: baseStyles,
 })(OutlinedInput);
+
+export const CustomOutlinedInput = (props) => {
+    const [isFocused, setIsFocused] = useState(true);
+    const inputRef = useRef(null); // Ref to track the input element
+
+    const handleClickOutside = (event) => {
+        // Check if the click was outside the input
+        if (inputRef.current && !inputRef.current.contains(event.target)) {
+            setIsFocused(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            // Cleanup the event listener
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    return (
+        <StyledOutlinedInput
+            {...props}
+            ref={inputRef} // Attach the ref
+            style={{ boxShadow: isFocused ? '0 0 3px 2px #096B78' : 'none' }}
+            onFocus={() => setIsFocused(true)} // Set focus on focus
+            onBlur={() => setIsFocused(false)} // Remove focus on blur
+        />
+    );
+};
 
 export const CustomSelect = withStyles({
     root: {
@@ -114,6 +145,7 @@ export const CustomSelect = withStyles({
         borderColor: '#096B78',
     },
 })(Select);
+
 
 // AUTO COMPLETE (FILTER WALLET SELECT) & DATE RANGE PICKERS
 
@@ -140,6 +172,7 @@ export const autoCompleteTheme = createTheme({
         MuiOutlinedInput: {
             styleOverrides: {
                 input: {
+                    borderRadius: "10px",
                     background: 'linear-gradient(to right, #022027, #02343C)',
                     padding: "10px 14px",
                     color: "#6DFAFE",

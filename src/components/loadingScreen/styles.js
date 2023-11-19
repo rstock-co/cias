@@ -12,6 +12,7 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
     marginTop: 'auto',
     marginBottom: 'auto',
     backgroundColor: 'transparent',
+    boxShadow: 'none',
   },
   '& .MuiDialogContent-root': {
     padding: '0px 24px 24px 24px',
