@@ -1,5 +1,9 @@
-const BaseUX = ({ data = {}, selectedWallets = [] } = {}) => {
+const BaseUX = ({ data, selectedWallets } = {}) => {
     const { totals = {}, ...restData } = data;
+
+    console.log("BaseUX data: ", data);
+    console.log("BaseUX totals: ", totals);
+    console.log("BaseUX restData: ", restData);
 
     return {
         ...restData, // Spread all the properties from data

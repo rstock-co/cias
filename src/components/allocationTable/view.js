@@ -14,7 +14,7 @@ const AllocationTable = ({
     
     // props from ux.header
     showMemberName, showHeaderRow, adjustedNetTotal, sortBy, handleToggleMemberName, handleToggleHeaderRow, 
-    handleAdjustedNetTotalChange, handleSortByChange, dialogTitle, generatedDate, generatedDateString,
+    handleAdjustedNetTotalChange, handleSortByChange, dialogTitle, generatedDateHTML, generatedDateString,
 
     // props from ux.base
     totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
@@ -119,7 +119,7 @@ return (
                                 Generated On:
                             </Typography>
                             <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '18px', textAlign: 'right' }}>
-                                {generatedDate()}
+                                {generatedDateHTML}
                             </Typography>
                             </TableCell>
                         </TableRow>
@@ -184,7 +184,7 @@ return (
                             </TableRow>
                         )}
                         {sortedAllocationTableData && sortedAllocationTableData.map((row) => (
-                            <StyledTableRow key={row.uniqueMemberWallet} walletDescription={row.walletDescription}>
+                            <StyledTableRow key={row.uniqueMemberWallet} walletdescription={row.walletDescription}>
                                 <StyledTableCell component="th" scope="row">
                                     {shortenAddress(row.uniqueMemberWallet)}
                                 </StyledTableCell>

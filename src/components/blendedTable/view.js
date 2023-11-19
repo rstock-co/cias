@@ -4,11 +4,12 @@ import TableTabs from "./tableTabs";
 import "@fontsource/inter-tight";
 
 const BlendedAllocationTable = ({ 
-    selectedWallets, 
-    savedTables, 
-    transferTxnsToBlend, 
+    tableData,
     dialogOpen, 
     setDialogOpen, 
+    selectedWallets, 
+    transferTxnsToBlend, 
+    savedTables, 
 } = {}) => (
 
     <>
