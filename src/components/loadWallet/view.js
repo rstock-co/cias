@@ -46,13 +46,7 @@ const LoadWallet = ({
     // ux.calculations
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
-} = {}) => {
-    
-    console.log("Txns to blend: ", transferTxnsToBlend);
-    console.log("Saved Tables: ", savedTables);
-    console.log("Selected Wallets: ", selectedWallets)
-    console.log("Saved Table ID: ", savedTableId);
-    return (
+} = {}) => (
 
     <Box sx={loadWalletStyles}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -327,7 +321,6 @@ const LoadWallet = ({
             setDialogOpen={setMemberSummaryDialogOpen} 
         />
     </Box>
-    );
-};
+);
 
 export default LoadWallet;

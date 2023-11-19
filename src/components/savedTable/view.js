@@ -38,22 +38,6 @@ const SavedTable = ({
         setSortBy(value);
     };
 
-    console.log("============SavedTable Props================")
-    console.log('Selected Wallets:', selectedWallets);
-    console.log('Table Data:', tableData);
-    console.log('Dialog Title:', dialogTitle);
-    console.log('Generated On Date:', generatedOnDate);
-    console.log('Total Transactions:', totalTxns);
-    console.log('Total Contributions Amount:', totalContributionsAmount);
-    console.log('Total Refunds Amount:', totalRefundsAmount);
-    console.log('Total Net Amount:', totalNetAmount);
-    console.log('Aggregated Contributions Chain Map:', aggregatedContributionsChainMap);
-    console.log('Aggregated Refunds Chain Map:', aggregatedRefundsChainMap);
-    console.log('Aggregated Transactions:', aggregatedTxns);
-    console.log('Total Share:', totalShare);
-    console.log("===========================================")
-
-
     return (
     <>
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>

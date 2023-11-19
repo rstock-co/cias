@@ -20,7 +20,6 @@ const FilterUX = ({
     });
 
     const handleFilterValueChange = curry((filterName, value) => {
-        console.log("filterName:", filterName, "value:", value);
         setFilters(prevFilters => ({
             ...prevFilters,
             [filterName]: value

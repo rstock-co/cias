@@ -12,14 +12,6 @@ export const filterTxns = (txns, { filterWallet, chain, dateRange, direction, mo
         return txns.filter(txn => txn.amount !== 0).sort((a, b) => b.timestamp - a.timestamp);
     }
 
-    console.log("filtering txns");
-    console.log("filterWallet:", filterWallet);
-    console.log("chain:", chain);
-    console.log("dateRange:", dateRange);
-    console.log("direction:", direction);
-    console.log("move:", move);
-    console.log("type:", type);
-
     return txns.filter(txn => {
         let matchesFilterWallet = true;
         let matchesChain = true;

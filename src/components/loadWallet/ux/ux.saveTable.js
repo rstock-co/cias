@@ -25,25 +25,16 @@ const SaveTableUX = ({selectedWallets}) => {
 
     const findSavedTableId = (existingTables, newWallets) => {
         const newTableIdentifier = generateTableWalletsIdentifier(newWallets);
-        console.log("New Table Identifier:", newTableIdentifier);
     
         const foundTable = existingTables.find(table => {
             const existingTableIdentifier = generateTableWalletsIdentifier(table.selectedWallets);
-            console.log("Existing Table Identifier:", existingTableIdentifier);
     
             return newTableIdentifier === existingTableIdentifier;
         });
     
-        if (foundTable) {
-            console.log("Found matching table with ID:", foundTable.id);
-        } else {
-            console.log("No matching table found");
-        }
-    
         return foundTable ? foundTable.id : null;
     };
     
-
     useEffect(() => {
         // Load tables from local storage
         const loadedTables = loadTablesFromLocalStorage();
@@ -51,19 +42,10 @@ const SaveTableUX = ({selectedWallets}) => {
     }, []);
     
     useEffect(() => {
-        console.log("findSavedTableId called from useEffect...")
         const newSavedTableId = findSavedTableId(savedTables, selectedWallets);
-        console.log("Saved Table ID from useEffect:", newSavedTableId);
         setSavedTableId(newSavedTableId);
     }, [savedTables, selectedWallets]);
     
-
-    // DEBUGGING, remove later
-    useEffect(() => {
-        console.log("Saved Table ID updated in state:", savedTableId);
-    }, [savedTableId]);
-    
-
     // Save tables to local storage whenever they change
     useEffect(() => {
         saveTablesToLocalStorage(savedTables);
