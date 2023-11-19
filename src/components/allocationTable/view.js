@@ -160,15 +160,9 @@ const AllocationTable = ({
                                     <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999' }}>
                                         {(totalShare * 100).toFixed(2)}%
                                     </StyledTableCell>
-                                    <StyledTableCell align="center" style={totalRowStyle}>
-                                    <StyledTableCell align="center" style={totalRowStyle}>
-                                        <div style={{ marginLeft: '5px' }}>
-                                            {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
-                                        </div>
+                                    <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999'}}>
+                                        {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
                                     </StyledTableCell>
-
-                                    </StyledTableCell>
-
                                     <StyledTableCell align="center" style={selectedWallets.length > 1 ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
                                         {totalTxns}
                                     </StyledTableCell>
@@ -223,7 +217,7 @@ const AllocationTable = ({
                                 totals: {totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
                                     aggregatedRefundsChainMap, aggregatedTxns, totalShare},
                                 numContributors: sortedAllocationTableData.length, 
-                                totalNet: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
+                                adjustedNetTotal: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
                             })
                         }
                     >

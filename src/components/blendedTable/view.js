@@ -1,12 +1,16 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import { StyledTabs, StyledTab } from './styles'; 
 import { printAllocationTable } from "../../lib/functions/actions";
-import TableTabs from "./tableTabs";
+import { extractTitle } from '../../lib/functions/format';
+import SavedTable from '../savedTable';
 import "@fontsource/inter-tight";
 
 const BlendedAllocationTable = ({ 
     tableData,
     dialogOpen, 
-    setDialogOpen, 
+    setDialogOpen,
+    tabIndex,
+    handleTabChange,
     selectedWallets, 
     transferTxnsToBlend, 
     savedTables, 
@@ -28,14 +32,23 @@ const BlendedAllocationTable = ({
             <DialogTitle>
                 Blended Allocation Table
             </DialogTitle>
+
             <DialogContent style={{ overflowX: 'auto' }}>
-                <TableTabs savedTables={savedTables} transferTxnsToBlend={transferTxnsToBlend} selectedWallets={selectedWallets} blendedTableList={blendedTableList} />
+                <StyledTabs value={tabIndex} onChange={handleTabChange}>
+                    {savedTables.length > 0 && savedTables.map(table => (
+                        <StyledTab key={table.id} label={`${extractTitle(table.tableTitle)}`} disableRipple />
+                    ))}
+                </StyledTabs>
+                {savedTables.length > 0 && (
+                    <SavedTable data={savedTables[tabIndex]} selectedWallets={selectedWallets} />
+                )}
             </DialogContent>
             
             <DialogActions>
-                <Button onClick={printAllocationTable}>Save as PDF</Button>
+                <Button onClick={printAllocationTable}>Download PDF</Button>
                 <Button onClick={() => setDialogOpen(false)}>Close</Button>
             </DialogActions>
+
         </Dialog>
 
     </>

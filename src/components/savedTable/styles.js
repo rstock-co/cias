@@ -24,8 +24,13 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 export const WideStyledTableCell = styled(StyledTableCell)({
     padding: '13px 30px',  // Adjusted padding
-    // any other specific styles
 });
+
+export const RightAlignedTableCell = styled(StyledTableCell)({
+    textAlign: 'right', // Align text to the right
+    fontWeight: 'bold',  // Ensure text is bold
+});
+
 
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -47,6 +52,17 @@ export const totalRowStyle = {
     padding: '4px 22px',  // Reduced padding; adjust as needed
     lineHeight: '1.2',    // Smaller line height; adjust as needed
 };
+
+export const adjustedNetStyle = {
+    fontWeight: 'bold',
+    fontFamily: 'Inter, sans-serif',
+    backgroundColor: '#999999',
+    padding: '4px 16px 4px 4px', // Adjusted padding
+    lineHeight: '1.2',
+    textAlign: 'right', // Align text to the right
+};
+
+
 
 export const totalRowStyleWithBorder = {
     ...totalRowStyle,

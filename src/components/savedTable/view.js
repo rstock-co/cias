@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Paper, TableContainer, Table, TableCell, TableHead, TableRow, TableBody, Box, Typography, 
         FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray } from "../../lib/functions/format";
-import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
+import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, RightAlignedTableCell } from "./styles";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import "@fontsource/inter-tight";
 
@@ -11,7 +11,7 @@ const SavedTable = ({
     selectedWallets, 
     
     // props from ux.base (data object)
-    tableData, dialogTitle, generatedOnDate,
+    tableData, tableTitle, generatedOnDate,
     totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
     aggregatedRefundsChainMap, aggregatedTxns, totalShare, 
 
@@ -103,7 +103,7 @@ const SavedTable = ({
                         {/* adjust colSpan as needed */}
                         <TableCell colSpan={showMemberName ? 6 : 5} style={{ borderBottom: 'none' }}>
                             <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
-                                {dialogTitle}
+                                {tableTitle}
                             </Typography>
                         </TableCell>
                         <TableCell align="right" colSpan={selectedWallets.length > 1 ? 4 : 3} style={{ borderBottom: 'none' }}>
@@ -153,15 +153,9 @@ const SavedTable = ({
                             <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999' }}>
                                 {(totalShare * 100).toFixed(2)}%
                             </StyledTableCell>
-                            <StyledTableCell align="center" style={totalRowStyle}>
-                            <StyledTableCell align="center" style={totalRowStyle}>
-                                <div style={{ marginLeft: '5px' }}>
-                                    {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
-                                </div>
+                            <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999'}}>
+                                {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
                             </StyledTableCell>
-
-                            </StyledTableCell>
-
                             <StyledTableCell align="center" style={selectedWallets.length > 1 ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
                                 {totalTxns}
                             </StyledTableCell>

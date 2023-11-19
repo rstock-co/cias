@@ -69,9 +69,10 @@ const SaveTableUX = ({selectedWallets}) => {
     };    
     
     const isTxnBlended = (savedTableID, txnHash) => {
-        const tableTxns = transferTxnsToBlend[savedTableID];
-        return tableTxns ? tableTxns.txnsToBlend.includes(txnHash) : false;
+        const txnInfo = transferTxnsToBlend[txnHash];
+        return txnInfo ? txnInfo.tableID === savedTableID : false;
     };
+    
 
     // if the wallet description starts with "Transfer from", then it could have a blend chip rendered beside it
     const getSavedTableIDFromDescription = (walletDescription, savedTables) => {

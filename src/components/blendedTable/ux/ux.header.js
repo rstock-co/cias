@@ -15,7 +15,8 @@ const HeaderUX = ({
     const [showHeaderRow, setShowHeaderRow] = useState(true);
     const [adjustedNetTotal, setAdjustedNetTotal] = useState("");
     const [sortBy, setSortBy] = useState("Amount");
-
+    const [tabIndex, setTabIndex] = useState(0);
+    
     const handleToggleMemberName = (event) => {
         setShowMemberName(event.target.checked);
     };
@@ -30,6 +31,10 @@ const HeaderUX = ({
 
     const handleSortByChange = (value) => {
         setSortBy(value);
+    };
+
+    const handleTabChange = (event, newValue) => {
+        setTabIndex(newValue);
     };
     
     const generatedDate = () => {
@@ -57,11 +62,13 @@ const HeaderUX = ({
         showHeaderRow,
         adjustedNetTotal,
         sortBy,
+        tabIndex,
 
         handleToggleMemberName,
         handleToggleHeaderRow,
         handleAdjustedNetTotalChange,
         handleSortByChange,
+        handleTabChange,
 
         generatedDate
     }

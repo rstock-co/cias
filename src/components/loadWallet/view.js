@@ -50,6 +50,9 @@ const LoadWallet = ({
 } = {}) => {
     
     console.log("SavedTables: ",savedTables)
+    console.log("BlendedTableList: ",  blendedTableList);
+    console.log("TransferTxnsToBlend: ", transferTxnsToBlend);
+    
     return(
 
     <Box sx={loadWalletStyles}>
