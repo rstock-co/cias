@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { generateAllocationTableTitle } from "../../../lib/functions/format";
 import { roundToNearest5Minutes } from '../../../lib/functions/time';
 import { format } from 'date-fns';
@@ -23,6 +23,7 @@ const HeaderUX = ({
     const [showHeaderRow, setShowHeaderRow] = useState(true);
     const [adjustedNetTotal, setAdjustedNetTotal] = useState("");
     const [generatedDateString, setGeneratedDateString] = useState("");
+    const [generatedDateHTML, setGeneratedDateHTML] = useState("");
     const [sortBy, setSortBy] = useState("Amount");
 
     const handleToggleMemberName = (event) => {
@@ -42,20 +43,20 @@ const HeaderUX = ({
     };
 
     const dialogTitle = generateAllocationTableTitle(selectedWallets, move);
-    
-    const generatedDate = () => {
+
+    useEffect(() => {
         const now = new Date();
         const currentDate = format(now, "MMMM d, yyyy");
         const currentTime = format(roundToNearest5Minutes(now), "'@' h:mm aaaa 'MST'");
         setGeneratedDateString(`${currentDate} ${currentTime}`);
-        return (
-            <>
+        setGeneratedDateHTML((
+            <div>
                 {currentDate}
                 <br />
                 {currentTime}
-            </>
-        );
-    }
+            </div>
+        ))
+    }, []); 
 
     return {
         tableData, 
@@ -83,7 +84,7 @@ const HeaderUX = ({
         handleSortByChange,
 
         dialogTitle,
-        generatedDate,
+        generatedDateHTML,
         generatedDateString
     }
 };

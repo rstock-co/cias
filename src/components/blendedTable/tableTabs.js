@@ -13,7 +13,7 @@ const TableTabs = ({savedTables, selectedWallets}) => {
     return (
         <>
             <StyledTabs value={tabIndex} onChange={handleChange}>
-                {savedTables.length > 0 && savedTables.map((table, index) => (
+                {savedTables.length > 0 && savedTables.map(table => (
                     <StyledTab key={table.id} label={`${extractTitle(table.tableTitle)}`} disableRipple />
                 ))}
             </StyledTabs>

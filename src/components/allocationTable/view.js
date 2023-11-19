@@ -1,10 +1,10 @@
 import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableCell, TableHead, 
-         TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar, Chip } from "@mui/material";
+         TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar, Chip,
+         FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray } from "../../lib/functions/format";
 import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, chipStyles } from "./styles";
 import { printAllocationTable } from "../../lib/functions/actions";
-import { FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from '@mui/material';
 import "@fontsource/inter-tight";
 
 const AllocationTable = ({ 
