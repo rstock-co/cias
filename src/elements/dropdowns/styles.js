@@ -140,6 +140,7 @@ export const autoCompleteTheme = createTheme({
         MuiOutlinedInput: {
             styleOverrides: {
                 input: {
+                    background: 'linear-gradient(to right, #022027, #02343C)',
                     padding: "10px 14px",
                     color: "#6DFAFE",
                     "&::placeholder": {
@@ -148,6 +149,7 @@ export const autoCompleteTheme = createTheme({
                 },
                 root: {
                     borderRadius: "10px",
+                    background: 'linear-gradient(to right, #022027, #02343C)',
                     fontFamily: 'Inter Tight, sans-serif',
                     height: "45px",
                     "&:hover": {

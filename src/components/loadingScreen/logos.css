@@ -1,19 +1,4 @@
-/* normal
-@keyframes spinCoin {
-    from {
-      transform: rotateY(0deg);
-    }
-    to {
-      transform: rotateY(360deg);
-    }
-  }
-  
-  .spinner {
-    animation: spinCoin 3s linear infinite;
-  } */
-
-
-/* spin faster at middle */
+/* effect:  spin faster at middle */
   @keyframes spinCoin {
     from {
       transform: rotateY(0deg);
@@ -40,24 +25,3 @@
   .spinner-bsc {
     filter: drop-shadow(0 0 5px rgb(240, 216, 128)); /* More subtle glow */
   }
-  
-  
-  
-  
-  /* don't go fully perpendicular
-  @keyframes spinCoin {
-    0% {
-      transform: rotateY(0deg) rotateX(10deg);
-    }
-    50% {
-      transform: rotateY(180deg) rotateX(10deg);
-    }
-    100% {
-      transform: rotateY(360deg) rotateX(10deg);
-    }
-  }
-  
-  .spinner {
-    animation: spinCoin 3s linear infinite;
-  }
-   */

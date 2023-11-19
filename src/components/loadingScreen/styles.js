@@ -1,6 +1,6 @@
 // styles.js
 import { styled } from '@mui/material/styles';
-import { Dialog, Paper, Box, Typography } from '@mui/material';
+import { Dialog, Box, Typography } from '@mui/material';
 
 export const StyledDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialog-paper': {
@@ -11,6 +11,7 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
     maxHeight: 'none',
     marginTop: 'auto',
     marginBottom: 'auto',
+    backgroundColor: 'transparent',
   },
   '& .MuiDialogContent-root': {
     padding: '0px 24px 24px 24px',
@@ -22,15 +23,6 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
     justifyContent: 'center',
   },
 }));
-
-export const StyledPaper = styled(Paper)({
-  boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1) !important', // Shadow for depth
-  overflow: 'hidden !important',
-  borderRadius: '15px !important', // Rounded corners
-  backgroundColor: '#FFF !important', // Set a visible background color
-  border: 'none !important', // Remove border
-  // ... other necessary styles
-});
 
 export const StyledBox = styled(Box)({
   background: 'radial-gradient(circle at top center, #02343C 50vh, #01070D 100vh)',
