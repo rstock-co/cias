@@ -2,7 +2,7 @@ import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, Table
          TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar, Chip,
          FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray } from "../../lib/functions/format";
-import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
+import { SortAllocationSelect } from "../dropdowns/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, chipStyles } from "./styles";
 import { printAllocationTable } from "../../lib/functions/actions";
 import "@fontsource/inter-tight";
@@ -34,7 +34,7 @@ const AllocationTable = ({
                 },
             }}
         >
-            <Box sx={{ display: 'flex', alignItems: 'center', padding: 0 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', padding: 0 }}>  
                 <DialogTitle sx={{ marginRight: 1 }}>
                     {dialogTitle}
                 </DialogTitle>
@@ -45,6 +45,7 @@ const AllocationTable = ({
                     />
                 )}
             </Box>
+
             <DialogContent style={{ overflowX: 'auto' }}>
                 {/* maxHeight: '800px'  */}
                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
@@ -203,6 +204,7 @@ const AllocationTable = ({
                     </Table>
                 </TableContainer>
             </DialogContent>
+
             <DialogActions>
             {savedTableId && <Button onClick={() => deleteTableData(savedTableId)}>Delete Table</Button>}
                 {!savedTableId && 
@@ -226,6 +228,7 @@ const AllocationTable = ({
                 <Button onClick={printAllocationTable}>Download PDF</Button>
                 <Button onClick={() => setDialogOpen(false)}>Close</Button>
             </DialogActions>
+
         </Dialog>
 
         <Snackbar

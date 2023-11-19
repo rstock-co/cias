@@ -3,7 +3,7 @@ import { Paper, TableContainer, Table, TableCell, TableHead, TableRow, TableBody
         FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray } from "../../lib/functions/format";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, RightAlignedTableCell } from "./styles";
-import { SortAllocationSelect } from "../selectInputs/sortAllocationSelect";
+import { SortAllocationSelect } from "../dropdowns/sortAllocationSelect";
 import "@fontsource/inter-tight";
 
 const SavedTable = ({ 
