@@ -17,9 +17,7 @@ const SaveTableUX = ({selectedWallets}) => {
 
     const loadTablesFromLocalStorage = () => {
         const data = localStorage.getItem('savedTables');
-        if (data) {
-            return JSON.parse(data);
-        }
+        if (data) return JSON.parse(data);
         return []; 
     };
 
@@ -72,7 +70,6 @@ const SaveTableUX = ({selectedWallets}) => {
         const txnInfo = transferTxnsToBlend[txnHash];
         return txnInfo ? txnInfo.tableID === savedTableID : false;
     };
-    
 
     // if the wallet description starts with "Transfer from", then it could have a blend chip rendered beside it
     const getSavedTableIDFromDescription = (walletDescription, savedTables) => {

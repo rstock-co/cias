@@ -1,13 +1,21 @@
 import React from 'react';
 import { DialogContent, Box } from '@mui/material';
-import { logos } from './data';
+import { StyledDialog, StyledPaper, StyledBox, StyledTypography } from './styles';
 import "@fontsource/inter-tight";
-import { StyledDialog, StyledBox, StyledTypography } from './styles';
 import "./logos.css";
+
+const logos = {
+  arb: 'arb.png',
+  eth: 'eth.png',
+  bsc: 'busd.png',
+};
 
 const LoadingScreen = ({ stableCoins, open = false }) => {
   return (
-    <StyledDialog open={open}>
+    <StyledDialog 
+      open={open}
+      components={{ Paper: StyledPaper }}
+    >
       <DialogContent>
         <StyledBox>
           {Object.entries(stableCoins).map(([coinKey, { name, chain, loading, txns }]) => (

@@ -1,5 +1,4 @@
 import { tableCellClasses } from '@mui/material/TableCell';
-import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { TableHead, TableCell, TableRow } from '@mui/material';
 import '@fontsource/plus-jakarta-sans';
@@ -24,6 +23,7 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
     position: 'sticky',
     top: 0,
     fontWeight: 700,
+    width: '100%',
     '& span': {
       opacity: 0,
       transform: 'translateY(-100%)',
@@ -112,21 +112,6 @@ export const loadScreenStyles = {
     height: '100vh',
     color: '#ffffff',
 };
-
-export const ColorButton = styled(Button)(({ theme }) => ({
-    background: '#04373A',
-    color: '#08E2EA',
-    border: '1px solid #08E2EA',
-    transform: 'translateY(-2px)',
-    boxShadow: '3.5px 3.5px 0 #095F71',
-    transition: 'box-shadow 0.3s ease-in-out',
-    // background: `linear-gradient(to right, #1D5AEF, #11BCE0)`,
-    '&:hover': {
-        // background: `linear-gradient(to right, #1D5AEF, #11BCE0)`,
-        backgroundColor: '#094c4f',
-        boxShadow: '0 0 10px #08E2EA', // 0 0 20px #1D5AEF, 0 0 30px #1D5AEF, 0 0 40px #1D5AEF',
-    },
-}));
 
 export const textGradientStyle = {
     background: '-webkit-linear-gradient(left, #11BCE0, #418CFE)',
