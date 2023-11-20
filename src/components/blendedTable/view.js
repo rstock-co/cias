@@ -44,7 +44,8 @@ const BlendedAllocationTable = ({
     tableTransferTotals,
 
     savedTableDisplayData,
-    dynamicDialogTitle
+    dynamicDialogTitle,
+    tabTitle
 
 } = {}) => {
     
@@ -94,7 +95,7 @@ const BlendedAllocationTable = ({
                     disableRipple
                 />                 
                 ))}
-                <StyledTab label={dynamicDialogTitle} disableRipple />
+                <StyledTab label={tabTitle} disableRipple />
             </StyledTabs>
             {savedTables.length > 0 && (
                 tabIndex < filteredBlendedTableIds.length

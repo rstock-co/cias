@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { roundToNearest5Minutes } from '../../../lib/functions/time';
 import { generateAllocationTableTitle, extractTitle } from "../../../lib/functions/format";
+import { formatAmountDisplay } from "../../../lib/functions/format";
 import { format } from 'date-fns';
 
 const HeaderUX = ({
@@ -72,6 +73,14 @@ const HeaderUX = ({
 
     const dialogTitle = `Blended ${generateAllocationTableTitle(selectedWallets, move)}`;
 
+    const tabTitle = dialogTitle === "Blended No wallets selected" ? '' : 
+        <div>
+            Blended Wallet:
+            <br />
+            {extractTitle(dialogTitle)}
+        </div>
+
+
     const savedTableDisplayData = useMemo(() => {
         return filteredBlendedTableIds.map(tableId => {
             const tableTitle = extractTitle(savedTables.find(table => table.id === tableId)?.tableTitle);
@@ -80,16 +89,21 @@ const HeaderUX = ({
         });
     }, [filteredBlendedTableIds, savedTables, tableTransferTotals]);
 
-    useEffect(() => {
-        if (tabIndex < savedTableDisplayData.length) {
-            // When one of the saved tables is selected
-            const selectedTable = savedTableDisplayData[tabIndex];
-            setDynamicDialogTitle(`Transfer Wallet # ${tabIndex + 1}: ${selectedTable.tableTitle}`);
+    const updateDynamicTitle = (index) => {
+        console.log("Updating dynamic title for index:", index);
+        if (index < savedTableDisplayData.length) {
+            const selectedTable = savedTableDisplayData[index];
+            setDynamicDialogTitle(`Transfer Wallet # ${index + 1}: ${selectedTable.tableTitle}`);
         } else {
-            // When the last tab (represented by TabTitle) is selected
             setDynamicDialogTitle(dialogTitle === "Blended No wallets selected" ? "Blended No wallets selected" : `Blended Wallet: ${extractTitle(dialogTitle)}`);
         }
-    }, [tabIndex, savedTableDisplayData, dialogTitle]);
+    };
+    
+    useEffect(() => {
+        if (savedTableDisplayData && savedTableDisplayData.length > 0) {
+            updateDynamicTitle(tabIndex);
+        }
+    }, [savedTableDisplayData, tabIndex]);
 
     useEffect(() => {
         // Calculate the total transfer amount for each table in filteredBlendedTableIds
@@ -131,6 +145,7 @@ const HeaderUX = ({
         tableTransferTotals,
         savedTableDisplayData,
         dynamicDialogTitle,
+        tabTitle,
     }
 };
 
