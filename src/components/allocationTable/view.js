@@ -236,13 +236,16 @@ const AllocationTable = ({
                                 selectedWallets,
                                 move,
                                 tableTitle: dialogTitle,
+                                isAggregated,
                                 generatedOnDate: generatedDateString,
                                 tableData: sortedAllocationTableData,
                                 totals: {totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
                                     aggregatedRefundsChainMap, aggregatedTxns, totalShare},
                                 numContributors: sortedAllocationTableData.length, 
                                 adjustedNetTotal: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
-                                isAggregated
+                                showMemberName: false,
+                                showHeaderRow: false,
+                                sortBy: "Amount"
                             })
                         }
                     >

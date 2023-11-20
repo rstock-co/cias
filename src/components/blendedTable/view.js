@@ -11,14 +11,30 @@ const BlendedAllocationTable = ({
     tabIndex,
     handleTabChange,
     selectedWallets, 
+    move,
     savedTables,
     filteredBlendedTableIds,
-    // getTableIdFromTabIndex,
+    dialogTitle,
+    TabTitle,
+
+    totalShare,
+    totalTxns, 
+    totalContributionsAmount, 
+    totalRefundsAmount, 
+    totalNetAmount, 
+    aggregatedContributionsChainMap, 
+    aggregatedRefundsChainMap, 
+    aggregatedTxns, 
+    sortedAllocationTableData,
+    adjustedNetTotal,
+    generatedDate,
+    isAggregated
 } = {}) => {
     
     console.log("filteredBlendedTableIds:", filteredBlendedTableIds);
     console.log("savedTables:", savedTables);
     console.log("tabIndex:", tabIndex);
+    console.log("dialogTitle:", dialogTitle)
 
     return (
 
@@ -41,11 +57,38 @@ const BlendedAllocationTable = ({
             <DialogContent style={{ overflowX: 'auto' }}>
             <StyledTabs value={tabIndex} onChange={handleTabChange}>
                 {filteredBlendedTableIds.map((tableId, index) => 
-                    <StyledTab key={index} label={`${extractTitle(savedTables.find(table => table.id === tableId).tableTitle)}`} disableRipple />
+                    <StyledTab
+                        key={index}
+                        label={
+                        <div>
+                            Transfer Wallet # {index + 1}
+                            <br />
+                            {extractTitle(savedTables.find((table) => table.id === tableId).tableTitle)}
+                        </div>
+                        }
+                        disableRipple
+                    />                  
                 )}
+                <StyledTab label={TabTitle} disableRipple />
             </StyledTabs>
-            {savedTables.length > 0 && tabIndex < filteredBlendedTableIds.length && (
-                <SavedTable data={savedTables.find(table => table.id === filteredBlendedTableIds[tabIndex])} selectedWallets={selectedWallets} />
+            {savedTables.length > 0 && (
+                tabIndex < filteredBlendedTableIds.length
+                ? <SavedTable data={savedTables.find(table => table.id === filteredBlendedTableIds[tabIndex])} selectedWallets={selectedWallets} />
+                : <SavedTable 
+                    data={{
+                        selectedWallets,
+                        move,
+                        tableTitle: dialogTitle,
+                        generatedOnDate: generatedDate,
+                        tableData: sortedAllocationTableData,
+                        totals: {totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
+                            aggregatedRefundsChainMap, aggregatedTxns, totalShare},
+                        numContributors: sortedAllocationTableData.length, 
+                        adjustedNetTotal: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
+                        isAggregated
+                    }}
+
+                />
             )}
             </DialogContent>
             

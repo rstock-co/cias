@@ -80,9 +80,9 @@ export const StyledTabs = styled(Tabs)(({ theme }) => ({
         }
     },
     '.MuiTabs-indicator': {
-        top: 3,
-        bottom: 3,
-        right: 3,
+        top: 9,
+        bottom: 9,
+        right: 9,
         height: 'auto',
         background: 'none',
         '&:after': {
@@ -95,7 +95,7 @@ export const StyledTabs = styled(Tabs)(({ theme }) => ({
             bottom: 0,
             borderRadius: 8,
             backgroundColor: theme.palette.mode === 'light' ? '#fff' : theme.palette.action.selected,
-            boxShadow: '0 4px 12px 0 rgba(0,0,0,0.16)',
+            boxShadow: '10px 10px 20px 0 rgba(0,0,0,0.16)',
         }
     }
 }));
@@ -104,8 +104,9 @@ export const StyledTab = styled(Tab)(({ theme }) => ({
     '&:hover': {
         opacity: 1
     },
-    minHeight: 44,
+    minHeight: 70,
     minWidth: 96,
+    fontFamily: 'Inter, sans-serif',
     [theme.breakpoints.up('md')]: {
         minWidth: 120
     },

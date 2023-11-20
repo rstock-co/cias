@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { roundToNearest5Minutes } from '../../../lib/functions/time';
+import { generateAllocationTableTitle, extractTitle } from "../../../lib/functions/format";
 import { format } from 'date-fns';
 
 const HeaderUX = ({
     savedTables,
+    selectedWallets,
+    move,
     blendedTableList,
     ...props
 } = {}) => {   
@@ -13,6 +16,11 @@ const HeaderUX = ({
     const [adjustedNetTotal, setAdjustedNetTotal] = useState("");
     const [sortBy, setSortBy] = useState("Amount");
     const [tabIndex, setTabIndex] = useState(0);
+    const [isAggregated, setIsAggregated] = useState(false);
+
+    useEffect(() => {     
+        setIsAggregated(selectedWallets.length > 1);
+    }, [selectedWallets]);
 
     const savedTableIds = savedTables.length > 0 ? savedTables.map(savedTable => savedTable.id) : [];
     const filteredBlendedTableIds = blendedTableList.filter(tableId => savedTableIds.includes(tableId));
@@ -50,6 +58,14 @@ const HeaderUX = ({
         );
     }
 
+    const dialogTitle = `Blended ${generateAllocationTableTitle(selectedWallets, move)}`;
+    const TabTitle = dialogTitle === "Blended No wallets selected" ? '' : 
+        <div>
+            Blended Wallet
+            <br />
+            {extractTitle(dialogTitle)}
+        </div>
+
     return {
         ...props,
         filteredBlendedTableIds,
@@ -66,7 +82,10 @@ const HeaderUX = ({
         handleSortByChange,
         handleTabChange,
 
-        generatedDate
+        generatedDate,
+        dialogTitle,
+        TabTitle,
+        isAggregated
     }
 };
 

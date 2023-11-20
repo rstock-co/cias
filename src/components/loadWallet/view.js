@@ -242,6 +242,7 @@ const LoadWallet = ({
                 dialogOpen={blendedAllocationDialogOpen}
                 setDialogOpen={setBlendedAllocationDialogOpen} 
                 selectedWallets={selectedWallets} 
+                move={filters.move} 
                 transferTxnsToBlend={transferTxnsToBlend}
                 savedTables={savedTables}
                 blendedTableList={blendedTableList}
