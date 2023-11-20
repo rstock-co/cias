@@ -13,6 +13,7 @@ const BlendedAllocationTable = ({
     selectedWallets, 
     move,
     savedTables,
+    setSavedTables,
     filteredBlendedTableIds,
     dialogTitle,
     TabTitle,
@@ -73,7 +74,7 @@ const BlendedAllocationTable = ({
             </StyledTabs>
             {savedTables.length > 0 && (
                 tabIndex < filteredBlendedTableIds.length
-                ? <SavedTable data={savedTables.find(table => table.id === filteredBlendedTableIds[tabIndex])} selectedWallets={selectedWallets} />
+                ? <SavedTable data={savedTables.find(table => table.id === filteredBlendedTableIds[tabIndex])} setSavedTables={setSavedTables} selectedWallets={selectedWallets} />
                 : <SavedTable 
                     data={{
                         selectedWallets,

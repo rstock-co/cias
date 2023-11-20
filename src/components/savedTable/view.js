@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Paper, TableContainer, Table, TableCell, TableHead, TableRow, TableBody, Box, Typography, 
         FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
@@ -11,34 +10,12 @@ const SavedTable = ({
     selectedWallets, 
     
     // props from ux.base (data object)
-    tableData, tableTitle, generatedOnDate, isAggregated,
+    id, tableData, tableTitle, generatedOnDate, isAggregated,
     totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
-    aggregatedRefundsChainMap, aggregatedTxns, totalShare, 
+    aggregatedRefundsChainMap, aggregatedTxns, totalShare, state,
+    headerStateSetters
 
 } = {}) => {
-
-    const [showMemberName, setShowMemberName] = useState(false);
-    const [showHeaderRow, setShowHeaderRow] = useState(true);
-    const [adjustedNetTotal, setAdjustedNetTotal] = useState("");
-    const [sortBy, setSortBy] = useState("Amount");
-
-    const handleToggleMemberName = (event) => {
-        setShowMemberName(event.target.checked);
-    };
-    
-    const handleToggleHeaderRow = (event) => {
-        setShowHeaderRow(event.target.checked);
-    };
-    
-    const handleAdjustedNetTotalChange = (event) => {
-        setAdjustedNetTotal(event.target.value);
-    };
-
-    const handleSortByChange = (value) => {
-        setSortBy(value);
-    };
-
-    console.log("isAggregated:", isAggregated)
 
     return (
     <>
@@ -59,8 +36,8 @@ const SavedTable = ({
                         Show Header Row (Totals)
                     </Typography>
                     <Switch
-                        checked={showHeaderRow}
-                        onChange={handleToggleHeaderRow}
+                        checked={state.showHeaderRow}
+                        onChange={(e) => headerStateSetters(id).toggleHeaderRow(e.target.checked)}
                         color="primary"
                         inputProps={{ 'aria-label': 'Toggle Header Row' }}
                     />
@@ -70,14 +47,14 @@ const SavedTable = ({
                         Show Member Name
                     </Typography>
                     <Switch
-                        checked={showMemberName}
-                        onChange={handleToggleMemberName}
+                        checked={state.showMemberName}
+                        onChange={(e) => headerStateSetters(id).toggleMemberName(e.target.checked)}
                         color="primary"
                         inputProps={{ 'aria-label': 'Toggle Member Name' }}
                     />
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                    <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
+                    <SortAllocationSelect sortBy={state.sortBy} handleSortByChange={(e) => headerStateSetters(id).sortBy(e.target.value)} />
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
                     <FormControl fullWidth sx={{ m: 1 }}>
@@ -87,8 +64,8 @@ const SavedTable = ({
                             variant="outlined"
                             size="small"
                             type="number"
-                            value={adjustedNetTotal}
-                            onChange={handleAdjustedNetTotalChange}
+                            value={state.adjustedNetTotal}
+                            onChange={(value) => headerStateSetters(id).adjustedNetTotal(value)}
                             startAdornment={<InputAdornment position="start">$</InputAdornment>}
                             label="Adjust Total Net Investment"
                             placeholder="Enter adjusted net investment"
@@ -105,12 +82,12 @@ const SavedTable = ({
 
                     {/* Table title and generation date */}
                     <TableRow>
-                        <TableCell colSpan={isAggregated ? 8 : showMemberName ? 7 : 6 } style={{ borderBottom: 'none' }}>
+                        <TableCell colSpan={isAggregated ? 8 : state.showMemberName ? 7 : 6 } style={{ borderBottom: 'none' }}>
                             <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
                                 {tableTitle}
                             </Typography>
                         </TableCell>
-                        <TableCell align="right" colSpan={isAggregated ? 3 : 2} style={{ borderBottom: 'none' }}>
+                        <TableCell align="right" colSpan={isAggregated ? 4 : 3} style={{ borderBottom: 'none' }}>
                         <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '16px', textAlign: 'right' }}>
                             Generated On:
                         </Typography>
@@ -123,7 +100,7 @@ const SavedTable = ({
                     {/* Table header row */}
                     <TableRow>
                         <StyledTableCell>Member Wallet</StyledTableCell>
-                            {showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
+                            {state.showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
                         <StyledTableCell align="center">Share (%)</StyledTableCell>
                         <StyledTableCell align="center">Total Net ($)</StyledTableCell>
                         {isAggregated && (
@@ -157,17 +134,17 @@ const SavedTable = ({
                 <TableBody>
 
                     {/* Table totals row (with grey background) */}
-                    {showHeaderRow && (
+                    {state.showHeaderRow && (
                         <TableRow>
                             <StyledTableCell component="th" scope="row" style={totalRowStyle}>
                                 Total
                             </StyledTableCell>
-                            {showMemberName && <StyledTableCell style={totalRowStyle}></StyledTableCell>}
+                            {state.showMemberName && <StyledTableCell style={totalRowStyle}></StyledTableCell>}
                             <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999' }}>
                                 {(totalShare * 100).toFixed(2)}%
                             </StyledTableCell>
                             <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999'}}>
-                                {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
+                                {totalTxns ? formatAmountDisplay(state.adjustedNetTotal !== "" ? Number(state.adjustedNetTotal) : totalNetAmount) : null}
                             </StyledTableCell>
                             {isAggregated && (
                                 <WideStyledTableCell align="center" style={totalRowStyleWithBorder}>{formatAggregatedData(aggregatedTxns).totalAmounts}</WideStyledTableCell>
@@ -192,7 +169,7 @@ const SavedTable = ({
                             <StyledTableCell component="th" scope="row">
                                 {shortenAddress(row.memberWallet)}
                             </StyledTableCell>
-                            {showMemberName && (
+                            {state.showMemberName && (
                                 <StyledTableCell component="th" scope="row">
                                     {row.memberName} 
                                 </StyledTableCell>

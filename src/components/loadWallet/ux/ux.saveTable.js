@@ -122,6 +122,7 @@ const SaveTableUX = ({selectedWallets}) => {
     return {
         savedTables,
         saveTableData,
+        setSavedTables,
         deleteTableData,
         savedTableId,
         handleToggleChip,

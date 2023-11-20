@@ -242,10 +242,13 @@ const AllocationTable = ({
                                 totals: {totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
                                     aggregatedRefundsChainMap, aggregatedTxns, totalShare},
                                 numContributors: sortedAllocationTableData.length, 
-                                adjustedNetTotal: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
-                                showMemberName: false,
-                                showHeaderRow: false,
-                                sortBy: "Amount"
+                                state: {
+                                    adjustedNetTotal: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
+                                    showMemberName: false,
+                                    showHeaderRow: false,
+                                    sortBy: "Amount",
+                                    transferTotal: 0,
+                                }
                             })
                         }
                     >
