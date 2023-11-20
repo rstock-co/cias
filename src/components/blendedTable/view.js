@@ -6,19 +6,19 @@ import SavedTable from '../savedTable';
 import "@fontsource/inter-tight";
 
 const BlendedAllocationTable = ({ 
-    tableData,
     dialogOpen, 
     setDialogOpen,
     tabIndex,
     handleTabChange,
     selectedWallets, 
-    transferTxnsToBlend, 
-    savedTables, 
-    blendedTableList,
+    savedTables,
+    filteredBlendedTableIds,
+    // getTableIdFromTabIndex,
 } = {}) => {
     
-    console.log("blendedTableList:", blendedTableList);
-    console.log("transferTxnsToBlend:", transferTxnsToBlend);
+    console.log("filteredBlendedTableIds:", filteredBlendedTableIds);
+    console.log("savedTables:", savedTables);
+    console.log("tabIndex:", tabIndex);
 
     return (
 
@@ -39,14 +39,14 @@ const BlendedAllocationTable = ({
             </DialogTitle>
 
             <DialogContent style={{ overflowX: 'auto' }}>
-                <StyledTabs value={tabIndex} onChange={handleTabChange}>
-                    {savedTables.length > 0 && savedTables.map(table => (
-                        <StyledTab key={table.id} label={`${extractTitle(table.tableTitle)}`} disableRipple />
-                    ))}
-                </StyledTabs>
-                {savedTables.length > 0 && (
-                    <SavedTable data={savedTables[tabIndex]} selectedWallets={selectedWallets} />
+            <StyledTabs value={tabIndex} onChange={handleTabChange}>
+                {filteredBlendedTableIds.map((tableId, index) => 
+                    <StyledTab key={index} label={`${extractTitle(savedTables.find(table => table.id === tableId).tableTitle)}`} disableRipple />
                 )}
+            </StyledTabs>
+            {savedTables.length > 0 && tabIndex < filteredBlendedTableIds.length && (
+                <SavedTable data={savedTables.find(table => table.id === filteredBlendedTableIds[tabIndex])} selectedWallets={selectedWallets} />
+            )}
             </DialogContent>
             
             <DialogActions>

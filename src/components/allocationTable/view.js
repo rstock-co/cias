@@ -242,6 +242,7 @@ const AllocationTable = ({
                                     aggregatedRefundsChainMap, aggregatedTxns, totalShare},
                                 numContributors: sortedAllocationTableData.length, 
                                 adjustedNetTotal: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
+                                isAggregated
                             })
                         }
                     >

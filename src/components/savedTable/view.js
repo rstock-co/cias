@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Paper, TableContainer, Table, TableCell, TableHead, TableRow, TableBody, Box, Typography, 
         FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
-import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray } from "../../lib/functions/format";
+import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import "@fontsource/inter-tight";
@@ -11,7 +11,7 @@ const SavedTable = ({
     selectedWallets, 
     
     // props from ux.base (data object)
-    tableData, tableTitle, generatedOnDate,
+    tableData, tableTitle, generatedOnDate, isAggregated,
     totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
     aggregatedRefundsChainMap, aggregatedTxns, totalShare, 
 
@@ -38,75 +38,79 @@ const SavedTable = ({
         setSortBy(value);
     };
 
+    console.log("isAggregated:", isAggregated)
+
     return (
     <>
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-                <Box mb={2}>
-                    <div>Total Contributions Amount: {totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</div>
-                    <div>Total Contributions: {formatChainMap(aggregatedContributionsChainMap)}</div>
-                    <div>Total Refunds Amount: {totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)}</div>
-                    <div>Total Refunds: {formatChainMap(aggregatedRefundsChainMap)}</div>
-                    <div>Total Net Amount: {totalNetAmount && formatAmountDisplay(totalNetAmount)}</div>
-                    <div>Total Transactions: {formatChainMap(aggregatedTxns)}</div>
-                </Box>
-                <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                        <Typography component="div">
-                            Show Header Row (Totals)
-                        </Typography>
-                        <Switch
-                            checked={showHeaderRow}
-                            onChange={handleToggleHeaderRow}
-                            color="primary"
-                            inputProps={{ 'aria-label': 'Toggle Header Row' }}
-                        />
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                        <Typography component="div">
-                            Show Member Name
-                        </Typography>
-                        <Switch
-                            checked={showMemberName}
-                            onChange={handleToggleMemberName}
-                            color="primary"
-                            inputProps={{ 'aria-label': 'Toggle Member Name' }}
-                        />
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                        <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                        <FormControl fullWidth sx={{ m: 1 }}>
-                            <InputLabel htmlFor="outlined-adornment-amount">Adjusted Net Total</InputLabel>
-                            <OutlinedInput
-                                id="outlined-adornment-amount"
-                                variant="outlined"
-                                size="small"
-                                type="number"
-                                value={adjustedNetTotal}
-                                onChange={handleAdjustedNetTotalChange}
-                                startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                                label="Adjust Total Net Investment"
-                                placeholder="Enter adjusted net investment"
-                                sx={{ margin: "none", maxWidth: 200, fontFamily: 'Inter Tight, sans-serif' }}
-                            />
-                        </FormControl>
-                    </Box>
-                </Box>
+            <Box mb={2}>
+                <div>Total Contributions Amount: {totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</div>
+                <div>Total Contributions: {formatChainMap(aggregatedContributionsChainMap)}</div>
+                <div>Total Refunds Amount: {totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)}</div>
+                <div>Total Refunds: {formatChainMap(aggregatedRefundsChainMap)}</div>
+                <div>Total Net Amount: {totalNetAmount && formatAggregatedData(aggregatedTxns).totalAmounts}</div>
+                <div>Total Transactions: {formatAggregatedData(aggregatedTxns).txns}</div>
             </Box>
 
+            {/* Header inputs and toggles */}
+            <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
+                    <Typography component="div">
+                        Show Header Row (Totals)
+                    </Typography>
+                    <Switch
+                        checked={showHeaderRow}
+                        onChange={handleToggleHeaderRow}
+                        color="primary"
+                        inputProps={{ 'aria-label': 'Toggle Header Row' }}
+                    />
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
+                    <Typography component="div">
+                        Show Member Name
+                    </Typography>
+                    <Switch
+                        checked={showMemberName}
+                        onChange={handleToggleMemberName}
+                        color="primary"
+                        inputProps={{ 'aria-label': 'Toggle Member Name' }}
+                    />
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
+                    <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
+                    <FormControl fullWidth sx={{ m: 1 }}>
+                        <InputLabel htmlFor="outlined-adornment-amount">Adjusted Net Total</InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-amount"
+                            variant="outlined"
+                            size="small"
+                            type="number"
+                            value={adjustedNetTotal}
+                            onChange={handleAdjustedNetTotalChange}
+                            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                            label="Adjust Total Net Investment"
+                            placeholder="Enter adjusted net investment"
+                            sx={{ margin: "none", maxWidth: 200, fontFamily: 'Inter Tight, sans-serif' }}
+                        />
+                    </FormControl>
+                </Box>
+            </Box>
+        </Box>
+
         <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none' }}>
-            {/* sx={{ maxHeight: '600px' }} */}
             <Table sx={{ border: 'none', tableLayout: 'auto' }} aria-label="member table">
                 <TableHead>
+
+                    {/* Table title and generation date */}
                     <TableRow>
-                        {/* adjust colSpan as needed */}
-                        <TableCell colSpan={showMemberName ? 6 : 5} style={{ borderBottom: 'none' }}>
+                        <TableCell colSpan={isAggregated ? 8 : showMemberName ? 7 : 6 } style={{ borderBottom: 'none' }}>
                             <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
                                 {tableTitle}
                             </Typography>
                         </TableCell>
-                        <TableCell align="right" colSpan={selectedWallets.length > 1 ? 4 : 3} style={{ borderBottom: 'none' }}>
+                        <TableCell align="right" colSpan={isAggregated ? 3 : 2} style={{ borderBottom: 'none' }}>
                         <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '16px', textAlign: 'right' }}>
                             Generated On:
                         </Typography>
@@ -115,15 +119,23 @@ const SavedTable = ({
                         </Typography>
                         </TableCell>
                     </TableRow>
+
+                    {/* Table header row */}
                     <TableRow>
                         <StyledTableCell>Member Wallet</StyledTableCell>
                             {showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
                         <StyledTableCell align="center">Share (%)</StyledTableCell>
                         <StyledTableCell align="center">Total Net ($)</StyledTableCell>
-                        <StyledTableCell align="center" style={selectedWallets.length > 1 ? {} : { borderRight: "1px solid grey" }}>
+                        {isAggregated && (
+                            <WideStyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
+                                Total Net ($)
+                                <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Wallet)</div>
+                            </WideStyledTableCell>
+                        )}
+                        <StyledTableCell align="center" style={isAggregated ? {} : { borderRight: "1px solid grey" }}>
                             Total # Txns
                         </StyledTableCell>
-                        {selectedWallets.length > 1 && (
+                        {isAggregated && (
                             <WideStyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
                                 # of Txns
                                 <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Wallet)</div>
@@ -142,8 +154,9 @@ const SavedTable = ({
                     </TableRow>
                 </TableHead>
 
-                {/* Render table body */}
                 <TableBody>
+
+                    {/* Table totals row (with grey background) */}
                     {showHeaderRow && (
                         <TableRow>
                             <StyledTableCell component="th" scope="row" style={totalRowStyle}>
@@ -156,11 +169,14 @@ const SavedTable = ({
                             <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999'}}>
                                 {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
                             </StyledTableCell>
-                            <StyledTableCell align="center" style={selectedWallets.length > 1 ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
+                            {isAggregated && (
+                                <WideStyledTableCell align="center" style={totalRowStyleWithBorder}>{formatAggregatedData(aggregatedTxns).totalAmounts}</WideStyledTableCell>
+                            )}
+                            <StyledTableCell align="center" style={isAggregated ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
                                 {totalTxns}
                             </StyledTableCell>
-                            {selectedWallets.length > 1 && (
-                                <WideStyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(aggregatedTxns)}</WideStyledTableCell>
+                            {isAggregated && (
+                                <WideStyledTableCell align="center" style={totalRowStyleWithBorder}>{formatAggregatedData(aggregatedTxns).txns}</WideStyledTableCell>
                             )}
 
                             <StyledTableCell align="center" style={totalRowStyle}>{totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
@@ -169,8 +185,10 @@ const SavedTable = ({
                             <StyledTableCell align="center" style={totalRowStyle}>{formatChainMap(aggregatedRefundsChainMap)}</StyledTableCell>
                         </TableRow>
                     )}
+
+                    {/* Table data */}
                     {tableData && tableData.map((row) => (
-                        <StyledTableRow key={row.memberWallet}>
+                        <StyledTableRow key={row.memberWallet} walletdescription={row.walletDescription}>
                             <StyledTableCell component="th" scope="row">
                                 {shortenAddress(row.memberWallet)}
                             </StyledTableCell>
@@ -181,9 +199,12 @@ const SavedTable = ({
                             )}
                             <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
                             <StyledTableCell align="center">{formatAmountDisplay(row.adjustedNetAmount)}</StyledTableCell>
-                            <StyledTableCell align="center" style={{ borderRight: selectedWallets.length > 1 ? "none" : "1px solid #b8b8b8" }}>{row.net}</StyledTableCell>
-                            {selectedWallets.length > 1 && (
-                                <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatChainArray(row.walletTxns)}</WideStyledTableCell>
+                            {isAggregated && (
+                                <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).totalAmounts}</WideStyledTableCell>
+                            )}
+                            <StyledTableCell align="center" style={{ borderRight: isAggregated ? "none" : "1px solid #b8b8b8" }}>{row.txns}</StyledTableCell>
+                            {isAggregated && (
+                                <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).txns}</WideStyledTableCell>
                             )}
                             <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
                             <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }} >{formatChainData(row.contributionsChainMap)}</StyledTableCell>

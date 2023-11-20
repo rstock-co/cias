@@ -3,12 +3,9 @@ import { roundToNearest5Minutes } from '../../../lib/functions/time';
 import { format } from 'date-fns';
 
 const HeaderUX = ({
-    tableData, 
-    dialogOpen, 
-    setDialogOpen, 
-    transferTxnsToBlend,
     savedTables,
     blendedTableList,
+    ...props
 } = {}) => {   
 
     const [showMemberName, setShowMemberName] = useState(false);
@@ -16,6 +13,9 @@ const HeaderUX = ({
     const [adjustedNetTotal, setAdjustedNetTotal] = useState("");
     const [sortBy, setSortBy] = useState("Amount");
     const [tabIndex, setTabIndex] = useState(0);
+
+    const savedTableIds = savedTables.length > 0 ? savedTables.map(savedTable => savedTable.id) : [];
+    const filteredBlendedTableIds = blendedTableList.filter(tableId => savedTableIds.includes(tableId));
     
     const handleToggleMemberName = (event) => {
         setShowMemberName(event.target.checked);
@@ -51,12 +51,8 @@ const HeaderUX = ({
     }
 
     return {
-        tableData, 
-        dialogOpen, 
-        setDialogOpen, 
-        savedTables,
-        transferTxnsToBlend,
-        blendedTableList,
+        ...props,
+        filteredBlendedTableIds,
 
         showMemberName,
         showHeaderRow,

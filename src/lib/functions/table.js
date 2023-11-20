@@ -44,21 +44,12 @@ const updateInvestmentWalletData = (data, investmentWallet, selectedAddresses, s
 };
 
 export const generateAllocationTableData = (tableData, selectedWallets) => {
-    // Check if data is available
-    if (dataIsNotAvailable(tableData, selectedWallets)) {
-        console.log('Data is not available');
-        return [];
-    }
+    if (dataIsNotAvailable(tableData, selectedWallets)) return [];
 
     const selectedAddresses = new Set(selectedWallets.map(wallet => wallet.address.toLowerCase()));
 
-    // Debugging: Check the initial state of tableData and selectedWallets
-    console.log('tableData:', tableData);
-    console.log('selectedWallets:', selectedWallets);
-
     const allocationTableData = tableData.reduce((allocationData, { from, to, flow, walletDescription, amount, chain, memberName }) => {
         if (txnIsNotRelevant(walletDescription)) {
-            console.log(`Transaction not relevant: ${walletDescription}`);
             return allocationData;
         }
 
