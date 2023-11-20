@@ -18,7 +18,7 @@ const determineBackground = (walletdescription, outflow) => {
 export const StyledTableHead = styled(TableHead)(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'center',
-    background: 'var(--body-bg)', // Define this variable or replace with a specific value
+    background: 'var(--body-bg)',
     zIndex: 7,
     position: 'sticky',
     top: 0,
@@ -31,13 +31,11 @@ export const StyledTableHead = styled(TableHead)(({ theme }) => ({
         duration: theme.transitions.duration.standard,
       }),
     },
-    '& .MuiTableCell-head': { // This targets Material-UI's TableCell with the 'head' class
-        padding: '8px 16px', // Example of reduced padding; adjust as needed
-        // If you have a specific height in mind, you can set it here:
-        height: '40px', // Or any other value that suits your design
+    '& .MuiTableCell-head': { 
+        padding: '8px 16px', 
+        height: '40px', 
     },
 }));
-
 
 export const StyledTableCell = styled(TableCell)(({ theme, walletdescription, outflow }) => ({
     position: 'relative',
@@ -57,10 +55,9 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletdescription, ou
         fontFamily: 'Inter, sans-serif'
     },
     [`&.${tableCellClasses.body}`]: {
-        // Set the height and line height for body cells
         height: '35px',
-        padding: '4px 8px', // Adjust padding to reduce height, keep horizontal padding the same for alignment
-        lineHeight: '35px', // Set line height to 'normal' to ensure text fits within the new height
+        padding: '4px 8px', 
+        lineHeight: '35px', 
     },
     '&::before': {
         content: outflow ? '""' : 'none',

@@ -17,6 +17,8 @@ const HeaderUX = ({
     const [sortBy, setSortBy] = useState("Amount");
     const [tabIndex, setTabIndex] = useState(0);
     const [isAggregated, setIsAggregated] = useState(false);
+    const [generatedDateString, setGeneratedDateString] = useState("");
+    const [generatedDateHTML, setGeneratedDateHTML] = useState("");
 
     useEffect(() => {     
         setIsAggregated(selectedWallets.length > 1);
@@ -44,20 +46,21 @@ const HeaderUX = ({
     const handleTabChange = (event, newValue) => {
         setTabIndex(newValue);
     };
-    
-    const generatedDate = () => {
+
+    useEffect(() => {
         const now = new Date();
         const currentDate = format(now, "MMMM d, yyyy");
         const currentTime = format(roundToNearest5Minutes(now), "'@' h:mm aaaa 'MST'");
-        return (
-            <>
+        setGeneratedDateString(`${currentDate} ${currentTime}`);
+        setGeneratedDateHTML((
+            <div>
                 {currentDate}
                 <br />
                 {currentTime}
-            </>
-        );
-    }
-
+            </div>
+        ))
+    }, []); 
+    
     const dialogTitle = `Blended ${generateAllocationTableTitle(selectedWallets, move)}`;
     const TabTitle = dialogTitle === "Blended No wallets selected" ? '' : 
         <div>
@@ -82,7 +85,8 @@ const HeaderUX = ({
         handleSortByChange,
         handleTabChange,
 
-        generatedDate,
+        generatedDateString,
+        generatedDateHTML,
         dialogTitle,
         TabTitle,
         isAggregated

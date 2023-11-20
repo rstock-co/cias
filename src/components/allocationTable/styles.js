@@ -11,7 +11,8 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
         fontWeight: 'bold',
         fontSize: 16,
         fontFamily: 'Inter, sans-serif',
-        borderBottom: 'none'
+        borderBottom: 'none',
+        position: 'sticky',
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,

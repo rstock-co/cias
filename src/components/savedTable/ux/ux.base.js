@@ -29,7 +29,6 @@ const BaseUX = ({ data, selectedWallets, setSavedTables } = {}) => {
             setSavedTables(prevTables => {
                 return prevTables.map(table => {
                     if (table.id === tableId) {
-                        // Assuming totals is part of each table's data
                         const updatedTableData = adjustIndividualShares(table.tableData, value, table.totals);
                         return { ...table, tableData: updatedTableData };
                     }
