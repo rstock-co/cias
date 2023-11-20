@@ -54,7 +54,7 @@ const SavedTable = ({
                     />
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                    <SortAllocationSelect sortBy={state.sortBy} handleSortByChange={(e) => headerStateSetters(id).sortBy(e.target.value)} />
+                    <SortAllocationSelect sortBy={state.sortBy} handleSortByChange={(value) => headerStateSetters(id).sortBy(value)} />
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
                     <FormControl fullWidth sx={{ m: 1 }}>
@@ -65,7 +65,7 @@ const SavedTable = ({
                             size="small"
                             type="number"
                             value={state.adjustedNetTotal}
-                            onChange={(value) => headerStateSetters(id).adjustedNetTotal(value)}
+                            onChange={(e) => headerStateSetters(id).adjustedNetTotal(e.target.value)}
                             startAdornment={<InputAdornment position="start">$</InputAdornment>}
                             label="Adjust Total Net Investment"
                             placeholder="Enter adjusted net investment"

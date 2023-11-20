@@ -12,11 +12,31 @@ const BaseUX = ({ data, selectedWallets, setSavedTables } = {}) => {
             });
         });
     };
+
+    const adjustIndividualShares = (tableData, adjustedNetTotal, totals) => tableData.map(row => {
+        const share = row.netAmount / (totals.totalNetAmount || 1);
+        const adjustedNetAmountValue = (adjustedNetTotal && totals.totalNetAmount) ? share * adjustedNetTotal : row.netAmount;
+        return { ...row, share, adjustedNetAmount: adjustedNetAmountValue };
+    });
     
     const headerStateSetters = (tableId) => ({
         toggleMemberName: value => updateSavedTableState(tableId, { showMemberName: value }),
         toggleHeaderRow: value => updateSavedTableState(tableId, { showHeaderRow: value }),
-        adjustedNetTotal: value => updateSavedTableState(tableId, { adjustedNetTotal: value }),
+        adjustedNetTotal: value => {
+            
+            updateSavedTableState(tableId, { adjustedNetTotal: value });
+    
+            setSavedTables(prevTables => {
+                return prevTables.map(table => {
+                    if (table.id === tableId) {
+                        // Assuming totals is part of each table's data
+                        const updatedTableData = adjustIndividualShares(table.tableData, value, table.totals);
+                        return { ...table, tableData: updatedTableData };
+                    }
+                    return table;
+                });
+            });
+        },
         sortBy: value => updateSavedTableState(tableId, { sortBy: value }),
         transferTotal: value => updateSavedTableState(tableId, { transferTotal: value }),
     });
@@ -25,7 +45,7 @@ const BaseUX = ({ data, selectedWallets, setSavedTables } = {}) => {
         ...restData, 
         ...totals,  
         selectedWallets, 
-        headerStateSetters
+        headerStateSetters,
     };
 };
 

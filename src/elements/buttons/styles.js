@@ -28,5 +28,9 @@ export const StyledChip = styled(Chip)(({ theme, blended }) => ({
     fontSize: '0.8rem',
     lineHeight: 1,
     paddingTop: '2px',
-    paddingBottom: 0
+    paddingBottom: 0,
+    '&:hover': {
+        backgroundColor: blended ? '#048241' : '#c24a2d',
+        boxShadow: '0 0 10px #08E2EA' // 0 0 20px #1D5AEF, 0 0 30px #1D5AEF, 0 0 40px #1D5AEF',
+    },
   }));
