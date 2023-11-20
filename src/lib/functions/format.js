@@ -114,17 +114,25 @@ export const formatChainArray = (chainMap) => {
 };
 
 export const formatAggregatedData = (inputData) => {
+    if (!inputData) {
+        return {
+            txns: '',
+            totalAmounts: ''
+        };
+    }
+
     const keys = Object.keys(inputData);
 
     const txns = keys.map(key => `${key}(${inputData[key].count})`).join(', ');
-    
+
     const totalAmounts = keys.map(key => `${key}(${formatAmountDisplay(inputData[key].totalAmount)})`).join(', ');
 
     return {
         txns,
         totalAmounts
     };
-} 
+};
+
 
 export const extractTitle = (tableTitle) => {
     // Pattern to match titles inside single quotes and extract them

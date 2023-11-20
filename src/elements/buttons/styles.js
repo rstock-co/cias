@@ -17,9 +17,9 @@ export const StyledColorButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-export const StyledChip = styled(Chip)(({ theme, isBlended }) => ({
+export const StyledChip = styled(Chip)(({ theme, blended }) => ({
     fontFamily: 'Inter Tight, sans-serif',
-    backgroundColor: isBlended ? '#048241' : '#c24a2d',
+    backgroundColor: blended ? '#048241' : '#c24a2d',
     color: 'white',
     cursor: 'pointer',
     marginLeft: 12,

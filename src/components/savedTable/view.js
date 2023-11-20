@@ -170,7 +170,7 @@ const SavedTable = ({
                         </TableRow>
                     )}
                     {tableData && tableData.map((row) => (
-                        <StyledTableRow key={row.memberWallet} walletDescription={row.walletDescription}>
+                        <StyledTableRow key={row.memberWallet}>
                             <StyledTableCell component="th" scope="row">
                                 {shortenAddress(row.memberWallet)}
                             </StyledTableCell>

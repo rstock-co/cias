@@ -1,10 +1,10 @@
 import { StyledChip } from "./styles";
 
-export const ToggleChipButton = ({ onToggle, isBlended, txnHash }) => (
+export const ToggleChipButton = ({ onToggle, blended, hash }) => (
   <StyledChip
-    label={isBlended ? "Blended" : "Not blended"}
-    onClick={() => onToggle(txnHash, !isBlended)}
-    isBlended={isBlended} 
+    label={blended ? "Blended" : "Not blended"}
+    onClick={() => onToggle(hash, !blended)}
+    blended={blended} 
   />
 );
 

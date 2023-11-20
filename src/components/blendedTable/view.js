@@ -15,7 +15,12 @@ const BlendedAllocationTable = ({
     transferTxnsToBlend, 
     savedTables, 
     blendedTableList,
-} = {}) => (
+} = {}) => {
+    
+    console.log("blendedTableList:", blendedTableList);
+    console.log("transferTxnsToBlend:", transferTxnsToBlend);
+
+    return (
 
     <>
         <Dialog
@@ -52,6 +57,6 @@ const BlendedAllocationTable = ({
         </Dialog>
 
     </>
-);
-
+    );
+};
 export default BlendedAllocationTable;

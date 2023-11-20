@@ -1,7 +1,7 @@
 import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableCell, TableHead, 
          TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar, Chip,
          FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
-import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatChainArray, formatAggregatedData } from "../../lib/functions/format";
+import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, chipStyles } from "./styles";
 import { printAllocationTable } from "../../lib/functions/actions";
@@ -113,7 +113,7 @@ const AllocationTable = ({
 
                             {/* Table title and generation date */}
                             <TableRow>
-                                <TableCell colSpan={showMemberName ? 7 : 6} style={{ borderBottom: 'none' }}>
+                                <TableCell colSpan={isAggregated ? 8 : showMemberName ? 7 : 6 } style={{ borderBottom: 'none' }}>
                                     <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
                                         {dialogTitle}
                                     </Typography>
