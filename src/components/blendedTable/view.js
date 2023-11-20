@@ -42,6 +42,10 @@ const BlendedAllocationTable = ({
     handleAdjustedNetTotalChange,
     handleSortByChange,
     tableTransferTotals,
+
+    savedTableDisplayData,
+    dynamicDialogTitle
+
 } = {}) => {
     
     console.log("filteredBlendedTableIds:", filteredBlendedTableIds);
@@ -49,11 +53,7 @@ const BlendedAllocationTable = ({
     console.log("tabIndex:", tabIndex);
     console.log("table transfer totals: ",tableTransferTotals)
 
-    const savedTableDisplayData = filteredBlendedTableIds.map(tableId => {
-        const tableTitle = extractTitle(savedTables.find(table => table.id === tableId)?.tableTitle);
-        const transferTotal = tableTransferTotals[tableId]?.toFixed(2) || "0.00";
-        return { tableId, tableTitle, transferTotal };
-    });
+    
 
     const SummaryLine = ({ label, value, labelWidth = "250px" }) => (
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -81,8 +81,8 @@ const BlendedAllocationTable = ({
                 },
             }}
             >
-            <DialogTitle>
-                Blended Allocation Table
+            <DialogTitle sx={{fontFamily: 'Inter Tight, sans-serif', fontWeight: 'medium', fontSize: '25px' }}>
+                {dynamicDialogTitle}
             </DialogTitle>
 
             <DialogContent style={{ overflowX: 'auto' }}>
@@ -94,7 +94,7 @@ const BlendedAllocationTable = ({
                     disableRipple
                 />                 
                 ))}
-                <StyledTab label={TabTitle} disableRipple />
+                <StyledTab label={dynamicDialogTitle} disableRipple />
             </StyledTabs>
             {savedTables.length > 0 && (
                 tabIndex < filteredBlendedTableIds.length
@@ -107,92 +107,74 @@ const BlendedAllocationTable = ({
                 )
                 : ( <>
                     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', fontFamily: 'Inter Tight, sans-serif' }}>
-                            <Box mb={2} mt={3}>
-                                <SummaryLine label="Total Contributions Amount:" value={totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)} />
-                                <SummaryLine
-                                    label="Total Contributions:"
-                                    value={formatChainMap(aggregatedContributionsChainMap)}
-                                />
-                                <SummaryLine
-                                    label="Total Refunds Amount:"
-                                    value={totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)}
-                                />
-                                <SummaryLine
-                                    label="Total Refunds:"
-                                    value={formatChainMap(aggregatedRefundsChainMap)}
-                                />
-                                <SummaryLine
-                                    label="Total Net Amount:"
-                                    value={totalNetAmount && formatAggregatedData(aggregatedTxns).totalAmounts}
-                                />
-                                <SummaryLine
-                                    label="Total Transactions:"
-                                    value={formatAggregatedData(aggregatedTxns).txns}
-                                />
+                        <Box mb={2} mt={3} ml={2}>
+                        <SummaryLine label="Total Contributions:" value={formatChainMap(aggregatedContributionsChainMap)} />
+                        <SummaryLine label="Total Refunds Amount:" value={totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)} />
+                        <SummaryLine label="Total Refunds:" value={formatChainMap(aggregatedRefundsChainMap)} />
+                        <SummaryLine label="Total Net Amount:" value={totalNetAmount && formatAggregatedData(aggregatedTxns).totalAmounts} />
+                        <SummaryLine label="Total Transactions:" value={formatAggregatedData(aggregatedTxns).txns} />
+                    </Box>
 
-                                {/* Repeat for other summary lines */}
+                    <Box mb={2} mt={3} ml={10}>
+                        <div>Transfer Summary:</div>
+                        {savedTableDisplayData.map(({ tableId, tableTitle, transferTotal }, index) => (
+                            <Box key={tableId} mb={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Typography variant="body1" sx={{ fontWeight: 'bold', marginRight: 1 }}>
+                                    {`Transfer Wallet # ${index + 1} | ${tableTitle}:`}
+                                </Typography>
+                                <Typography variant="body1" sx={{ marginLeft: 'auto' }}>
+                                    {`${formatAmountDisplay(transferTotal)}`}
+                                </Typography>
                             </Box>
-
-                            <Box mb={2} mt={3} ml={10}>
-                                <div>Transfer Summary:</div>
-                                {savedTableDisplayData.map(({ tableId, tableTitle, transferTotal }, index) => (
-                                    <Box key={tableId} mb={1} sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Typography variant="body1" sx={{ fontWeight: 'bold', marginRight: 1 }}>
-                                            {`Transfer Wallet # ${index + 1} | ${tableTitle}:`}
-                                        </Typography>
-                                        <Typography variant="body1" sx={{ marginLeft: 'auto' }}>
-                                            {`${formatAmountDisplay(transferTotal)}`}
-                                        </Typography>
-                                    </Box>
-                                ))}
-                            </Box>
+                        ))}
+                    </Box>
                         
-                        {/* Header inputs and toggles */}
-                        <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                                <Typography component="div">
-                                    Show Header Row (Totals)
-                                </Typography>
-                                <Switch
-                                    checked={showHeaderRow}
-                                    onChange={handleToggleHeaderRow}
-                                    color="primary"
-                                    inputProps={{ 'aria-label': 'Toggle Header Row' }}
+                    {/* Header inputs and toggles */}
+                    <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
+                            <Typography component="div">
+                                Show Header Row (Totals)
+                            </Typography>
+                            <Switch
+                                checked={showHeaderRow}
+                                onChange={handleToggleHeaderRow}
+                                color="primary"
+                                inputProps={{ 'aria-label': 'Toggle Header Row' }}
+                            />
+                        </Box>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
+                            <Typography component="div">
+                                Show Member Name
+                            </Typography>
+                            <Switch
+                                checked={showMemberName}
+                                onChange={handleToggleMemberName}
+                                color="primary"
+                                inputProps={{ 'aria-label': 'Toggle Member Name' }}
+                            />
+                        </Box>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
+                            <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
+                        </Box>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
+                            <FormControl fullWidth sx={{ m: 1 }}>
+                                <InputLabel htmlFor="outlined-adornment-amount">Adjusted Net Total</InputLabel>
+                                <OutlinedInput
+                                    id="outlined-adornment-amount"
+                                    variant="outlined"
+                                    size="small"
+                                    type="number"
+                                    value={adjustedNetTotal}
+                                    onChange={handleAdjustedNetTotalChange}
+                                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                                    label="Adjust Total Net Investment"
+                                    placeholder="Enter adjusted net investment"
+                                    sx={{ margin: "none", maxWidth: 200, fontFamily: 'Inter Tight, sans-serif' }}
                                 />
-                            </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                                <Typography component="div">
-                                    Show Member Name
-                                </Typography>
-                                <Switch
-                                    checked={showMemberName}
-                                    onChange={handleToggleMemberName}
-                                    color="primary"
-                                    inputProps={{ 'aria-label': 'Toggle Member Name' }}
-                                />
-                            </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                                <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
-                            </Box>
-                            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                                <FormControl fullWidth sx={{ m: 1 }}>
-                                    <InputLabel htmlFor="outlined-adornment-amount">Adjusted Net Total</InputLabel>
-                                    <OutlinedInput
-                                        id="outlined-adornment-amount"
-                                        variant="outlined"
-                                        size="small"
-                                        type="number"
-                                        value={adjustedNetTotal}
-                                        onChange={handleAdjustedNetTotalChange}
-                                        startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                                        label="Adjust Total Net Investment"
-                                        placeholder="Enter adjusted net investment"
-                                        sx={{ margin: "none", maxWidth: 200, fontFamily: 'Inter Tight, sans-serif' }}
-                                    />
-                                </FormControl>
-                            </Box>
+                            </FormControl>
                         </Box>
                     </Box>
+                </Box>
 
 
                     <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none' }}>

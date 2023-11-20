@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { roundToNearest5Minutes } from '../../../lib/functions/time';
 import { generateAllocationTableTitle, extractTitle } from "../../../lib/functions/format";
 import { format } from 'date-fns';
@@ -21,6 +21,8 @@ const HeaderUX = ({
     const [generatedDateString, setGeneratedDateString] = useState("");
     const [generatedDateHTML, setGeneratedDateHTML] = useState("");
     const [tableTransferTotals, setTableTransferTotals] = useState({});
+    const [dynamicDialogTitle, setDynamicDialogTitle] = useState('');
+
 
     useEffect(() => {     
         setIsAggregated(selectedWallets.length > 1);
@@ -67,16 +69,27 @@ const HeaderUX = ({
             </div>
         ))
     }, []); 
-    
+
     const dialogTitle = `Blended ${generateAllocationTableTitle(selectedWallets, move)}`;
-    const TabTitle = dialogTitle === "Blended No wallets selected" ? '' : 
-        <div>
-            Blended Wallet
-            <br />
-            {extractTitle(dialogTitle)}
-        </div>
 
+    const savedTableDisplayData = useMemo(() => {
+        return filteredBlendedTableIds.map(tableId => {
+            const tableTitle = extractTitle(savedTables.find(table => table.id === tableId)?.tableTitle);
+            const transferTotal = tableTransferTotals[tableId]?.toFixed(2) || "0.00";
+            return { tableId, tableTitle, transferTotal };
+        });
+    }, [filteredBlendedTableIds, savedTables, tableTransferTotals]);
 
+    useEffect(() => {
+        if (tabIndex < savedTableDisplayData.length) {
+            // When one of the saved tables is selected
+            const selectedTable = savedTableDisplayData[tabIndex];
+            setDynamicDialogTitle(`Transfer Wallet # ${tabIndex + 1}: ${selectedTable.tableTitle}`);
+        } else {
+            // When the last tab (represented by TabTitle) is selected
+            setDynamicDialogTitle(dialogTitle === "Blended No wallets selected" ? "Blended No wallets selected" : `Blended Wallet: ${extractTitle(dialogTitle)}`);
+        }
+    }, [tabIndex, savedTableDisplayData, dialogTitle]);
 
     useEffect(() => {
         // Calculate the total transfer amount for each table in filteredBlendedTableIds
@@ -114,9 +127,10 @@ const HeaderUX = ({
         generatedDateString,
         generatedDateHTML,
         dialogTitle,
-        TabTitle,
         isAggregated,
         tableTransferTotals,
+        savedTableDisplayData,
+        dynamicDialogTitle,
     }
 };
 
