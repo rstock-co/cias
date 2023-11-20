@@ -8,6 +8,7 @@ const HeaderUX = ({
     selectedWallets,
     move,
     blendedTableList,
+    transferTxnsToBlend,
     ...props
 } = {}) => {   
 
@@ -19,14 +20,20 @@ const HeaderUX = ({
     const [isAggregated, setIsAggregated] = useState(false);
     const [generatedDateString, setGeneratedDateString] = useState("");
     const [generatedDateHTML, setGeneratedDateHTML] = useState("");
+    const [tableTransferTotals, setTableTransferTotals] = useState({});
 
     useEffect(() => {     
         setIsAggregated(selectedWallets.length > 1);
     }, [selectedWallets]);
 
-    const savedTableIds = savedTables.length > 0 ? savedTables.map(savedTable => savedTable.id) : [];
-    const filteredBlendedTableIds = blendedTableList.filter(tableId => savedTableIds.includes(tableId));
-    
+    const [filteredBlendedTableIds, setFilteredBlendedTableIds] = useState([]);
+
+    useEffect(() => {
+        const savedTableIds = savedTables.map(table => table.id);
+        const newFilteredIds = blendedTableList.filter(tableId => savedTableIds.includes(tableId));
+        setFilteredBlendedTableIds(newFilteredIds);
+    }, [blendedTableList, savedTables]); 
+
     const handleToggleMemberName = (event) => {
         setShowMemberName(event.target.checked);
     };
@@ -69,6 +76,25 @@ const HeaderUX = ({
             {extractTitle(dialogTitle)}
         </div>
 
+
+
+    useEffect(() => {
+        // Calculate the total transfer amount for each table in filteredBlendedTableIds
+        const totals = filteredBlendedTableIds.reduce((acc, tableId) => {
+            const totalAmount = Object.entries(transferTxnsToBlend)
+                .filter(([_, txnInfo]) => txnInfo.tableID === tableId)
+                .reduce((total, [_, txnInfo]) => total + txnInfo.amount, 0);
+
+            acc[tableId] = totalAmount;
+            return acc;
+        }, {});
+
+        setTableTransferTotals(totals);
+    }, [transferTxnsToBlend, filteredBlendedTableIds, savedTables]);
+
+    // Example usage: Get the total for the currently selected table
+
+
     return {
         ...props,
         filteredBlendedTableIds,
@@ -89,7 +115,8 @@ const HeaderUX = ({
         generatedDateHTML,
         dialogTitle,
         TabTitle,
-        isAggregated
+        isAggregated,
+        tableTransferTotals,
     }
 };
 

@@ -14,18 +14,22 @@ const BlendUX = ({ transferTxnsToBlend, savedTables, tableData } = {}) => {
  */
 
     useEffect(() => {
+        // Set of transaction hashes from tableData
         const txnHashes = new Set(tableData.map(txn => txn.hash));
-        const matchingTableIds = Object.entries(transferTxnsToBlend)
-            .filter(([txnHash, txnInfo]) => txnHashes.has(txnHash))
-            .map(([_, txnInfo]) => txnInfo.tableID);
 
-        const filteredTableIds = new Set(
-            savedTables
-                .filter(table => matchingTableIds.includes(table.id))
-                .map(table => table.id)
+        // Set of matching table IDs from transferTxnsToBlend
+        const matchingTableIds = new Set(
+            Object.entries(transferTxnsToBlend)
+                .filter(([txnHash, txnInfo]) => txnHashes.has(txnHash))
+                .map(([_, txnInfo]) => txnInfo.tableID)
         );
 
-        setBlendedTableList(Array.from(filteredTableIds));
+        // Filter savedTables to include only those present in matchingTableIds
+        const filteredTableIds = savedTables
+            .filter(table => matchingTableIds.has(table.id))
+            .map(table => table.id);
+
+        setBlendedTableList(filteredTableIds);
     }, [transferTxnsToBlend, savedTables, tableData]);
 
     return { blendedTableList };

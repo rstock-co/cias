@@ -32,7 +32,6 @@ const BlendedAllocationTable = ({
     sortedAllocationTableData,
     adjustedNetTotal,
     isAggregated,
-    generatedDateString,
     generatedDateHTML,
 
     showHeaderRow,
@@ -42,12 +41,32 @@ const BlendedAllocationTable = ({
     handleToggleHeaderRow,
     handleAdjustedNetTotalChange,
     handleSortByChange,
+    tableTransferTotals,
 } = {}) => {
     
     console.log("filteredBlendedTableIds:", filteredBlendedTableIds);
     console.log("savedTables:", savedTables);
     console.log("tabIndex:", tabIndex);
-    console.log("dialogTitle:", dialogTitle)
+    console.log("table transfer totals: ",tableTransferTotals)
+
+    const savedTableDisplayData = filteredBlendedTableIds.map(tableId => {
+        const tableTitle = extractTitle(savedTables.find(table => table.id === tableId)?.tableTitle);
+        const transferTotal = tableTransferTotals[tableId]?.toFixed(2) || "0.00";
+        return { tableId, tableTitle, transferTotal };
+    });
+
+    const SummaryLine = ({ label, value, labelWidth = "250px" }) => (
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Typography variant="body1" sx={{ fontWeight: 'bold', width: labelWidth }}>
+                {label}
+            </Typography>
+            <Typography variant="body1" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>
+                {value}
+            </Typography>
+        </Box>
+    );
+    
+      
 
     return (
         <>
@@ -68,19 +87,13 @@ const BlendedAllocationTable = ({
 
             <DialogContent style={{ overflowX: 'auto' }}>
             <StyledTabs value={tabIndex} onChange={handleTabChange}>
-                {filteredBlendedTableIds.map((tableId, index) => 
+                {savedTableDisplayData.map(({ tableId, tableTitle }, index) => (
                     <StyledTab
-                        key={index}
-                        label={
-                        <div>
-                            Transfer Wallet # {index + 1}
-                            <br />
-                            {extractTitle(savedTables.find((table) => table.id === tableId).tableTitle)}
-                        </div>
-                        }
-                        disableRipple
-                    />                  
-                )}
+                    key={tableId}
+                    label={<div>Transfer Wallet # {index + 1}<br />{tableTitle}</div>}
+                    disableRipple
+                />                 
+                ))}
                 <StyledTab label={TabTitle} disableRipple />
             </StyledTabs>
             {savedTables.length > 0 && (
@@ -93,16 +106,47 @@ const BlendedAllocationTable = ({
                     />
                 )
                 : ( <>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-                        <Box mb={2}>
-                            <div>Total Contributions Amount: {totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</div>
-                            <div>Total Contributions: {formatChainMap(aggregatedContributionsChainMap)}</div>
-                            <div>Total Refunds Amount: {totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)}</div>
-                            <div>Total Refunds: {formatChainMap(aggregatedRefundsChainMap)}</div>
-                            <div>Total Net Amount: {totalNetAmount && formatAggregatedData(aggregatedTxns).totalAmounts}</div>
-                            <div>Total Transactions: {formatAggregatedData(aggregatedTxns).txns}</div>
-                        </Box>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', fontFamily: 'Inter Tight, sans-serif' }}>
+                            <Box mb={2} mt={3}>
+                                <SummaryLine label="Total Contributions Amount:" value={totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)} />
+                                <SummaryLine
+                                    label="Total Contributions:"
+                                    value={formatChainMap(aggregatedContributionsChainMap)}
+                                />
+                                <SummaryLine
+                                    label="Total Refunds Amount:"
+                                    value={totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)}
+                                />
+                                <SummaryLine
+                                    label="Total Refunds:"
+                                    value={formatChainMap(aggregatedRefundsChainMap)}
+                                />
+                                <SummaryLine
+                                    label="Total Net Amount:"
+                                    value={totalNetAmount && formatAggregatedData(aggregatedTxns).totalAmounts}
+                                />
+                                <SummaryLine
+                                    label="Total Transactions:"
+                                    value={formatAggregatedData(aggregatedTxns).txns}
+                                />
 
+                                {/* Repeat for other summary lines */}
+                            </Box>
+
+                            <Box mb={2} mt={3} ml={10}>
+                                <div>Transfer Summary:</div>
+                                {savedTableDisplayData.map(({ tableId, tableTitle, transferTotal }, index) => (
+                                    <Box key={tableId} mb={1} sx={{ display: 'flex', alignItems: 'center' }}>
+                                        <Typography variant="body1" sx={{ fontWeight: 'bold', marginRight: 1 }}>
+                                            {`Transfer Wallet # ${index + 1} | ${tableTitle}:`}
+                                        </Typography>
+                                        <Typography variant="body1" sx={{ marginLeft: 'auto' }}>
+                                            {`${formatAmountDisplay(transferTotal)}`}
+                                        </Typography>
+                                    </Box>
+                                ))}
+                            </Box>
+                        
                         {/* Header inputs and toggles */}
                         <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
                             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
@@ -149,6 +193,7 @@ const BlendedAllocationTable = ({
                             </Box>
                         </Box>
                     </Box>
+
 
                     <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none' }}>
                         <Table sx={{ border: 'none', tableLayout: 'auto' }} aria-label="member table">
