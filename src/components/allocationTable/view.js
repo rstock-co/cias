@@ -2,6 +2,7 @@ import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, Table
          TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar, Chip,
          FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
+import { SummaryLine } from "../../elements/templates/tables";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, chipStyles } from "./styles";
 import { printAllocationTable } from "../../lib/functions/actions";
@@ -50,15 +51,14 @@ const AllocationTable = ({
             </Box>
 
             <DialogContent style={{ overflowX: 'auto' }}>
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
-                    <Box mb={2}>
-                        <div>Total Contributions Amount: {totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</div>
-                        <div>Total Contributions: {formatChainMap(aggregatedContributionsChainMap)}</div>
-                        <div>Total Refunds Amount: {totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)}</div>
-                        <div>Total Refunds: {formatChainMap(aggregatedRefundsChainMap)}</div>
-                        <div>Total Net Amount: {totalNetAmount && formatAggregatedData(aggregatedTxns).totalAmounts}</div>
-                        <div>Total Transactions: {formatAggregatedData(aggregatedTxns).txns}</div>
-                    </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', fontFamily: 'Inter Tight, sans-serif' }}>
+                    <Box mb={2} mt={3} ml={2}>
+                    <SummaryLine label="Total Contributions:" value={formatChainMap(aggregatedContributionsChainMap)} />
+                    <SummaryLine label="Total Refunds Amount:" value={totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)} />
+                    <SummaryLine label="Total Refunds:" value={formatChainMap(aggregatedRefundsChainMap)} />
+                    <SummaryLine label="Total Net Amount:" value={totalNetAmount && formatAggregatedData(aggregatedTxns).totalAmounts} />
+                    <SummaryLine label="Total Transactions:" value={formatAggregatedData(aggregatedTxns).txns} />
+                </Box>
 
                     {/* Header inputs and toggles */}
                     <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>

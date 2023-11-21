@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { roundToNearest5Minutes } from '../../../lib/functions/time';
 import { generateAllocationTableTitle, extractTitle } from "../../../lib/functions/format";
-import { formatAmountDisplay } from "../../../lib/functions/format";
 import { format } from 'date-fns';
 
 const HeaderUX = ({
@@ -84,7 +83,7 @@ const HeaderUX = ({
     const savedTableDisplayData = useMemo(() => {
         return filteredBlendedTableIds.map(tableId => {
             const tableTitle = extractTitle(savedTables.find(table => table.id === tableId)?.tableTitle);
-            const transferTotal = tableTransferTotals[tableId]?.toFixed(2) || "0.00";
+            const transferTotal = tableTransferTotals[tableId] ?? 0.00;
             return { tableId, tableTitle, transferTotal };
         });
     }, [filteredBlendedTableIds, savedTables, tableTransferTotals]);
