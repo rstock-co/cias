@@ -2,7 +2,7 @@ import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, Table
     TableRow, TableBody, DialogActions, Button, Box, Typography, 
     FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
-import { SummaryLine, TransferWalletSummary } from "../../elements/templates/tables";
+import { TransferWalletSummary, WalletSummary } from "../../elements/templates/tables";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, StyledTab, StyledTabs } from "./styles";
 import { printAllocationTable } from "../../lib/functions/actions";
@@ -93,15 +93,20 @@ const BlendedAllocationTable = ({
                 )
                 : ( <>
                     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', fontFamily: 'Inter Tight, sans-serif' }}>
-                        <Box mb={2} mt={3} ml={2}>
-                            <SummaryLine label="Total Contributions:" value={formatChainMap(aggregatedContributionsChainMap)} />
-                            <SummaryLine label="Total Refunds Amount:" value={totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)} />
-                            <SummaryLine label="Total Refunds:" value={formatChainMap(aggregatedRefundsChainMap)} />
-                            <SummaryLine label="Total Net Amount:" value={totalNetAmount && formatAggregatedData(aggregatedTxns).totalAmounts} />
-                            <SummaryLine label="Total Transactions:" value={formatAggregatedData(aggregatedTxns).txns} />
+                        <Box mb={2} mt={2} ml={2}>
+                            <WalletSummary
+                                walletTitle={dialogTitle}
+                                walletType="Blended"
+                                totalNetAmount={totalNetAmount} 
+                                aggregatedContributionsChainMap={aggregatedContributionsChainMap}
+                                totalContributionsAmount={totalContributionsAmount}
+                                totalRefundsAmount={totalRefundsAmount}
+                                aggregatedRefundsChainMap={aggregatedRefundsChainMap}
+                                aggregatedTxns={aggregatedTxns}
+                            />
                         </Box>
 
-                    <Box mb={2} mt={3} ml={10} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', fontFamily: 'Inter Tight, sans-serif' }}>
+                    <Box mb={2} mt={2} ml={7} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', fontFamily: 'Inter Tight, sans-serif' }}>
                     {savedTableDisplayData.map(({ tableId, tableTitle, transferTotal }, index) => {
                         // Only render TransferWalletSummary for tables other than the last one
                         if (index <= savedTableDisplayData.length - 1) {

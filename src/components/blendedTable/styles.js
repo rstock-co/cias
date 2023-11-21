@@ -95,7 +95,7 @@ export const StyledTabs = styled(Tabs)(({ theme }) => ({
             bottom: 0,
             borderRadius: 8,
             backgroundColor: theme.palette.mode === 'light' ? '#fff' : theme.palette.action.selected,
-            boxShadow: '10px 10px 20px 0 rgba(0,0,0,0.16)',
+            boxShadow: '2px 2px 6px #096473',
         }
     }
 }));
@@ -111,7 +111,10 @@ export const StyledTab = styled(Tab)(({ theme }) => ({
         minWidth: 120
     },
     '.MuiTab-wrapper': {
-        color: theme.palette.text.primary,
+        color: '#097c8f !important',
         textTransform: 'initial'
-    }
+    },
+    '&.Mui-selected': {
+        color: '#097c8f !important', // Your desired color
+    },
 }));

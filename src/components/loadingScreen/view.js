@@ -20,13 +20,14 @@ const LoadingScreen = ({ stableCoins, open = false }) => {
           {Object.entries(stableCoins).map(([coinKey, { name, chain, loading, txns }]) => (
             <Box key={coinKey} sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
               <StyledTypography>
-                {loading ? `Loading transactions for ${name}...` : `Loaded ${txns} transactions for ${name}`}
+                {loading ? `Loading transactions for ${name}...  ` : `Loaded ${txns} transactions for ${name}  `}
               </StyledTypography>
               <img 
                 src={logos[chain]} 
                 className={`${loading ? "spinner" : ""} spinner-${chain.toLowerCase()}`} 
                 alt={`${name} logo`} 
-                style={{ width: '40px', height: '40px' }} />
+                style={{ width: '40px', height: '40px', marginLeft: '10px' }} 
+            />
             </Box>
           ))}
         </StyledBox>

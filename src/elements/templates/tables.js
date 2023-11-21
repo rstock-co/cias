@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { formatAmountDisplay, FormatTxnLink } from '../../lib/functions/format';
+import { formatAmountDisplay, FormatTxnLink, formatAggregatedData, formatChainMap, extractTitle } from '../../lib/functions/format';
 import "@fontsource/inter-tight";
 
 const logos = {
@@ -9,16 +9,17 @@ const logos = {
     bsc: 'busd.png',
   };
 
-export const SummaryLine = ({ label, value }) => (
-    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-        <Typography variant="body1" sx={{ fontWeight: 'bold', width: "200px" }}>
+  export const SummaryLine = ({ label, value }) => (
+    <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '3px' }}>
+        <Typography variant="body1" sx={{ fontWeight: 'bold', width: "235px" }}>
             {label}
         </Typography>
-        <Typography variant="body1" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>
+        <Typography variant="body1" sx={{ fontFamily: 'Inter Tight, sans-serif', display: 'flex', alignItems: 'center' }}>
             {value}
         </Typography>
     </Box>
 );
+
 
 export const TransferWalletSummary = ({ transferTxnsToBlend, transferTotal, walletTitle, walletNumber }) => {
 
@@ -88,3 +89,74 @@ export const TransferWalletSummary = ({ transferTxnsToBlend, transferTotal, wall
     </Box>
 )};
 
+const formatLogoChainMap = (chainMapString) => {
+    const logos = {
+        arb: 'arb.png', // Replace with path to your images
+        eth: 'eth.png',
+        bsc: 'busd.png',
+    };
+
+    return chainMapString.split(', ').map((part, index) => {
+        const [chain, number] = part.split('(');
+        const count = number.slice(0, -1); // Remove closing parenthesis
+
+        return (
+            <span key={index} style={{ display: 'inline-flex', alignItems: 'center', marginRight: '5px' }}>
+                <img 
+                    src={logos[chain]} 
+                    alt={`${chain} logo`} 
+                    style={{ width: '20px', height: '20px', marginRight: '5px' }} 
+                />
+                {count}
+            </span>
+        );
+    });
+};
+
+
+export const WalletSummary = ({ 
+    walletTitle, walletType, 
+    totalNetAmount, aggregatedContributionsChainMap, totalContributionsAmount, totalRefundsAmount, aggregatedRefundsChainMap, aggregatedTxns
+ } = {}) => (
+
+    <Box sx={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '16px', marginRight: '40px' }}>
+        <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'flex-start' }}>
+            {walletType === 'Blended' ? 'Blended Wallet' : 'Allocation Wallet'}
+            {walletTitle.includes('|') && (
+                <Typography 
+                component="span" 
+                sx={{ 
+                    fontFamily: 'Inter Tight, sans-serif', 
+                    color: "#808080", 
+                    fontSize: '0.6em', 
+                    marginLeft: '0.5em', 
+                    alignSelf: 'flex-start',
+                    textShadow: `0 0 10px #097c8f, 0 0 20px #097c8f` // Adjust the glow effect here
+                }}>
+                [*Aggregated]
+            </Typography>
+            
+            )}
+        </Typography>
+
+        <Typography sx={{ fontSize: '20px', fontWeight: 'lighter', fontFamily: 'Inter Tight, sans-serif'}}>
+            {extractTitle(walletTitle)}
+        </Typography>
+
+        <Typography sx={{ mb: 2, fontSize: '18px', fontFamily: 'Inter Tight, sans-serif' }}>
+            Total Net Amount:&nbsp;&nbsp;
+            <span style={{ color: '#097c8f' }}>
+                {formatAmountDisplay(totalNetAmount)}
+            </span>
+        </Typography>
+
+        <Box mb={2} mt={2}>
+            <SummaryLine label="Total Contributions:" value={formatLogoChainMap(formatChainMap(aggregatedContributionsChainMap))} />
+            <SummaryLine label="Total Contributions Amount:" value={totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)} />
+            <SummaryLine label="Total Refunds:" value={formatLogoChainMap(formatChainMap(aggregatedRefundsChainMap))} />
+            <SummaryLine label="Total Refunds Amount:" value={totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)} />
+            {/* <SummaryLine label="Total Net Amount:" value={totalNetAmount && formatAggregatedData(aggregatedTxns).totalAmounts} />
+            <SummaryLine label="Total Transactions:" value={formatAggregatedData(aggregatedTxns).txns} /> */}
+        </Box>
+    </Box>
+);
