@@ -200,7 +200,7 @@ const BlendedAllocationTable = ({
                                     <StyledTableCell>Member Wallet</StyledTableCell>
                                         {showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
                                     <StyledTableCell align="center">Share (%)</StyledTableCell>
-                                    <StyledTableCell align="center">Total Net ($)</StyledTableCell>
+                                    <StyledTableCell align="center">Grand Total Net ($)</StyledTableCell>
                                     {isAggregated && (
                                         <WideStyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
                                             Total Net ($)

@@ -160,3 +160,31 @@ export const WalletSummary = ({
         </Box>
     </Box>
 );
+
+const TransfersTableCell = ({ transfers, totalAmount }) => (
+    <Box>
+        {transfers.map((transfer, index) => (
+            <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                <Typography variant="body2">Transfer # {index + 1}:</Typography>
+                <Typography variant="body2">[{transfer.percentage} - ${transfer.amount.toFixed(2)}]</Typography>
+            </Box>
+        ))}
+        {transfers.length > 1 && (
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Total:</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>${totalAmount.toFixed(2)}</Typography>
+            </Box>
+        )}
+    </Box>
+);
+
+// Example usage
+const transfers = [
+    { percentage: '3.56%', amount: 219.32 },
+    { percentage: '5.87%', amount: 734.91 },
+    // ... add more transfers as needed
+];
+const totalAmount = transfers.reduce((sum, transfer) => sum + transfer.amount, 0);
+
+// <TableCell><TableCellContent transfers={transfers} totalAmount={totalAmount} /></TableCell>
+
