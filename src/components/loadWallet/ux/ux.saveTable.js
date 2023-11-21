@@ -49,7 +49,7 @@ const SaveTableUX = ({selectedWallets}) => {
         saveTablesToLocalStorage(savedTables);
     }, [savedTables]);
     
-    const handleToggleChip = (savedTableID, txnHash, isBlended, txnAmount, txnTimestamp, txnLink) => {
+    const handleToggleChip = (savedTableID, txnHash, isBlended, txnAmount, txnTimestamp, txnChain) => {
         setTransferTxnsToBlend(prevTxnsToBlend => {
             const newTxnsToBlend = { ...prevTxnsToBlend };
     
@@ -59,7 +59,7 @@ const SaveTableUX = ({selectedWallets}) => {
                     tableID: savedTableID, 
                     amount: txnAmount, 
                     timestamp: txnTimestamp,
-                    link: txnLink 
+                    chain: txnChain
                 };
             } else {
                 // Remove the transaction hash if it exists

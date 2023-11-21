@@ -22,7 +22,7 @@ export const stableCoinsToFetch = {
 // TABLE COLUMNS
 export const propertyMap = {
     id: { header: '#', align: 'center' },
-    chain: { header: 'Chain', align: 'center' },
+    chainLogo: { header: 'Chain', align: 'center' },
     walletName: { header: 'Wallet', align: 'center' }, 
     flow: { header: 'Flow', align: 'center' },
     dateTime: { header: 'Date/Time', align: 'left' },
@@ -82,11 +82,27 @@ const generateWalletDescription = (flow, to, from, moveName, fromMemberName, toM
  * @returns formatted txn data for the table
  */
 
+const logos = {
+    arb: 'arb.png',
+    eth: 'eth.png',
+    bsc: 'busd.png',
+  };
+
 export const generateTableData = (txn, id, selectedAddresses) => {
     const walletName = txn.walletName;
     const timestamp = parseInt(txn.timeStamp) * 1000;
     const hash = txn.hash;
     const chain = txn.chain;
+    const chainLogo = (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+            <img 
+                src={logos[chain]} 
+                alt={`${chain} logo`} 
+                style={{ width: '30px', height: '30px', margin: 'auto' }} 
+            />
+        </div>
+    );
+
     const dateTime = formatTime(timestamp, 'America/Denver');
     const link = <FormatTxnLink hash={hash} chain={chain} />;
     const amount = formatAmountDecimals(chain, txn.value);
@@ -112,6 +128,7 @@ export const generateTableData = (txn, id, selectedAddresses) => {
 
         // displayed in table
         id,
+        chainLogo,
         walletName,
         flow,
         dateTime,

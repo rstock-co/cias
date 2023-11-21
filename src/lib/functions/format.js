@@ -1,4 +1,4 @@
-export const FormatTxnLink = ({ hash, chain }) => {
+export const FormatTxnLink = ({ hash, chain, style }) => {
     const chainUrls = {
         arb: `https://arbiscan.io/tx/${hash}`,
         bsc: `https://bscscan.com/tx/${hash}`,
@@ -8,11 +8,12 @@ export const FormatTxnLink = ({ hash, chain }) => {
     const link = chainUrls[chain];
 
     return (
-        <a href={link} target="_blank" rel="noopener noreferrer" className="txnLink">
+        <a href={link} target="_blank" rel="noopener noreferrer" className="txnLink" style={style}>
             Txn
         </a>
     );
 };
+
 
 export const formatSankeToCapital = (snakeCaseString) => {
     const words = snakeCaseString.split('_');
