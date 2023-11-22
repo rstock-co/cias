@@ -17,11 +17,12 @@ const filters = {
 
 const removeZerosAndSort = (txns) => txns.filter(txn => txn.amount !== 0).sort((a, b) => b.timestamp - a.timestamp);
 
-const noFilterIsApplied = (filterOptions) => Object.values(filterOptions).every(option => {
-    if (option === null || option === undefined || option === '') return true;
-    if (typeof option === 'object' && option.startDate === '' && option.endDate === '') return true;
-    return false;
-});
+const noFilterIsApplied = (filterOptions) => 
+    Object.values(filterOptions).every(option => {
+        if (option === null || option === undefined || option === '') return true;
+        if (typeof option === 'object' && option.startDate === '' && option.endDate === '') return true;
+        return false;
+    });
 
 const executeFilter = (txn, filterOptions) => 
     Object.keys(filters).every(filterKey => {

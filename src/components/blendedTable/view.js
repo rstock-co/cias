@@ -3,6 +3,7 @@ import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, Table
     FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
 import { TransferWalletSummary, WalletSummary } from "../../elements/templates/tables";
+import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, StyledTab, StyledTabs } from "./styles";
 import { printAllocationTable } from "../../lib/functions/actions";
@@ -75,13 +76,14 @@ const BlendedAllocationTable = ({
             <StyledTabs value={tabIndex} onChange={handleTabChange}>
                 {savedTableDisplayData.map(({ tableId, tableTitle }, index) => (
                     <StyledTab
-                    key={tableId}
-                    label={<div>Transfer Wallet # {index + 1}<br />{tableTitle}</div>}
-                    disableRipple
-                />                 
+                        key={tableId}
+                        label={<div>Transfer Wallet # {index + 1}<br />{tableTitle}</div>}
+                        disableRipple
+                    />                 
                 ))}
                 <StyledTab label={tabTitle} disableRipple />
             </StyledTabs>
+            
             {savedTables.length > 0 && (
                 tabIndex < filteredBlendedTableIds.length
                 ? (
@@ -129,21 +131,20 @@ const BlendedAllocationTable = ({
                     {/* Header inputs and toggles */}
                     <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                            <Typography component="div">
-                                Show Header Row (Totals)
+                            <Typography component="div" sx={{fontFamily: 'Inter Tight'}}>
+                                Show Totals Row
                             </Typography>
-                            <Switch
+                            <CustomColorSwitch
                                 checked={showHeaderRow}
                                 onChange={handleToggleHeaderRow}
-                                color="primary"
                                 inputProps={{ 'aria-label': 'Toggle Header Row' }}
                             />
                         </Box>
                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                            <Typography component="div">
+                            <Typography component="div" sx={{fontFamily: 'Inter Tight'}}>
                                 Show Member Name
                             </Typography>
-                            <Switch
+                            <CustomColorSwitch
                                 checked={showMemberName}
                                 onChange={handleToggleMemberName}
                                 color="primary"
@@ -155,7 +156,16 @@ const BlendedAllocationTable = ({
                         </Box>
                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
                             <FormControl fullWidth sx={{ m: 1 }}>
-                                <InputLabel htmlFor="outlined-adornment-amount">Adjusted Net Total</InputLabel>
+                                <InputLabel 
+                                    htmlFor="outlined-adornment-amount" 
+                                    style={{
+                                        fontWeight: 'bold', 
+                                        color: '#097c8f', 
+                                    }}
+                                >
+                                    Adjusted Net Total
+                                </InputLabel>
+
                                 <OutlinedInput
                                     id="outlined-adornment-amount"
                                     variant="outlined"
@@ -164,9 +174,15 @@ const BlendedAllocationTable = ({
                                     value={adjustedNetTotal}
                                     onChange={handleAdjustedNetTotalChange}
                                     startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                                    label="Adjust Total Net Investment"
-                                    placeholder="Enter adjusted net investment"
+                                    label="Adjust Total Net Am"
+                                    placeholder="Enter adjusted net"
                                     sx={{ margin: "none", maxWidth: 200, fontFamily: 'Inter Tight, sans-serif' }}
+                                    InputLabelProps={{
+                                        style: {
+                                            fontWeight: 'bold', 
+                                            color: '#097c8f', 
+                                        },
+                                    }}
                                 />
                             </FormControl>
                         </Box>
@@ -238,10 +254,10 @@ const BlendedAllocationTable = ({
                                             Total
                                         </StyledTableCell>
                                         {showMemberName && <StyledTableCell style={totalRowStyle}></StyledTableCell>}
-                                        <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999' }}>
+                                        <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#b5b5b5' }}>
                                             {(totalShare * 100).toFixed(2)}%
                                         </StyledTableCell>
-                                        <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999'}}>
+                                        <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#b5b5b5'}}>
                                             {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
                                         </StyledTableCell>
                                         {isAggregated && (

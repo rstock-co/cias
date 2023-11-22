@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { formatAmountDisplay, FormatTxnLink, formatAggregatedData, formatChainMap, extractTitle } from '../../lib/functions/format';
+import { formatAmountDisplay, FormatTxnLink, formatChainMap, extractTitle } from '../../lib/functions/format';
 import "@fontsource/inter-tight";
 
 const logos = {

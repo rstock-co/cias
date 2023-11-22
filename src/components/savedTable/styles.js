@@ -41,7 +41,7 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export const totalRowStyle = {
     fontWeight: 'bold',
     fontFamily: 'Inter, sans-serif',
-    backgroundColor: '#999999',
+    backgroundColor: '#b5b5b5',
     padding: '4px 22px',  // Reduced padding; adjust as needed
     lineHeight: '1.2',    // Smaller line height; adjust as needed
 };
@@ -49,7 +49,7 @@ export const totalRowStyle = {
 export const adjustedNetStyle = {
     fontWeight: 'bold',
     fontFamily: 'Inter, sans-serif',
-    backgroundColor: '#999999',
+    backgroundColor: '#b5b5b5',
     padding: '4px 16px 4px 4px', // Adjusted padding
     lineHeight: '1.2',
     textAlign: 'right', // Align text to the right

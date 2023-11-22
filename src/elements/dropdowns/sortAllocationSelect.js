@@ -18,12 +18,25 @@ export const SortAllocationSelect = ({ sortBy, handleSortByChange }) => {
                     variant="outlined"
                     size="small"
                     sx={{ maxWidth: 200, backgroundColor: 'white', fontFamily: 'Inter Tight, sans-serif' }}
+                    InputLabelProps={{
+                        style: {
+                            fontWeight: 'bold', // Make the label text bold
+                            color: '#097c8f', // Set a different font color for the label
+                        },
+                    }}
+                    InputProps={{
+                        ...params.InputProps,
+                        style: {
+                            fontFamily: 'Inter Tight, sans-serif',
+                        },
+                    }}
+                    
                 />
             )}
         />
     );
 };
-
+  
 
 
 

@@ -171,10 +171,10 @@ const AllocationTable = ({
                                         Total
                                     </StyledTableCell>
                                     {showMemberName && <StyledTableCell style={totalRowStyle}></StyledTableCell>}
-                                    <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999' }}>
+                                    <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#b5b5b5' }}>
                                         {(totalShare * 100).toFixed(2)}%
                                     </StyledTableCell>
-                                    <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#999999'}}>
+                                    <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#b5b5b5'}}>
                                         {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
                                     </StyledTableCell>
                                     {isAggregated && (

@@ -47,7 +47,7 @@ export const StyledTableCell = styled(TableCell)(({ theme, walletdescription, ou
     [`&.${tableCellClasses.head}`]: {
         background: 'none',
         backgroundImage: 'linear-gradient(to bottom, #07888A, #0A4963)',  // purple:  #0A0216, #1D0F35)',
-        borderColor: '#999999',
+        borderColor: '#b5b5b5',
         color: theme.palette.common.white,
         fontWeight: 'bold',
         fontSize: 16,
