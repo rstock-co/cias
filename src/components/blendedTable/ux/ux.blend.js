@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const BlendUX = ({savedTables, sortedAllocationTableData}) => {
+const BlendUX = ({savedTables, savedTableDisplayData, sortedAllocationTableData}) => {
 
     const [aggregateData, setAggregateData] = useState({});
 
@@ -19,7 +19,7 @@ const BlendUX = ({savedTables, sortedAllocationTableData}) => {
                 return acc;
             }, {});
     
-            // Aggregate data from sortedAllocationTableData
+            // Aggregate data from sortedAllocationTableData (for baseWallet)
             sortedAllocationTableData.forEach(item => {
                 if (!newAggregateData[item.memberWallet]) {
                     newAggregateData[item.memberWallet] = { baseWallet: null, totalAdjustedNetAmount: 0, totalNetAmount: 0 };
@@ -44,11 +44,14 @@ const BlendUX = ({savedTables, sortedAllocationTableData}) => {
     
             // Aggregate data from each SavedTable
             savedTables.forEach((table, tableIndex) => {
+                const tableDisplay = savedTableDisplayData.find(t => t.tableId === table.id);
+    
                 table.tableData.forEach(item => {
                     if (!newAggregateData[item.memberWallet]) {
                         newAggregateData[item.memberWallet] = { baseWallet: null, totalAdjustedNetAmount: 0, totalNetAmount: 0 };
                     }
                     const savedWallet = {
+                        walletName: tableDisplay ? tableDisplay.tableTitle : 'Unknown',
                         share: item.share,
                         adjustedNetAmount: item.adjustedNetAmount,
                         netAmount: item.netAmount
@@ -84,7 +87,7 @@ const BlendUX = ({savedTables, sortedAllocationTableData}) => {
         };
     
         setAggregateData(computeAggregateData());
-    }, [savedTables, sortedAllocationTableData]);
+    }, [savedTables, savedTableDisplayData, sortedAllocationTableData]);
     
 
     return {

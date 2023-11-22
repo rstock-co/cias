@@ -243,7 +243,7 @@ const BlendedAllocationTable = ({
                                         </WideStyledTableCell>
                                     )} */}
 
-                                    <StyledTableCell align="center">
+                                    <StyledTableCell align="center" sx={{borderLeft: "1px solid grey", borderRight: "1px solid grey"}}>
                                         Transfer Wallets Summary
                                         <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(Total Net $ | Share %)</div>
                                     </StyledTableCell>
@@ -294,7 +294,7 @@ const BlendedAllocationTable = ({
                                         )} */}
 
                                         {/* Transfer Wallets Summary */}
-                                        <StyledTableCell align="center" style={isAggregated ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
+                                        <StyledTableCell align="center" sx={{...totalRowStyle, borderLeft: "1px solid grey", borderRight: "1px solid grey"}}>
                                             {totalTxns}
                                         </StyledTableCell>
 
@@ -348,7 +348,7 @@ const BlendedAllocationTable = ({
                                             <StyledTableCell align="center">{formatAmountDisplay(adjustedNetAmount)}</StyledTableCell>
                                             <StyledTableCell align="center">{(share * 100).toFixed(2)}%</StyledTableCell>
 
-                                            <StyledTableCell align="center" style={{ maxWidth: '200px' }}>
+                                            <StyledTableCell align="center" style={{ maxWidth: '200px', borderLeft: "1px solid #b8b8b8", borderRight: "1px solid #b8b8b8"}}>
                                                 {TransfersTableCell(data, tableTransferTotals)}
                                             </StyledTableCell>
 

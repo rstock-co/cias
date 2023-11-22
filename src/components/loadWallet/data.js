@@ -5,7 +5,7 @@ import { getERC20TxnsEth } from "../../api/eth";
 import { formatAmountDecimals, formatAmountDisplay, FormatTxnLink } from "../../lib/functions/format";
 import { formatTime } from "../../lib/functions/time";
 import { getMoveName, getWalletName } from "../../lib/functions/wallets";
-import { allWallets as wallets, teamWallets, memberWallets, ignoreWallets } from "../../lib/data/wallets";
+import { allWallets as wallets, teamWallets, memberWallets, ignoreWallets, tokenContractAddresses } from "../../lib/data/wallets";
 
 // STABLE COINS TO FETCH
 export const stableCoinsToFetch = { 
@@ -36,42 +36,48 @@ export const propertyMap = {
 
 // TABLE DATA HELPER FUNCTIONS
 
+const OutFlow = {
+    fundingMove: ({ teamWallet, moveName }) => teamWallet ? `Funding "${moveName}" via "${teamWallet.name}"` : null,
+    tokenPurchase: ({ tokenPurchase }) => tokenPurchase ? `Purchase "${tokenPurchase.name}" tokens` : null,
+    internalTransfer: ({ to }) => getWalletName(wallets, to) ? `Transfer to ${getWalletName(wallets, to)}` : null,
+    memberRefund: ({ toMemberName, moveName }) => {
+        let description = toMemberName ? `Member refund (${toMemberName})` : 'Member refund';
+        if (moveName !== "Unknown") description += ` - ${moveName}`;
+        return description;
+    }
+};
+
+const InFlow = {
+    internalTransfer: ({ from }) => getWalletName(wallets, from) ? `Transfer from ${getWalletName(wallets, from)}` : null,
+    tokenSale: ({ tokenSale }) => tokenSale ? `Purchase "${tokenSale.name}" tokens` : null,
+    memberContribution: ({ fromMemberName, moveName }) => {
+        let description = fromMemberName ? `Member contribution (${fromMemberName})` : 'Member contribution';
+        if (moveName !== "Unknown") description += ` - ${moveName}`;
+        return description;
+    }
+};
+
+
 const generateWalletDescription = (flow, to, from, moveName, fromMemberName, toMemberName) => {
-    let walletDescription = '';
-    
-    if (flow === 'Out') {
-        
-        const teamWallet = teamWallets.find(wallet => wallet.address === to);
-    
-        // funding a move
-        if (teamWallet) {
-            walletDescription = `Funding "${moveName}" via "${teamWallet.name}"`;
-        }
-        // internal transfer
-        else if (getWalletName(wallets, to)) {
-            walletDescription = `Transfer to ${getWalletName(wallets, to)}`;
-        }
-        // member refund
-        else { 
-            walletDescription = toMemberName ? `Member refund (${toMemberName})` : 'Member refund';
-            if (moveName !== "Unknown") walletDescription += ` - ${moveName}`;
-        }
-    
-    } else if (flow === 'In') {
-    
-        // internal transfer
-        if (getWalletName(wallets, from)) {
-            walletDescription = `Transfer from ${getWalletName(wallets, from)}`;
-        }
-        // member contribution
-        else {  
-            walletDescription = fromMemberName ? `Member contribution (${fromMemberName})` : 'Member contribution';
-            if (moveName !== "Unknown") walletDescription += ` - ${moveName}`;
+    const conditions = flow === 'Out' ? OutFlow : InFlow;
+    const teamWallet = teamWallets.find(wallet => wallet.address === to);
+    const tokenPurchase = tokenContractAddresses.find(wallet => wallet.address === to);
+    const tokenSale = tokenContractAddresses.find(wallet => wallet.address === from);
+
+    for (const condition of Object.values(conditions)) {
+        const params = {
+            to, from, moveName, fromMemberName, toMemberName, teamWallet, tokenPurchase, tokenSale
+        };
+        const result = condition(params);
+        if (result) {
+            return result;
         }
     }
 
-    return walletDescription;
+    return ''; // Default description if no condition matched
 };
+
+
 
 
 /**
@@ -89,6 +95,11 @@ const logos = {
   };
 
 export const generateTableData = (txn, id, selectedAddresses) => {
+    const from = txn.from.toLowerCase();
+    const to = txn.to.toLowerCase();
+    if (ignoreWallets.some(wallet => wallet.address === from.toLowerCase() || wallet.address === to.toLowerCase())) {
+        return null;
+    }
     const walletName = txn.walletName;
     const timestamp = parseInt(txn.timeStamp) * 1000;
     const hash = txn.hash;
@@ -102,25 +113,16 @@ export const generateTableData = (txn, id, selectedAddresses) => {
             />
         </div>
     );
-
     const dateTime = formatTime(timestamp, 'America/Denver');
     const link = <FormatTxnLink hash={hash} chain={chain} />;
     const amount = formatAmountDecimals(chain, txn.value);
     const amountDisplay = formatAmountDisplay(amount);
     const currency = txn.tokenSymbol;
     
-    const from = txn.from.toLowerCase();
-    const to = txn.to.toLowerCase();
-
-    if (ignoreWallets.some(wallet => wallet.address === from.toLowerCase() || wallet.address === to.toLowerCase())) {
-        return null;
-    }
-    
     const flow = from && selectedAddresses.includes(from) ? 'Out' : 'In';
     const moveName = getMoveName(timestamp);
     const fromMemberName = getWalletName(memberWallets, from);
     const toMemberName = getWalletName(memberWallets, to);
-
     const walletDescription = generateWalletDescription(flow, to, from, moveName, fromMemberName, toMemberName);
     const memberName = fromMemberName || toMemberName;
 

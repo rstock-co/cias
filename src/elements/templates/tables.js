@@ -174,14 +174,16 @@ export const TransfersTableCell = (memberData, transferTotals) => {
     return (
         <Box>
             {savedWallets.map(([walletKey, walletData], index) => {
-                const transferIndex = index + 1; // Assuming transfer # starts from 1
+                const transferIndex = index + 1; // For accessing transferTotals
                 const totalForThisTransfer = transferTotals[transferIndex] || 0;
                 const transferAmount = walletData.share * totalForThisTransfer; // Calculate amount based on share
                 totalAmount += transferAmount;
 
                 return (
                     <Box key={walletKey} sx={{ display: 'flex', justifyContent: 'space-between', mb: 0, fontFamily: 'Inter Tight, sans-serif' }}>
-                        <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>Transfer #{transferIndex}:</Typography>
+                        <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>
+                            {walletData.walletName}: 
+                        </Typography>
                         <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>
                             [{formatAmountDisplay(transferAmount)} | {(walletData.share * 100).toFixed(2)}%]
                         </Typography>
@@ -197,5 +199,3 @@ export const TransfersTableCell = (memberData, transferTotals) => {
         </Box>
     );
 };
-
-

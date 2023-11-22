@@ -64,7 +64,7 @@ export const shortenAddress = (address, startLength = 4, endLength = 6) => {
 
     // Ensure the address starts with '0x'
     if (!address.startsWith('0x')) {
-        console.log("Address should start with '0x'");
+        console.log("Address should start with '0x': ", address);
         return;
     }
 
