@@ -118,9 +118,6 @@ const HeaderUX = ({
         setTableTransferTotals(totals);
     }, [transferTxnsToBlend, filteredBlendedTableIds, savedTables]);
 
-    // Example usage: Get the total for the currently selected table
-
-
     return {
         ...props,
         filteredBlendedTableIds,

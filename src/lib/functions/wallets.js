@@ -67,3 +67,5 @@ export const generateTableWalletsIdentifier = (wallets) => {
                   .sort()
                   .join(',');
 };
+
+export const sumObjectValues = obj => Object.values(obj).reduce((a, b) => a + b, 0);

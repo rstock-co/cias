@@ -14,7 +14,7 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
         borderBottom: 'none'
     },
     [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
+        fontSize: 15,
         fontFamily: 'Inter Tight, sans-serif',
         borderBottom: 'none',
         padding: '13px 22px',  // Adjusted padding

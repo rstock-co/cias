@@ -23,8 +23,6 @@ const AllocationTable = ({
 
 } = {}) => {
 
-    console.log("Aggregated Txns: ", aggregatedTxns)
-    console.log("sortedAllocationTableData: ", sortedAllocationTableData)
     return (
     <>
         <Dialog

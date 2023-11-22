@@ -1,12 +1,15 @@
 import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableCell, TableHead, 
     TableRow, TableBody, DialogActions, Button, Box, Typography, 
-    FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
+    FormControl, InputLabel, OutlinedInput, InputAdornment } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
-import { TransferWalletSummary, WalletSummary } from "../../elements/templates/tables";
+import { getWalletName, sumObjectValues } from "../../lib/functions/wallets";
+import { memberWallets } from "../../lib/data/wallets";
+import { TransferWalletSummary, WalletSummary, TransfersTableCell } from "../../elements/templates/tables";
 import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, StyledTab, StyledTabs } from "./styles";
 import { printAllocationTable } from "../../lib/functions/actions";
+
 import SavedTable from '../savedTable';
 import "@fontsource/inter-tight";
 
@@ -46,14 +49,20 @@ const BlendedAllocationTable = ({
 
     savedTableDisplayData,
     dynamicDialogTitle,
-    tabTitle
+    tabTitle,
+
+    aggregateDataForBlendedTable
 
 } = {}) => {
     
-    console.log("filteredBlendedTableIds:", filteredBlendedTableIds);
     console.log("savedTables:", savedTables);
-    console.log("tabIndex:", tabIndex);
     console.log("table transfer totals: ",tableTransferTotals)
+    console.log("savedTableDisplayData:", savedTableDisplayData);
+
+    console.log("aggregate data for blended table:", aggregateDataForBlendedTable)
+
+    const totalTransferAmount = sumObjectValues(tableTransferTotals)
+    const grandTotalNet = adjustedNetTotal !== "" ? Number(adjustedNetTotal) + totalTransferAmount : totalNetAmount + totalTransferAmount;
 
     return (
         <>
@@ -214,34 +223,50 @@ const BlendedAllocationTable = ({
                                 {/* Table header row */}
                                 <TableRow>
                                     <StyledTableCell>Member Wallet</StyledTableCell>
-                                        {showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
-                                    <StyledTableCell align="center">Share (%)</StyledTableCell>
-                                    <StyledTableCell align="center">Grand Total Net ($)</StyledTableCell>
-                                    {isAggregated && (
+
+                                    {showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
+                                    
+                                    <StyledTableCell align="center">
+                                        All Wallets
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(Total Net $)</div>
+                                    </StyledTableCell>
+
+                                    <StyledTableCell align="center">
+                                        Share
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(%)</div>
+                                    </StyledTableCell>
+                                    
+                                    {/* {isAggregated && (
                                         <WideStyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
                                             Total Net ($)
                                             <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Wallet)</div>
                                         </WideStyledTableCell>
-                                    )}
-                                    <StyledTableCell align="center" style={isAggregated ? {} : { borderRight: "1px solid grey" }}>
-                                        Total # Txns
+                                    )} */}
+
+                                    <StyledTableCell align="center">
+                                        Transfer Wallets Summary
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(Total Net $ | Share %)</div>
                                     </StyledTableCell>
-                                    {isAggregated && (
-                                        <WideStyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
-                                            # of Txns
-                                            <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Wallet)</div>
-                                        </WideStyledTableCell>
-                                    )}
+                                    
+                                    <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
+                                        Base Wallet
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(Total Net $ | Share %)</div>
+                                    </StyledTableCell>
+                                    
                                     <StyledTableCell align="center">Contributions ($)</StyledTableCell>
+
                                     <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
                                         # of Contributions
                                         <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
                                     </StyledTableCell>
+                                    
                                     <StyledTableCell align="center">Refunds ($)</StyledTableCell>
+                                    
                                     <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
                                         # of Refunds
                                         <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
                                     </StyledTableCell>
+                                
                                 </TableRow>
                             </TableHead>
 
@@ -253,19 +278,26 @@ const BlendedAllocationTable = ({
                                         <StyledTableCell component="th" scope="row" style={totalRowStyle}>
                                             Total
                                         </StyledTableCell>
+
                                         {showMemberName && <StyledTableCell style={totalRowStyle}></StyledTableCell>}
+
+                                        <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#b5b5b5'}}>
+                                            {totalTxns ? formatAmountDisplay(grandTotalNet) : null}
+                                        </StyledTableCell>
+
                                         <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#b5b5b5' }}>
                                             {(totalShare * 100).toFixed(2)}%
                                         </StyledTableCell>
-                                        <StyledTableCell align="center" style={{ fontWeight: "bold", backgroundColor: '#b5b5b5'}}>
-                                            {totalTxns ? formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount) : null}
-                                        </StyledTableCell>
-                                        {isAggregated && (
+
+                                        {/* {isAggregated && (
                                             <WideStyledTableCell align="center" style={totalRowStyleWithBorder}>{formatAggregatedData(aggregatedTxns).totalAmounts}</WideStyledTableCell>
-                                        )}
+                                        )} */}
+
+                                        {/* Transfer Wallets Summary */}
                                         <StyledTableCell align="center" style={isAggregated ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
                                             {totalTxns}
                                         </StyledTableCell>
+
                                         {isAggregated && (
                                             <WideStyledTableCell align="center" style={totalRowStyleWithBorder}>{formatAggregatedData(aggregatedTxns).txns}</WideStyledTableCell>
                                         )}
@@ -278,32 +310,66 @@ const BlendedAllocationTable = ({
                                 )}
 
                                 {/* Table data */}
-                                {sortedAllocationTableData && sortedAllocationTableData.map((row) => (
-                                    <StyledTableRow key={row.memberWallet} walletdescription={row.walletDescription}>
-                                        <StyledTableCell component="th" scope="row">
-                                            {shortenAddress(row.memberWallet)}
-                                        </StyledTableCell>
-                                        {showMemberName && (
-                                            <StyledTableCell component="th" scope="row">
-                                                {row.memberName} 
-                                            </StyledTableCell>
-                                        )}
-                                        <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
-                                        <StyledTableCell align="center">{formatAmountDisplay(row.adjustedNetAmount)}</StyledTableCell>
-                                        {isAggregated && (
-                                            <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).totalAmounts}</WideStyledTableCell>
-                                        )}
-                                        <StyledTableCell align="center" style={{ borderRight: isAggregated ? "none" : "1px solid #b8b8b8" }}>{row.txns}</StyledTableCell>
-                                        {isAggregated && (
-                                            <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).txns}</WideStyledTableCell>
-                                        )}
-                                        <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
-                                        <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }} >{formatChainData(row.contributionsChainMap)}</StyledTableCell>
-                                        <StyledTableCell align="center">{formatAmountDisplay(row.refundsAmount)}</StyledTableCell>
-                                        <StyledTableCell align="center">{formatChainData(row.refundsChainMap)}</StyledTableCell>
+                                {Object.entries(aggregateDataForBlendedTable)
+                                    .map(([memberWallet, data]) => {
+                                        const adjustedNetAmount = Object.values(data).reduce((acc, walletData) => {
+                                            return acc + (walletData && walletData.adjustedNetAmount ? walletData.adjustedNetAmount : 0);
+                                        }, 0);
 
-                                    </StyledTableRow>
-                                ))}
+                                        // Return an object representing each row, along with calculated adjustedNetAmount
+                                        return { memberWallet, data, adjustedNetAmount };
+                                    })
+                                    .sort((a, b) => b.adjustedNetAmount - a.adjustedNetAmount) // Sort by adjustedNetAmount in descending order
+                                    .map(({ memberWallet, data, adjustedNetAmount }) => {
+                                        const baseWallet = data.baseWallet;
+                                        const share = adjustedNetAmount / grandTotalNet;
+
+                                    return (
+                                        <StyledTableRow key={memberWallet}>
+                                            <StyledTableCell component="th" scope="row">
+                                                {shortenAddress(memberWallet)}
+                                            </StyledTableCell>
+
+                                            {showMemberName && (
+                                                <StyledTableCell component="th" scope="row">
+                                                    {getWalletName(memberWallets, memberWallet)}
+                                                </StyledTableCell>
+                                            )}
+
+                                            <StyledTableCell align="center">{formatAmountDisplay(adjustedNetAmount)}</StyledTableCell>
+                                            <StyledTableCell align="center">{(share * 100).toFixed(2)}%</StyledTableCell>
+
+                                            <StyledTableCell align="center" style={{ maxWidth: '200px' }}>
+                                                {TransfersTableCell(data, grandTotalNet)}
+                                            </StyledTableCell>
+
+
+                                            <StyledTableCell align="center">
+                                                {baseWallet ? baseWallet.txns : 0}
+                                            </StyledTableCell>
+
+                                            {isAggregated && (
+                                                <WideStyledTableCell align="center">
+                                                    {baseWallet ? formatAggregatedData(baseWallet.walletTxns).txns : 0}
+                                                </WideStyledTableCell>
+                                            )}
+
+                                            <StyledTableCell align="center">
+                                                {baseWallet ? formatAmountDisplay(baseWallet.contributionsAmount) : formatAmountDisplay(0)}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="center">
+                                                {baseWallet ? formatChainData(baseWallet.contributionsChainMap) : formatChainData({})}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="center">
+                                                {baseWallet ? formatAmountDisplay(baseWallet.refundsAmount) : formatAmountDisplay(0)}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="center">
+                                                {baseWallet ? formatChainData(baseWallet.refundsChainMap) : formatChainData({})}
+                                            </StyledTableCell>
+                                        </StyledTableRow>
+                                    );
+                                })}
+
                             </TableBody>
                         </Table>
                     </TableContainer>

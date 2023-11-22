@@ -121,7 +121,7 @@ export const WalletSummary = ({
 
     <Box sx={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '16px', marginRight: '40px' }}>
         <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'flex-start' }}>
-            {walletType === 'Blended' ? 'Blended Wallet' : 'Allocation Wallet'}
+            {walletType === 'Blended' ? 'Base Wallet' : 'Allocation Wallet'}
             {walletTitle.includes('|') && (
                 <Typography 
                 component="span" 
@@ -161,30 +161,40 @@ export const WalletSummary = ({
     </Box>
 );
 
-const TransfersTableCell = ({ transfers, totalAmount }) => (
-    <Box>
-        {transfers.map((transfer, index) => (
-            <Box key={index} sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="body2">Transfer # {index + 1}:</Typography>
-                <Typography variant="body2">[{transfer.percentage} - ${transfer.amount.toFixed(2)}]</Typography>
-            </Box>
-        ))}
-        {transfers.length > 1 && (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Total:</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>${totalAmount.toFixed(2)}</Typography>
-            </Box>
-        )}
-    </Box>
-);
+export const TransfersTableCell = (memberData) => {
+    // Filter only savedWallets (keys like 'savedWallet1', 'savedWallet2', etc.)
+    const savedWallets = Object.entries(memberData)
+        .filter(([key, _]) => key.startsWith('savedWallet'));
 
-// Example usage
-const transfers = [
-    { percentage: '3.56%', amount: 219.32 },
-    { percentage: '5.87%', amount: 734.91 },
-    // ... add more transfers as needed
-];
-const totalAmount = transfers.reduce((sum, transfer) => sum + transfer.amount, 0);
+    if (savedWallets.length === 0) {
+        return <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>No transfers available</Typography>;
+    }
 
-// <TableCell><TableCellContent transfers={transfers} totalAmount={totalAmount} /></TableCell>
+    let totalAmount = 0;
+
+    return (
+        <Box>
+            {savedWallets.map(([walletKey, walletData], index) => {
+                const transferAmount = walletData.adjustedNetAmount || 0;
+                const transferShare = walletData.share || 0; // Use the share from the member data
+                totalAmount += transferAmount;
+
+                return (
+                    <Box key={walletKey} sx={{ display: 'flex', justifyContent: 'space-between', mb: 0, fontFamily: 'Inter Tight, sans-serif' }}>
+                        <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>Transfer #{index + 1}:</Typography>
+                        <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>
+                            [{formatAmountDisplay(transferAmount)} | {(transferShare * 100).toFixed(2)}%]
+                        </Typography>
+                    </Box>
+                );
+            })}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0 }}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: 'Inter Tight, sans-serif' }}>Total:</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: 'Inter Tight, sans-serif' }}>
+                    {formatAmountDisplay(totalAmount)}
+                </Typography>
+            </Box>
+        </Box>
+    );
+};
 
