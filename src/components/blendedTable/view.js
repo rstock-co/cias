@@ -312,9 +312,18 @@ const BlendedAllocationTable = ({
                                 {/* Table data */}
                                 {Object.entries(aggregateDataForBlendedTable)
                                     .map(([memberWallet, data]) => {
-                                        const adjustedNetAmount = Object.values(data).reduce((acc, walletData) => {
-                                            return acc + (walletData && walletData.adjustedNetAmount ? walletData.adjustedNetAmount : 0);
-                                        }, 0);
+                                        const baseWalletContribution = data.baseWallet ? data.baseWallet.adjustedNetAmount : 0;
+
+                                        const savedWalletsContribution = Object.entries(data)
+                                            .filter(([key, _]) => key.startsWith('savedWallet'))
+                                            .reduce((acc, [walletKey, walletData]) => {
+                                                const transferIndex = parseInt(walletKey.replace('savedWallet', ''), 10); // Extract index from walletKey
+                                                const totalTransferAmount = tableTransferTotals[transferIndex] || 0;
+                                                const memberContribution = walletData.share * totalTransferAmount; // Calculate based on share
+                                                return acc + memberContribution;
+                                            }, 0);
+
+                                        const adjustedNetAmount = baseWalletContribution + savedWalletsContribution;
 
                                         // Return an object representing each row, along with calculated adjustedNetAmount
                                         return { memberWallet, data, adjustedNetAmount };
@@ -340,7 +349,7 @@ const BlendedAllocationTable = ({
                                             <StyledTableCell align="center">{(share * 100).toFixed(2)}%</StyledTableCell>
 
                                             <StyledTableCell align="center" style={{ maxWidth: '200px' }}>
-                                                {TransfersTableCell(data, grandTotalNet)}
+                                                {TransfersTableCell(data, tableTransferTotals)}
                                             </StyledTableCell>
 
 

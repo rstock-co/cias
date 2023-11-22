@@ -161,8 +161,7 @@ export const WalletSummary = ({
     </Box>
 );
 
-export const TransfersTableCell = (memberData) => {
-    // Filter only savedWallets (keys like 'savedWallet1', 'savedWallet2', etc.)
+export const TransfersTableCell = (memberData, transferTotals) => {
     const savedWallets = Object.entries(memberData)
         .filter(([key, _]) => key.startsWith('savedWallet'));
 
@@ -175,15 +174,16 @@ export const TransfersTableCell = (memberData) => {
     return (
         <Box>
             {savedWallets.map(([walletKey, walletData], index) => {
-                const transferAmount = walletData.adjustedNetAmount || 0;
-                const transferShare = walletData.share || 0; // Use the share from the member data
+                const transferIndex = index + 1; // Assuming transfer # starts from 1
+                const totalForThisTransfer = transferTotals[transferIndex] || 0;
+                const transferAmount = walletData.share * totalForThisTransfer; // Calculate amount based on share
                 totalAmount += transferAmount;
 
                 return (
                     <Box key={walletKey} sx={{ display: 'flex', justifyContent: 'space-between', mb: 0, fontFamily: 'Inter Tight, sans-serif' }}>
-                        <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>Transfer #{index + 1}:</Typography>
+                        <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>Transfer #{transferIndex}:</Typography>
                         <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>
-                            [{formatAmountDisplay(transferAmount)} | {(transferShare * 100).toFixed(2)}%]
+                            [{formatAmountDisplay(transferAmount)} | {(walletData.share * 100).toFixed(2)}%]
                         </Typography>
                     </Box>
                 );
@@ -197,4 +197,5 @@ export const TransfersTableCell = (memberData) => {
         </Box>
     );
 };
+
 
