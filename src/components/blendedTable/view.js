@@ -222,7 +222,7 @@ const BlendedAllocationTable = ({
 
                                 {/* Table header row */}
                                 <TableRow>
-                                    <StyledTableCell>Member Wallet</StyledTableCell>
+                                    <StyledTableCell sx={{paddingLeft: '25px'}}>&nbsp;&nbsp;&nbsp;Member Wallet</StyledTableCell>
 
                                     {showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
                                     
@@ -282,18 +282,14 @@ const BlendedAllocationTable = ({
                                             {(totalShare * 100).toFixed(2)}%
                                         </StyledTableCell>
 
-                                        {/* {isAggregated && (
-                                            <WideStyledTableCell align="center" style={totalRowStyleWithBorder}>{formatAggregatedData(aggregatedTxns).totalAmounts}</WideStyledTableCell>
-                                        )} */}
-
                                         {/* Transfer Wallets Summary */}
                                         <StyledTableCell align="center" sx={{...totalRowStyle, borderLeft: "1px solid grey", borderRight: "1px solid grey"}}>
                                             {totalTxns}
                                         </StyledTableCell>
 
-                                        {isAggregated && (
-                                            <WideStyledTableCell align="center" style={totalRowStyleWithBorder}>{formatAggregatedData(aggregatedTxns).txns}</WideStyledTableCell>
-                                        )}
+                                        <StyledTableCell align="center" sx={{...totalRowStyle, borderLeft: "1px solid grey", borderRight: "1px solid grey"}}>
+                                            {totalTxns}
+                                        </StyledTableCell>
 
                                         <StyledTableCell align="center" style={totalRowStyle}>{totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
                                         <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(aggregatedContributionsChainMap)}</StyledTableCell>
@@ -328,8 +324,8 @@ const BlendedAllocationTable = ({
 
                                     return (
                                         <StyledTableRow key={memberWallet}>
-                                            <StyledTableCell component="th" scope="row">
-                                                {shortenAddress(memberWallet)}
+                                            <StyledTableCell component="th" scope="row" sx={{paddingLeft: '25px'}}>
+                                            {'\u00A0\u00A0\u00A0' + shortenAddress(memberWallet)}
                                             </StyledTableCell>
 
                                             {showMemberName && (
@@ -346,7 +342,7 @@ const BlendedAllocationTable = ({
                                             </StyledTableCell>
 
 
-                                            <StyledTableCell align="center">
+                                            <StyledTableCell align="center" sx={{borderLeft: "1px solid #b8b8b8", borderRight: "1px solid #b8b8b8"}}>
                                                 {baseWallet ? BaseWalletTableCell(baseWallet) : 'No contributions'}
                                             </StyledTableCell>
 

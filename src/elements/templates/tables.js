@@ -216,34 +216,3 @@ export const BaseWalletTableCell = (baseWallet) => (
         </Typography>
     </Box>
 );
-
-// return (
-//     <Box key={walletKey} sx={{ display: 'flex', justifyContent: 'space-between', mb: 0, fontFamily: 'Inter Tight, sans-serif', alignItems: 'right' }}>
-//         <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', flex: 1 }}>
-//             {walletData.walletName}:
-//         </Typography>
-//         <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flex: 1 }}>
-//             <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '50px' }}>
-//                 {formatAmountDisplay(transferAmount)}
-//             </Typography>
-//             <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', mx: 1 }}>
-//                 |
-//             </Typography>
-//             <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '50px' }}>
-//                 {(walletData.share * 100).toFixed(2)}%
-//             </Typography>
-//         </Box>
-//     </Box>
-// );
-// })}
-// <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0, alignItems: 'center' }}>
-// <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: 'Inter Tight, sans-serif', flex: 1, textAlign: 'left' }}>Total:</Typography>
-// <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flex: 1 }}>
-//     <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '50px' }}>
-//         {formatAmountDisplay(totalAmount)}
-//     </Typography>
-//     {/* Add empty placeholders to align with the pipes and percentages */}
-//     <Typography variant="body2" sx={{ visibility: 'hidden', mx: 1 }}>|</Typography>
-//     <Typography variant="body2" sx={{ visibility: 'hidden', textAlign: 'right', minWidth: '50px' }}>%</Typography>
-// </Box>
-// </Box>

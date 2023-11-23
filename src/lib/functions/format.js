@@ -78,7 +78,7 @@ export const shortenAddress = (address, startLength = 4, endLength = 6) => {
     const start = address.substring(0, startLength + 2); // add 2 to account for '0x'
     const end = address.substring(address.length - endLength);
 
-    return start + '...' + end;
+    return `${start} ... ${end}`;
 }
 
 export const formatChainData = (chainData) => {
