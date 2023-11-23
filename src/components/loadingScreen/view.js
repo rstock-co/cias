@@ -5,10 +5,11 @@ import "@fontsource/inter-tight";
 import "./logos.css";
 
 const logos = {
-  arb: 'arb.png',
-  eth: 'eth.png',
-  bsc: 'busd.png',
+  arb: 'https://i.imgur.com/3kJricG.png',
+  eth: 'https://i.imgur.com/iPqQBBB.png',
+  bsc: 'https://i.imgur.com/a5V7FFD.png',
 };
+
 
 const LoadingScreen = ({ stableCoins, open = false }) => {
   return (

@@ -1,6 +1,15 @@
 import { useState, useEffect } from 'react';
+import { sumObjectValues } from '../../../lib/functions/wallets';
+import { processBlendedTableData } from '../../../lib/functions/table';
 
-const BlendUX = ({savedTables, savedTableDisplayData, sortedAllocationTableData}) => {
+const BlendUX = ({
+    savedTables, 
+    savedTableDisplayData, 
+    sortedAllocationTableData, 
+    tableTransferTotals,
+    adjustedNetTotal,
+    totalNetAmount,
+} = {}) => {
 
     const [aggregateData, setAggregateData] = useState({});
 
@@ -89,9 +98,15 @@ const BlendUX = ({savedTables, savedTableDisplayData, sortedAllocationTableData}
         setAggregateData(computeAggregateData());
     }, [savedTables, savedTableDisplayData, sortedAllocationTableData]);
     
-
+    const totalTransferAmount = sumObjectValues(tableTransferTotals)
+    const grandTotalNet = adjustedNetTotal !== "" ? Number(adjustedNetTotal) + totalTransferAmount : totalNetAmount + totalTransferAmount;
+    const blendedTableData = processBlendedTableData(aggregateData, tableTransferTotals, grandTotalNet);
+    
     return {
-        aggregateDataForBlendedTable: aggregateData
+        aggregateDataForBlendedTable: aggregateData,
+        totalTransferAmount,
+        grandTotalNet,
+        blendedTableData
     }
 
 }

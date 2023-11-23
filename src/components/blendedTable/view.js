@@ -1,14 +1,14 @@
 import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableHead, 
     TableRow, TableBody, DialogActions, Button, Box, Typography, 
     FormControl, InputLabel, OutlinedInput, InputAdornment } from "@mui/material";
-import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
-import { getWalletName, sumObjectValues } from "../../lib/functions/wallets";
+import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData } from "../../lib/functions/format";
+import { getWalletName } from "../../lib/functions/wallets";
 import { memberWallets } from "../../lib/data/wallets";
 import { TransferWalletSummary, WalletSummary, TransfersTableCell, BaseWalletTableCell } from "../../elements/templates/tables";
 import { printTableToPDF } from "../../lib/functions/actions";
 import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
-import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, StyledTab, StyledTabs } from "./styles";
+import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, StyledTab, StyledTabs } from "./styles";
 
 import SavedTable from '../savedTable';
 import "@fontsource/inter-tight";
@@ -33,7 +33,6 @@ const BlendedAllocationTable = ({
     aggregatedContributionsChainMap, 
     aggregatedRefundsChainMap, 
     aggregatedTxns, 
-    sortedAllocationTableData,
     adjustedNetTotal,
     isAggregated,
     generatedDateString,
@@ -51,7 +50,11 @@ const BlendedAllocationTable = ({
     dynamicDialogTitle,
     tabTitle,
 
-    aggregateDataForBlendedTable
+    // ux.blend
+    aggregateDataForBlendedTable,
+    totalTransferAmount,
+    grandTotalNet,
+    blendedTableData
 
 } = {}) => {
     
@@ -59,11 +62,7 @@ const BlendedAllocationTable = ({
     console.log("table transfer totals: ",tableTransferTotals)
     console.log("savedTableDisplayData:", savedTableDisplayData);
     console.log("transferTxnsToBlend:", transferTxnsToBlend)
-
     console.log("aggregate data for blended table:", aggregateDataForBlendedTable)
-
-    const totalTransferAmount = sumObjectValues(tableTransferTotals)
-    const grandTotalNet = adjustedNetTotal !== "" ? Number(adjustedNetTotal) + totalTransferAmount : totalNetAmount + totalTransferAmount;
 
     return (
         <>
@@ -85,7 +84,7 @@ const BlendedAllocationTable = ({
                         {dynamicDialogTitle}
                     </Typography>
 
-                    {/* Hide these elements based on tabIndex */}
+                    {/* Hide these elements based on tabIndex (hide when blended table not selected) */}
                     {tabIndex >= filteredBlendedTableIds.length && (
                     <Box sx={{ display: 'flex', alignItems: 'center', ml: 2 }}>
                         {/* Show Totals Row */}
@@ -171,8 +170,6 @@ const BlendedAllocationTable = ({
                     />
                 )
                 : ( <>
-                    
-
                     <TableContainer component={Paper} id="blendedTable" sx={{ border: 'none', marginTop: '15px' }}>
 
                         <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none', marginTop: '15px', marginLeft: '20px' }}>
@@ -181,7 +178,6 @@ const BlendedAllocationTable = ({
 
                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', flexWrap: 'wrap', fontFamily: 'Inter Tight, sans-serif' }}>
 
-                        {/* WalletSummary Box */}
                             <Box mb={2} mt={2} ml={3}>
                                 <WalletSummary
                                     walletTitle={dialogTitle}
@@ -195,7 +191,6 @@ const BlendedAllocationTable = ({
                                 />
                             </Box>
 
-                        {/* TransferWalletSummary Elements */}
                         {savedTableDisplayData.map(({ tableId, tableTitle, transferTotal }, index) => {
                             // Only render TransferWalletSummary for tables other than the last one
                             if (index <= savedTableDisplayData.length - 1) {
@@ -308,30 +303,8 @@ const BlendedAllocationTable = ({
                                 )}
 
                                 {/* Table data */}
-                                {Object.entries(aggregateDataForBlendedTable)
-                                    .map(([memberWallet, data]) => {
-                                        const baseWalletContribution = data.baseWallet ? data.baseWallet.adjustedNetAmount : 0;
+                                {blendedTableData.map(({ memberWallet, data, adjustedNetAmount, share, baseWallet }) => (
 
-                                        const savedWalletsContribution = Object.entries(data)
-                                            .filter(([key, _]) => key.startsWith('savedWallet'))
-                                            .reduce((acc, [walletKey, walletData]) => {
-                                                const transferIndex = parseInt(walletKey.replace('savedWallet', ''), 10); // Extract index from walletKey
-                                                const transferAmount = tableTransferTotals[transferIndex] || 0;
-                                                const memberContribution = walletData.share * transferAmount; // Calculate based on share
-                                                return acc + memberContribution;
-                                            }, 0);
-
-                                        const adjustedNetAmount = baseWalletContribution + savedWalletsContribution;
-
-                                        // Return an object representing each row, along with calculated adjustedNetAmount
-                                        return { memberWallet, data, adjustedNetAmount };
-                                    })
-                                    .sort((a, b) => b.adjustedNetAmount - a.adjustedNetAmount) // Sort by adjustedNetAmount in descending order
-                                    .map(({ memberWallet, data, adjustedNetAmount }) => {
-                                        const baseWallet = data.baseWallet;
-                                        const share = adjustedNetAmount / grandTotalNet;
-
-                                    return (
                                         <StyledTableRow key={memberWallet}>
                                             <StyledTableCell component="th" scope="row">
                                             {'\u00A0\u00A0\u00A0' + shortenAddress(memberWallet)}
@@ -346,20 +319,14 @@ const BlendedAllocationTable = ({
                                             <StyledTableCell align="center">{formatAmountDisplay(adjustedNetAmount)}</StyledTableCell>
                                             <StyledTableCell align="center">{(share * 100).toFixed(2)}%</StyledTableCell>
 
-                                            <StyledTableCell align="center" style={{ width: '250px', paddingRight: '25px', borderLeft: "1px solid #b8b8b8", borderRight: "1px solid #b8b8b8"}}>
+                                            {/* Transfer Wallets Summary */}
+                                            <StyledTableCell align="center" style={{ width: '275px', paddingRight: '25px', borderLeft: "1px solid #b8b8b8", borderRight: "1px solid #b8b8b8"}}>
                                                 {TransfersTableCell(data, tableTransferTotals)}
                                             </StyledTableCell>
-
 
                                             <StyledTableCell align="center" sx={{borderLeft: "1px solid #b8b8b8", borderRight: "1px solid #b8b8b8"}}>
                                                 {baseWallet ? BaseWalletTableCell(baseWallet) : 'No contributions'}
                                             </StyledTableCell>
-
-                                            {isAggregated && (
-                                                <WideStyledTableCell align="center">
-                                                    {baseWallet ? formatAggregatedData(baseWallet.walletTxns).txns : 0}
-                                                </WideStyledTableCell>
-                                            )}
 
                                             <StyledTableCell align="center" >
                                                 {baseWallet ? formatAmountDisplay(baseWallet.contributionsAmount) : formatAmountDisplay(0)}
@@ -374,8 +341,7 @@ const BlendedAllocationTable = ({
                                                 {baseWallet ? formatChainData(baseWallet.refundsChainMap) : formatChainData({})}
                                             </StyledTableCell>
                                         </StyledTableRow>
-                                    );
-                                })}
+                                    ))}
 
                             </TableBody>
                         </Table>
@@ -385,7 +351,7 @@ const BlendedAllocationTable = ({
             </DialogContent>
                     
             <DialogActions>
-                <Button onClick={() => printTableToPDF('blendedTable', 'tabloid', 'blended-table.pdf')}>Download PDF</Button>
+                <Button onClick={() => printTableToPDF('blendedTable', 'portrait', 'tabloid', 'blended-table.pdf', true, 2)}>Download PDF</Button>
                 <Button onClick={() => setDialogOpen(false)}>Close</Button>
             </DialogActions>
 
