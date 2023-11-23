@@ -184,10 +184,10 @@ export const TransfersTableCell = (memberData, transferTotals) => {
                             <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '50px' }}>
                                 {formatAmountDisplay(transferAmount)}
                             </Typography>
-                            <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', mx: 1 }}>
+                            <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', ml: 1, mr: 0.5  }}>
                                 |
                             </Typography>
-                            <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '50px' }}>
+                            <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '45px' }}>
                                 {(walletData.share * 100).toFixed(2)}%
                             </Typography>
                         </Box>
@@ -201,8 +201,8 @@ export const TransfersTableCell = (memberData, transferTotals) => {
                         {formatAmountDisplay(totalAmount)}
                     </Typography>
                     {/* Add empty placeholders to align with the pipes and percentages */}
-                    <Typography variant="body2" sx={{ visibility: 'hidden', mx: 1 }}>|</Typography>
-                    <Typography variant="body2" sx={{ visibility: 'hidden', textAlign: 'right', minWidth: '50px' }}>%</Typography>
+                    <Typography variant="body2" sx={{ visibility: 'hidden', ml: 1, mr: 0.5 }}>|</Typography>
+                    <Typography variant="body2" sx={{ visibility: 'hidden', textAlign: 'right', minWidth: '45px' }}>%</Typography>
                 </Box>
             </Box>
         </Box>  
