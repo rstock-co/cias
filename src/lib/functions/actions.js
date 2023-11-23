@@ -17,15 +17,6 @@ import jsPDF from 'jspdf';
 
 export const printTableToPDF = (elementId, orientation, pdfSize, filename, fitToWidth = true, quality = 2) => {
 
-  console.log("=== DOWNLOAD PDF ===")
-  console.log("elementId: ", elementId);
-  console.log("orientation: ", orientation);
-  console.log("pdfSize: ", pdfSize);
-  console.log("filename: ", filename);
-  console.log("fitToWidth: ", fitToWidth);
-  console.log("quality: ", quality);
-  console.log("====================")
-
   const element = document.getElementById(elementId);
 
   html2canvas(element, { scale: quality, useCORS: true }).then((originalCanvas) => {
@@ -47,15 +38,6 @@ export const printTableToPDF = (elementId, orientation, pdfSize, filename, fitTo
         : imagePixelHeight / printableHeightInches;
       
       const pixelsPerPage = pixelsPerInch * (fitToWidth ? printableHeightInches : printableWidthInches);
-
-      console.log("=== PDF PROPERTIES ===")
-      console.log("printableWidthInches: ", printableWidthInches);
-      console.log("printableHeightInches: ", printableHeightInches);
-      console.log("imagePixelWidth: ", imagePixelWidth);
-      console.log("imagePixelHeight: ", imagePixelHeight);
-      console.log("pixelsPerInch: ", pixelsPerInch);
-      console.log("pixelsPerPage: ", pixelsPerPage);
-      console.log("======================")
       
       let yPos = 0;
 
@@ -77,10 +59,10 @@ export const printTableToPDF = (elementId, orientation, pdfSize, filename, fitTo
         pdf.addImage(pageCanvasDataUrl, 'PNG', paddingInches / 2, paddingInches / 2, printableWidthInches, currentPagePrintHeightPixels / pixelsPerInch);
 
         yPos += currentPagePrintHeightPixels;
-    }
+      }
 
     pdf.save(filename);
-});
+  });
 
 };
 
@@ -114,26 +96,10 @@ export const printTableToPDF = (elementId, orientation, pdfSize, filename, fitTo
 // https://pdfresizer.com/  (100 MB limit)
 
 
-// STACK OVERFLOW
+// STACK OVERFLOW - WHY WE NEED TO KEEP THE SCALE AT 2 TO AVOID GREY SHADING ON THE PDF:
 
-// https://stackoverflow.com/questions/36472094/how-to-set-image-to-fit-width-of-the-page-using-jspdf
+// https://stackoverflow.com/a/63443349
 
-
-
-// EXAMPLE USAGE:
-
-// export const printAllocationTable = () => {
-//     const element = document.getElementById('allocationTable');
-//     const opt = {
-//         margin: 1,
-//         filename: 'allocation_table.pdf',
-//         image: { type: 'jpeg', quality: 0.98 },
-//         html2canvas: { scale: 2, windowWidth: element.scrollWidth, windowHeight: element.scrollHeight },
-//         jsPDF: { unit: 'in', format: 'tabloid', orientation: 'landscape' }
-//     };
-
-//     html2pdf().from(element).set(opt).save();
-// }
 
 export const copyToClipboard = async (text, handler) => {
     if (!navigator.clipboard) {

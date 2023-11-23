@@ -169,10 +169,11 @@ export const TransfersTableCell = (memberData, transferTotals) => {
 
     return (
         <Box>
-            {savedWallets.map(([walletKey, walletData], index) => {
-                const transferIndex = index + 1; // For accessing transferTotals
-                const totalForThisTransfer = transferTotals[transferIndex] || 0;
-                const transferAmount = walletData.share * totalForThisTransfer; // Calculate amount based on share
+            {savedWallets.map(([walletKey, walletData]) => {
+                // Extract the number from the walletKey (e.g., 'savedWallet2') and use it to access the correct transferTotal
+                const transferId = walletKey.match(/\d+$/)[0];
+                const totalForThisTransfer = transferTotals[transferId] || 0;
+                const transferAmount = walletData.share * totalForThisTransfer;
                 totalAmount += transferAmount;
 
                 return (
@@ -193,8 +194,8 @@ export const TransfersTableCell = (memberData, transferTotals) => {
                         </Box>
                     </Box>
                 );
-                })}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0, alignItems: 'center' }}>
+            })}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0, alignItems: 'center' }}>
                 <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: 'Inter Tight, sans-serif', flex: 0.75, textAlign: 'right', paddingRight: 0 }}>Total:</Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flex: 1 }}>
                     <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '50px' }}>
@@ -207,7 +208,8 @@ export const TransfersTableCell = (memberData, transferTotals) => {
             </Box>
         </Box>  
     );
-};
+}
+
 
 export const BaseWalletTableCell = (baseWallet) => (
     <Box sx={{ display: 'flex', justifyContent: 'center', mb: 0, fontFamily: 'Inter Tight, sans-serif' }}>
