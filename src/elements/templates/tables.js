@@ -211,8 +211,8 @@ export const TransfersTableCell = (memberData, transferTotals) => {
 
 export const BaseWalletTableCell = (baseWallet) => (
     <Box sx={{ display: 'flex', justifyContent: 'center', mb: 0, fontFamily: 'Inter Tight, sans-serif' }}>
-        <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', textAlign: 'center' }}>
-            [{formatAmountDisplay(baseWallet.adjustedNetAmount)} | {(baseWallet.share * 100).toFixed(2)}%]
+        <Typography variant="body1" sx={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '15px', textAlign: 'center' }}>
+            {formatAmountDisplay(baseWallet.adjustedNetAmount)} &nbsp;|&nbsp; {(baseWallet.share * 100).toFixed(2)}%  &nbsp;({baseWallet.txns} txns)
         </Typography>
     </Box>
 );

@@ -58,6 +58,7 @@ const BlendedAllocationTable = ({
     console.log("savedTables:", savedTables);
     console.log("table transfer totals: ",tableTransferTotals)
     console.log("savedTableDisplayData:", savedTableDisplayData);
+    console.log("transferTxnsToBlend:", transferTxnsToBlend)
 
     console.log("aggregate data for blended table:", aggregateDataForBlendedTable)
 
@@ -205,7 +206,7 @@ const BlendedAllocationTable = ({
 
                                 {/* Table title and generation date */}
                                 <TableRow>
-                                    <TableCell colSpan={isAggregated ? 8 : showMemberName ? 7 : 6 } style={{ borderBottom: 'none' }}>
+                                    <TableCell colSpan={showMemberName ? 8 : 7 } style={{ borderBottom: 'none' }}>
                                         <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
                                             {dialogTitle}
                                         </Typography>
@@ -228,22 +229,22 @@ const BlendedAllocationTable = ({
                                     
                                     <StyledTableCell align="center">
                                         All Wallets
-                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>(Total Net $)</div>
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>Total Net ($)</div>
                                     </StyledTableCell>
 
                                     <StyledTableCell align="center">
-                                        Share
-                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>(%)</div>
+                                        Share (%)
+                                        {/* <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>%</div> */}
                                     </StyledTableCell>
 
                                     <StyledTableCell align="center" sx={{borderLeft: "1px solid grey", borderRight: "1px solid grey"}}>
                                         Transfer Wallets Summary
-                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>(Total Net $ | Share %)</div>
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>Total Net $ &nbsp;|&nbsp; Share %</div>
                                     </StyledTableCell>
                                     
                                     <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
                                         Base Wallet
-                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>(Total Net $ | Share %)</div>
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>Total Net $ &nbsp;|&nbsp; Share % (# of txns)</div>
                                     </StyledTableCell>
                                     
                                     <StyledTableCell align="center">Contributions ($)</StyledTableCell>
@@ -284,11 +285,11 @@ const BlendedAllocationTable = ({
 
                                         {/* Transfer Wallets Summary */}
                                         <StyledTableCell align="center" sx={{...totalRowStyle, borderLeft: "1px solid grey", borderRight: "1px solid grey"}}>
-                                            {totalTxns}
+                                            {formatAmountDisplay(totalTransferAmount)} &nbsp;|&nbsp; {Object.keys(transferTxnsToBlend).length} transfers
                                         </StyledTableCell>
 
                                         <StyledTableCell align="center" sx={{...totalRowStyle, borderLeft: "1px solid grey", borderRight: "1px solid grey"}}>
-                                            {totalTxns}
+                                            {formatAmountDisplay(adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount)} &nbsp;|&nbsp; {(totalShare * 100).toFixed(2)}% &nbsp;({totalTxns} txns)
                                         </StyledTableCell>
 
                                         <StyledTableCell align="center" style={totalRowStyle}>{totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
@@ -307,8 +308,8 @@ const BlendedAllocationTable = ({
                                             .filter(([key, _]) => key.startsWith('savedWallet'))
                                             .reduce((acc, [walletKey, walletData]) => {
                                                 const transferIndex = parseInt(walletKey.replace('savedWallet', ''), 10); // Extract index from walletKey
-                                                const totalTransferAmount = tableTransferTotals[transferIndex] || 0;
-                                                const memberContribution = walletData.share * totalTransferAmount; // Calculate based on share
+                                                const transferAmount = tableTransferTotals[transferIndex] || 0;
+                                                const memberContribution = walletData.share * transferAmount; // Calculate based on share
                                                 return acc + memberContribution;
                                             }, 0);
 
@@ -324,7 +325,7 @@ const BlendedAllocationTable = ({
 
                                     return (
                                         <StyledTableRow key={memberWallet}>
-                                            <StyledTableCell component="th" scope="row" sx={{paddingLeft: '25px'}}>
+                                            <StyledTableCell component="th" scope="row">
                                             {'\u00A0\u00A0\u00A0' + shortenAddress(memberWallet)}
                                             </StyledTableCell>
 
@@ -352,10 +353,10 @@ const BlendedAllocationTable = ({
                                                 </WideStyledTableCell>
                                             )}
 
-                                            <StyledTableCell align="center">
+                                            <StyledTableCell align="center" >
                                                 {baseWallet ? formatAmountDisplay(baseWallet.contributionsAmount) : formatAmountDisplay(0)}
                                             </StyledTableCell>
-                                            <StyledTableCell align="center">
+                                            <StyledTableCell align="center" sx={{borderRight: "1px solid #b8b8b8"}}>
                                                 {baseWallet ? formatChainData(baseWallet.contributionsChainMap) : formatChainData({})}
                                             </StyledTableCell>
                                             <StyledTableCell align="center">
