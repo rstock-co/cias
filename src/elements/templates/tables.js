@@ -116,7 +116,7 @@ const formatLogoChainMap = (chainMapString) => {
 
 export const WalletSummary = ({ 
     walletTitle, walletType, 
-    totalNetAmount, aggregatedContributionsChainMap, totalContributionsAmount, totalRefundsAmount, aggregatedRefundsChainMap, aggregatedTxns
+    totalNetAmount, aggregatedContributionsChainMap, totalContributionsAmount, totalRefundsAmount, aggregatedRefundsChainMap, 
  } = {}) => (
 
     <Box sx={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '16px', marginRight: '40px' }}>
@@ -124,17 +124,17 @@ export const WalletSummary = ({
             {walletType === 'Blended' ? 'Base Wallet' : 'Allocation Wallet'}
             {walletTitle.includes('|') && (
                 <Typography 
-                component="span" 
-                sx={{ 
-                    fontFamily: 'Inter Tight, sans-serif', 
-                    color: "#808080", 
-                    fontSize: '0.6em', 
-                    marginLeft: '0.5em', 
-                    alignSelf: 'flex-start',
-                    textShadow: `0 0 10px #097c8f, 0 0 20px #097c8f` // Adjust the glow effect here
+                    component="span" 
+                    sx={{ 
+                        fontFamily: 'Inter Tight, sans-serif', 
+                        color: "#808080", 
+                        fontSize: '0.6em', 
+                        marginLeft: '0.5em', 
+                        alignSelf: 'flex-start',
+                        textShadow: `0 0 10px #097c8f, 0 0 20px #097c8f` // Adjust the glow effect here
                 }}>
-                [*Aggregated]
-            </Typography>
+                    [*Aggregated]
+                </Typography>
             
             )}
         </Typography>
@@ -155,8 +155,6 @@ export const WalletSummary = ({
             <SummaryLine label="Total Contributions Amount:" value={totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)} />
             <SummaryLine label="Total Refunds:" value={formatLogoChainMap(formatChainMap(aggregatedRefundsChainMap))} />
             <SummaryLine label="Total Refunds Amount:" value={totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)} />
-            {/* <SummaryLine label="Total Net Amount:" value={totalNetAmount && formatAggregatedData(aggregatedTxns).totalAmounts} />
-            <SummaryLine label="Total Transactions:" value={formatAggregatedData(aggregatedTxns).txns} /> */}
         </Box>
     </Box>
 );
@@ -165,9 +163,7 @@ export const TransfersTableCell = (memberData, transferTotals) => {
     const savedWallets = Object.entries(memberData)
         .filter(([key, _]) => key.startsWith('savedWallet'));
 
-    if (savedWallets.length === 0) {
-        return <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>No transfers available</Typography>;
-    }
+    if (savedWallets.length === 0) return <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>No transfers available</Typography>;
 
     let totalAmount = 0;
 
@@ -180,22 +176,74 @@ export const TransfersTableCell = (memberData, transferTotals) => {
                 totalAmount += transferAmount;
 
                 return (
-                    <Box key={walletKey} sx={{ display: 'flex', justifyContent: 'space-between', mb: 0, fontFamily: 'Inter Tight, sans-serif' }}>
-                        <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>
-                            {walletData.walletName}: 
+                    <Box key={walletKey} sx={{ display: 'flex', justifyContent: 'space-between', mb: 0, fontFamily: 'Inter Tight, sans-serif', alignItems: 'right' }}>
+                        <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', flex: 0.75, textAlign: 'right', paddingRight: 0 }}>
+                            {walletData.walletName}:
                         </Typography>
-                        <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>
-                            [{formatAmountDisplay(transferAmount)} | {(walletData.share * 100).toFixed(2)}%]
-                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flex: 1 }}>
+                            <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '50px' }}>
+                                {formatAmountDisplay(transferAmount)}
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', mx: 1 }}>
+                                |
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '50px' }}>
+                                {(walletData.share * 100).toFixed(2)}%
+                            </Typography>
+                        </Box>
                     </Box>
                 );
-            })}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0 }}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: 'Inter Tight, sans-serif' }}>Total:</Typography>
-                <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: 'Inter Tight, sans-serif' }}>
-                    {formatAmountDisplay(totalAmount)}
-                </Typography>
+                })}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0, alignItems: 'center' }}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: 'Inter Tight, sans-serif', flex: 0.75, textAlign: 'right', paddingRight: 0 }}>Total:</Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flex: 1 }}>
+                    <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '50px' }}>
+                        {formatAmountDisplay(totalAmount)}
+                    </Typography>
+                    {/* Add empty placeholders to align with the pipes and percentages */}
+                    <Typography variant="body2" sx={{ visibility: 'hidden', mx: 1 }}>|</Typography>
+                    <Typography variant="body2" sx={{ visibility: 'hidden', textAlign: 'right', minWidth: '50px' }}>%</Typography>
+                </Box>
             </Box>
-        </Box>
+        </Box>  
     );
 };
+
+export const BaseWalletTableCell = (baseWallet) => (
+    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 0, fontFamily: 'Inter Tight, sans-serif' }}>
+        <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', textAlign: 'center' }}>
+            [{formatAmountDisplay(baseWallet.adjustedNetAmount)} | {(baseWallet.share * 100).toFixed(2)}%]
+        </Typography>
+    </Box>
+);
+
+// return (
+//     <Box key={walletKey} sx={{ display: 'flex', justifyContent: 'space-between', mb: 0, fontFamily: 'Inter Tight, sans-serif', alignItems: 'right' }}>
+//         <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', flex: 1 }}>
+//             {walletData.walletName}:
+//         </Typography>
+//         <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flex: 1 }}>
+//             <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '50px' }}>
+//                 {formatAmountDisplay(transferAmount)}
+//             </Typography>
+//             <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', mx: 1 }}>
+//                 |
+//             </Typography>
+//             <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '50px' }}>
+//                 {(walletData.share * 100).toFixed(2)}%
+//             </Typography>
+//         </Box>
+//     </Box>
+// );
+// })}
+// <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0, alignItems: 'center' }}>
+// <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: 'Inter Tight, sans-serif', flex: 1, textAlign: 'left' }}>Total:</Typography>
+// <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flex: 1 }}>
+//     <Typography variant="body2" sx={{ fontWeight: 'bold', fontFamily: 'Inter Tight, sans-serif', textAlign: 'right', minWidth: '50px' }}>
+//         {formatAmountDisplay(totalAmount)}
+//     </Typography>
+//     {/* Add empty placeholders to align with the pipes and percentages */}
+//     <Typography variant="body2" sx={{ visibility: 'hidden', mx: 1 }}>|</Typography>
+//     <Typography variant="body2" sx={{ visibility: 'hidden', textAlign: 'right', minWidth: '50px' }}>%</Typography>
+// </Box>
+// </Box>

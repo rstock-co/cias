@@ -11,13 +11,14 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
         fontWeight: 'bold',
         fontSize: 16,
         fontFamily: 'Inter, sans-serif',
+        padding: '15px 10px',
         borderBottom: 'none'
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 15,
         fontFamily: 'Inter Tight, sans-serif',
         borderBottom: 'none',
-        padding: '13px 22px',  // Adjusted padding
+        padding: '10px 10px',  // Adjusted padding
         lineHeight: '1.1',    // Smaller line height
     },
 }));

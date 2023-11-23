@@ -4,7 +4,7 @@ import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, Table
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
 import { getWalletName, sumObjectValues } from "../../lib/functions/wallets";
 import { memberWallets } from "../../lib/data/wallets";
-import { TransferWalletSummary, WalletSummary, TransfersTableCell } from "../../elements/templates/tables";
+import { TransferWalletSummary, WalletSummary, TransfersTableCell, BaseWalletTableCell } from "../../elements/templates/tables";
 import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, StyledTab, StyledTabs } from "./styles";
@@ -228,43 +228,36 @@ const BlendedAllocationTable = ({
                                     
                                     <StyledTableCell align="center">
                                         All Wallets
-                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(Total Net $)</div>
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>(Total Net $)</div>
                                     </StyledTableCell>
 
                                     <StyledTableCell align="center">
                                         Share
-                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(%)</div>
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>(%)</div>
                                     </StyledTableCell>
-                                    
-                                    {/* {isAggregated && (
-                                        <WideStyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
-                                            Total Net ($)
-                                            <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Wallet)</div>
-                                        </WideStyledTableCell>
-                                    )} */}
 
                                     <StyledTableCell align="center" sx={{borderLeft: "1px solid grey", borderRight: "1px solid grey"}}>
                                         Transfer Wallets Summary
-                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(Total Net $ | Share %)</div>
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>(Total Net $ | Share %)</div>
                                     </StyledTableCell>
                                     
                                     <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
                                         Base Wallet
-                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(Total Net $ | Share %)</div>
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>(Total Net $ | Share %)</div>
                                     </StyledTableCell>
                                     
                                     <StyledTableCell align="center">Contributions ($)</StyledTableCell>
 
                                     <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
                                         # of Contributions
-                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>(per Chain)</div>
                                     </StyledTableCell>
                                     
                                     <StyledTableCell align="center">Refunds ($)</StyledTableCell>
                                     
                                     <StyledTableCell align="center" style={{ borderRight: "1px solid grey" }}>
                                         # of Refunds
-                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal', fontStyle: "italic" }}>(per Chain)</div>
+                                        <div style={{ whiteSpace: "pre-wrap", fontSize: "15px", fontWeight: 'normal' }}>(per Chain)</div>
                                     </StyledTableCell>
                                 
                                 </TableRow>
@@ -348,13 +341,13 @@ const BlendedAllocationTable = ({
                                             <StyledTableCell align="center">{formatAmountDisplay(adjustedNetAmount)}</StyledTableCell>
                                             <StyledTableCell align="center">{(share * 100).toFixed(2)}%</StyledTableCell>
 
-                                            <StyledTableCell align="center" style={{ maxWidth: '200px', borderLeft: "1px solid #b8b8b8", borderRight: "1px solid #b8b8b8"}}>
+                                            <StyledTableCell align="center" style={{ width: '250px', paddingRight: '25px', borderLeft: "1px solid #b8b8b8", borderRight: "1px solid #b8b8b8"}}>
                                                 {TransfersTableCell(data, tableTransferTotals)}
                                             </StyledTableCell>
 
 
                                             <StyledTableCell align="center">
-                                                {baseWallet ? baseWallet.txns : 0}
+                                                {baseWallet ? BaseWalletTableCell(baseWallet) : 'No contributions'}
                                             </StyledTableCell>
 
                                             {isAggregated && (
