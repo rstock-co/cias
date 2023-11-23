@@ -1,11 +1,11 @@
 import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableCell, TableHead, 
          TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar, Chip,
          FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
-import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
+import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData, extractTitle } from "../../lib/functions/format";
 import { SummaryLine } from "../../elements/templates/tables";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, chipStyles } from "./styles";
-import { printAllocationTable } from "../../lib/functions/actions";
+import { printTableToPDF } from "../../lib/functions/actions";
 import "@fontsource/inter-tight";
 
 const AllocationTable = ({ 
@@ -252,7 +252,7 @@ const AllocationTable = ({
                     >
                         Save Table
                     </Button>}
-                <Button onClick={printAllocationTable}>Download PDF</Button>
+                <Button onClick={() => printTableToPDF('allocationTable', 'tabloid', 'allocation-table.pdf')}>Download PDF</Button>
                 <Button onClick={() => setDialogOpen(false)}>Close</Button>
             </DialogActions>
 

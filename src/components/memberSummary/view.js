@@ -3,7 +3,7 @@ import { Button, Typography, Dialog, DialogContent, DialogActions, Table, TableR
 import { formatAmountDisplay } from '../../lib/functions/format';
 import { StyledTableCell, StyledTableRow, totalRowStyle } from './styles';
 import { calculateTotals, initialTotals, generatedDate } from './data';
-import { printMemberSummaryTable } from '../../lib/functions/actions';
+import { printTableToPDF } from '../../lib/functions/actions';
 
 import "@fontsource/inter-tight";
 
@@ -84,7 +84,7 @@ const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
                 </TableContainer>
             </DialogContent>
             <DialogActions>
-                <Button onClick={printMemberSummaryTable}>Save as PDF</Button>
+                <Button onClick={() => printTableToPDF('memberTable', 'letter', 'member-summary.pdf')}>Save as PDF</Button>
                 <Button onClick={() => setDialogOpen(false)}>Close</Button>
             </DialogActions>
         </Dialog>

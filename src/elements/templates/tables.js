@@ -45,7 +45,7 @@ export const TransferWalletSummary = ({ transferTxnsToBlend, transferTotal, wall
             )}
         </Typography>
 
-        <Typography sx={{ fontSize: '20px', fontWeight: 'lighter', fontFamily: 'Inter Tight, sans-serif'}}>
+        <Typography sx={{ fontSize: '20px', color: '#097c8f', fontFamily: 'Inter Tight, sans-serif'}}>
             {walletTitle}
         </Typography>
 
@@ -119,7 +119,7 @@ export const WalletSummary = ({
     totalNetAmount, aggregatedContributionsChainMap, totalContributionsAmount, totalRefundsAmount, aggregatedRefundsChainMap, 
  } = {}) => (
 
-    <Box sx={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '16px', marginRight: '40px' }}>
+    <Box sx={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '16px', marginRight: '40px', marginBottom: 0 }}>
         <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'flex-start' }}>
             {walletType === 'Blended' ? 'Base Wallet' : 'Allocation Wallet'}
             {walletTitle.includes('|') && (
@@ -139,7 +139,7 @@ export const WalletSummary = ({
             )}
         </Typography>
 
-        <Typography sx={{ fontSize: '20px', fontWeight: 'lighter', fontFamily: 'Inter Tight, sans-serif'}}>
+        <Typography sx={{ fontSize: '20px', fontWeight: 'lighter', color: '#097c8f', fontFamily: 'Inter Tight, sans-serif'}}>
             {extractTitle(walletTitle)}
         </Typography>
 

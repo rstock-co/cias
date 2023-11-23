@@ -2,33 +2,12 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-export const printAllocationTable = () => {
-    const element = document.getElementById('allocationTable');
-
-    html2canvas(element, { scale: 2, useCORS: true }).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('portrait', 'in', 'tabloid');
-        const imgProps = pdf.getImageProperties(imgData);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const ratio = imgProps.width / imgProps.height;
-        let imgHeight = pdfHeight - 0.5;  // Subtract padding
-        let imgWidth = imgHeight * ratio;
-        if (imgWidth > pdfWidth - 0.5) {  // Subtract padding
-            imgWidth = pdfWidth - 0.5;  // Subtract padding
-            imgHeight = imgWidth / ratio;
-        }
-        pdf.addImage(imgData, 'PNG', 0.25, 0.25, imgWidth, imgHeight);  // Add padding
-        pdf.save('download.pdf');
-    });
-}
-
-export const printMemberSummaryTable = () => {
-  const element = document.getElementById('memberTable');
+export const printTableToPDF = (elementId, pdfSize, filename) => {
+  const element = document.getElementById(elementId);
 
   html2canvas(element, { scale: 2, useCORS: true }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('portrait', 'in', 'letter');
+      const pdf = new jsPDF('portrait', 'in', pdfSize);
       const imgProps = pdf.getImageProperties(imgData);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
@@ -40,9 +19,9 @@ export const printMemberSummaryTable = () => {
           imgHeight = imgWidth / ratio;
       }
       pdf.addImage(imgData, 'PNG', 0.25, 0.25, imgWidth, imgHeight);  // Add padding
-      pdf.save('download.pdf');
+      pdf.save(filename);
   });
-}
+};
 
 // import html2pdf from "html2pdf.js";
 
@@ -58,7 +37,6 @@ export const printMemberSummaryTable = () => {
 
 //     html2pdf().from(element).set(opt).save();
 // }
-
 
 export const copyToClipboard = async (text, handler) => {
     if (!navigator.clipboard) {

@@ -1,14 +1,14 @@
-import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableCell, TableHead, 
+import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableHead, 
     TableRow, TableBody, DialogActions, Button, Box, Typography, 
     FormControl, InputLabel, OutlinedInput, InputAdornment } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
 import { getWalletName, sumObjectValues } from "../../lib/functions/wallets";
 import { memberWallets } from "../../lib/data/wallets";
 import { TransferWalletSummary, WalletSummary, TransfersTableCell, BaseWalletTableCell } from "../../elements/templates/tables";
+import { printTableToPDF } from "../../lib/functions/actions";
 import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, StyledTab, StyledTabs } from "./styles";
-import { printAllocationTable } from "../../lib/functions/actions";
 
 import SavedTable from '../savedTable';
 import "@fontsource/inter-tight";
@@ -36,7 +36,7 @@ const BlendedAllocationTable = ({
     sortedAllocationTableData,
     adjustedNetTotal,
     isAggregated,
-    generatedDateHTML,
+    generatedDateString,
 
     showHeaderRow,
     showMemberName,
@@ -78,8 +78,75 @@ const BlendedAllocationTable = ({
                 },
             }}
             >
-            <DialogTitle sx={{fontFamily: 'Inter Tight, sans-serif', fontWeight: 'medium', fontSize: '25px' }}>
-                {dynamicDialogTitle}
+            <DialogTitle>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                    {/* Title on the left */}
+                    <Typography sx={{ fontFamily: 'Inter Tight, sans-serif', fontWeight: 'medium', fontSize: '25px', flexShrink: 0 }}>
+                        {dynamicDialogTitle}
+                    </Typography>
+
+                    {/* Hide these elements based on tabIndex */}
+                    {tabIndex >= filteredBlendedTableIds.length && (
+                    <Box sx={{ display: 'flex', alignItems: 'center', ml: 2 }}>
+                        {/* Show Totals Row */}
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
+                            <Typography component="div" sx={{ fontFamily: 'Inter Tight' }}>
+                                Show Totals Row
+                            </Typography>
+                            <CustomColorSwitch
+                                checked={showHeaderRow}
+                                onChange={handleToggleHeaderRow}
+                                inputProps={{ 'aria-label': 'Toggle Header Row' }}
+                            />
+                        </Box>
+
+                        {/* Show Member Name */}
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
+                            <Typography component="div" sx={{ fontFamily: 'Inter Tight' }}>
+                                Show Member Name
+                            </Typography>
+                            <CustomColorSwitch
+                                checked={showMemberName}
+                                onChange={handleToggleMemberName}
+                                color="primary"
+                                inputProps={{ 'aria-label': 'Toggle Member Name' }}
+                            />
+                        </Box>
+
+                        {/* Sort Allocation Select */}
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
+                            <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
+                        </Box>
+
+                        {/* Adjusted Net Total */}
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
+                            <FormControl fullWidth sx={{ m: 1 }}>
+                                <InputLabel 
+                                    htmlFor="outlined-adornment-amount" 
+                                    style={{ fontWeight: 'bold', color: '#097c8f' }}
+                                >
+                                    Adjusted Net Total
+                                </InputLabel>
+                                <OutlinedInput
+                                    id="outlined-adornment-amount"
+                                    variant="outlined"
+                                    size="small"
+                                    type="number"
+                                    value={adjustedNetTotal}
+                                    onChange={handleAdjustedNetTotalChange}
+                                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                                    label="Adjust Total Net Am"
+                                    placeholder="Enter adjusted net"
+                                    sx={{ margin: "none", maxWidth: 200, fontFamily: 'Inter Tight, sans-serif' }}
+                                    InputLabelProps={{
+                                        style: { fontWeight: 'bold', color: '#097c8f' },
+                                    }}
+                                />
+                            </FormControl>
+                        </Box>
+                    </Box>
+                    )}
+                </Box>
             </DialogTitle>
 
             <DialogContent style={{ overflowX: 'auto' }}>
@@ -104,122 +171,63 @@ const BlendedAllocationTable = ({
                     />
                 )
                 : ( <>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', fontFamily: 'Inter Tight, sans-serif' }}>
-                        <Box mb={2} mt={2} ml={2}>
-                            <WalletSummary
-                                walletTitle={dialogTitle}
-                                walletType="Blended"
-                                totalNetAmount={totalNetAmount} 
-                                aggregatedContributionsChainMap={aggregatedContributionsChainMap}
-                                totalContributionsAmount={totalContributionsAmount}
-                                totalRefundsAmount={totalRefundsAmount}
-                                aggregatedRefundsChainMap={aggregatedRefundsChainMap}
-                                aggregatedTxns={aggregatedTxns}
-                            />
-                        </Box>
+                    
 
-                    <Box mb={2} mt={2} ml={7} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', fontFamily: 'Inter Tight, sans-serif' }}>
-                    {savedTableDisplayData.map(({ tableId, tableTitle, transferTotal }, index) => {
-                        // Only render TransferWalletSummary for tables other than the last one
-                        if (index <= savedTableDisplayData.length - 1) {
-                            return (
-                                <TransferWalletSummary
-                                    key={tableId}
-                                    transferTxnsToBlend={transferTxnsToBlend}
-                                    transferTotal={transferTotal}
-                                    walletTitle={tableTitle}
-                                    walletNumber={index + 1}
+                    <TableContainer component={Paper} id="blendedTable" sx={{ border: 'none', marginTop: '15px' }}>
+
+                        <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none', marginTop: '15px', marginLeft: '20px' }}>
+                            {dialogTitle}
+                        </Typography>
+
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start', flexWrap: 'wrap', fontFamily: 'Inter Tight, sans-serif' }}>
+
+                        {/* WalletSummary Box */}
+                            <Box mb={2} mt={2} ml={3}>
+                                <WalletSummary
+                                    walletTitle={dialogTitle}
+                                    walletType="Blended"
+                                    totalNetAmount={totalNetAmount} 
+                                    aggregatedContributionsChainMap={aggregatedContributionsChainMap}
+                                    totalContributionsAmount={totalContributionsAmount}
+                                    totalRefundsAmount={totalRefundsAmount}
+                                    aggregatedRefundsChainMap={aggregatedRefundsChainMap}
+                                    aggregatedTxns={aggregatedTxns}
                                 />
-                            );
-                        }
+                            </Box>
 
-                        // Skip rendering for the last table
-                        return null;
-                    })}
-                    </Box>
-                        
-                    {/* Header inputs and toggles */}
-                    <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                            <Typography component="div" sx={{fontFamily: 'Inter Tight'}}>
-                                Show Totals Row
+                        {/* TransferWalletSummary Elements */}
+                        {savedTableDisplayData.map(({ tableId, tableTitle, transferTotal }, index) => {
+                            // Only render TransferWalletSummary for tables other than the last one
+                            if (index <= savedTableDisplayData.length - 1) {
+                                return (
+                                    <Box mb={1} mt={2} ml={2} key={tableId}>
+                                        <TransferWalletSummary
+                                            transferTxnsToBlend={transferTxnsToBlend}
+                                            transferTotal={transferTotal}
+                                            walletTitle={tableTitle}
+                                            walletNumber={index + 1}
+                                        />
+                                    </Box>
+                                );
+                            }
+
+                            // Skip rendering for the last table
+                            return null;
+                            })}
+                        </Box>
+
+                        {/* Generated On Date */}
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'right', mb: 1 }}>
+                            <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '18px' }}>
+                                Generated On:
                             </Typography>
-                            <CustomColorSwitch
-                                checked={showHeaderRow}
-                                onChange={handleToggleHeaderRow}
-                                inputProps={{ 'aria-label': 'Toggle Header Row' }}
-                            />
-                        </Box>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                            <Typography component="div" sx={{fontFamily: 'Inter Tight'}}>
-                                Show Member Name
+                            <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '18px', ml: 1, mr: 2 }}>
+                                {generatedDateString}
                             </Typography>
-                            <CustomColorSwitch
-                                checked={showMemberName}
-                                onChange={handleToggleMemberName}
-                                color="primary"
-                                inputProps={{ 'aria-label': 'Toggle Member Name' }}
-                            />
                         </Box>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                            <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
-                        </Box>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                            <FormControl fullWidth sx={{ m: 1 }}>
-                                <InputLabel 
-                                    htmlFor="outlined-adornment-amount" 
-                                    style={{
-                                        fontWeight: 'bold', 
-                                        color: '#097c8f', 
-                                    }}
-                                >
-                                    Adjusted Net Total
-                                </InputLabel>
 
-                                <OutlinedInput
-                                    id="outlined-adornment-amount"
-                                    variant="outlined"
-                                    size="small"
-                                    type="number"
-                                    value={adjustedNetTotal}
-                                    onChange={handleAdjustedNetTotalChange}
-                                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                                    label="Adjust Total Net Am"
-                                    placeholder="Enter adjusted net"
-                                    sx={{ margin: "none", maxWidth: 200, fontFamily: 'Inter Tight, sans-serif' }}
-                                    InputLabelProps={{
-                                        style: {
-                                            fontWeight: 'bold', 
-                                            color: '#097c8f', 
-                                        },
-                                    }}
-                                />
-                            </FormControl>
-                        </Box>
-                    </Box>
-                </Box>
-
-
-                    <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none' }}>
                         <Table sx={{ border: 'none', tableLayout: 'auto' }} aria-label="member table">
                             <TableHead>
-
-                                {/* Table title and generation date */}
-                                <TableRow>
-                                    <TableCell colSpan={showMemberName ? 8 : 7 } style={{ borderBottom: 'none' }}>
-                                        <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
-                                            {dialogTitle}
-                                        </Typography>
-                                    </TableCell>
-                                    <TableCell align="right" colSpan={isAggregated ? 3 : 2} style={{ borderBottom: 'none' }}>
-                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '16px', textAlign: 'right' }}>
-                                        Generated On:
-                                    </Typography>
-                                    <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '18px', textAlign: 'right' }}>
-                                        {generatedDateHTML}
-                                    </Typography>
-                                    </TableCell>
-                                </TableRow>
 
                                 {/* Table header row */}
                                 <TableRow>
@@ -377,7 +385,7 @@ const BlendedAllocationTable = ({
             </DialogContent>
                     
             <DialogActions>
-                <Button onClick={printAllocationTable}>Download PDF</Button>
+                <Button onClick={() => printTableToPDF('blendedTable', 'tabloid', 'blended-table.pdf')}>Download PDF</Button>
                 <Button onClick={() => setDialogOpen(false)}>Close</Button>
             </DialogActions>
 
