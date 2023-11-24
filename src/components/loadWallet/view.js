@@ -1,7 +1,7 @@
 import { Table, TableBody, TableContainer, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
 import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle, loadWalletStyles } from './styles';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../elements/dropdowns';
-import { ToggleChipButton, ColorButton } from '../../elements/buttons';
+import { ToggleChipButton, ColorButton, FetchTypeSelect } from '../../elements/buttons';
 import { propertyMap } from './data';
 import { allWallets as wallets, moves } from "../../lib/data";
 import { isPoolInvestmentsWallet } from '../../lib/functions/wallets';
@@ -18,7 +18,7 @@ import '@fontsource/inter-tight';
 
 const LoadWallet = ({
     // ux.init
-    stableCoins, selectedWallets,
+    stableCoins, selectedWallets, fetchType, setFetchType,
     
     // ux.base
     tableData, handleSelectedWalletChange,
@@ -64,14 +64,6 @@ const LoadWallet = ({
                         </span>
                     </Typography>
                     
-                    
-                    {/* {formattedChainData.map((data, index) => (
-                        <Typography variant="h6" align="left" key={index} >
-                            {<span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', color: 'white', letterSpacing: '1px' }}>
-                                {data}
-                            </span>}
-                        </Typography>
-                    ))} */}
                     <Box sx={{ marginRight: selectedWallets.length > 0 ? '89px' : '347px', marginTop: '10px' }}>
                         <DateRangeSelect selectedDateRange={filters.dateRange} handleChange={handleDateChange} isStartDateDefault={isStartDateDefault} isEndDateDefault={isEndDateDefault} />
                     </Box>
@@ -96,7 +88,6 @@ const LoadWallet = ({
                         </Typography>
                     ))}
 
-
                     {isPoolInvestmentsWallet(selectedWallets) && 
                         <Box sx={{ marginTop: '35px' }}>
                             <MoveSelect moves={moves.map(move => move.moveName)} selectedMove={filters.move} handleChange={handleFilterChange('move')} />
@@ -104,23 +95,31 @@ const LoadWallet = ({
                 </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
-                    <WalletSelect wallets={wallets} selectedWallets={selectedWallets} handleChange={handleSelectedWalletChange} />
-                    <TypeSelect types={filterTypes} selectedType={filters.type} handleChange={handleFilterChange('type')} />
-                    <ChainSelect chains={['arb', 'eth', 'bsc']} selectedChain={filters.chain} handleChange={handleFilterChange('chain')} />
-                    <DirectionSelect directions={['In', 'Out']} selectedDirection={filters.direction} handleChange={handleFilterChange('direction')} />
-                    <FilterWalletSelect wallets={filterWallets} filteredWallet={filters.filterWallet} handleChange={handleFilterValueChange('filterWallet')} selectedWallets={selectedWallets}  />
-                </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: '30px' }}>
+                {/* FetchTypeSelect button group above everything */}
+                <FetchTypeSelect
+                    fetchType={fetchType} 
+                    setFetchType={setFetchType} 
+                />
 
-                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', gap: '15px', marginTop: '30px' }}>
-                    <ColorButton onClick={handleClearFilters} buttonText="Clear All Filters" />
-                    <ColorButton onClick={handleGenerateAllocations} buttonText="Generate Allocations" />
-                    <ColorButton onClick={handleGenerateChainFlow} buttonText="Chain Cash Flow" />
-                    {/* <SettingsIcon sx={{ 
-                        fontSize: 40, 
-                        color: '#095D6F', 
-                    }} /> */}
+                {/* Box for selects and colored buttons */}
+                <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+                    {/* Box for the select components */}
+                    <Box sx={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+                        <WalletSelect wallets={wallets} selectedWallets={selectedWallets} handleChange={handleSelectedWalletChange} />
+                        <TypeSelect types={filterTypes} selectedType={filters.type} handleChange={handleFilterChange('type')} />
+                        <ChainSelect chains={['arb', 'eth', 'bsc']} selectedChain={filters.chain} handleChange={handleFilterChange('chain')} />
+                        <DirectionSelect directions={['In', 'Out']} selectedDirection={filters.direction} handleChange={handleFilterChange('direction')} />
+                        <FilterWalletSelect wallets={filterWallets} filteredWallet={filters.filterWallet} handleChange={handleFilterValueChange('filterWallet')} selectedWallets={selectedWallets} />
+                    </Box>
+
+                    {/* Box for the colored buttons */}
+                    <Box sx={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
+                        <ColorButton onClick={handleClearFilters} buttonText="Clear All Filters" />
+                        <ColorButton onClick={handleGenerateAllocations} buttonText="Generate Allocations" />
+                        <ColorButton onClick={handleGenerateChainFlow} buttonText="Chain Cash Flow" />
+                    {/* <SettingsIcon sx={{ fontSize: 40, color: '#095D6F' }} /> */}
+                    </Box>
                 </Box>
             </Box>
             {/* HEADER END */}

@@ -34,3 +34,12 @@ export const StyledChip = styled(Chip)(({ theme, blended }) => ({
         boxShadow: '0 0 10px #08E2EA' // 0 0 20px #1D5AEF, 0 0 30px #1D5AEF, 0 0 40px #1D5AEF',
     },
   }));
+
+
+export const FetchTypeButton = styled(Button)(({ theme, active }) => ({
+    backgroundColor: active ? theme.palette.primary.main : theme.palette.grey[300],
+    color: active ? 'white' : 'black',
+    '&:hover': {
+      backgroundColor: active ? theme.palette.primary.dark : theme.palette.grey[400],
+    },
+}));

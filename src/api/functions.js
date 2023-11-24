@@ -82,10 +82,9 @@ const fetchAndSetStatus = async (walletAddress, key, transaction, stateSetter) =
 };
 
 export const getAggregateTransactions = async (walletAddress, transactionsToFetch, updateStatusFn, stateSetter) => {
+
     // Set all transactions to loading
-    Object.keys(transactionsToFetch).forEach(key => {
-        updateStatusFn(stateSetter, key, { loading: true });
-    });
+    Object.keys(transactionsToFetch).forEach(key => updateStatusFn(stateSetter, key, { loading: true }));
 
     try {
         const fetchPromises = Object.keys(transactionsToFetch).map(key => {
@@ -105,9 +104,7 @@ export const getAggregateTransactions = async (walletAddress, transactionsToFetc
         return newTxns;
     } catch (error) {
         console.error('Error fetching aggregate transactions:', error);
-        Object.keys(transactionsToFetch).forEach(key => {
-            updateStatusFn(stateSetter, key, { loading: false, txns: 0 });
-        });
+        Object.keys(transactionsToFetch).forEach(key => updateStatusFn(stateSetter, key, { loading: false, txns: 0 }));
         throw error;
     }
 };

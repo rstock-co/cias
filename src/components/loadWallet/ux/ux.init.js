@@ -19,9 +19,7 @@ const InitUX = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [loadingLocked, setLoadingLocked] = useState(false);
 
-   
     const getAggregateERC20Txns = async (walletAddress) => getAggregateTransactions(walletAddress, stableCoins, updateStatus, setStableCoins);
-    
     const getAggregateNormalTxns = async (walletAddress) => getAggregateTransactions(walletAddress, chains, updateStatus, setChains);
     
     const fetchTransactions = async (walletsToFetch) => {
@@ -64,7 +62,6 @@ const InitUX = () => {
         }
     };
     
-
     useEffect(() => {
         // Fetch transactions only for the newly added wallets
         const newWallets = selectedWallets.filter(wallet => !previousWallets.find(w => w.address === wallet.address));
@@ -103,6 +100,7 @@ const InitUX = () => {
     return {
         txns,
         setTxns,
+        fetchType,
         setFetchType,
         selectedWallets,
         setSelectedWallets,
