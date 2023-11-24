@@ -88,21 +88,21 @@ const HeaderUX = ({
         });
     }, [filteredBlendedTableIds, savedTables, tableTransferTotals]);
 
-    const updateDynamicTitle = (index) => {
-        console.log("Updating dynamic title for index:", index);
-        if (index < savedTableDisplayData.length) {
-            const selectedTable = savedTableDisplayData[index];
-            setDynamicDialogTitle(`Transfer Wallet # ${index + 1}: ${selectedTable.tableTitle}`);
-        } else {
-            setDynamicDialogTitle(dialogTitle === "Blended No wallets selected" ? "Blended No wallets selected" : `Blended Wallet: ${extractTitle(dialogTitle)}`);
-        }
-    };
     
     useEffect(() => {
+        const updateDynamicTitle = (index) => {
+            console.log("Updating dynamic title for index:", index);
+            if (index < savedTableDisplayData.length) {
+                const selectedTable = savedTableDisplayData[index];
+                setDynamicDialogTitle(`Transfer Wallet # ${index + 1}: ${selectedTable.tableTitle}`);
+            } else {
+                setDynamicDialogTitle(dialogTitle === "Blended No wallets selected" ? "Blended No wallets selected" : `Blended Wallet: ${extractTitle(dialogTitle)}`);
+            }
+        };
         if (savedTableDisplayData && savedTableDisplayData.length > 0) {
             updateDynamicTitle(tabIndex);
         }
-    }, [savedTableDisplayData, tabIndex]);
+    }, [savedTableDisplayData, tabIndex, dialogTitle]);
 
     useEffect(() => {
         // Calculate the total transfer amount for each table in filteredBlendedTableIds

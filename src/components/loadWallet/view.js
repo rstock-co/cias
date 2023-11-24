@@ -1,7 +1,6 @@
 import { Table, TableBody, TableContainer, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
 import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle, loadWalletStyles } from './styles';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../elements/dropdowns';
-import SettingsIcon from '@mui/icons-material/Settings'; // Import SettingsIcon from Material-UI icons
 import { ToggleChipButton, ColorButton } from '../../elements/buttons';
 import { propertyMap } from './data';
 import { allWallets as wallets, moves } from "../../lib/data";
