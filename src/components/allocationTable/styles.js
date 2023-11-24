@@ -3,7 +3,6 @@ import { tableCellClasses } from '@mui/material/TableCell';
 import { TableRow, TableCell } from "@mui/material";
 import "@fontsource/inter-tight";
 
-
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: theme.palette.common.black,
@@ -67,4 +66,5 @@ export const chipStyles = {
         boxShadow: '1.5px 1.5px 6px #096473',
     },
 };
+
 

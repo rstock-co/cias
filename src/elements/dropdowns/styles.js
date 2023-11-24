@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef }from 'react';
 import { OutlinedInput, InputLabel, Select, TextField } from '@mui/material';
-import { createTheme } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
-import { withStyles } from '@mui/styles';
+import { createTheme, styled } from '@mui/material/styles';
 import "@fontsource/inter-tight";
 
 // SINGLE SELECTS
@@ -59,24 +57,22 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
 
 // MULTI SELECT (main wallet select box)
 
-export const CustomInputLabel = withStyles({
-    root: {
-        color: '#e6c347', // Set the label color
+export const CustomInputLabel = styled(InputLabel)(({ theme }) => ({
+    color: '#e6c347',
+    fontWeight: 'bold',
+    fontFamily: 'Inter, sans-serif',
+    fontSize: '17px',
+    letterSpacing: '0.75px',
+    left: '-5px',
+    '&.Mui-focused': {
+        color: '#e6c347',
         fontWeight: 'bold',
-        fontFamily: 'Inter, sans-serif',
-        fontSize: '17px',
-        letterSpacing: '0.75px',
-        left: '-5px',
-        '&.Mui-focused': {
-            color: '#e6c347',
-            fontWeight: 'bold',
-        },
-        '&.MuiInputLabel-shrink': {
-            color: '#e6c347', 
-            fontWeight: "bold",
-        },
     },
-})(InputLabel);
+    '&.MuiInputLabel-shrink': {
+        color: '#e6c347', 
+        fontWeight: "bold",
+    },
+}));
 
 // Define the base styles
 const baseStyles = {
@@ -96,9 +92,9 @@ const baseStyles = {
 };
 
 // Apply the base styles to OutlinedInput
-const StyledOutlinedInput = withStyles({
+const StyledOutlinedInput = styled(OutlinedInput)(({ theme }) => ({
     root: baseStyles,
-})(OutlinedInput);
+}));
 
 export const CustomOutlinedInput = (props) => {
     const [isFocused, setIsFocused] = useState(true);
@@ -131,7 +127,7 @@ export const CustomOutlinedInput = (props) => {
     );
 };
 
-export const CustomSelect = withStyles({
+export const CustomSelect = styled(Select)(({ theme }) => ({
     root: {
         height: '50px',
     },
@@ -144,7 +140,7 @@ export const CustomSelect = withStyles({
         color: "#6DFAFE", // Set to the theme's primary text color or another color for when the select has a value
         borderColor: '#096B78',
     },
-})(Select);
+}));
 
 
 // AUTO COMPLETE (FILTER WALLET SELECT) & DATE RANGE PICKERS
