@@ -1,7 +1,5 @@
 import { getWalletAddress } from "../../lib/functions/wallets";
-import { getERC20TxnsArb } from "../../api/arb";
-import { getERC20TxnsBsc } from "../../api/bsc";
-import { getERC20TxnsEth } from "../../api/eth";
+import { getERC20TxnsArb, getERC20TxnsBsc, getERC20TxnsEth } from "../../api";
 import { formatAmountDecimals, formatAmountDisplay, FormatTxnLink } from "../../lib/functions/format";
 import { formatTime } from "../../lib/functions/time";
 import { getMoveName, getWalletName } from "../../lib/functions/wallets";
