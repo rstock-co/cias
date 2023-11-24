@@ -15,7 +15,7 @@ import jsPDF from 'jspdf';
  * @param {float} quality Values > 1 increase quality and file size, while values < 1 decrease them. Can be a decimal.
  */
 
-export const printTableToPDF = (elementId, orientation, pdfSize, filename, fitToWidth = true, quality = 2) => {
+export const printBlendedTableToPDF = (elementId, orientation, pdfSize, filename, fitToWidth = true, quality = 2) => {
 
   const element = document.getElementById(elementId);
 
@@ -65,6 +65,32 @@ export const printTableToPDF = (elementId, orientation, pdfSize, filename, fitTo
   });
 
 };
+
+
+// ==========================   LEGACY (print normal single page PDF's - for now)  ====================
+
+export const printTableToPDF = (elementId, orientation, pdfSize, filename, quality = 2) => {
+
+  const element = document.getElementById(elementId);
+
+  html2canvas(element, { scale: quality, useCORS: true }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF(orientation, 'in', pdfSize);
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const ratio = imgProps.width / imgProps.height;
+      let imgHeight = pdfHeight - 0.5;  // Subtract padding
+      let imgWidth = imgHeight * ratio;
+      if (imgWidth > pdfWidth - 0.5) {  // Subtract padding
+          imgWidth = pdfWidth - 0.5;  // Subtract padding
+          imgHeight = imgWidth / ratio;
+      }
+      pdf.addImage(imgData, 'PNG', 0.25, 0.25, imgWidth, imgHeight);  // Add padding
+      pdf.save(filename);
+  });
+}
+
 
 // ====================================================================================================
 

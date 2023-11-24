@@ -252,7 +252,7 @@ const AllocationTable = ({
                     >
                         Save Table
                     </Button>}
-                <Button onClick={() => printTableToPDF('allocationTable', 'tabloid', 'allocation-table.pdf')}>Download PDF</Button>
+                <Button onClick={() => printTableToPDF('allocationTable', 'portrait', 'tabloid', 'allocation-table.pdf')}>Download PDF</Button>
                 <Button onClick={() => setDialogOpen(false)}>Close</Button>
             </DialogActions>
 
