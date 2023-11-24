@@ -143,9 +143,8 @@ export const extractTitle = (tableTitle) => {
     if (match) {
         // Return the matched group without quotes
         return match[1];
-    } else {
-        // If no single quotes found, assume the format is "Aggregated Allocation Table for: Volcano, Vela-hyper-vlp (2 wallets)"
-        // Split by "for:", take the second part, replace commas with "|", remove parentheses and trim spaces
+    } else if (tableTitle.includes('for:')) {
+        // If no single quotes found but contains 'for:', process accordingly
         return tableTitle.split('for:')[1]
             .replace(/,/g, '|')
             .replace(/\([^)]+\)/g, '')
@@ -153,5 +152,10 @@ export const extractTitle = (tableTitle) => {
             .split('|')
             .map(s => s.trim().replace(/-/g, ' '))
             .join(' | ');
+    } else {
+        // For other cases, remove parentheses and their content, and trim spaces
+        return tableTitle.replace(/\([^)]+\)/g, '').trim();
     }
 }
+
+

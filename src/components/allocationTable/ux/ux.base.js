@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { generateAllocationTableData, calculateTotals } from '../../../lib/functions/table';
+import { generateAllocationTableData, calculateTotals, generateSummaryData } from '../../../lib/functions/table';
 
 const BaseUX = ({ 
     tableData, 
@@ -10,12 +10,16 @@ const BaseUX = ({
 
     const [allocationTableData, setAllocationTableData] = useState([]);
     const [totals, setTotals] = useState({});
+    const [summaryData, setSummaryData] = useState({});
     const [sortedAllocationTableData, setSortedAllocationTableData] = useState([]);
 
     useEffect(() => {
         const allocationData = generateAllocationTableData(tableData, selectedWallets);
+        const summaryData = generateSummaryData(tableData, selectedWallets);
+        const totals = calculateTotals(allocationData);
         setAllocationTableData(allocationData);
-        setTotals(calculateTotals(allocationData));
+        setSummaryData(summaryData);
+        setTotals(totals);
     }, [tableData, selectedWallets]);
 
     useEffect(() => {
@@ -42,6 +46,7 @@ const BaseUX = ({
     return {
         ...totals,
         totalShare,
+        summaryData,
         sortedAllocationTableData,
     };
 }

@@ -115,13 +115,18 @@ const formatLogoChainMap = (chainMapString) => {
 
 
 export const WalletSummary = ({ 
-    walletTitle, walletType, 
+    id, walletTitle, walletType, 
     totalNetAmount, aggregatedContributionsChainMap, totalContributionsAmount, totalRefundsAmount, aggregatedRefundsChainMap, 
- } = {}) => (
+ } = {}) => {
+
+    const totalContributions = walletTitle === 'Blended' ? formatLogoChainMap(formatChainMap(aggregatedContributionsChainMap)) : formatLogoChainMap(aggregatedContributionsChainMap);
+    const totalRefunds = walletTitle === 'Blended' ? formatLogoChainMap(formatChainMap(aggregatedRefundsChainMap)) : formatLogoChainMap(aggregatedRefundsChainMap);
+
+    return (
 
     <Box sx={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '16px', marginRight: '40px', marginBottom: 0 }}>
         <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'flex-start' }}>
-            {walletType === 'Blended' ? 'Base Wallet' : 'Allocation Wallet'}
+            {walletType === 'Blended' ? 'Base Wallet' : `Wallet # ${id + 1}`}
             {walletTitle.includes('|') && (
                 <Typography 
                     component="span" 
@@ -151,13 +156,14 @@ export const WalletSummary = ({
         </Typography>
 
         <Box mb={2} mt={2}>
-            <SummaryLine label="Total Contributions:" value={formatLogoChainMap(formatChainMap(aggregatedContributionsChainMap))} />
+            <SummaryLine label="Total Contributions:" value={totalContributions} />
             <SummaryLine label="Total Contributions Amount:" value={totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)} />
-            <SummaryLine label="Total Refunds:" value={formatLogoChainMap(formatChainMap(aggregatedRefundsChainMap))} />
+            <SummaryLine label="Total Refunds:" value={totalRefunds} />
             <SummaryLine label="Total Refunds Amount:" value={totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)} />
         </Box>
     </Box>
 );
+            };
 
 export const TransfersTableCell = (memberData, transferTotals) => {
     const savedWallets = Object.entries(memberData)

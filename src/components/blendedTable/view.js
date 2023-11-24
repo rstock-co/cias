@@ -5,7 +5,7 @@ import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData } 
 import { getWalletName } from "../../lib/functions/wallets";
 import { memberWallets } from "../../lib/data/wallets";
 import { TransferWalletSummary, WalletSummary, TransfersTableCell, BaseWalletTableCell } from "../../elements/templates/tables";
-import { printTableToPDF } from "../../lib/functions/actions";
+import { printBlendedTableToPDF } from "../../lib/functions/actions";
 import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, StyledTab, StyledTabs } from "./styles";
@@ -34,7 +34,6 @@ const BlendedAllocationTable = ({
     aggregatedRefundsChainMap, 
     aggregatedTxns, 
     adjustedNetTotal,
-    isAggregated,
     generatedDateString,
 
     showHeaderRow,
@@ -351,7 +350,7 @@ const BlendedAllocationTable = ({
             </DialogContent>
                     
             <DialogActions>
-                <Button onClick={() => printTableToPDF('blendedTable', 'portrait', 'tabloid', 'blended-table.pdf', true, 2)}>Download PDF</Button>
+                <Button onClick={() => printBlendedTableToPDF('blendedTable', 'portrait', 'tabloid', 'blended-table.pdf')}>Download PDF</Button>
                 <Button onClick={() => setDialogOpen(false)}>Close</Button>
             </DialogActions>
 

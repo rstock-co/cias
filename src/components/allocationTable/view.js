@@ -2,10 +2,11 @@ import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, Table
          TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar, Chip,
          FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
-import { SummaryLine } from "../../elements/templates/tables";
-import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
-import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, chipStyles } from "./styles";
 import { printTableToPDF } from "../../lib/functions/actions";
+import { WalletSummary } from "../../elements/templates/tables";
+import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
+import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
+import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, chipStyles } from "./styles";
 import "@fontsource/inter-tight";
 
 const AllocationTable = ({ 
@@ -19,9 +20,13 @@ const AllocationTable = ({
 
     // ux.base
     totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
-    aggregatedRefundsChainMap, aggregatedTxns, totalShare, sortedAllocationTableData,
+    aggregatedRefundsChainMap, aggregatedTxns, totalShare, sortedAllocationTableData, summaryData,
 
 } = {}) => {
+
+    console.log("allocation table data: ", sortedAllocationTableData)
+    console.log("summary data: ", summaryData)
+    console.log("selected wallets: ", selectedWallets)
 
     return (
     <>
@@ -36,96 +41,119 @@ const AllocationTable = ({
                 },
             }}
         >
-            <Box sx={{ display: 'flex', alignItems: 'center', padding: 0 }}>  
-                <DialogTitle sx={{ marginRight: 1 }}>
-                    {dialogTitle}
-                </DialogTitle>
-                {savedTableId && (
-                    <Chip
-                        label={`Saved as Table # ${savedTableId}`}
-                        sx={chipStyles}
-                    />
-                )}
-            </Box>
-
-            <DialogContent style={{ overflowX: 'auto' }}>
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', fontFamily: 'Inter Tight, sans-serif' }}>
-                    <Box mb={2} mt={3} ml={2}>
-                    <SummaryLine label="Total Contributions:" value={formatChainMap(aggregatedContributionsChainMap)} />
-                    <SummaryLine label="Total Refunds Amount:" value={totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)} />
-                    <SummaryLine label="Total Refunds:" value={formatChainMap(aggregatedRefundsChainMap)} />
-                    <SummaryLine label="Total Net Amount:" value={totalNetAmount && formatAggregatedData(aggregatedTxns).totalAmounts} />
-                    <SummaryLine label="Total Transactions:" value={formatAggregatedData(aggregatedTxns).txns} />
-                </Box>
-
-                    {/* Header inputs and toggles */}
-                    <Box sx={{ ml: 'auto', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', mb: 2 }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                            <Typography component="div">
-                                Show Header Row (Totals)
-                            </Typography>
-                            <Switch
-                                checked={showHeaderRow}
-                                onChange={handleToggleHeaderRow}
-                                color="primary"
-                                inputProps={{ 'aria-label': 'Toggle Header Row' }}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '15px', marginRight: '25px' }}> 
+                    
+                    <Box> 
+                        <Box sx={{ml: 3}}>
+                        {savedTableId && (
+                            <Chip
+                                label={`Saved as Table # ${savedTableId}`}
+                                sx={chipStyles}
                             />
-                        </Box>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                            <Typography component="div">
-                                Show Member Name
-                            </Typography>
-                            <Switch
-                                checked={showMemberName}
-                                onChange={handleToggleMemberName}
-                                color="primary"
-                                inputProps={{ 'aria-label': 'Toggle Member Name' }}
+                        )}
+                    </Box>
+                    </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', ml: 2 }}>
+                    {/* Show Totals Row */}
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
+                        <Typography component="div" sx={{ fontFamily: 'Inter Tight' }}>
+                            Show Totals Row
+                        </Typography>
+                        <CustomColorSwitch
+                            checked={showHeaderRow}
+                            onChange={handleToggleHeaderRow}
+                            inputProps={{ 'aria-label': 'Toggle Header Row' }}
+                        />
+                    </Box>
+
+                    {/* Show Member Name */}
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
+                        <Typography component="div" sx={{ fontFamily: 'Inter Tight' }}>
+                            Show Member Name
+                        </Typography>
+                        <CustomColorSwitch
+                            checked={showMemberName}
+                            onChange={handleToggleMemberName}
+                            color="primary"
+                            inputProps={{ 'aria-label': 'Toggle Member Name' }}
+                        />
+                    </Box>
+
+                    {/* Sort Allocation Select */}
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
+                        <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
+                    </Box>
+
+                    {/* Adjusted Net Total */}
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
+                        <FormControl fullWidth sx={{ m: 1 }}>
+                            <InputLabel 
+                                htmlFor="outlined-adornment-amount" 
+                                style={{ fontWeight: 'bold', color: '#097c8f' }}
+                            >
+                                Adjusted Net Total
+                            </InputLabel>
+                            <OutlinedInput
+                                id="outlined-adornment-amount"
+                                variant="outlined"
+                                size="small"
+                                type="number"
+                                value={adjustedNetTotal}
+                                onChange={handleAdjustedNetTotalChange}
+                                startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                                label="Adjust Total Net Am"
+                                placeholder="Enter adjusted net"
+                                sx={{ margin: "none", maxWidth: 200, fontFamily: 'Inter Tight, sans-serif' }}
+                                InputLabelProps={{
+                                    style: { fontWeight: 'bold', color: '#097c8f' },
+                                }}
                             />
-                        </Box>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                            <SortAllocationSelect sortBy={sortBy} handleSortByChange={handleSortByChange} />
-                        </Box>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 2 }}>
-                            <FormControl fullWidth sx={{ m: 1 }}>
-                                <InputLabel htmlFor="outlined-adornment-amount">Adjusted Net Total</InputLabel>
-                                <OutlinedInput
-                                    id="outlined-adornment-amount"
-                                    variant="outlined"
-                                    size="small"
-                                    type="number"
-                                    value={adjustedNetTotal}
-                                    onChange={handleAdjustedNetTotalChange}
-                                    startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                                    label="Adjust Total Net Investment"
-                                    placeholder="Enter adjusted net investment"
-                                    sx={{ margin: "none", maxWidth: 200, fontFamily: 'Inter Tight, sans-serif' }}
-                                />
-                            </FormControl>
-                        </Box>
+                        </FormControl>
                     </Box>
                 </Box>
+            </Box>
+            
+       
+            <DialogContent style={{ overflowX: 'auto' }}>
+                
 
-                <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none' }}>
+                <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none',  }}>
+
+                    {/* Table title */}
+                    <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none', marginTop: '15px', marginLeft: '20px', marginBottom: '10px' }}>
+                        {dialogTitle}
+                    </Typography>
+
+                    {/* Wallet Summaries */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}> 
+                        {summaryData && summaryData.length > 0 && summaryData.map(({ walletName, netAmount, totalContributions, contributionsAmount, totalRefunds, refundsAmount }, index) => (
+                            <Box mb={0} mt={2} ml={3}>
+                                <WalletSummary
+                                    key={index}
+                                    id={index}
+                                    walletTitle={walletName}
+                                    walletType="Allocation"
+                                    totalNetAmount={netAmount} 
+                                    aggregatedContributionsChainMap={totalContributions}
+                                    totalContributionsAmount={contributionsAmount}
+                                    totalRefundsAmount={refundsAmount}
+                                    aggregatedRefundsChainMap={totalRefunds}
+                                />
+                            </Box>
+                        ))}
+                    </Box>
+                    {/*generation date */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'right', mb: 1 }}>
+                        <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '16px', textAlign: 'right' }}>
+                            Generated On:&nbsp;&nbsp;&nbsp;
+                        </Typography>
+                        <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '18px', textAlign: 'right', marginRight: '15px' }}>
+                            {generatedDateString}
+                        </Typography>
+                    </Box>
+
                     <Table sx={{ border: 'none', tableLayout: 'auto' }} aria-label="member table">
                         <TableHead>
-
-                            {/* Table title and generation date */}
-                            <TableRow>
-                                <TableCell colSpan={isAggregated ? 8 : showMemberName ? 7 : 6 } style={{ borderBottom: 'none' }}>
-                                    <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none' }}>
-                                        {dialogTitle}
-                                    </Typography>
-                                </TableCell>
-                                <TableCell align="right" colSpan={isAggregated ? 3 : 2} style={{ borderBottom: 'none' }}>
-                                <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '16px', textAlign: 'right' }}>
-                                    Generated On:
-                                </Typography>
-                                <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'regular', fontSize: '18px', textAlign: 'right' }}>
-                                    {generatedDateHTML}
-                                </Typography>
-                                </TableCell>
-                            </TableRow>
-
                             {/* Table header row */}
                             <TableRow>
                                 <StyledTableCell>Member Wallet</StyledTableCell>
@@ -223,9 +251,11 @@ const AllocationTable = ({
                     </Table>
                 </TableContainer>
             </DialogContent>
+  
 
             {/* Buttons located below table */}
             <DialogActions>
+            
             {savedTableId && <Button onClick={() => deleteTableData(savedTableId)}>Delete Table</Button>}
                 {!savedTableId && 
                     <Button 
