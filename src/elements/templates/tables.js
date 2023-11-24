@@ -94,11 +94,30 @@ const formatLogoChainMap = (chainMapString) => {
         arb: 'https://i.imgur.com/3kJricG.png',
         eth: 'https://i.imgur.com/iPqQBBB.png',
         bsc: 'https://i.imgur.com/a5V7FFD.png',
-      };
+    };
+
+    // Check if chainMapString is a valid string
+    if (typeof chainMapString !== 'string' || chainMapString.trim() === '') {
+        return null;
+    }
 
     return chainMapString.split(', ').map((part, index) => {
-        const [chain, number] = part.split('(');
+        const parts = part.split('(');
+        
+        // Check if the split operation produced the expected array
+        if (parts.length < 2) {
+            console.error('Unexpected format:', part);
+            return null; // Or return a placeholder/fallback element
+        }
+
+        const [chain, number] = parts;
         const count = number.slice(0, -1); // Remove closing parenthesis
+
+        // Check if the chain is recognized and has a logo
+        if (!logos[chain]) {
+            console.error('Logo not found for chain:', chain);
+            return <span key={index}>{chain} {count}</span>; // Fallback if no logo is available
+        }
 
         return (
             <span key={index} style={{ display: 'inline-flex', alignItems: 'center', marginRight: '5px' }}>
@@ -110,8 +129,9 @@ const formatLogoChainMap = (chainMapString) => {
                 {count}
             </span>
         );
-    });
+    }).filter(element => element !== null); // Filter out null elements
 };
+
 
 
 export const WalletSummary = ({ 
@@ -121,7 +141,7 @@ export const WalletSummary = ({
 
     const totalContributions = walletTitle === 'Blended' ? formatLogoChainMap(formatChainMap(aggregatedContributionsChainMap)) : formatLogoChainMap(aggregatedContributionsChainMap);
     const totalRefunds = walletTitle === 'Blended' ? formatLogoChainMap(formatChainMap(aggregatedRefundsChainMap)) : formatLogoChainMap(aggregatedRefundsChainMap);
-
+    
     return (
 
     <Box sx={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '16px', marginRight: '40px', marginBottom: 0 }}>
@@ -156,10 +176,11 @@ export const WalletSummary = ({
         </Typography>
 
         <Box mb={2} mt={2}>
-            <SummaryLine label="Total Contributions:" value={totalContributions} />
-            <SummaryLine label="Total Contributions Amount:" value={totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)} />
-            <SummaryLine label="Total Refunds:" value={totalRefunds} />
-            <SummaryLine label="Total Refunds Amount:" value={totalRefundsAmount && formatAmountDisplay(totalRefundsAmount)} />
+            <SummaryLine label="Total Contribution Txns:" value={totalContributions} />
+            <SummaryLine label="Total Contributions Amount:" value={formatAmountDisplay(totalContributionsAmount)} />
+            <SummaryLine label="Total Refund Txns:" value={totalRefunds ? totalRefunds : 0} />
+            <SummaryLine label="Total Refunds Amount:" value={formatAmountDisplay(totalRefundsAmount)} />
+
         </Box>
     </Box>
 );

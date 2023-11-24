@@ -79,11 +79,17 @@ const LoadWallet = ({
                     {selectedWallets.length > 0 && selectedWallets.map((wallet, index) => (
                         <Typography key={index} variant="h4" align="left" sx={{ marginTop: index === 0 ? 0 : '10px' }}>
                             <span style={textGradientStyle}>{wallet.name}{':  '}</span>
-                            <span style={{ fontFamily: 'Inter Tight', fontSize: '22px', color: 'white' }}>
+                            <a 
+                                href={`https://debank.com/profile/${wallet.address}`} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                style={{ fontFamily: 'Inter Tight', fontSize: '22px', color: 'white', textDecoration: 'none' }}
+                            >
                                 {wallet.address}
-                            </span>
+                            </a>
                         </Typography>
                     ))}
+
 
                     {isPoolInvestmentsWallet(selectedWallets) && 
                         <Box sx={{ marginTop: '35px' }}>
@@ -111,7 +117,7 @@ const LoadWallet = ({
 
             {/* TABLE START */}
             <TableContainer component={Paper} sx={{ maxHeight: '80vh', overflow: 'auto', background: 'transparent', backdropFilter: 'blur(5px)' }}>
-                <Table sx={{ minWidth: 2020, backgroundColor: 'transparent' }} stickyHeader aria-label="simple table">
+                <Table sx={{ minWidth: 2050, backgroundColor: 'transparent' }} stickyHeader aria-label="simple table">
                     <StyledTableHead>
                         <TableRow>
                             {Object.entries(propertyMap).map(([key, value]) => (

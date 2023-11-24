@@ -1,8 +1,8 @@
-import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableCell, TableHead, 
+import { Paper, Dialog, DialogContent, TableContainer, Table, TableHead, 
          TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar, Chip,
-         FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
+         FormControl, InputLabel, OutlinedInput, InputAdornment } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
-import { printTableToPDF } from "../../lib/functions/actions";
+import { printTableToPDF, printBlendedTableToPDF } from "../../lib/functions/actions";
 import { WalletSummary } from "../../elements/templates/tables";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
@@ -282,13 +282,20 @@ const AllocationTable = ({
                     >
                         Save Table
                     </Button>}
-                <Button onClick={() => printTableToPDF('allocationTable', 'portrait', 'tabloid', 'allocation-table.pdf')}>Download PDF</Button>
+                    <Button onClick={() => {
+                        isAggregated 
+                            ? printBlendedTableToPDF('allocationTable', 'portrait', 'tabloid', 'aggregated-table.pdf') 
+                            : printTableToPDF('allocationTable', 'portrait', 'tabloid', 'allocation-table.pdf')
+                        }}>
+                        Download PDF
+                    </Button>
+
                 <Button onClick={() => setDialogOpen(false)}>Close</Button>
             </DialogActions>
 
         </Dialog>
 
-        {/* Information that renders when the 'Save Table' or 'Delete Table' button is clicked */}
+        {/* Message renders when the 'Save Table' or 'Delete Table' button is clicked */}
         <Snackbar
             open={saveTableSnackbarOpen}
             autoHideDuration={3000}

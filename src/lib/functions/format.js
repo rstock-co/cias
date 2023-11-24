@@ -43,7 +43,7 @@ export const generateAllocationTableTitle = (selectedWallets, move) => {
 export const formatAmountDecimals = (chain, value) => chain === 'bsc' ? value / 1e18 : value / 1e6;
 
 export const formatAmountDisplay = (value) => {
-    if (value === undefined || value === null || isNaN(value)) {
+    if (value === undefined || value === null || isNaN(value) || Number(value) === 0 || value === '0') {
         return "$0.00"; 
     }
 
