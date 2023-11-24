@@ -57,7 +57,7 @@ const LoadWallet = ({
 
         <Box sx={loadWalletStyles}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '1045px', marginRight: '0px' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: selectedWallets.length > 0 ? '1045px' : '1380px', marginRight: '0px' }}>
                     
                     <Typography variant="h3" align="left" sx={{ flexGrow: 1}}>
                         <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '45px', fontWeight: 'bold', color: 'white', letterSpacing: '4px' }}>
@@ -73,7 +73,7 @@ const LoadWallet = ({
                             </span>}
                         </Typography>
                     ))} */}
-                    <Box sx={{marginRight: '125px', marginTop: '10px'}} >
+                    <Box sx={{ marginRight: selectedWallets.length > 0 ? '89px' : '347px', marginTop: '10px' }}>
                         <DateRangeSelect selectedDateRange={filters.dateRange} handleChange={handleDateChange} isStartDateDefault={isStartDateDefault} isEndDateDefault={isEndDateDefault} />
                     </Box>
 
