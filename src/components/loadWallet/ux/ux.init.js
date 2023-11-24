@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { stableCoinsToFetch, chainsToFetch } from '../data';
-import { getAggregateTransactions, updateStatus } from "../../api/functions";
+import { getAggregateTransactions, updateStatus } from '../../../api/functions';
 
 const InitUX = () => {
 

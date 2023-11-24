@@ -67,15 +67,25 @@ export const getNormalTransactions = async (walletAddress, apiUrl, apiKey, chain
 // UX INIT FUNCTIONS
 
 export const updateStatus = (stateSetter, key, updates) => {
-    stateSetter(prevState => ({
-        ...prevState,
-        [key]: { ...prevState[key], ...updates },
-    }));
+    stateSetter(prevState => {
+        // Debugging: Log if the key does not exist
+        if (!prevState.hasOwnProperty(key)) {
+            console.error(`Key '${key}' not found in state.`);
+            return prevState;
+        }
+
+        return {
+            ...prevState,
+            [key]: { ...prevState[key], ...updates },
+        };
+    });
 };
 
-const fetchAndSetStatus = async (walletAddress, key, apiCall, stateSetter) => {
+
+const fetchAndSetStatus = async (walletAddress, key, transaction, stateSetter) => {
     try {
-        const result = await apiCall(walletAddress);
+        // Ensure that apiCall is executed with both walletAddress and coin.address
+        const result = await transaction.apiCall(walletAddress, transaction.address);
         updateStatus(stateSetter, key, { loading: false, txns: result.length });
         return result;
     } catch (error) {
@@ -85,15 +95,15 @@ const fetchAndSetStatus = async (walletAddress, key, apiCall, stateSetter) => {
     }
 };
 
-export const getAggregateTransactions = async (walletAddress, transactionsToFetch, stateSetter) => {
 
+export const getAggregateTransactions = async (walletAddress, transactionsToFetch, stateSetter) => {
     // Set all transactions to loading
     Object.keys(transactionsToFetch).forEach(key => updateStatus(stateSetter, key, { loading: true }));
 
     try {
         const fetchPromises = Object.keys(transactionsToFetch).map(key => {
             const transaction = transactionsToFetch[key];
-            return fetchAndSetStatus(walletAddress, key, transaction.apiCall, stateSetter);
+            return fetchAndSetStatus(walletAddress, key, transaction, stateSetter);
         });
 
         const transactionsArrays = await Promise.all(fetchPromises);
@@ -112,6 +122,7 @@ export const getAggregateTransactions = async (walletAddress, transactionsToFetc
         throw error;
     }
 };
+
 
 
 

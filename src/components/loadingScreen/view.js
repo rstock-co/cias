@@ -12,6 +12,7 @@ const logos = {
 
 
 const LoadingScreen = ({ stableCoins, open = false }) => {
+  console.log("StableCoins from loading screen: ", stableCoins)
   return (
     <StyledDialog 
       open={open}
