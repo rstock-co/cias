@@ -1,6 +1,7 @@
 import { Table, TableBody, TableContainer, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
 import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle, loadWalletStyles } from './styles';
 import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../elements/dropdowns';
+import SettingsIcon from '@mui/icons-material/Settings'; // Import SettingsIcon from Material-UI icons
 import { ToggleChipButton, ColorButton } from '../../elements/buttons';
 import { propertyMap } from './data';
 import { allWallets as wallets, moves } from "../../lib/data";
@@ -56,12 +57,15 @@ const LoadWallet = ({
 
         <Box sx={loadWalletStyles}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'column', alignItems: 'flex-start' }}>
-                    <Typography variant="h3" align="left" sx={{ marginBottom: '25px' }}>
-                    <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '45px', fontWeight: 'bold', color: 'white', letterSpacing: '4px' }}>
-                        WALLET LOOKUP
-                    </span>
-                    </Typography >
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center', width: '1045px', marginRight: '0px' }}>
+                    
+                    <Typography variant="h3" align="left" sx={{ flexGrow: 1}}>
+                        <span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '45px', fontWeight: 'bold', color: 'white', letterSpacing: '4px' }}>
+                            WALLET LOOKUP
+                        </span>
+                    </Typography>
+                    
+                    
                     {/* {formattedChainData.map((data, index) => (
                         <Typography variant="h6" align="left" key={index} >
                             {<span style={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '20px', color: 'white', letterSpacing: '1px' }}>
@@ -69,15 +73,18 @@ const LoadWallet = ({
                             </span>}
                         </Typography>
                     ))} */}
+                    <Box sx={{marginRight: '125px', marginTop: '10px'}} >
+                        <DateRangeSelect selectedDateRange={filters.dateRange} handleChange={handleDateChange} isStartDateDefault={isStartDateDefault} isEndDateDefault={isEndDateDefault} />
+                    </Box>
+
+                    <ColorButton onClick={handleGenerateChainFlow} buttonText="Saved Tables" />
                 </Box>
 
-                <Box sx={{ marginTop: '15px' }}>
-                    <DateRangeSelect selectedDateRange={filters.dateRange} handleChange={handleDateChange} isStartDateDefault={isStartDateDefault} isEndDateDefault={isEndDateDefault} />
-                </Box>
+                
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                     {selectedWallets.length > 0 && selectedWallets.map((wallet, index) => (
-                        <Typography key={index} variant="h4" align="left" sx={{ marginTop: index === 0 ? 0 : '10px' }}>
+                        <Typography key={index} variant="h4" align="right" sx={{ marginTop: index === 0 ? 0 : '10px' }}>
                             <span style={textGradientStyle}>{wallet.name}{':  '}</span>
                             <a 
                                 href={`https://debank.com/profile/${wallet.address}`} 
@@ -111,6 +118,10 @@ const LoadWallet = ({
                     <ColorButton onClick={handleClearFilters} buttonText="Clear All Filters" />
                     <ColorButton onClick={handleGenerateAllocations} buttonText="Generate Allocations" />
                     <ColorButton onClick={handleGenerateChainFlow} buttonText="Chain Cash Flow" />
+                    {/* <SettingsIcon sx={{ 
+                        fontSize: 40, 
+                        color: '#095D6F', 
+                    }} /> */}
                 </Box>
             </Box>
             {/* HEADER END */}
