@@ -1,7 +1,7 @@
 import { Paper, Dialog, DialogContent, TableContainer, Table, TableHead, 
          TableRow, TableBody, DialogActions, Button, Box, Typography, Snackbar, Chip,
          FormControl, InputLabel, OutlinedInput, InputAdornment } from "@mui/material";
-import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
+import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData, extractTitle } from "../../lib/functions/format";
 import { printTableToPDF, printBlendedTableToPDF } from "../../lib/functions/actions";
 import { WalletSummary } from "../../elements/templates/tables";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
@@ -27,6 +27,7 @@ const AllocationTable = ({
     console.log("allocation table data: ", sortedAllocationTableData)
     console.log("summary data: ", summaryData)
     console.log("selected wallets: ", selectedWallets)
+    console.log("dialog title: ", dialogTitle)
 
     return (
     <>
@@ -206,7 +207,7 @@ const AllocationTable = ({
                                     {isAggregated && (
                                         <WideStyledTableCell align="center" style={totalRowStyleWithBorder}>{formatAggregatedData(aggregatedTxns).totalAmounts}</WideStyledTableCell>
                                     )}
-                                    <StyledTableCell align="center" style={isAggregated ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid #b8b8b8" }}>
+                                    <StyledTableCell align="center" style={isAggregated ? totalRowStyle : { ...totalRowStyle, borderRight: "1px solid grey" }}>
                                         {totalTxns}
                                     </StyledTableCell>
                                     {isAggregated && (
@@ -284,8 +285,18 @@ const AllocationTable = ({
                     </Button>}
                     <Button onClick={() => {
                         isAggregated 
-                            ? printBlendedTableToPDF('allocationTable', 'portrait', 'tabloid', 'aggregated-table.pdf') 
-                            : printTableToPDF('allocationTable', 'portrait', 'tabloid', 'allocation-table.pdf')
+                            ? printBlendedTableToPDF(
+                                'allocationTable', 
+                                sortedAllocationTableData.length > 15 ? 'portrait' : 'landscape', 
+                                sortedAllocationTableData.length > 15 ? 'tabloid' : 'letter', 
+                                `${extractTitle(dialogTitle)}.pdf`
+                            )
+                            : printTableToPDF(
+                                'allocationTable', 
+                                sortedAllocationTableData.length > 15 ? 'portrait' : 'landscape', 
+                                sortedAllocationTableData.length > 15 ? 'tabloid' : 'letter', 
+                                `${extractTitle(dialogTitle)}.pdf`
+                            )
                         }}>
                         Download PDF
                     </Button>

@@ -1,11 +1,10 @@
-import { getWalletAddress } from "../../lib/functions/wallets";
-import { getERC20TxnsArb, getERC20TxnsBsc, getERC20TxnsEth } from "../../api";
+import { getERC20TxnsArb, getERC20TxnsBsc, getERC20TxnsEth, getNormalTxnsArb, getNormalTxnsBsc, getNormalTxnsEth } from "../../api";
 import { formatAmountDecimals, formatAmountDisplay, FormatTxnLink } from "../../lib/functions/format";
+import { getMoveName, getWalletName, getWalletAddress } from "../../lib/functions/wallets";
 import { formatTime } from "../../lib/functions/time";
-import { getMoveName, getWalletName } from "../../lib/functions/wallets";
 import { allWallets as wallets, teamWallets, memberWallets, ignoreWallets, tokenContractAddresses } from "../../lib/data/wallets";
 
-// STABLE COINS TO FETCH
+// erc20 transactions to fetch
 export const stableCoinsToFetch = { 
     stableArb: { address: getWalletAddress("usdc-e_arb"), name: "USDC.e", apiCall: getERC20TxnsArb, chain: "arb", loading: false, txns: 0 },
     stableArb2: { address: getWalletAddress("usdc_arb"), name: "USDC", apiCall: getERC20TxnsArb, chain: "arb", loading: false, txns: 0 },
@@ -15,8 +14,17 @@ export const stableCoinsToFetch = {
     stableEth2: { address: getWalletAddress("usdt_eth"), name: "USDT", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },
     stableBsc: { address: getWalletAddress("busd_bep20"), name: "BUSD", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
     stableBsc2: { address: getWalletAddress("bsc-usd_bep20"), name: "BSC-USD", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
+    // Add other stable coins as needed
 };
 
+// normal transactions to fetch
+export const chainsToFetch = {
+    normalEth: { name: "Ethereum", apiCall: getNormalTxnsEth, chain: "eth", loading: false, txns: 0 },
+    normalBsc: { name: "Binance Smart Chain", apiCall: getNormalTxnsBsc, chain: "bsc", loading: false, txns: 0 },
+    normalArb: { name: "Arbitrum", apiCall: getNormalTxnsArb, chain: "arb", loading: false, txns: 0 },
+    // Add other chains as needed
+};
+ 
 // TABLE COLUMNS
 export const propertyMap = {
     id: { header: '#', align: 'center' },

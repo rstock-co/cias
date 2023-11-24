@@ -1,61 +1,59 @@
 import { useEffect, useState } from 'react';
-import { stableCoinsToFetch, chainsToFetch } from '../data';
-import { getAggregateTransactions, updateStatus } from "../../api/functions";
+import { stableCoinsToFetch } from '../data';
+import { searchWalletName } from '../../../lib/functions/wallets';
+// Import the function to fetch normal transactions
+import { getNormalTransactions } from '../../../lib/functions/normalTransactions'; 
 
 const InitUX = () => {
-
     const [stableCoins, setStableCoins] = useState(stableCoinsToFetch);
-    const [chains, setChains] = useState(chainsToFetch);
-
-    // SELECTED WALLETS
     const [selectedWallets, setSelectedWallets] = useState([]);
     const [previousWallets, setPreviousWallets] = useState([]);
-
-    // TRANSACTIONS
     const [txns, setTxns] = useState([]);
-    const [fetchType, setFetchType] = useState('erc20'); // 'normal', 'erc20', 'all'
-
-    // LOADING SCREEN TRIGGER
     const [isLoading, setIsLoading] = useState(false);
     const [loadingLocked, setLoadingLocked] = useState(false);
+    const [transactionType, setTransactionType] = useState('erc20'); // 'normal', 'erc20', 'all'
 
-   
-    const getAggregateERC20Txns = async (walletAddress) => {
-        return getAggregateTransactions(walletAddress, stableCoins, (key, updates) => updateStatus(setStableCoins, key, updates));
+    // ... existing function definitions ...
+
+    const fetchNormalTxns = async (walletAddress) => {
+        // Implement your logic to fetch normal transactions
+        return getNormalTransactions(walletAddress);
     };
-    
-    const getAggregateNormalTxns = async (walletAddress) => {
-        return getAggregateTransactions(walletAddress, chains, (key, updates) => updateStatus(setChains, key, updates));
-    };
-    
+
     const fetchTransactions = async (walletsToFetch) => {
-        const minLoadingTime = 3000; // Minimum loading time in milliseconds
+        const minLoadingTime = 3000;
         const startTime = Date.now(); 
-    
         setLoadingLocked(true); 
         setIsLoading(true);
-    
         const newTxns = [];
+
         for (const wallet of walletsToFetch) {
             if (wallet && wallet.address) {
                 try {
-                    if (fetchType === 'erc20' || fetchType === 'all') {
-                        const erc20Results = await getAggregateERC20Txns(wallet.address);
-                        newTxns.push(...erc20Results);
+                    let result = [];
+                    if (transactionType === 'erc20' || transactionType === 'all') {
+                        result = result.concat(await getAggregateERC20Txns(wallet.address));
                     }
-                    if (fetchType === 'normal' || fetchType === 'all') {
-                        const normalResults = await getAggregateNormalTxns(wallet.address);
-                        newTxns.push(...normalResults);
+                    if (transactionType === 'normal' || transactionType === 'all') {
+                        result = result.concat(await fetchNormalTxns(wallet.address));
                     }
+                    newTxns.push(...result);
                 } catch (error) {
                     console.error('Error fetching transactions for wallet:', wallet.name, error);
                 }
             }
         }
-    
+
+
+
+
+
+
+
+
+        
+// ==========================================================
         setTxns(prevTxns => [...prevTxns, ...newTxns]);
-    
-        // Calculate elapsed time and handle loading state
         const elapsedTime = Date.now() - startTime;
         if (elapsedTime < minLoadingTime) {
             setTimeout(() => {
@@ -67,32 +65,28 @@ const InitUX = () => {
             setLoadingLocked(false); 
         }
     };
-    
 
     useEffect(() => {
         // Fetch transactions only for the newly added wallets
         const newWallets = selectedWallets.filter(wallet => !previousWallets.find(w => w.address === wallet.address));
-    
+
         if (newWallets.length > 0) {
             fetchTransactions(newWallets)
-            .then(() => {
-                // Handle successful fetch
-            })
+            .then(() => {})
             .catch((error) => {
                 console.error('Error fetching transactions:', error);
-                // Update all coins/chains to not loading on error
+                // If there is an error, update all coins to not loading
                 Object.keys(stableCoins).forEach(coinKey =>
-                    updateStatus(setStableCoins, coinKey, { loading: false })
+                updateCoinStatus(coinKey, { loading: false })
                 );
             });
         }
-    
+
         // Update the previousWallets state for the next effect run
         setPreviousWallets(selectedWallets);
-    
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedWallets, fetchType]); 
-    
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedWallets]);
 
     // manage the global loading state based on individual coin statuses
     const areAllCoinsNotLoading = (coins) => Object.values(coins).every(coin => !coin.loading);
@@ -103,15 +97,16 @@ const InitUX = () => {
         }
     }, [stableCoins, loadingLocked]);
       
+
     return {
         txns,
         setTxns,
-        setFetchType,
         selectedWallets,
         setSelectedWallets,
         fetchTransactions,
         isLoading,
-        stableCoins
+        stableCoins,
+        setTransactionType, // Expose the function to change transaction type
     };
 }
 

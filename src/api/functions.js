@@ -1,4 +1,7 @@
 import axios from "axios";
+import { searchWalletName } from "../lib/functions/wallets";
+
+// API CALLS
 
 export const getERC20Transactions = async (walletAddress, contractAddress, apiUrl, apiKey, chainLabel) => {
     const requestConfig = {
@@ -24,7 +27,8 @@ export const getERC20Transactions = async (walletAddress, contractAddress, apiUr
         const response = await axios.get(apiUrl, requestConfig);
         return response.data.result.map(txn => ({
             ...txn,
-            chain: chainLabel // manually add chain label to each transaction
+            chain: chainLabel, // manually add chain label to each transaction
+            fetchType: 'erc20', // manually add fetchType to each transaction
         }));
     } catch (error) {
         console.error(`Error fetching ${chainLabel} transactions:`, error);
@@ -51,13 +55,68 @@ export const getNormalTransactions = async (walletAddress, apiUrl, apiKey, chain
         const response = await axios.get(apiUrl, requestConfig);
         return response.data.result.map(txn => ({
             ...txn,
-            chain: chainLabel // manually add chain label to each transaction
+            chain: chainLabel, // manually add chain label to each transaction
+            fetchType: 'normal', // manually add fetchType to each transaction
         }));
     } catch (error) {
         console.error(`Error fetching ${chainLabel} transactions:`, error);
         throw error; 
     }
 };
+
+// UX INIT FUNCTIONS
+
+export const updateStatus = (stateSetter, key, updates) => {
+    stateSetter(prevState => ({
+        ...prevState,
+        [key]: { ...prevState[key], ...updates },
+    }));
+};
+
+const fetchAndSetStatus = async (walletAddress, key, apiCall, stateSetter) => {
+    try {
+        const result = await apiCall(walletAddress);
+        updateStatus(stateSetter, key, { loading: false, txns: result.length });
+        return result;
+    } catch (error) {
+        console.error(`Error fetching transactions for ${key}:`, error);
+        updateStatus(stateSetter, key, { loading: false, txns: 0 });
+        throw error;
+    }
+};
+
+export const getAggregateTransactions = async (walletAddress, transactionsToFetch, stateSetter) => {
+
+    // Set all transactions to loading
+    Object.keys(transactionsToFetch).forEach(key => updateStatus(stateSetter, key, { loading: true }));
+
+    try {
+        const fetchPromises = Object.keys(transactionsToFetch).map(key => {
+            const transaction = transactionsToFetch[key];
+            return fetchAndSetStatus(walletAddress, key, transaction.apiCall, stateSetter);
+        });
+
+        const transactionsArrays = await Promise.all(fetchPromises);
+        const walletName = searchWalletName(walletAddress);
+
+        // Flatten transactions and append the wallet name
+        const newTxns = transactionsArrays.flat().map(txn => ({
+            ...txn,
+            walletName
+        }));
+
+        return newTxns;
+    } catch (error) {
+        console.error('Error fetching aggregate transactions:', error);
+        Object.keys(transactionsToFetch).forEach(key => updateStatus(stateSetter, key, { loading: false, txns: 0 }));
+        throw error;
+    }
+};
+
+
+
+
+
 
 
 /**
