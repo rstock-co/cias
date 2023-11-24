@@ -35,11 +35,27 @@ export const StyledChip = styled(Chip)(({ theme, blended }) => ({
     },
   }));
 
-
-export const FetchTypeButton = styled(Button)(({ theme, active }) => ({
-    backgroundColor: active ? theme.palette.primary.main : theme.palette.grey[300],
-    color: active ? 'white' : 'black',
+  
+  export const FetchTypeButton = styled(Button)(({ active }) => ({
+    fontFamily: 'Inter Tight, sans-serif',
+    fontWeight: 'regular',
+    fontSize: '15px',
+    background: active ? '#0A5067' : `linear-gradient(to right, #022027, #04373A)`,
+    color: '#08E2EA',
+    border: '1px solid #08E2EA !important',
+    transform: 'translateY(-2px)',
+    boxShadow: active ? '0 0 10px #08E2EA' : '3.5px 3.5px 0 #095D6F',
+    transition: 'box-shadow 0.3s ease-in-out',
+    marginTop: 12,
+    outline: 'none',
     '&:hover': {
-      backgroundColor: active ? theme.palette.primary.dark : theme.palette.grey[400],
+        background: '#0c546e',
+        boxShadow: '0 0 10px #08E2EA',
+    },
+    '&:focus, &:active, &:focus-visible': {
+        boxShadow: '0 0 10px #08E2EA',
+        outline: 'none',
+        border: '1px solid #08E2EA !important',
     },
 }));
+  
