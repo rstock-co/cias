@@ -20,13 +20,9 @@ const InitUX = () => {
     const [loadingLocked, setLoadingLocked] = useState(false);
 
    
-    const getAggregateERC20Txns = async (walletAddress) => {
-        return getAggregateTransactions(walletAddress, stableCoins, (key, updates) => updateStatus(setStableCoins, key, updates));
-    };
+    const getAggregateERC20Txns = async (walletAddress) => getAggregateTransactions(walletAddress, stableCoins, updateStatus, setStableCoins);
     
-    const getAggregateNormalTxns = async (walletAddress) => {
-        return getAggregateTransactions(walletAddress, chains, (key, updates) => updateStatus(setChains, key, updates));
-    };
+    const getAggregateNormalTxns = async (walletAddress) => getAggregateTransactions(walletAddress, chains, updateStatus, setChains);
     
     const fetchTransactions = async (walletsToFetch) => {
         const minLoadingTime = 3000; // Minimum loading time in milliseconds
@@ -81,9 +77,10 @@ const InitUX = () => {
             .catch((error) => {
                 console.error('Error fetching transactions:', error);
                 // Update all coins/chains to not loading on error
-                Object.keys(stableCoins).forEach(coinKey =>
+                Object.keys(stableCoins).forEach(coinKey => {
+                    console.log(`Updating status for coinKey (useEffect): ${coinKey}`)
                     updateStatus(setStableCoins, coinKey, { loading: false })
-                );
+                });
             });
         }
     

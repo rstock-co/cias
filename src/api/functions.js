@@ -66,25 +66,11 @@ export const getNormalTransactions = async (walletAddress, apiUrl, apiKey, chain
 
 // UX INIT FUNCTIONS
 
-export const updateStatus = (stateSetter, key, updates) => {
-    stateSetter(prevState => {
-        // Debugging: Log if the key does not exist
-        if (!prevState.hasOwnProperty(key)) {
-            console.error(`Key '${key}' not found in state.`);
-            return prevState;
-        }
-
-        return {
-            ...prevState,
-            [key]: { ...prevState[key], ...updates },
-        };
-    });
-};
-
+export const updateStatus = (stateSetter, key, updates) => 
+    stateSetter(prevState => ({ ...prevState, [key]: { ...prevState[key], ...updates }}));
 
 const fetchAndSetStatus = async (walletAddress, key, transaction, stateSetter) => {
     try {
-        // Ensure that apiCall is executed with both walletAddress and coin.address
         const result = await transaction.apiCall(walletAddress, transaction.address);
         updateStatus(stateSetter, key, { loading: false, txns: result.length });
         return result;
@@ -95,10 +81,11 @@ const fetchAndSetStatus = async (walletAddress, key, transaction, stateSetter) =
     }
 };
 
-
-export const getAggregateTransactions = async (walletAddress, transactionsToFetch, stateSetter) => {
+export const getAggregateTransactions = async (walletAddress, transactionsToFetch, updateStatusFn, stateSetter) => {
     // Set all transactions to loading
-    Object.keys(transactionsToFetch).forEach(key => updateStatus(stateSetter, key, { loading: true }));
+    Object.keys(transactionsToFetch).forEach(key => {
+        updateStatusFn(stateSetter, key, { loading: true });
+    });
 
     try {
         const fetchPromises = Object.keys(transactionsToFetch).map(key => {
@@ -118,16 +105,12 @@ export const getAggregateTransactions = async (walletAddress, transactionsToFetc
         return newTxns;
     } catch (error) {
         console.error('Error fetching aggregate transactions:', error);
-        Object.keys(transactionsToFetch).forEach(key => updateStatus(stateSetter, key, { loading: false, txns: 0 }));
+        Object.keys(transactionsToFetch).forEach(key => {
+            updateStatusFn(stateSetter, key, { loading: false, txns: 0 });
+        });
         throw error;
     }
 };
-
-
-
-
-
-
 
 
 /**
