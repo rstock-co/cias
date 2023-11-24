@@ -7,18 +7,13 @@ export const getERC20Transactions = async (walletAddress, contractAddress, apiUr
             action: 'tokentx',
             address: walletAddress,
             startblock: '0',
-            endblock: '99999999',
+            endblock: chainLabel === 'arb' ? 'latest' : '99999999',
             page: '1',
             offset: '1000',
             sort: 'asc',
             apikey: apiKey,
         },
     };
-
-    // Adjust for Arbiscan's different endblock parameter value
-    if (chainLabel === 'arb') {
-        requestConfig.params.endblock = 'latest';
-    }
 
     // Conditionally add the contractaddress key-value pair
     if (contractAddress) {
@@ -54,7 +49,10 @@ export const getNormalTransactions = async (walletAddress, apiUrl, apiKey, chain
 
     try {
         const response = await axios.get(apiUrl, requestConfig);
-        return response.data.result;
+        return response.data.result.map(txn => ({
+            ...txn,
+            chain: chainLabel // manually add chain label to each transaction
+        }));
     } catch (error) {
         console.error(`Error fetching ${chainLabel} transactions:`, error);
         throw error; 

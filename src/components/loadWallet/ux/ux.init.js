@@ -27,7 +27,6 @@ const InitUX = () => {
     const fetchAndSetStatus = async (walletAddress, coinKey) => {
         try {
             const coin = stableCoins[coinKey];
-            updateCoinStatus(coinKey, { loading: true });
 
             const result = await coin.apiCall(walletAddress, coin.address);
             updateCoinStatus(coinKey, { loading: false, txns: result.length });
