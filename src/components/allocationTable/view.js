@@ -9,7 +9,17 @@ import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSel
 import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
 import { StyledTableCell, StyledTableRow, WideStyledTableCell, chipStyles, totalRowStyle, totalRowStyleWithBorder } from "./styles";
 
-const HeaderTemplate = ({savedTableId, chipStyles, showHeaderRow, handleToggleHeaderRow, showMemberName, handleToggleMemberName, sortBy, handleSortByChange, adjustedNetTotal, handleAdjustedNetTotalChange }) => (
+const HeaderTemplate = ({
+    savedTableId,
+    showHeaderRow, 
+    handleToggleHeaderRow, 
+    showMemberName, 
+    handleToggleMemberName, 
+    sortBy, 
+    handleSortByChange, 
+    adjustedNetTotal, 
+    handleAdjustedNetTotalChange 
+}) => (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '15px', marginRight: '25px' }}> 
         <Box> 
             <Box sx={{ml: 3}}>
@@ -88,7 +98,14 @@ const TableTitle = ({ dialogTitle }) => (
     </Typography>
 );
 
-const WalletSummaryTemplate = ({ walletName, netAmount, totalContributions, contributionsAmount, totalRefunds, refundsAmount }, index) => (
+const WalletSummaryTemplate = ({ 
+    walletName, 
+    netAmount, 
+    totalContributions, 
+    contributionsAmount, 
+    totalRefunds, 
+    refundsAmount 
+}, index) => (
     <Box mb={0} mt={2} ml={3}>
         <WalletSummary
             key={index}
@@ -104,9 +121,9 @@ const WalletSummaryTemplate = ({ walletName, netAmount, totalContributions, cont
     </Box>
 );
 
-const WalletSummaries = ({summaryData}) => (
+const WalletSummaries = ({summaryData}) => summaryData && summaryData.length > 0 && (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}> 
-        {summaryData && summaryData.length > 0 && summaryData.map(WalletSummaryTemplate)}
+        {summaryData.map(WalletSummaryTemplate)}
     </Box>
 )
 
@@ -121,9 +138,11 @@ const GenerationDate = ({generatedDateString}) => (
     </Box>
 )
 
-const SummaryTableHeader = ({showMemberName, isAggregated }) => (
+const SummaryTableHeader = ({
+    showMemberName, 
+    isAggregated 
+}) => (
     <TableHead>
-        {/* Table header row */}
         <TableRow>
             <StyledTableCell>Member Wallet</StyledTableCell>
             {showMemberName && <StyledTableCell>Member Name</StyledTableCell>}
@@ -158,7 +177,20 @@ const SummaryTableHeader = ({showMemberName, isAggregated }) => (
     </TableHead>
 )
 
-const SummaryTableTotalsRow = ({showHeaderRow, totalRowStyle, showMemberName, totalShare, totalTxns, adjustedNetTotal, totalNetAmount, isAggregated, totalRowStyleWithBorder, aggregatedTxns, totalContributionsAmount, aggregatedContributionsChainMap, totalRefundsAmount, aggregatedRefundsChainMap}) => 
+const SummaryTableTotalsRow = ({
+    showHeaderRow, 
+    showMemberName, 
+    totalShare, 
+    totalTxns, 
+    adjustedNetTotal, 
+    totalNetAmount, 
+    isAggregated, 
+    aggregatedTxns, 
+    totalContributionsAmount, 
+    aggregatedContributionsChainMap, 
+    totalRefundsAmount, 
+    aggregatedRefundsChainMap
+}) => 
     showHeaderRow && (
         <TableRow>
             <StyledTableCell component="th" scope="row" style={totalRowStyle}>
@@ -188,7 +220,23 @@ const SummaryTableTotalsRow = ({showHeaderRow, totalRowStyle, showMemberName, to
         </TableRow>
     )
 
-const SummaryTable = ({showMemberName, isAggregated, showHeaderRow, totalRowStyle, totalShare, totalTxns, adjustedNetTotal, totalNetAmount, totalRowStyleWithBorder, aggregatedTxns, totalContributionsAmount, aggregatedContributionsChainMap, totalRefundsAmount, aggregatedRefundsChainMap, sortedAllocationTableData }) => (
+const SummaryTable = ({
+    showMemberName, 
+    isAggregated, 
+    showHeaderRow, 
+    totalRowStyle, 
+    totalShare, 
+    totalTxns, 
+    adjustedNetTotal, 
+    totalNetAmount, 
+    totalRowStyleWithBorder, 
+    aggregatedTxns, 
+    totalContributionsAmount, 
+    aggregatedContributionsChainMap, 
+    totalRefundsAmount, 
+    aggregatedRefundsChainMap, 
+    sortedAllocationTableData 
+}) => (
     <Table sx={{ border: 'none', tableLayout: 'auto' }} aria-label="member table">
         {SummaryTableHeader({showMemberName, isAggregated })}
 
@@ -208,23 +256,23 @@ const SummaryTable = ({showMemberName, isAggregated, showHeaderRow, totalRowStyl
                             {row.memberName} 
                         </StyledTableCell>
                     )}
-        <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
-        <StyledTableCell align="center">{formatAmountDisplay(row.adjustedNetAmount)}</StyledTableCell>
-        {isAggregated && (
-            <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).totalAmounts}</WideStyledTableCell>
-        )}
-        <StyledTableCell align="center" style={{ borderRight: isAggregated ? "none" : "1px solid #b8b8b8" }}>{row.txns}</StyledTableCell>
-        {isAggregated && (
-            <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).txns}</WideStyledTableCell>
-        )}
-        <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
-        <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }} >{formatChainData(row.contributionsChainMap)}</StyledTableCell>
-        <StyledTableCell align="center">{formatAmountDisplay(row.refundsAmount)}</StyledTableCell>
-        <StyledTableCell align="center">{formatChainData(row.refundsChainMap)}</StyledTableCell>
+                    <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
+                    <StyledTableCell align="center">{formatAmountDisplay(row.adjustedNetAmount)}</StyledTableCell>
+                    {isAggregated && (
+                        <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).totalAmounts}</WideStyledTableCell>
+                    )}
+                    <StyledTableCell align="center" style={{ borderRight: isAggregated ? "none" : "1px solid #b8b8b8" }}>{row.txns}</StyledTableCell>
+                    {isAggregated && (
+                        <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).txns}</WideStyledTableCell>
+                    )}
+                    <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
+                    <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }} >{formatChainData(row.contributionsChainMap)}</StyledTableCell>
+                    <StyledTableCell align="center">{formatAmountDisplay(row.refundsAmount)}</StyledTableCell>
+                    <StyledTableCell align="center">{formatChainData(row.refundsChainMap)}</StyledTableCell>
 
                 </StyledTableRow>
             ))}
-    </TableBody>
+        </TableBody>
     </Table>
 )
 
@@ -295,20 +343,14 @@ const TableFooterButtons = ({
         </DialogActions>
     )
 
-const AllocationTable = ({ 
-    // original props
-    dialogOpen, setDialogOpen, selectedWallets, move, saveTableData, deleteTableData, savedTableId,
-    saveTableSnackbarMessage, saveTableSnackbarOpen, handleCloseSaveTableSnackbar,
+const AllocationTable = (props = {}) => {
 
-    // ux.header
-    showMemberName, showHeaderRow, adjustedNetTotal, sortBy, handleToggleMemberName, handleToggleHeaderRow, 
-    handleAdjustedNetTotalChange, handleSortByChange, dialogTitle, generatedDateString, isAggregated,
-
-    // ux.base
-    totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 
-    aggregatedRefundsChainMap, aggregatedTxns, totalShare, sortedAllocationTableData, summaryData,
-
-} = {}) => {
+    const {
+        dialogOpen, setDialogOpen, selectedWallets, 
+        saveTableSnackbarMessage, saveTableSnackbarOpen, handleCloseSaveTableSnackbar,
+        dialogTitle, generatedDateString, isAggregated,
+        sortedAllocationTableData, summaryData,
+    } = props;
 
     console.log("allocation table data: ", sortedAllocationTableData)
     console.log("summary data: ", summaryData)
@@ -328,7 +370,7 @@ const AllocationTable = ({
                     },
                 }}
             >
-                {HeaderTemplate({savedTableId, chipStyles , showHeaderRow, handleToggleHeaderRow, showMemberName, handleToggleMemberName, sortBy, handleSortByChange, adjustedNetTotal, handleAdjustedNetTotalChange})}
+                {HeaderTemplate(props)}
 
 
                 <DialogContent style={{ overflowX: 'auto' }}>
@@ -340,12 +382,12 @@ const AllocationTable = ({
 
                         {GenerationDate({generatedDateString})}
 
-                        {SummaryTable({ showMemberName, isAggregated, showHeaderRow, totalRowStyle, totalShare, totalTxns, adjustedNetTotal, totalNetAmount, totalRowStyleWithBorder, aggregatedTxns, totalContributionsAmount, aggregatedContributionsChainMap, totalRefundsAmount, aggregatedRefundsChainMap, sortedAllocationTableData})}
+                        {SummaryTable(props)}
 
                     </TableContainer>
                 </DialogContent>
 
-                {TableFooterButtons({ savedTableId, selectedWallets, move, dialogTitle, isAggregated, generatedDateString, sortedAllocationTableData, totalTxns, totalNetAmount, aggregatedContributionsChainMap, aggregatedRefundsChainMap, aggregatedTxns, totalShare, adjustedNetTotal, saveTableData, deleteTableData})}
+                {TableFooterButtons(props)}
 
             </Dialog>
 
