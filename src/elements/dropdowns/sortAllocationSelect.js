@@ -1,5 +1,5 @@
-import { Autocomplete, TextField } from '@mui/material';
 import "@fontsource/inter-tight"
+import { Autocomplete, TextField } from '@mui/material';
 
 export const SortAllocationSelect = ({ sortBy, handleSortByChange }) => {
     const sortOptions = ["# of contributions", "Amount"];

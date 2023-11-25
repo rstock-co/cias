@@ -1,6 +1,6 @@
+import '@fontsource/inter-tight';
 import { MenuItem } from '@mui/material';
 import { StyledTextField } from './styles';
-import '@fontsource/inter-tight';
 
 export const TypeSelect = ({ types, selectedType, handleChange }) => (
         <StyledTextField

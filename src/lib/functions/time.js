@@ -1,5 +1,5 @@
+import { addMinutes, format, startOfMinute } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
-import { format, startOfMinute, addMinutes } from 'date-fns';
 
 // Use "America/Denver" for Mountain Standard Time
 

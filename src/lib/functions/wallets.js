@@ -1,6 +1,6 @@
-import { moves } from "../data/moves";
-import { allWallets as wallets, memberWallets, INVESTMENT_WALLET } from "../data/wallets";
+import { INVESTMENT_WALLET, memberWallets, allWallets as wallets } from "../data/wallets";
 import { filterByDateRange } from "./filters";
+import { moves } from "../data/moves";
 
 export const getUniqueWallets = txns => Array.from(
         new Set(txns.flatMap(txn => [txn.to, txn.from]))
