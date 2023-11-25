@@ -1,20 +1,20 @@
-import { Table, TableBody, TableContainer, TableRow, Paper, Box, Typography, IconButton, Snackbar  } from '@mui/material';
-import { StyledTableHead, StyledTableCell, StyledTableRow, textGradientStyle, loadWalletStyles } from './styles';
-import { WalletSelect, TypeSelect, FilterWalletSelect, ChainSelect, DateRangeSelect, DirectionSelect, MoveSelect } from '../../elements/dropdowns';
-import { ToggleChipButton, ColorButton, FetchTypeSelect } from '../../elements/buttons';
-import { propertyMap } from './data';
-import { allWallets as wallets, moves } from "../../lib/data";
-import { isPoolInvestmentsWallet } from '../../lib/functions/wallets';
-import { copyToClipboard } from '../../lib/functions/actions';
+import '@fontsource/plus-jakarta-sans';
+import '@fontsource/inter-tight';
+import { Box, IconButton, Paper, Snackbar, Table, TableBody, TableContainer, TableRow, Typography  } from '@mui/material';
+import { ChainSelect, DateRangeSelect, DirectionSelect, FilterWalletSelect, MoveSelect, TypeSelect, WalletSelect } from '../../elements/dropdowns';
+import { ColorButton, FetchTypeSelect, ToggleChipButton } from '../../elements/buttons';
+import { StyledTableCell, StyledTableHead, StyledTableRow, loadWalletStyles, textGradientStyle } from './styles';
+import { moves, allWallets as wallets } from "../../lib/data";
 import AllocationTable from '../allocationTable/';
 import BlendedAllocationTable from '../blendedTable/';
 import ChainCashFlowDialog from '../chainCashFlow/view';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import LoadingScreen from '../loadingScreen/view';
 import MemberSummaryDialog from '../memberSummary/view';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import PersonIcon from '@mui/icons-material/Person';
-import '@fontsource/plus-jakarta-sans';
-import '@fontsource/inter-tight';
+import { copyToClipboard } from '../../lib/functions/actions';
+import { isPoolInvestmentsWallet } from '../../lib/functions/wallets';
+import { propertyMap } from './data';
 
 const LoadWallet = ({
     // ux.init
