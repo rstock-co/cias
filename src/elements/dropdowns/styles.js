@@ -5,7 +5,7 @@ import "@fontsource/inter-tight";
 
 // SINGLE SELECTS
 
-export const StyledTextField = styled(TextField)(({ theme }) => ({
+export const StyledTextField = styled(TextField)(() => ({
     minWidth: 120,
 
     '& .MuiOutlinedInput-root': {
@@ -57,7 +57,7 @@ export const StyledTextField = styled(TextField)(({ theme }) => ({
 
 // MULTI SELECT (main wallet select box)
 
-export const CustomInputLabel = styled(InputLabel)(({ theme }) => ({
+export const CustomInputLabel = styled(InputLabel)(() => ({
     color: '#e6c347',
     fontWeight: 'bold',
     fontFamily: 'Inter, sans-serif',
@@ -92,7 +92,7 @@ const baseStyles = {
 };
 
 // Apply the base styles to OutlinedInput
-const StyledOutlinedInput = styled(OutlinedInput)(({ theme }) => ({
+const StyledOutlinedInput = styled(OutlinedInput)(() => ({
     root: baseStyles,
 }));
 
@@ -127,7 +127,7 @@ export const CustomOutlinedInput = (props) => {
     );
 };
 
-export const CustomSelect = styled(Select)(({ theme }) => ({
+export const CustomSelect = styled(Select)(() => ({
     root: {
         height: '50px',
     },

@@ -128,7 +128,7 @@ export const generateSummaryData = (tableData, selectedWallets) => {
     tableData.forEach(transaction => {
         if (txnIsNotRelevant(transaction.walletDescription)) return;
 
-        const walletName = transaction.walletName;
+        const {walletName} = transaction;
         const summary = walletSummaries[walletName];
 
         if (summary) {
@@ -156,13 +156,12 @@ export const generateSummaryData = (tableData, selectedWallets) => {
 
 // BLENDED TABLE FUNCTIONS
 
-export const processBlendedTableData = (aggregateDataForBlendedTable, tableTransferTotals, grandTotalNet) => {
-    return Object.entries(aggregateDataForBlendedTable)
+export const processBlendedTableData = (aggregateDataForBlendedTable, tableTransferTotals, grandTotalNet) => Object.entries(aggregateDataForBlendedTable)
         .map(([memberWallet, data]) => {
-            const baseWallet = data.baseWallet; 
+            const {baseWallet} = data; 
             const baseWalletContribution = baseWallet ? baseWallet.adjustedNetAmount : 0;
             const savedWalletsContribution = Object.entries(data)
-                .filter(([key, _]) => key.startsWith('savedWallet'))
+                .filter(([key]) => key.startsWith('savedWallet'))
                 .reduce((acc, [walletKey, walletData]) => {
                     const transferIndex = parseInt(walletKey.replace('savedWallet', ''), 10);
                     const transferAmount = tableTransferTotals[transferIndex] || 0;
@@ -173,6 +172,5 @@ export const processBlendedTableData = (aggregateDataForBlendedTable, tableTrans
             const share = adjustedNetAmount / grandTotalNet;
             return { memberWallet, data, adjustedNetAmount, share, baseWallet };
         })
-        .sort((a, b) => b.adjustedNetAmount - a.adjustedNetAmount);
-}
+        .sort((a, b) => b.adjustedNetAmount - a.adjustedNetAmount)
 

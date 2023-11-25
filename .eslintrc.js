@@ -7,6 +7,7 @@
 module.exports = {
   plugins: [
     '@stylistic',
+    '@stylistic/jsx',
     '@stylistic/migrate'
   ],
   rules: {
@@ -18,7 +19,7 @@ module.exports = {
     'no-return-assign': 1,
     'new-cap': 0,
     'no-unused-vars': [
-      'warn',
+      'error',
       {
         vars: 'local',
       },
@@ -29,11 +30,11 @@ module.exports = {
     'prefer-destructuring': 'warn',
     'prefer-rest-params': 1,
     'prefer-template': 'error',
-    'react/display-name': 0,
-    'react/jsx-key': 0,
-    'react/no-unescaped-entities': 0,
-    'react/no-unknown-property': 0,
-    'react/prop-types': 0,
+    'stylistic/jsx/display-name': 0,
+    'stylistic/jsx/jsx-key': 0,
+    'stylistic/jsx/no-unescaped-entities': 0,
+    'stylistic/jsx/no-unknown-property': 0,
+    'stylistic/jsx/prop-types': 0,
     'sort-imports': 0,
     '@stylistic/js/space-before-function-paren': 0,
     '@stylistic/js/indent': 0,

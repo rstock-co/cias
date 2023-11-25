@@ -80,13 +80,11 @@ const HeaderUX = ({
         </div>
 
 
-    const savedTableDisplayData = useMemo(() => {
-        return filteredBlendedTableIds.map(tableId => {
+    const savedTableDisplayData = useMemo(() => filteredBlendedTableIds.map(tableId => {
             const tableTitle = extractTitle(savedTables.find(table => table.id === tableId)?.tableTitle);
             const transferTotal = tableTransferTotals[tableId] ?? 0.00;
             return { tableId, tableTitle, transferTotal };
-        });
-    }, [filteredBlendedTableIds, savedTables, tableTransferTotals]);
+        }), [filteredBlendedTableIds, savedTables, tableTransferTotals]);
 
     
     useEffect(() => {
@@ -108,8 +106,8 @@ const HeaderUX = ({
         // Calculate the total transfer amount for each table in filteredBlendedTableIds
         const totals = filteredBlendedTableIds.reduce((acc, tableId) => {
             const totalAmount = Object.entries(transferTxnsToBlend)
-                .filter(([_, txnInfo]) => txnInfo.tableID === tableId)
-                .reduce((total, [_, txnInfo]) => total + txnInfo.amount, 0);
+                .filter(([, txnInfo]) => txnInfo.tableID === tableId)
+                .reduce((total, [, txnInfo]) => total + txnInfo.amount, 0);
 
             acc[tableId] = totalAmount;
             return acc;

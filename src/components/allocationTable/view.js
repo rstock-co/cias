@@ -16,7 +16,7 @@ const AllocationTable = ({
     
     // ux.header
     showMemberName, showHeaderRow, adjustedNetTotal, sortBy, handleToggleMemberName, handleToggleHeaderRow, 
-    handleAdjustedNetTotalChange, handleSortByChange, dialogTitle, generatedDateHTML, generatedDateString, isAggregated,
+    handleAdjustedNetTotalChange, handleSortByChange, dialogTitle, generatedDateString, isAggregated,
 
     // ux.base
     totalTxns, totalContributionsAmount, totalRefundsAmount, totalNetAmount, aggregatedContributionsChainMap, 

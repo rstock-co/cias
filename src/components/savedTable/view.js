@@ -1,13 +1,10 @@
-import { Paper, TableContainer, Table, TableCell, TableHead, TableRow, TableBody, Box, Typography, 
-        FormControl, InputLabel, OutlinedInput, InputAdornment, Switch } from "@mui/material";
+import { Paper } from "@mui/material";
 import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
-import { StyledTableCell, WideStyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from "./styles";
-import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
+import { totalRowStyle, totalRowStyleWithBorder } from "./styles";
 import "@fontsource/inter-tight";
 
 const SavedTable = ({ 
     // separate props
-    selectedWallets, 
     
     // props from ux.base (data object)
     id, tableData, tableTitle, generatedOnDate, isAggregated,
@@ -15,9 +12,7 @@ const SavedTable = ({
     aggregatedRefundsChainMap, aggregatedTxns, totalShare, state,
     headerStateSetters
 
-} = {}) => {
-
-    return (
+} = {}) => (
     <>
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap' }}>
             <Box mb={2}>
@@ -194,6 +189,6 @@ const SavedTable = ({
             </Table>
         </TableContainer>
     </>
-)};
+);
 
 export default SavedTable;
