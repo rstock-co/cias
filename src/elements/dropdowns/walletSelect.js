@@ -7,6 +7,10 @@ import '@fontsource/inter-tight';
 export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
     const [selectOpen, setSelectOpen] = useState(false);
 
+    const handleClose = () => {
+        setSelectOpen(false);
+    };
+
     const handleSelectChange = (event) => {
         handleChange(event);
         handleClose(); // Close the select when an item is clicked
@@ -16,9 +20,6 @@ export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
         setSelectOpen(true);
     };
 
-    const handleClose = () => {
-        setSelectOpen(false);
-    };
 
     return (
         <ThemeProvider theme={autoCompleteTheme}>

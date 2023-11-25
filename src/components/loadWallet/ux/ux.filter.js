@@ -80,7 +80,6 @@ const FilterUX = ({
             const filteredTxns = filterTxns(tableData, filters);
             setTableData(filteredTxns);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [txns, selectedWallets, filters]);
     
     return {

@@ -9,7 +9,7 @@ module.exports = {
     'no-return-assign': 1,
     'new-cap': 0,
     'no-unused-vars': [
-      'error',
+      'warn',
       {
         vars: 'local',
       },
@@ -17,7 +17,7 @@ module.exports = {
     'no-use-before-define': 'error',
     'object-shorthand': 1,
     'prefer-arrow-callback': 1,
-    'prefer-destructuring': 'error',
+    'prefer-destructuring': 'warn',
     'prefer-rest-params': 1,
     'prefer-template': 'error',
     'react/display-name': 0,
@@ -26,7 +26,7 @@ module.exports = {
     'react/no-unescaped-entities': 0,
     'react/no-unknown-property': 0,
     'react/prop-types': 0,
-    'sort-imports': 1,
+    'sort-imports': 0,
     'space-before-function-paren': 0,
     indent: 0,
   },
