@@ -1,7 +1,7 @@
+import "@fontsource/inter-tight";
+import { TableCell, TableRow } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { tableCellClasses } from '@mui/material/TableCell';
-import { TableRow, TableCell } from "@mui/material";
-import "@fontsource/inter-tight";
 
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({

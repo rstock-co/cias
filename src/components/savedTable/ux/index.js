@@ -1,5 +1,5 @@
-import { hoc } from "../../../lib/pipelines/hoc";
 import baseUX from "./ux.base";
+import { hoc } from "../../../lib/pipelines/hoc";
 
 const BaseUX = hoc(baseUX);
 

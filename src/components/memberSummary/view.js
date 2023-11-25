@@ -1,11 +1,10 @@
-
-import { Button, Typography, Dialog, DialogContent, DialogActions, Table, TableRow, TableCell, TableBody, TableContainer, TableHead, Paper } from '@mui/material';
-import { formatAmountDisplay } from '../../lib/functions/format';
+import "@fontsource/inter-tight";
+import { Button, Dialog, DialogActions, DialogContent, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { StyledTableCell, StyledTableRow, totalRowStyle } from './styles';
-import { calculateTotals, initialTotals, generatedDate } from './data';
+import { calculateTotals, generatedDate, initialTotals } from './data';
+import { formatAmountDisplay } from '../../lib/functions/format';
 import { printTableToPDF } from '../../lib/functions/actions';
 
-import "@fontsource/inter-tight";
 
 const MemberSummary = ({ memberData, dialogOpen, setDialogOpen }) => {
     const { memberSummary, memberName } = memberData;

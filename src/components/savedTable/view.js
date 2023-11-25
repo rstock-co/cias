@@ -1,7 +1,7 @@
-import { Paper } from "@mui/material";
-import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData, formatAggregatedData } from "../../lib/functions/format";
-import { totalRowStyle, totalRowStyleWithBorder } from "./styles";
 import "@fontsource/inter-tight";
+import { formatAggregatedData, formatAmountDisplay, formatChainData, formatChainMap, shortenAddress } from "../../lib/functions/format";
+import { totalRowStyle, totalRowStyleWithBorder } from "./styles";
+import { Paper } from "@mui/material";
 
 const SavedTable = ({ 
     // separate props

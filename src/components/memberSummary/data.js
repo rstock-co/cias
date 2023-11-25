@@ -1,7 +1,7 @@
 import { getMoveAttribute, getWalletName } from "../../lib/functions/wallets";
+import { format } from 'date-fns';
 import { memberWallets } from "../../lib/data/wallets";
 import { roundToNearest5Minutes } from '../../lib/functions/time';
-import { format } from 'date-fns';
 
 export const initialTotals = () => ({
     totalContributionsCount: 0,

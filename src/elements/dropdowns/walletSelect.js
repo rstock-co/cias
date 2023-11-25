@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { FormControl, MenuItem, Checkbox, ListItemText } from '@mui/material';
-import { CustomInputLabel, CustomSelect, CustomOutlinedInput, autoCompleteTheme } from './styles';
-import { ThemeProvider } from '@mui/material/styles';
 import '@fontsource/inter-tight';
+import { Checkbox, FormControl, ListItemText, MenuItem } from '@mui/material';
+import { CustomInputLabel, CustomOutlinedInput, CustomSelect, autoCompleteTheme } from './styles';
+import React, { useState } from 'react';
+import { ThemeProvider } from '@mui/material/styles';
 
 export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
     const [selectOpen, setSelectOpen] = useState(false);

@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef }from 'react';
-import { OutlinedInput, InputLabel, Select, TextField } from '@mui/material';
-import { createTheme, styled } from '@mui/material/styles';
 import "@fontsource/inter-tight";
+import { InputLabel, OutlinedInput, Select, TextField } from '@mui/material';
+import { createTheme, styled } from '@mui/material/styles';
+import { useEffect, useRef, useState }from 'react';
 
 // SINGLE SELECTS
 

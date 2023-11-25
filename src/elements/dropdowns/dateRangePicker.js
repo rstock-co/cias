@@ -1,8 +1,8 @@
+import { DateRangePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { TextField, ThemeProvider } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider, DateRangePicker } from '@mui/x-date-pickers-pro';
-import dayjs from 'dayjs';
 import { autoCompleteTheme, defaultStyle, filledStyle } from './styles';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
 
 export const DateRangeSelect = ({
     selectedDateRange,

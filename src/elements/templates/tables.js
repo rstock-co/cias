@@ -1,7 +1,7 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
-import { formatAmountDisplay, FormatTxnLink, formatChainMap, extractTitle } from '../../lib/functions/format';
 import "@fontsource/inter-tight";
+import { Box, Typography } from '@mui/material';
+import { FormatTxnLink, extractTitle, formatAmountDisplay, formatChainMap } from '../../lib/functions/format';
+import React from 'react';
 
 const logos = {
     arb: 'arb.png',
