@@ -1,7 +1,7 @@
 import { getERC20TxnsArb, getERC20TxnsBsc, getERC20TxnsEth, getNormalTxnsArb, getNormalTxnsBsc, getNormalTxnsEth } from "../../api";
 import { formatAmountDecimals, formatAmountDisplay, FormatTxnLink } from "../../lib/functions/format";
 import { getMoveName, getWalletName, getWalletAddress } from "../../lib/functions/wallets";
-import { formatTime } from "../../lib/functions/time";
+import { formatTime, getHistoricalPrice } from "../../lib/functions/time";
 import { allWallets as wallets, teamWallets, memberWallets, ignoreWallets, tokenContractAddresses } from "../../lib/data/wallets";
 
 // erc20 transactions to fetch
@@ -100,7 +100,7 @@ const logos = {
     bsc: 'https://i.imgur.com/a5V7FFD.png',
   };
 
-export const generateTableData = (txn, id, selectedAddresses) => {
+export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrices, historicalETHPrices) => {
     const from = txn.from.toLowerCase();
     const to = txn.to.toLowerCase();
     if (ignoreWallets.some(wallet => wallet.address === from.toLowerCase() || wallet.address === to.toLowerCase())) {
@@ -134,6 +134,8 @@ export const generateTableData = (txn, id, selectedAddresses) => {
     const walletDescription = generateWalletDescription(flow, to, from, moveName, fromMemberName, toMemberName);
     const memberName = fromMemberName || toMemberName;
 
+    const historicalPrice = txnType === 'normal' ? getHistoricalPrice(currency, timestamp, historicalBNBPrices, historicalETHPrices) : 'n/a';
+
     return {
 
         // displayed in table
@@ -157,6 +159,7 @@ export const generateTableData = (txn, id, selectedAddresses) => {
         amount,
         memberName,
         moveName,
+        historicalPrice
     }
 };
 
