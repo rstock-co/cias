@@ -1,5 +1,4 @@
 module.exports = {
-  extends: ['prettier', 'plugin:react/recommended', 'strongloop'],
   plugins: ['react'],
   rules: {
     'array-callback-return': 1,
@@ -29,7 +28,6 @@ module.exports = {
     'react/prop-types': 0,
     'sort-imports': 1,
     'space-before-function-paren': 0,
-    'max-len': ['error', { code: 120 }],
     indent: 0,
   },
   env: {
