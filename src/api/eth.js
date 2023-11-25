@@ -1,28 +1,17 @@
-import { getERC20Transactions, getNormalTransactions } from './transactions';
 import { ETH_API_KEY } from '../lib/data';
-import { fetchHistoricalPriceData } from './price';
+import { txnRequestsBuilder as createRequests } from './createRequests';
 
-export const getNormalTxnsEth = async walletAddress => getNormalTransactions(walletAddress, "https://api.etherscan.io/api", ETH_API_KEY, 'eth');
-
-// contractAddress is optional, if passed, txns will be filtered by the token (ie. Vela)
-export const getERC20TxnsEth = async (walletAddress, contractAddress) => getERC20Transactions(walletAddress, contractAddress, "https://api.etherscan.io/api", ETH_API_KEY, 'eth');
-
-// HISTORICAL PRICE DATA
-
-export const ethDateRange = {
-    startDate: '2023-01-01',
-    endDate: '2023-12-31'
+const ETH = {
+    apiUri: 'https://api.etherscan.io/api',
+    apiKey: ETH_API_KEY,
+    chain: 'eth',
+    txnDateRange: {
+        startDate: '2023-01-01',
+        endDate: '2023-12-31'
+    },
+    conversionCurrency: 'usd',
+    currencyName: 'eth',
+    currencyDisplayName: 'Ethereum'
 };
 
-const ethConversionCurrency = 'usd';
-
-export const getEtheriumPrices = async () => {
-    try {
-        const ethPrices = await fetchHistoricalPriceData('eth', ethConversionCurrency, ethDateRange);
-        return ethPrices;
-    } catch (error) {
-        console.error('Error fetching Ethereum prices:', error);
-        throw error; // Rethrow the error for handling in the component
-    }
-};
-
+export const { normalTxns: getNormalTxnsEth, erc20Txns: getERC20TxnsEth, getPrices: getEtheriumPrices } = createRequests(ETH);

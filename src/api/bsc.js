@@ -1,27 +1,18 @@
-import { getERC20Transactions, getNormalTransactions } from './transactions';
 import { BSC_API_KEY } from '../lib/data';
-import { fetchHistoricalPriceData } from './price';
+import { txnRequestsBuilder as createRequests } from './createRequests';
 
-export const getNormalTxnsBsc = async walletAddress => getNormalTransactions(walletAddress, "https://api.bscscan.com/api", BSC_API_KEY, 'bsc');
-
-// contractAddress is optional, if passed, txns will be filtered by the token (ie. Vela)
-export const getERC20TxnsBsc = async (walletAddress, contractAddress) => getERC20Transactions(walletAddress, contractAddress, "https://api.bscscan.com/api", BSC_API_KEY, 'bsc');
-
-// HISTORICAL PRICE DATA
-
-const bnbDateRange = {
-    startDate: '2023-01-01',
-    endDate: '2023-12-31'
+const BSC = {
+    apiUri: 'https://api.bscscan.com/api',
+    apiKey: BSC_API_KEY,
+    chain: 'bsc',
+    txnDateRange: {
+        startDate: '2023-01-01',
+        endDate: '2023-12-31'
+    },
+    conversionCurrency: 'usd',
+    currencyName: 'bnb',
+    currencyDisplayName: 'BNB',
 }
 
-const bnbConversionCurrency = 'usd';
 
-export const getBNBPrices = async () => {
-    try {
-        const bnbPrices = await fetchHistoricalPriceData('bnb', bnbConversionCurrency, bnbDateRange);
-        return bnbPrices;
-    } catch (error) {
-        console.error('Error fetching BNB prices:', error);
-        throw error; // Rethrow the error for handling in the component
-    }
-};
+export const { normalTxns: getNormalTxnsBsc, erc20Txns: getERC20TxnsBsc, getPrices: getBNBPrices } = createRequests(BSC);
