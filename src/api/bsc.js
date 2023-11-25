@@ -1,5 +1,5 @@
-import { BSC_API_KEY } from '../lib/data';
 import { getERC20Transactions, getNormalTransactions } from './transactions';
+import { BSC_API_KEY } from '../lib/data';
 import { fetchHistoricalPriceData } from './price';
 
 export const getNormalTxnsBsc = async walletAddress => getNormalTransactions(walletAddress, "https://api.bscscan.com/api", BSC_API_KEY, 'bsc');
