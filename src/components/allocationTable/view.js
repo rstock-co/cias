@@ -4,10 +4,10 @@ import { Box, Button, Chip, Dialog, DialogActions, DialogContent,
     TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { extractTitle, formatAggregatedData, formatAmountDisplay, formatChainData, formatChainMap, shortenAddress } from "../../lib/functions/format";
 import { printBlendedTableToPDF, printTableToPDF } from "../../lib/functions/actions";
-import { WalletSummary } from "../../elements/templates/tables";
-import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
-import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
 import { StyledTableCell, StyledTableRow, WideStyledTableCell, chipStyles, totalRowStyle, totalRowStyleWithBorder } from "./styles";
+import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
+import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
+import { WalletSummary } from "../../elements/templates/tables";
 
 const HeaderTemplate = ({
     savedTableId,
@@ -92,7 +92,7 @@ const HeaderTemplate = ({
     </Box>
 )
 
-const TableTitle = ({ dialogTitle }) => (
+const TableTitleTemplate = ({ dialogTitle }) => (
     <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none', marginTop: '15px', marginLeft: '20px', marginBottom: '10px' }}>
         {dialogTitle}
     </Typography>
@@ -121,13 +121,13 @@ const WalletSummaryTemplate = ({
     </Box>
 );
 
-const WalletSummaries = ({summaryData}) => summaryData && summaryData.length > 0 && (
+const WalletSummariesTemplate = ({summaryData}) => summaryData && summaryData.length > 0 && (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}> 
         {summaryData.map(WalletSummaryTemplate)}
     </Box>
 )
 
-const GenerationDate = ({generatedDateString}) => (
+const GenerationDateTemplate = ({generatedDateString}) => (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', textAlign: 'right', mb: 1 }}>
         <Typography variant="subtitle1" sx={{ fontFamily: 'Inter Tight', fontWeight: 'bold', fontSize: '16px', textAlign: 'right' }}>
             Generated On:&nbsp;&nbsp;&nbsp;
@@ -138,7 +138,7 @@ const GenerationDate = ({generatedDateString}) => (
     </Box>
 )
 
-const SummaryTableHeader = ({
+const SummaryTableHeaderTemplate = ({
     showMemberName, 
     isAggregated 
 }) => (
@@ -177,7 +177,7 @@ const SummaryTableHeader = ({
     </TableHead>
 )
 
-const SummaryTableTotalsRow = ({
+const SummaryTableTotalsRowTemplate = ({
     showHeaderRow, 
     showMemberName, 
     totalShare, 
@@ -220,7 +220,7 @@ const SummaryTableTotalsRow = ({
         </TableRow>
     )
 
-const SummaryTable = ({
+const SummaryTableTemplate = ({
     showMemberName, 
     isAggregated, 
     showHeaderRow, 
@@ -238,12 +238,12 @@ const SummaryTable = ({
     sortedAllocationTableData 
 }) => (
     <Table sx={{ border: 'none', tableLayout: 'auto' }} aria-label="member table">
-        {SummaryTableHeader({showMemberName, isAggregated })}
+        {SummaryTableHeaderTemplate({showMemberName, isAggregated })}
 
         {}
         <TableBody>
 
-            {SummaryTableTotalsRow({showHeaderRow, totalRowStyle, showMemberName, totalShare, totalTxns, adjustedNetTotal, totalNetAmount, isAggregated, totalRowStyleWithBorder, aggregatedTxns, totalContributionsAmount, aggregatedContributionsChainMap, totalRefundsAmount, aggregatedRefundsChainMap})}
+            {SummaryTableTotalsRowTemplate({showHeaderRow, totalRowStyle, showMemberName, totalShare, totalTxns, adjustedNetTotal, totalNetAmount, isAggregated, totalRowStyleWithBorder, aggregatedTxns, totalContributionsAmount, aggregatedContributionsChainMap, totalRefundsAmount, aggregatedRefundsChainMap})}
 
             {/* Table data */}
             {sortedAllocationTableData && sortedAllocationTableData.map((row) => (
@@ -276,7 +276,7 @@ const SummaryTable = ({
     </Table>
 )
 
-const TableFooterButtons = ({ 
+const TableFooterButtonsTemplate = ({ 
     savedTableId, 
     selectedWallets, 
     move, 
@@ -376,18 +376,18 @@ const AllocationTable = (props = {}) => {
                 <DialogContent style={{ overflowX: 'auto' }}>
                     <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none',  }}>
 
-                        {TableTitle({ dialogTitle })}
+                        {TableTitleTemplate({ dialogTitle })}
 
-                        {WalletSummaries({summaryData})}
+                        {WalletSummariesTemplate({summaryData})}
 
-                        {GenerationDate({generatedDateString})}
+                        {GenerationDateTemplate({generatedDateString})}
 
-                        {SummaryTable(props)}
+                        {SummaryTableTemplate(props)}
 
                     </TableContainer>
                 </DialogContent>
 
-                {TableFooterButtons(props)}
+                {TableFooterButtonsTemplate(props)}
 
             </Dialog>
 
