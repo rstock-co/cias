@@ -4,10 +4,11 @@ module.exports = {
   rules: {
     'array-callback-return': 1,
     'arrow-body-style': 1,
-    'no-console': 1,
+    'no-console': 0,
     'comma-dangle': 0,
     'no-duplicate-imports': 'error',
     'no-return-assign': 1,
+    'new-cap': 0,
     'no-unused-vars': [
       'error',
       {
