@@ -31,13 +31,8 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "eslint": "^7.5.0",
-    "eslint-config-prettier": "^6.5.0",
-    "eslint-config-strongloop": "^2.1.0",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.14.2"
+    "@stylistic/eslint-plugin-js": "^1.4.1",
+    "eslint": ">=8.40.0"
   },
   "scripts": {
     "start": "react-scripts start",
