@@ -2,12 +2,12 @@ import "@fontsource/inter-tight";
 import { Box, Button, Chip, Dialog, DialogActions, DialogContent, 
     FormControl, InputAdornment, InputLabel, OutlinedInput, Paper, Snackbar, Table, TableBody,
     TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import { extractTitle, formatAggregatedData, formatAmountDisplay, formatChainData, formatChainMap, shortenAddress } from "../../lib/functions/format";
-import { printBlendedTableToPDF, printTableToPDF } from "../../lib/functions/actions";
+import { extractTitle, formatAggregatedData, formatAmountDisplay, formatChainData, formatChainMap, shortenAddress } from "../../../lib/functions/format";
+import { printBlendedTableToPDF, printTableToPDF } from "../../../lib/functions/actions";
 import { StyledTableCell, StyledTableRow, WideStyledTableCell, chipStyles, totalRowStyle, totalRowStyleWithBorder } from "./styles";
-import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
-import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
-import { WalletSummary } from "../../elements/templates/tables";
+import { CustomColorSwitch } from "../../../elements/toggles/coloredToggle";
+import { SortAllocationSelect } from "../../../elements/dropdowns/sortAllocationSelect";
+import { WalletSummary } from "../../../elements/templates/tables";
 
 const ShowTotalsRowTemplate = ({ showHeaderRow, handleToggleHeaderRow }) => (
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
