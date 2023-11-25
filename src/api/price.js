@@ -2,11 +2,6 @@ import axios from 'axios';
 
 const coinGeckoBaseUrl = 'https://api.coingecko.com/api/v3';
 
-const getIdFromSymbol = (symbol) => {
-    const currency = currencies.find(c => c.symbol === symbol);
-    return currency ? currency.id : null;
-};
-
 const currencies = [
     {
         "id": "binancecoin",
@@ -18,6 +13,11 @@ const currencies = [
         "name": "Ethereum"
     },
 ]
+
+const getIdFromSymbol = (symbol) => {
+    const currency = currencies.find(c => c.symbol === symbol);
+    return currency ? currency.id : null;
+};
 
 export const fetchHistoricalPriceData = async (coinSymbol, conversionCurrency, {startDate, endDate}) => {
 

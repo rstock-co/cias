@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { stableCoinsToFetch, chainsToFetch } from '../data';
+import { chainsToFetch, stableCoinsToFetch } from '../data';
 import { getAggregateTransactions, updateStatus } from '../../../api/transactions';
 import { getBNBPrices, getEtheriumPrices } from '../../../api';
 
@@ -87,7 +87,6 @@ const InitUX = () => {
         // Update the previousWallets state for the next effect run
         setPreviousWallets(selectedWallets);
     
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedWallets, fetchType]); 
     
 

@@ -306,7 +306,7 @@ const BlendedAllocationTable = ({
 
                                         <StyledTableRow key={memberWallet}>
                                             <StyledTableCell component="th" scope="row">
-                                            {'\u00A0\u00A0\u00A0' + shortenAddress(memberWallet)}
+                                            {`\u00A0\u00A0\u00A0${shortenAddress(memberWallet)}`}
                                             </StyledTableCell>
 
                                             {showMemberName && (
