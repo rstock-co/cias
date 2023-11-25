@@ -2,16 +2,12 @@ import { moves } from "../data/moves";
 import { allWallets as wallets, memberWallets, INVESTMENT_WALLET } from "../data/wallets";
 import { filterByDateRange } from "./filters";
 
-export const getUniqueWallets = txns => {
-    return Array.from(
+export const getUniqueWallets = txns => Array.from(
         new Set(txns.flatMap(txn => [txn.to, txn.from]))
     ).filter(wallet => wallet);
-};
 
 export const getUniqueTypes = (tableData) => {
-    const types = tableData.map(row => {
-        return row.walletDescription.startsWith("Member") ? "Member" : row.walletDescription;
-    });
+    const types = tableData.map(row => row.walletDescription.startsWith("Member") ? "Member" : row.walletDescription);
     // Create a set to get unique values, then convert it back to an array
     return [...new Set(types)].filter(type => type);
 };
@@ -62,10 +58,8 @@ export const getMoveAttribute = (moveName, attributeKeys) => {
     return result;
 };
 
-export const generateTableWalletsIdentifier = (wallets) => {
-    return wallets.map(wallet => `${wallet.name}-${wallet.address}`)
+export const generateTableWalletsIdentifier = (wallets) => wallets.map(wallet => `${wallet.name}-${wallet.address}`)
                   .sort()
                   .join(',');
-};
 
 export const sumObjectValues = obj => Object.values(obj).reduce((a, b) => a + b, 0);

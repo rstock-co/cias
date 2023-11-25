@@ -196,7 +196,7 @@ export const TransfersTableCell = (memberData, transferTotals) => {
         <Box>
             {savedWallets.map(([walletKey, walletData]) => {
                 // Extract the number from the walletKey (e.g., 'savedWallet2') and use it to access the correct transferTotal
-                const transferId = walletKey.match(/\d+$/)[0];
+                const [transferId] = walletKey.match(/\d+$/);
                 const totalForThisTransfer = transferTotals[transferId] || 0;
                 const transferAmount = walletData.share * totalForThisTransfer;
                 totalAmount += transferAmount;

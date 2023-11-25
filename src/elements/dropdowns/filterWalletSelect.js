@@ -7,8 +7,7 @@ export const FilterWalletSelect = ({
     filteredWallet,
     selectedWallets = [], 
     handleChange,
-}) => {
-    return (
+}) => (
         <ThemeProvider theme={autoCompleteTheme}>
             <Autocomplete
                 options={
@@ -55,5 +54,4 @@ export const FilterWalletSelect = ({
             />
         </ThemeProvider>
     );
-};
 

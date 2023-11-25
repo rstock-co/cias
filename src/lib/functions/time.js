@@ -22,7 +22,7 @@ export const getHistoricalPrice = (txn, currency, timestamp, historicalBNBPrices
         return 0;
     }
 
-    const dateString = new Date(timestamp).toISOString().split('T')[0];
+    const [dateString] = new Date(timestamp).toISOString().split('T');
     console.log(`Retrieving historical price for date: ${dateString} and currency: ${currency}`);
 
     let historicalPrices = currency === 'ETH' ? historicalETHPrices : historicalBNBPrices;

@@ -2,8 +2,7 @@ import '@fontsource/inter-tight';
 import { MenuItem } from '@mui/material';
 import { StyledTextField } from './styles';
 
-export const ChainSelect = ({ chains, selectedChain, handleChange }) => {
-    return (
+export const ChainSelect = ({ chains, selectedChain, handleChange }) => (
         <StyledTextField
             select
             label="Chain"
@@ -27,4 +26,3 @@ export const ChainSelect = ({ chains, selectedChain, handleChange }) => {
             ))}
         </StyledTextField>
     );
-};

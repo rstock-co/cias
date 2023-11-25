@@ -2,8 +2,7 @@ import { MenuItem } from '@mui/material';
 import { StyledTextField } from './styles';
 import '@fontsource/inter-tight';
 
-export const DirectionSelect = ({ directions, selectedDirection, handleChange }) => {
-    return (
+export const DirectionSelect = ({ directions, selectedDirection, handleChange }) => (
         <StyledTextField
             select
             label="Direction"
@@ -26,5 +25,4 @@ export const DirectionSelect = ({ directions, selectedDirection, handleChange })
                 </MenuItem>
             ))}
         </StyledTextField>
-    );
-}
+    )

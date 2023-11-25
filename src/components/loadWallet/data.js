@@ -106,10 +106,10 @@ export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrice
     if (ignoreWallets.some(wallet => wallet.address === from.toLowerCase() || wallet.address === to.toLowerCase())) {
         return null;
     }
-    const walletName = txn.walletName;
+    const {walletName} = txn;
     const timestamp = parseInt(txn.timeStamp) * 1000;
-    const hash = txn.hash;
-    const chain = txn.chain;
+    const {hash} = txn;
+    const {chain} = txn;
     const txnType = txn.fetchType;
     const currency = txnType === 'erc20' ? txn.tokenSymbol : (chain === 'bsc' ? 'BNB' : 'ETH');
     const chainLogo = (
@@ -176,9 +176,7 @@ export const calculateTotalValueByChain = (tableData) => {
     const chains = ['arb', 'bsc', 'eth'];
     let result = {};
     chains.forEach(chain => {
-        result[chain] = tableData.reduce((total, row) => {
-            return row.chain.toLowerCase() === chain ? total + parseFloat(row.amount) : total;
-        }, 0);
+        result[chain] = tableData.reduce((total, row) => row.chain.toLowerCase() === chain ? total + parseFloat(row.amount) : total, 0);
     });
     return result;
 };

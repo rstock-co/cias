@@ -2,8 +2,7 @@ import { MenuItem } from '@mui/material';
 import { StyledTextField } from './styles';
 import '@fontsource/inter-tight';
 
-export const MoveSelect = ({ moves, selectedMove, handleChange }) => {
-    return (
+export const MoveSelect = ({ moves, selectedMove, handleChange }) => (
         <StyledTextField
             select
             label="Move"
@@ -28,4 +27,3 @@ export const MoveSelect = ({ moves, selectedMove, handleChange }) => {
             ))}
         </StyledTextField>
     );
-};
