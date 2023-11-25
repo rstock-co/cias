@@ -17,7 +17,7 @@ export const roundToNearest5Minutes = (date) => {
 };
 
 export const getHistoricalPrice = (currency, timestamp, historicalBNBPrices, historicalETHPrices) => {
-    console.log(`Retrieving historical price for currency: ${currency} and timestamp: ${timestamp}`)
+
     if (!timestamp || isNaN(timestamp)) {
         return 0;
     }
@@ -37,4 +37,3 @@ export const getHistoricalPrice = (currency, timestamp, historicalBNBPrices, his
 
     return historicalPrice;
 };
-
