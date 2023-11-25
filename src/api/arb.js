@@ -8,6 +8,7 @@ export const ARB = {
     conversionCurrency: 'usd',
     currencyName: 'eth',
     currencyDisplayName: 'Ethereum',
+    endblock: 'latest'
 };
 
 export const { normalTxns: getNormalTxnsArb, erc20Txns: getERC20TxnsArb } = createRequests(ARB);

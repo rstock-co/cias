@@ -12,6 +12,7 @@ const BSC = {
     conversionCurrency: 'usd',
     currencyName: 'bnb',
     currencyDisplayName: 'BNB',
+    endblock: '99999999'
 }
 
 

@@ -1,9 +1,9 @@
 import { getERC20Transactions, getNormalTransactions } from './transactions';
 import { fetchHistoricalPriceData } from './price';
 
-const createGetNormalTxns = ({ apiUri, apiKey, chain }) => async walletAddress => getNormalTransactions(walletAddress, apiUri, apiKey, chain);
+const createGetNormalTxns = ({ apiUri, apiKey, chain, endblock }) => async walletAddress => getNormalTransactions(walletAddress, { apiUri, apiKey, chain, endblock });
 
-const createGetERC20Txns = ({ apiUri, apiKey, chain }) => async (walletAddress, contractAddress) => getERC20Transactions(walletAddress, contractAddress, apiUri, apiKey, chain);
+const createGetERC20Txns = ({ apiUri, apiKey, chain, endblock }) => async (walletAddress, contractAddress) => getERC20Transactions(walletAddress, { apiUri, apiKey, chain, endblock }, contractAddress);
 
 
 const createGetPrices = ({ conversionCurrency, currencyName, currencyDisplayName, txnDateRange }) => async () => {
@@ -16,9 +16,9 @@ const createGetPrices = ({ conversionCurrency, currencyName, currencyDisplayName
     }
 };
 
-export const txnRequestsBuilder = ({ apiUri, apiKey, chain, txnDateRange, conversionCurrency, currencyName, currencyDisplayName }) => ({
-    normalTxns: createGetNormalTxns({ apiUri, apiKey, chain }),
-    erc20Txns: createGetERC20Txns({ apiUri, apiKey, chain }),
+export const txnRequestsBuilder = ({ apiUri, apiKey, chain, endblock, txnDateRange, conversionCurrency, currencyName, currencyDisplayName }) => ({
+    normalTxns: createGetNormalTxns({ apiUri, apiKey, chain, endblock }),
+    erc20Txns: createGetERC20Txns({ apiUri, apiKey, chain, endblock }),
     getPrices: createGetPrices({ conversionCurrency, currencyName, currencyDisplayName, txnDateRange })
 });
 

@@ -1,68 +1,64 @@
+import { noOp, tap } from "../lib/functions/fp";
 import axios from "axios";
 import { searchWalletName } from "../lib/functions/wallets";
 
 // API CALLS
+//
+const createRequestConfig = (walletAddress, action, { apiKey, endblock}) => ({
+    params: {
+        module: 'account',
+        action,
+        address: walletAddress,
+        startblock: '0',
+        endblock,
+        page: '1',
+        offset: '1000',
+        sort: 'asc',
+        apikey: apiKey,
+    },
+});
 
-export const getERC20Transactions = async (walletAddress, contractAddress, apiUrl, apiKey, chainLabel) => {
-    const requestConfig = {
-        params: {
-            module: 'account',
-            action: 'tokentx',
-            address: walletAddress,
-            startblock: '0',
-            endblock: chainLabel === 'arb' ? 'latest' : '99999999',
-            page: '1',
-            offset: '1000',
-            sort: 'asc',
-            apikey: apiKey,
-        },
-    };
-
-    // Conditionally add the contractaddress key-value pair
-    if (contractAddress) {
-        requestConfig.params.contractaddress = contractAddress;
-    }
-
-    try {
-        const response = await axios.get(apiUrl, requestConfig);
-        return response.data.result.map(txn => ({
-            ...txn,
-            chain: chainLabel, // manually add chain label to each transaction
-            fetchType: 'erc20', // manually add fetchType to each transaction
-        }));
-    } catch (error) {
-        console.error(`Error fetching ${chainLabel} transactions:`, error);
-        throw error; 
-    }
+const normalTxns = {
+    fetchType: 'normal',
+    action: 'txlist'
 };
 
-export const getNormalTransactions = async (walletAddress, apiUrl, apiKey, chainLabel) => {
-    const requestConfig = {
-        params: {
-            module: 'account',
-            action: 'txlist',
-            address: walletAddress,
-            startblock: '0',
-            endblock: chainLabel === 'arb' ? 'latest' : '99999999',
-            page: '1',
-            offset: '1000',
-            sort: 'asc',
-            apikey: apiKey,
-        },
-    };
+const ercTxns = {
+    fetchType: 'erc20',
+    action: 'tokentx'
+};
+
+
+const getTxns = async (walletAddress, 
+    { apiUri, apiKey, chain, endblock } = {}, 
+    txnType = normalTxns, 
+    enrichConfig = noOp) => 
+{
+    const requestConfig = enrichConfig(createRequestConfig(walletAddress, txnType.action, { apiKey, endblock }));
 
     try {
-        const response = await axios.get(apiUrl, requestConfig);
+        const response = await axios.get(apiUri, requestConfig);
         return response.data.result.map(txn => ({
             ...txn,
-            chain: chainLabel, // manually add chain label to each transaction
-            fetchType: 'normal', // manually add fetchType to each transaction
+            chain,
+            fetchType: txnType.fetchType
         }));
     } catch (error) {
-        console.error(`Error fetching ${chainLabel} transactions:`, error);
+        console.error(`Error fetching ${chain} transactions:`, error);
         throw error; 
     }
-};
+}
+
+export const getERC20Transactions = async (walletAddress, { apiUri, apiKey, chain, endblock }, contractAddress) => 
+    getTxns(walletAddress, { apiUri, apiKey, chain, endblock }, ercTxns, tap(config => {
+        if (contractAddress) {
+            config.params.contractaddress = contractAddress;
+        }
+    }));
+
+
+export const getNormalTransactions = async (walletAddress, { apiUri, apiKey, chain, endblock }) => 
+    getTxns(walletAddress, { apiUri, apiKey, chain, endblock }, normalTxns)
 
 // UX INIT FUNCTIONS
 
@@ -117,7 +113,7 @@ export const getAggregateTransactions = async (walletAddress, transactionsToFetc
  * see:  https://docs.arbiscan.io/api-endpoints/accounts#get-a-list-of-normal-transactions-by-address
  * 
  * ==================================================================================================
- 
+
         https://api.arbiscan.io/api
             ?module=account
             &action=txlist
@@ -127,9 +123,9 @@ export const getAggregateTransactions = async (walletAddress, transactionsToFetc
             &page=1
             &offset=10
             &sort=asc&apikey=YourApiKeyToken
- 
+
  * RESPONSE
- 
+
         "result": [
             {
                 "blockNumber": "11046656",
@@ -178,7 +174,7 @@ export const getAggregateTransactions = async (walletAddress, transactionsToFetc
                 "functionName": "approve(address spender, uint256 amount)"
             }
         ]
- */
+        */
 
 
 /**
@@ -188,7 +184,7 @@ export const getAggregateTransactions = async (walletAddress, transactionsToFetc
  * see:  https://docs.arbiscan.io/api-endpoints/accounts#get-a-list-of-erc20-token-transfer-events-by-address
  * 
  * ==================================================================================================
- 
+
         https://api.arbiscan.io/api
             ?module=account
             &action=tokentx
@@ -201,7 +197,7 @@ export const getAggregateTransactions = async (walletAddress, transactionsToFetc
             &sort=asc
             &apikey=YourApiKeyToken
 
-* RESPONSE
+ * RESPONSE
 
         "result":[
             {
@@ -247,4 +243,4 @@ export const getAggregateTransactions = async (walletAddress, transactionsToFetc
                 "confirmations":"8994891"
             }
         ]
-*/
+        */

@@ -11,7 +11,8 @@ const ETH = {
     },
     conversionCurrency: 'usd',
     currencyName: 'eth',
-    currencyDisplayName: 'Ethereum'
+    currencyDisplayName: 'Ethereum',
+    endblock: '99999999'
 };
 
 export const { normalTxns: getNormalTxnsEth, erc20Txns: getERC20TxnsEth, getPrices: getEtheriumPrices } = createRequests(ETH);
