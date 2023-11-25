@@ -110,6 +110,7 @@ export const generateTableData = (txn, id, selectedAddresses) => {
     const timestamp = parseInt(txn.timeStamp) * 1000;
     const hash = txn.hash;
     const chain = txn.chain;
+    const txnType = txn.fetchType;
     const chainLogo = (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
             <img 
@@ -121,8 +122,8 @@ export const generateTableData = (txn, id, selectedAddresses) => {
     );
     const dateTime = formatTime(timestamp, 'America/Denver');
     const link = <FormatTxnLink hash={hash} chain={chain} />;
-    const amount = formatAmountDecimals(chain, txn.value);
-    const amountDisplay = formatAmountDisplay(amount);
+    const amount = formatAmountDecimals(chain, txn.value, txnType);
+    const amountDisplay = formatAmountDisplay(amount, txnType, chain);
     const currency = txn.tokenSymbol;
     
     const flow = from && selectedAddresses.includes(from) ? 'Out' : 'In';
@@ -149,6 +150,7 @@ export const generateTableData = (txn, id, selectedAddresses) => {
         
         // not displayed in table
         chain,
+        txnType,
         hash,
         timestamp,
         amount,

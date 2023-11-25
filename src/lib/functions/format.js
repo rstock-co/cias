@@ -40,19 +40,24 @@ export const generateAllocationTableTitle = (selectedWallets, move) => {
 };
 
 
-export const formatAmountDecimals = (chain, value) => chain === 'bsc' ? value / 1e18 : value / 1e6;
+export const formatAmountDecimals = (chain, value, txnType) => {
+    return txnType === 'erc20'
+        ? chain === 'bsc' ? value / 1e18 : value / 1e6
+        : value / 1e18; // Default to ETH conversion for 'normal' transactions
+};
 
-export const formatAmountDisplay = (value) => {
-    if (value === undefined || value === null || isNaN(value) || Number(value) === 0 || value === '0') {
-        return "$0.00"; 
+export const formatAmountDisplay = (value, txnType, chain) => {
+    if (!value || isNaN(value) || Number(value) === 0) {
+        return txnType === 'erc20' ? "$0.00" : `0 ${chain === 'bsc' ? 'BNB' : 'ETH'}`; // Adjust for zero value
     }
-
-    return value.toLocaleString(undefined, {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-    });
+    
+    if (txnType === 'erc20') {
+        return Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+    } else {
+        // Determine the currency symbol based on the chain
+        const currencySymbol = chain === 'bsc' ? 'BNB' : 'ETH';
+        return `${value.toFixed(4)} ${currencySymbol}`; // 4 decimal points for 'normal' transactions
+    }
 };
 
 export const shortenAddress = (address, startLength = 4, endLength = 6) => {
