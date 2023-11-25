@@ -2,7 +2,7 @@
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
 
-export const CustomColorSwitch = styled(Switch)(({ theme }) => ({
+export const CustomColorSwitch = styled(Switch)(() => ({
   '& .MuiSwitch-switchBase': {
     color: '#f7f9fa', // thumb color when unchecked
     

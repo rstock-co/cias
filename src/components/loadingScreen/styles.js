@@ -2,7 +2,7 @@
 import { styled } from '@mui/material/styles';
 import { Dialog, Box, Typography } from '@mui/material';
 
-export const StyledDialog = styled(Dialog)(({ theme }) => ({
+export const StyledDialog = styled(Dialog)(() => ({
   '& .MuiDialog-paper': {
     width: '60vw',
     height: '60vh',

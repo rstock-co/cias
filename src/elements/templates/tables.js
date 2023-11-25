@@ -23,14 +23,12 @@ const logos = {
 
 export const TransferWalletSummary = ({ transferTxnsToBlend, transferTotal, walletTitle, walletNumber }) => {
 
-    const filterTxns = (tableId, transferTxnsToBlend) => {
-        return Object.entries(transferTxnsToBlend)
-            .filter(([_, txnData]) => txnData.tableID === tableId)
+    const filterTxns = (tableId, transferTxnsToBlend) => Object.entries(transferTxnsToBlend)
+            .filter(([, txnData]) => txnData.tableID === tableId)
             .reduce((acc, [txnHash, txnData]) => {
                 acc[txnHash] = txnData;
                 return acc;
             }, {});
-    };
 
     const filteredTxns = filterTxns(walletNumber, transferTxnsToBlend);
     
@@ -188,7 +186,7 @@ export const WalletSummary = ({
 
 export const TransfersTableCell = (memberData, transferTotals) => {
     const savedWallets = Object.entries(memberData)
-        .filter(([key, _]) => key.startsWith('savedWallet'));
+        .filter(([key]) => key.startsWith('savedWallet'));
 
     if (savedWallets.length === 0) return <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>No transfers available</Typography>;
 

@@ -1,7 +1,7 @@
 import { Button, Chip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-export const StyledColorButton = styled(Button)(({ theme }) => ({
+export const StyledColorButton = styled(Button)(() => ({
     // background: '#04373A',
     background: `linear-gradient(to right, #022027, #04373A)`,
     color: '#08E2EA',
@@ -17,7 +17,7 @@ export const StyledColorButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-export const StyledChip = styled(Chip)(({ theme, blended }) => ({
+export const StyledChip = styled(Chip)(({ blended }) => ({
     fontFamily: 'Inter Tight, sans-serif',
     backgroundColor: blended ? '#048241' : '#c24a2d',
     color: 'white',
@@ -36,7 +36,7 @@ export const StyledChip = styled(Chip)(({ theme, blended }) => ({
   }));
 
   
-export const FetchTypeButton = styled(Button)(({ theme, active }) => ({
+export const FetchTypeButton = styled(Button)(({ active }) => ({
     fontFamily: 'Inter Tight, sans-serif',
     fontWeight: 'regular',
     fontSize: '15px',

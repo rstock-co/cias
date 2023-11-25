@@ -20,8 +20,8 @@ const BlendUX = ({ transferTxnsToBlend, savedTables, tableData } = {}) => {
         // Set of matching table IDs from transferTxnsToBlend
         const matchingTableIds = new Set(
             Object.entries(transferTxnsToBlend)
-                .filter(([txnHash, txnInfo]) => txnHashes.has(txnHash))
-                .map(([_, txnInfo]) => txnInfo.tableID)
+                .filter(([txnHash]) => txnHashes.has(txnHash))
+                .map(([, txnInfo]) => txnInfo.tableID)
         );
 
         // Filter savedTables to include only those present in matchingTableIds

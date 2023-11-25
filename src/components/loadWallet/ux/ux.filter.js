@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { generateTableData } from '../data';
 import { ignoreWallets } from '../../../lib/data/wallets';
 import { filterTxns } from '../../../lib/functions/filters';
-import { getHistoricalPrice } from '../../../lib/functions/time';
 import { curry } from '../../../lib/functions/fp';
 
 const FilterUX = ({
