@@ -9,7 +9,7 @@ const FilterUX = ({
     setTableData,
     selectedWallets,
     historicalBNBPrices,
-    historicalEthPrices,
+    historicalETHPrices,
 
 } = {}) => {
     const [filters, setFilters] = useState({
@@ -75,7 +75,7 @@ const FilterUX = ({
                     wallet.address.toLowerCase() === txn.from.toLowerCase() || 
                     wallet.address.toLowerCase() === txn.to.toLowerCase()
                 ))
-                .map((txn, index) => generateTableData(txn, index, selectedWalletAddresses, historicalBNBPrices, historicalEthPrices))
+                .map((txn, index) => generateTableData(txn, index, selectedWalletAddresses, historicalBNBPrices, historicalETHPrices))
                 .filter(row => row !== null); // Filter out null values
     
             // Apply additional filters if necessary

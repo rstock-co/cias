@@ -21,7 +21,7 @@ export const getBNBPrices = async () => {
         const bnbPrices = await fetchHistoricalPriceData('bnb', bnbConversionCurrency, bnbDateRange);
         return bnbPrices;
     } catch (error) {
-        console.error('Error fetching Ethereum prices:', error);
+        console.error('Error fetching BNB prices:', error);
         throw error; // Rethrow the error for handling in the component
     }
 };
