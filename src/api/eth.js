@@ -1,5 +1,5 @@
-import { ETH_API_KEY } from '../lib/data';
 import { getERC20Transactions, getNormalTransactions } from './transactions';
+import { ETH_API_KEY } from '../lib/data';
 import { fetchHistoricalPriceData } from './price';
 
 export const getNormalTxnsEth = async walletAddress => getNormalTransactions(walletAddress, "https://api.etherscan.io/api", ETH_API_KEY, 'eth');
