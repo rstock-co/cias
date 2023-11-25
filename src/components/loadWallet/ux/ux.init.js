@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { stableCoinsToFetch, chainsToFetch } from '../data';
-import { getAggregateTransactions, updateStatus } from '../../../api/functions';
+import { getAggregateTransactions, updateStatus } from '../../../api/transactions';
+import { getBNBPrices, getEtheriumPrices } from '../../../api';
 
 const InitUX = () => {
 
@@ -14,6 +15,8 @@ const InitUX = () => {
     // TRANSACTIONS
     const [txns, setTxns] = useState([]);
     const [fetchType, setFetchType] = useState('erc20'); // 'normal', 'erc20', 'all'
+    const [historicalBNBPrices, setHistoricalBNBPrices] = useState([]);
+    const [historicalEthPrices, setHistoricalEthPrices] = useState([]);
 
     // LOADING SCREEN TRIGGER
     const [isLoading, setIsLoading] = useState(false);
@@ -96,6 +99,24 @@ const InitUX = () => {
             setIsLoading(!areAllCoinsNotLoading(stableCoins));
         }
     }, [stableCoins, loadingLocked]);
+
+    // Fetch historical price data on load
+    useEffect(() => {
+        const fetchPrices = async () => {
+            try {
+                const bnbPrices = await getBNBPrices();
+                const ethPrices = await getEtheriumPrices();
+    
+                setHistoricalBNBPrices(bnbPrices);
+                setHistoricalEthPrices(ethPrices);
+            } catch (error) {
+                console.error('Error fetching prices:', error);
+            }
+        };
+    
+        fetchPrices();
+    }, []);
+    
       
     return {
         txns,
@@ -106,7 +127,10 @@ const InitUX = () => {
         setSelectedWallets,
         fetchTransactions,
         isLoading,
-        stableCoins
+        stableCoins,
+
+        historicalBNBPrices,
+        historicalEthPrices,
     };
 }
 

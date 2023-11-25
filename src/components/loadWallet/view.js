@@ -18,8 +18,7 @@ import '@fontsource/inter-tight';
 
 const LoadWallet = ({
     // ux.init
-    stableCoins, selectedWallets, fetchType, setFetchType,
-    
+    stableCoins, selectedWallets, fetchType, setFetchType, historicalBNBPrices, historicalEthPrices,
     // ux.base
     tableData, handleSelectedWalletChange,
 
@@ -51,6 +50,8 @@ const LoadWallet = ({
     console.log("SavedTables: ",savedTables)
     console.log("BlendedTableList: ",  blendedTableList);
     console.log("TransferTxnsToBlend: ", transferTxnsToBlend);
+    console.log("historical BNB prices: ", historicalBNBPrices);
+    console.log("historical ETH prices: ", historicalEthPrices);
     
     return (
 
