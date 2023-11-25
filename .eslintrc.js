@@ -1,5 +1,14 @@
+// Migrate built-in rules to @stylistic/js namespace
+/* eslint @stylistic/migrate/migrate-js: "error" */
+
+// Migrate `@typescript-eslint` rules to @stylistic/ts namespace
+/* eslint @stylistic/migrate/migrate-ts: "error" */
+
 module.exports = {
-  plugins: ['react'],
+  plugins: [
+    '@stylistic',
+    '@stylistic/migrate'
+  ],
   rules: {
     'array-callback-return': 1,
     'arrow-body-style': 1,
@@ -9,7 +18,7 @@ module.exports = {
     'no-return-assign': 1,
     'new-cap': 0,
     'no-unused-vars': [
-      'warn',
+      'error',
       {
         vars: 'local',
       },
