@@ -16,7 +16,7 @@ const InitUX = () => {
     const [txns, setTxns] = useState([]);
     const [fetchType, setFetchType] = useState('erc20'); // 'normal', 'erc20', 'all'
     const [historicalBNBPrices, setHistoricalBNBPrices] = useState([]);
-    const [historicalEthPrices, setHistoricalEthPrices] = useState([]);
+    const [historicalETHPrices, setHistoricalETHPrices] = useState([]);
 
     // LOADING SCREEN TRIGGER
     const [isLoading, setIsLoading] = useState(false);
@@ -108,7 +108,7 @@ const InitUX = () => {
                 const ethPrices = await getEtheriumPrices();
     
                 setHistoricalBNBPrices(bnbPrices);
-                setHistoricalEthPrices(ethPrices);
+                setHistoricalETHPrices(ethPrices);
             } catch (error) {
                 console.error('Error fetching prices:', error);
             }
@@ -130,7 +130,7 @@ const InitUX = () => {
         stableCoins,
 
         historicalBNBPrices,
-        historicalEthPrices,
+        historicalETHPrices,
     };
 }
 

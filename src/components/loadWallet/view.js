@@ -47,11 +47,12 @@ const LoadWallet = ({
 
 } = {}) => {
     
-    console.log("SavedTables: ",savedTables)
-    console.log("BlendedTableList: ",  blendedTableList);
-    console.log("TransferTxnsToBlend: ", transferTxnsToBlend);
-    console.log("historical BNB prices: ", historicalBNBPrices);
-    console.log("historical ETH prices: ", historicalEthPrices);
+    // console.log("SavedTables: ",savedTables)
+    // console.log("BlendedTableList: ",  blendedTableList);
+    // console.log("TransferTxnsToBlend: ", transferTxnsToBlend);
+    console.log("tableData: ", tableData);
+    console.log("historicalBNBPrices: ", historicalBNBPrices);
+    console.log("historicalEthPrices: ", historicalEthPrices);
     
     return (
 

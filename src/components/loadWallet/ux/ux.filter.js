@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react';
 import { generateTableData } from '../data';
 import { ignoreWallets } from '../../../lib/data/wallets';
 import { filterTxns } from '../../../lib/functions/filters';
+import { getHistoricalPrice } from '../../../lib/functions/time';
 import { curry } from '../../../lib/functions/fp';
 
 const FilterUX = ({
     txns,
     setTableData,
     selectedWallets,
+    historicalBNBPrices,
+    historicalEthPrices,
 
 } = {}) => {
     const [filters, setFilters] = useState({
@@ -73,7 +76,7 @@ const FilterUX = ({
                     wallet.address.toLowerCase() === txn.from.toLowerCase() || 
                     wallet.address.toLowerCase() === txn.to.toLowerCase()
                 ))
-                .map((txn, index) => generateTableData(txn, index, selectedWalletAddresses))
+                .map((txn, index) => generateTableData(txn, index, selectedWalletAddresses, historicalBNBPrices, historicalEthPrices))
                 .filter(row => row !== null); // Filter out null values
     
             // Apply additional filters if necessary
