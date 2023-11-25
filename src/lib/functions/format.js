@@ -15,7 +15,7 @@ export const FormatTxnLink = ({ hash, chain, style }) => {
 };
 
 
-export const formatSankeToCapital = (snakeCaseString) => {
+export const formatSnakeToCapital = (snakeCaseString) => {
     const words = snakeCaseString.split('_');
     const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
     const capitalCasedString = capitalizedWords.join(' ');
@@ -25,32 +25,33 @@ export const formatSankeToCapital = (snakeCaseString) => {
 
 export const formatWalletName = name => 
     // Strip off the part within brackets
-     formatSankeToCapital(name).replace(/ *\([^)]*\) */g, '')
+    formatSnakeToCapital(name).replace(/ *\([^)]*\) */g, '')
 ;
 
 export const generateAllocationTableTitle = (selectedWallets, move) => {
     if (selectedWallets.length === 0) return 'No wallets selected'; 
-    
+
     if (move) return `Allocation Table for: '${move}' Investment`;
 
     return selectedWallets.length > 1
         ? `Aggregated Allocation Table for: ${selectedWallets.map(wallet => 
             formatWalletName(wallet.name)).join(', ')} (${selectedWallets.length} wallets)`
-        : `Allocation Table for: '${formatWalletName(selectedWallets[0].name)}' Wallet`;
+            : `Allocation Table for: '${formatWalletName(selectedWallets[0].name)}' Wallet`;
 };
 
 
 export const formatAmountDecimals = (chain, value, txnType) => 
-     txnType === 'erc20'
+    txnType === 'erc20'
         ? chain === 'bsc' ? value / 1e18 : value / 1e6
         : value / 1e18 // Default to ETH conversion for 'normal' transactions
 ;
+
 
 export const formatAmountDisplay = (value, txnType, chain) => {
     if (!value || isNaN(value) || Number(value) === 0) {
         return txnType === 'erc20' ? "$0.00" : `0 ${chain === 'bsc' ? 'BNB' : 'ETH'}`; // Adjust for zero value
     }
-    
+
     if (txnType === 'erc20') {
         return Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
     } else {
@@ -97,23 +98,16 @@ export const formatChainData = (chainData) => {
 
 export const formatChainDataString = (transactions, values) => Object.entries(transactions).map(([chain, count]) => `${chain.toUpperCase()}: ${count} transactions, $${values[chain].toFixed(2)} total`)
 
-export const formatChainMap = (chainMap) => {
-    if (chainMap) {
-        return Object.entries(chainMap)
-            .map(([chain, count]) => `${chain}(${count})`)
-            .join(", ");
-    }
-    return "";
-};
+export const formatChainMap = (chainMap) => 
+    chainMap ? Object.entries(chainMap)
+        .map(([chain, count]) => `${chain}(${count})`) 
+        : "";
 
-export const formatChainArray = (chainMap) => {
-    if (chainMap) {
-        return Object.entries(chainMap)
-            .map(([key, value]) => `${key}(${value})`)
-            .join(", ");
-    }
-    return "";
-};
+export const formatChainArray = (chainMap) => chainMap 
+    ? Object.entries(chainMap)
+    .map(([key, value]) => `${key}(${value})`)
+    .join(", ")
+    : "";
 
 export const formatAggregatedData = (inputData) => {
     if (!inputData) {
@@ -141,22 +135,21 @@ export const extractTitle = (tableTitle) => {
     const quotePattern = /'([^']+)'/;
     let match = tableTitle.match(quotePattern);
 
-    if (match) {
-        // Return the matched group without quotes
-        return match[1];
-    } else if (tableTitle.includes('for:')) {
-        // If no single quotes found but contains 'for:', process accordingly
-        return tableTitle.split('for:')[1]
-            .replace(/,/g, '|')
-            .replace(/\([^)]+\)/g, '')
-            .trim()
-            .split('|')
-            .map(s => s.trim().replace(/-/g, ' '))
-            .join(' | ');
-    } else {
-        // For other cases, remove parentheses and their content, and trim spaces
+    // Return the matched group without quotes
+    if (match) return match[1];
+
+    // For other cases, remove parentheses and their content, and trim spaces
+    if (! tableTitle.includes('for:'))
         return tableTitle.replace(/\([^)]+\)/g, '').trim();
-    }
+
+    // If no single quotes found but contains 'for:', process accordingly
+    return tableTitle.split('for:')[1]
+        .replace(/,/g, '|')
+        .replace(/\([^)]+\)/g, '')
+        .trim()
+        .split('|')
+        .map(s => s.trim().replace(/-/g, ' '))
+        .join(' | ');
 }
 
 
