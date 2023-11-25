@@ -1,5 +1,5 @@
 import { ARB_API_KEY } from '../lib/data';
-import { getERC20Transactions, getNormalTransactions } from './functions';
+import { getERC20Transactions, getNormalTransactions } from './transactions';
 
 export const getNormalTxnsArb = async walletAddress => {
     return getNormalTransactions(walletAddress, "https://api.arbiscan.io/api", ARB_API_KEY, 'arb');

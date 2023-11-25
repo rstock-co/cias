@@ -111,6 +111,7 @@ export const generateTableData = (txn, id, selectedAddresses) => {
     const hash = txn.hash;
     const chain = txn.chain;
     const txnType = txn.fetchType;
+    const currency = txnType === 'erc20' ? txn.tokenSymbol : (chain === 'bsc' ? 'BNB' : 'ETH');
     const chainLogo = (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
             <img 
@@ -124,7 +125,7 @@ export const generateTableData = (txn, id, selectedAddresses) => {
     const link = <FormatTxnLink hash={hash} chain={chain} />;
     const amount = formatAmountDecimals(chain, txn.value, txnType);
     const amountDisplay = formatAmountDisplay(amount, txnType, chain);
-    const currency = txn.tokenSymbol;
+   
     
     const flow = from && selectedAddresses.includes(from) ? 'Out' : 'In';
     const moveName = getMoveName(timestamp);
