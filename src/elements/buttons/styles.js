@@ -36,26 +36,25 @@ export const StyledChip = styled(Chip)(({ theme, blended }) => ({
   }));
 
   
-  export const FetchTypeButton = styled(Button)(({ active }) => ({
+export const FetchTypeButton = styled(Button)(({ theme, active }) => ({
     fontFamily: 'Inter Tight, sans-serif',
     fontWeight: 'regular',
     fontSize: '15px',
-    background: active ? '#0A5067' : `linear-gradient(to right, #022027, #04373A)`,
-    color: '#08E2EA',
-    border: '1px solid #08E2EA !important',
+    background: active ? '-webkit-linear-gradient(left, #264aa6, #0b2566)' : `linear-gradient(to right, #022027, #04373A)`,
+    color: active ? '#8fafff' : '#08E2EA',
+    border: active ? '1px solid #5580ed !important' : '1px solid #08E2EA !important',
     transform: 'translateY(-2px)',
-    boxShadow: active ? '0 0 10px #08E2EA' : '3.5px 3.5px 0 #095D6F',
-    transition: 'box-shadow 0.3s ease-in-out',
+    boxShadow: active ? '0 0 3px 3px #b09946' : 'none',
+    transition: 'box-shadow 0.3s ease-in-out, background 0.3s ease-in-out',
     marginTop: 12,
-    outline: 'none',
     '&:hover': {
-        background: '#0c546e',
-        boxShadow: '0 0 10px #08E2EA',
+        background: active ? '#0A5067' : '#0c546e',
+        boxShadow: '0 0 3px 3px #b09946', // maintain the box shadow on hover
     },
     '&:focus, &:active, &:focus-visible': {
-        boxShadow: '0 0 10px #08E2EA',
-        outline: 'none',
-        border: '1px solid #08E2EA !important',
+        border: '#3a61c2'
     },
 }));
+
+
   

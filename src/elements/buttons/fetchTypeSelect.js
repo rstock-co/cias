@@ -2,7 +2,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import { FetchTypeButton } from './styles';
 
 export const FetchTypeSelect = ({ fetchType, setFetchType }) => (
-    <ButtonGroup variant="contained" aria-label="fetch type button group" sx={{ boxShadow: 'none' }} disableRipple>
+    <ButtonGroup variant="contained" aria-label="fetch type button group" sx={{ boxShadow: 'none', marginBottom: '15px' }} disableRipple>
         <FetchTypeButton active={fetchType === 'normal'} onClick={() => setFetchType('normal')}>
             Normal
         </FetchTypeButton>
