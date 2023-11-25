@@ -44,8 +44,7 @@ export const generateMemberSummaryTableData = (tableData, memberWallet) => {
     return [memberName, ...memberData];
 };
 
-export const calculateTotals = (summaryTableData) => {
-    return summaryTableData.reduce((totals, entry) => {
+export const calculateTotals = (summaryTableData) => summaryTableData.reduce((totals, entry) => {
         totals.totalContributionsCount += entry.contributionsCount;
         totals.totalRefundsCount += entry.refundsCount;
         totals.totalContributionsAmount += entry.contributionsTotal;
@@ -55,7 +54,6 @@ export const calculateTotals = (summaryTableData) => {
 
         return totals;
     }, initialTotals());
-};
 
 export const generatedDate = () => {
     const now = new Date();

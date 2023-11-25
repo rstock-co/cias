@@ -38,7 +38,7 @@ export const fetchHistoricalPriceData = async (coinSymbol, conversionCurrency, {
     try {
         const response = await axios.get(url, requestConfig);
         const processedData = response.data.prices.reduce((acc, [date, price]) => {
-            const formattedDate = new Date(date).toISOString().split('T')[0];
+            const [formattedDate] = new Date(date).toISOString().split('T');
             acc[formattedDate] = price;
             return acc;
         }, {});

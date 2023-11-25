@@ -2,8 +2,7 @@ import { MenuItem } from '@mui/material';
 import { StyledTextField } from './styles';
 import '@fontsource/inter-tight';
 
-export const TypeSelect = ({ types, selectedType, handleChange }) => {
-    return (
+export const TypeSelect = ({ types, selectedType, handleChange }) => (
         <StyledTextField
             select
             label="Type"
@@ -25,6 +24,5 @@ export const TypeSelect = ({ types, selectedType, handleChange }) => {
                 <MenuItem key={type} value={type} sx={{ fontFamily: 'Inter Tight, sans-serif' }}>{type}</MenuItem>
             ))}
         </StyledTextField>
-    );
-}
+    )
 

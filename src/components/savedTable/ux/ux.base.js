@@ -2,15 +2,13 @@ const BaseUX = ({ data, selectedWallets, setSavedTables } = {}) => {
     const { totals = {}, ...restData } = data;
 
     const updateSavedTableState = (tableId, newState) => {
-        setSavedTables(prevTables => {
-            return prevTables.map(table => {
+        setSavedTables(prevTables => prevTables.map(table => {
                 if (table.id === tableId) {
                     // Update the state of the specific table
                     return { ...table, state: { ...table.state, ...newState } };
                 }
                 return table; // Return other tables unchanged
-            });
-        });
+            }));
     };
 
     const adjustIndividualShares = (tableData, adjustedNetTotal, totals) => tableData.map(row => {
@@ -26,15 +24,13 @@ const BaseUX = ({ data, selectedWallets, setSavedTables } = {}) => {
             
             updateSavedTableState(tableId, { adjustedNetTotal: value });
     
-            setSavedTables(prevTables => {
-                return prevTables.map(table => {
+            setSavedTables(prevTables => prevTables.map(table => {
                     if (table.id === tableId) {
                         const updatedTableData = adjustIndividualShares(table.tableData, value, table.totals);
                         return { ...table, tableData: updatedTableData };
                     }
                     return table;
-                });
-            });
+                }));
         },
         sortBy: value => updateSavedTableState(tableId, { sortBy: value }),
         transferTotal: value => updateSavedTableState(tableId, { transferTotal: value }),

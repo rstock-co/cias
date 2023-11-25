@@ -23,10 +23,10 @@ export const formatSankeToCapital = (snakeCaseString) => {
     return capitalCasedString;
 };
 
-export const formatWalletName = name => {
+export const formatWalletName = name => 
     // Strip off the part within brackets
-    return formatSankeToCapital(name).replace(/ *\([^)]*\) */g, '');
-};
+     formatSankeToCapital(name).replace(/ *\([^)]*\) */g, '')
+;
 
 export const generateAllocationTableTitle = (selectedWallets, move) => {
     if (selectedWallets.length === 0) return 'No wallets selected'; 
@@ -40,11 +40,11 @@ export const generateAllocationTableTitle = (selectedWallets, move) => {
 };
 
 
-export const formatAmountDecimals = (chain, value, txnType) => {
-    return txnType === 'erc20'
+export const formatAmountDecimals = (chain, value, txnType) => 
+     txnType === 'erc20'
         ? chain === 'bsc' ? value / 1e18 : value / 1e6
-        : value / 1e18; // Default to ETH conversion for 'normal' transactions
-};
+        : value / 1e18 // Default to ETH conversion for 'normal' transactions
+;
 
 export const formatAmountDisplay = (value, txnType, chain) => {
     if (!value || isNaN(value) || Number(value) === 0) {
@@ -95,11 +95,7 @@ export const formatChainData = (chainData) => {
     return "";
 };
 
-export const formatChainDataString = (transactions, values) => {
-    return Object.entries(transactions).map(([chain, count]) => {
-        return `${chain.toUpperCase()}: ${count} transactions, $${values[chain].toFixed(2)} total`;
-    });
-}
+export const formatChainDataString = (transactions, values) => Object.entries(transactions).map(([chain, count]) => `${chain.toUpperCase()}: ${count} transactions, $${values[chain].toFixed(2)} total`)
 
 export const formatChainMap = (chainMap) => {
     if (chainMap) {

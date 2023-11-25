@@ -27,7 +27,7 @@ module.exports = {
     'no-use-before-define': 'error',
     'object-shorthand': 1,
     'prefer-arrow-callback': 1,
-    'prefer-destructuring': 'warn',
+    'prefer-destructuring': 'error',
     'prefer-rest-params': 1,
     'prefer-template': 'error',
     'stylistic/jsx/display-name': 0,
