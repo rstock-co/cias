@@ -19,7 +19,6 @@ const ethConversionCurrency = 'usd';
 export const getEtheriumPrices = async () => {
     try {
         const ethPrices = await fetchHistoricalPriceData('eth', ethConversionCurrency, ethDateRange);
-        console.log("API Response for ETH Prices:", ethPrices);
         return ethPrices;
     } catch (error) {
         console.error('Error fetching Ethereum prices:', error);
