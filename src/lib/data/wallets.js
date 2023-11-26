@@ -1,10 +1,11 @@
-export const INVESTMENT_WALLET = '0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca'.toLowerCase();
 import wallets from './wallets.json';
 
 const createWallet = ([name, address]) => ({
     name,
     address: address.toLowerCase()
 });
+
+export const INVESTMENT_WALLET = wallets.investmentWallet;
 
 export const depositWallets = wallets.depositWallets.map(createWallet);
 

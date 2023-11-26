@@ -1,4 +1,6 @@
 {
+    "investmentWallet": "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca",
+
     "depositWallets": [
         ["investments (deposit)", "0xb79e768bef0ca0a34e53c3fe2ac26e600acf8cca"],
         ["fair-launches (deposit)", "0xb443c767dcb9a858a0acceb76191ddde4cd70c4d"],
