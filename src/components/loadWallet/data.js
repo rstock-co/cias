@@ -3,6 +3,7 @@ import { formatTime, getHistoricalPrice } from "../../lib/functions/time";
 import { getERC20TxnsArb, getERC20TxnsBsc, getERC20TxnsEth, getNormalTxnsArb, getNormalTxnsBsc, getNormalTxnsEth } from "../../api";
 import { getMoveName, getWalletAddress, getWalletName } from "../../lib/functions/wallets";
 import { ignoreWallets, memberWallets, teamWallets, tokenContractAddresses, allWallets as wallets } from "../../lib/data/wallets";
+import { curry } from "../../lib/functions/fp";
 
 // erc20 transactions to fetch
 export const stableCoinsToFetch = { 
@@ -24,7 +25,7 @@ export const chainsToFetch = {
     normalArb: { name: "Arbitrum", apiCall: getNormalTxnsArb, chain: "arb", loading: false, txns: 0 },
     // Add other chains as needed
 };
- 
+
 // TABLE COLUMNS
 export const propertyMap = {
     id: { header: '#', align: 'center' },
@@ -96,7 +97,7 @@ const logos = {
     arb: 'https://i.imgur.com/3kJricG.png',
     eth: 'https://i.imgur.com/iPqQBBB.png',
     bsc: 'https://i.imgur.com/a5V7FFD.png',
-  };
+};
 
 export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrices, historicalETHPrices) => {
     const from = txn.from.toLowerCase();
@@ -123,7 +124,7 @@ export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrice
     const link = <FormatTxnLink hash={hash} chain={chain} />;
     const amount = formatAmountDecimals(chain, txn.value, txnType);
     const amountDisplay = formatAmountDisplay(amount, txnType, chain);
-   
+
     const flow = from && selectedAddresses.includes(from) ? 'Out' : 'In';
     const moveName = getMoveName(timestamp);
     const fromMemberName = getWalletName(memberWallets, from);
@@ -147,7 +148,7 @@ export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrice
         walletDescription,
         amountDisplay,
         currency,
-        
+
         // not displayed in table
         chain,
         txnType,
@@ -160,20 +161,20 @@ export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrice
     }
 };
 
-export const calculateTotalTransactionsByChain = (tableData) => {
-    const chains = ['arb', 'bsc', 'eth'];
-    let result = {};
-    chains.forEach(chain => {
-        result[chain] = tableData.filter(row => row.chain.toLowerCase() === chain).length;
-    });
-    return result;
-}
+const allChains = ['arb', 'bsc', 'eth'];
 
-export const calculateTotalValueByChain = (tableData) => {
-    const chains = ['arb', 'bsc', 'eth'];
-    let result = {};
-    chains.forEach(chain => {
-        result[chain] = tableData.reduce((total, row) => row.chain.toLowerCase() === chain ? total + parseFloat(row.amount) : total, 0);
-    });
-    return result;
-};
+const createChainReducerForTableRow = (tableData, tableDataMapper) =>
+    (acc, chain) => ({ 
+        ...acc, 
+        [chain]: tableDataMapper(tableData, chain)
+    })
+
+const createChainsReducer = curry((chains, tableDataMapper, tableData) => 
+    chains.reduce(createChainReducerForTableRow(tableData, tableDataMapper), {}))
+
+export const calculateTotalTransactionsByChain = 
+    createChainsReducer(allChains, (data, chain) => data.filter(row => row.chain.toLowerCase() === chain).length);
+
+export const calculateTotalValueByChain = 
+    createChainsReducer(allChains, (data, chain) => data.reduce((total, row) => row.chain.toLowerCase() === chain ? total + parseFloat(row.amount) : total, 0))
+
