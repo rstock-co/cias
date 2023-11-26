@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
 import { chainsToFetch, stableCoinsToFetch } from '../data';
 import { getAggregateTransactions, updateStatus } from '../../../api/transactions';
 import { getBNBPrices, getEtheriumPrices } from '../../../api';
+import { useEffect, useState } from 'react';
 
 const InitUX = () => {
 
