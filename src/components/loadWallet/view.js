@@ -70,7 +70,7 @@ const LoadWallet = ({
                         <DateRangeSelect selectedDateRange={filters.dateRange} handleChange={handleDateChange} isStartDateDefault={isStartDateDefault} isEndDateDefault={isEndDateDefault} />
                     </Box>
 
-                    <ColorButton onClick={handleGenerateChainFlow} buttonText="Saved Tables" />
+                    
                 </Box>
 
                 
@@ -98,15 +98,15 @@ const LoadWallet = ({
             </Box>
 
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, marginTop: '30px' }}>
-                {/* FetchTypeSelect button group above everything */}
-                <FetchTypeSelect
-                    fetchType={fetchType} 
-                    setFetchType={setFetchType} 
-                />
-
-                {/* Box for selects and colored buttons */}
                 <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
-                    {/* Box for the select components */}
+                    <FetchTypeSelect
+                        fetchType={fetchType} 
+                        setFetchType={setFetchType} 
+                    />
+                    <ColorButton onClick={handleGenerateChainFlow} buttonText="Saved Tables" />
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+   
                     <Box sx={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
                         <WalletSelect wallets={wallets} selectedWallets={selectedWallets} handleChange={handleSelectedWalletChange} />
                         <TypeSelect types={filterTypes} selectedType={filters.type} handleChange={handleFilterChange('type')} />
@@ -115,7 +115,7 @@ const LoadWallet = ({
                         <FilterWalletSelect wallets={filterWallets} filteredWallet={filters.filterWallet} handleChange={handleFilterValueChange('filterWallet')} selectedWallets={selectedWallets} />
                     </Box>
 
-                    {/* Box for the colored buttons */}
+  
                     <Box sx={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
                         <ColorButton onClick={handleClearFilters} buttonText="Clear All Filters" />
                         <ColorButton onClick={handleGenerateAllocations} buttonText="Generate Allocations" />
