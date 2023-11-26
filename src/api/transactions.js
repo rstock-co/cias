@@ -56,7 +56,6 @@ export const getERC20Transactions = async (walletAddress, { apiUri, apiKey, chai
         }
     }));
 
-
 export const getNormalTransactions = async (walletAddress, { apiUri, apiKey, chain, endblock }) => 
     getTxns(walletAddress, { apiUri, apiKey, chain, endblock }, normalTxns)
 
