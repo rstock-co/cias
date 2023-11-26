@@ -106,12 +106,13 @@ export const calculateTotals = (data) => {
     }, initialTotals());
 };
 
-export const generateSummaryData = (tableData, selectedWallets) => {
+export const generateSummaryData = (tableData, selectedWallets, fetchType) => {
 
     // Initialize summaries for each selected wallet
     const walletSummaries = selectedWallets.reduce((acc, wallet) => {
         acc[wallet.name] = {
             walletName: wallet.name,
+            fetchType,
             netAmount: 0,
             contributions: 0,
             contributionsAmount: 0,

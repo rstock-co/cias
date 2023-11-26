@@ -123,8 +123,8 @@ export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrice
     const dateTime = formatTime(timestamp, 'America/Denver');
     const link = <FormatTxnLink hash={hash} chain={chain} />;
     const amount = formatAmountDecimals(chain, txn.value, txnType);
-    const amountDisplay = formatAmountDisplay(amount, txnType, chain);
-
+    const amountDisplay = formatAmountDisplay(amount, txnType);
+   
     const flow = from && selectedAddresses.includes(from) ? 'Out' : 'In';
     const moveName = getMoveName(timestamp);
     const fromMemberName = getWalletName(memberWallets, from);

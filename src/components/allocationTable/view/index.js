@@ -11,7 +11,7 @@ const AllocationTable = (props = {}) => {
     const {
         dialogOpen, setDialogOpen, selectedWallets, 
         dialogTitle, generatedDateString, isAggregated,
-        sortedAllocationTableData, summaryData,
+        sortedAllocationTableData, summaryData
     } = props;
 
     console.log("allocation table data: ", sortedAllocationTableData)

@@ -47,14 +47,21 @@ export const formatAmountDecimals = (chain, value, txnType) =>
 ;
 
 
-export const formatAmountDisplay = (value, txnType, chain) => {
-    if (!value || isNaN(value) || Number(value) === 0) {
-        return txnType === 'erc20' ? "$0.00" : `0 ${chain === 'bsc' ? 'BNB' : 'ETH'}`; // Adjust for zero value
+export const formatAmountDisplay = (value, txnType = "erc20") => {
+    if (value === undefined || value === null || isNaN(value) || Number(value) === 0 || value === '0') {
+        return txnType === "normal" ? "0.0000" : "$0.00";
     }
 
-    if (txnType === 'erc20') {
-        return Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-    } 
+    if (txnType === "normal") {
+        return parseFloat(value).toFixed(4);
+    }
+
+    return value.toLocaleString(undefined, {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
 };
 
 export const shortenAddress = (address, startLength = 4, endLength = 6) => {

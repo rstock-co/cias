@@ -1,6 +1,7 @@
 import { Box, Chip, FormControl, InputAdornment, InputLabel, OutlinedInput, Typography } from '@mui/material';
 import CustomColorToggle from '../../../elements/toggles/coloredToggle';
 import { SortAllocationSelect } from '../../../elements/dropdowns';
+import { chipStyles } from './styles';
 
 const ShowTotalsRowTemplate = ({ showHeaderRow, handleToggleHeaderRow }) => (
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>

@@ -133,7 +133,7 @@ const formatLogoChainMap = (chainMapString) => {
 
 
 export const WalletSummary = ({ 
-    id, walletTitle, walletType, 
+    id, walletTitle, walletType, fetchType,
     totalNetAmount, aggregatedContributionsChainMap, totalContributionsAmount, totalRefundsAmount, aggregatedRefundsChainMap, 
  } = {}) => {
 
@@ -169,15 +169,15 @@ export const WalletSummary = ({
         <Typography sx={{ mb: 2, fontSize: '18px', fontFamily: 'Inter Tight, sans-serif' }}>
             Total Net Amount:&nbsp;&nbsp;
             <span style={{ color: '#097c8f' }}>
-                {formatAmountDisplay(totalNetAmount)}
+                {formatAmountDisplay(totalNetAmount, fetchType)}
             </span>
         </Typography>
 
         <Box mb={2} mt={2}>
             <SummaryLine label="Total Contribution Txns:" value={totalContributions} />
-            <SummaryLine label="Total Contributions Amount:" value={formatAmountDisplay(totalContributionsAmount)} />
+            <SummaryLine label="Total Contributions Amount:" value={formatAmountDisplay(totalContributionsAmount, fetchType)} />
             <SummaryLine label="Total Refund Txns:" value={totalRefunds ? totalRefunds : 0} />
-            <SummaryLine label="Total Refunds Amount:" value={formatAmountDisplay(totalRefundsAmount)} />
+            <SummaryLine label="Total Refunds Amount:" value={formatAmountDisplay(totalRefundsAmount, fetchType)} />
 
         </Box>
     </Box>

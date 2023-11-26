@@ -252,6 +252,7 @@ const LoadWallet = ({
                 saveTableSnackbarMessage={saveTableSnackbarMessage}
                 saveTableSnackbarOpen={saveTableSnackbarOpen}
                 handleCloseSaveTableSnackbar={handleCloseSaveTableSnackbar}
+                fetchType={fetchType}
             />
 
             <BlendedAllocationTable

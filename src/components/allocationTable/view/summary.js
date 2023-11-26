@@ -13,7 +13,8 @@ const WalletSummaryTemplate = ({
     totalContributions, 
     contributionsAmount, 
     totalRefunds, 
-    refundsAmount 
+    refundsAmount,
+    fetchType
 }, index) => (
     <Box mb={0} mt={2} ml={3}>
         <WalletSummary
@@ -26,6 +27,7 @@ const WalletSummaryTemplate = ({
             totalContributionsAmount={contributionsAmount}
             totalRefundsAmount={refundsAmount}
             aggregatedRefundsChainMap={totalRefunds}
+            fetchType={fetchType}
         />
     </Box>
 );
