@@ -1,8 +1,8 @@
-import { getERC20TxnsArb, getERC20TxnsBsc, getERC20TxnsEth, getNormalTxnsArb, getNormalTxnsBsc, getNormalTxnsEth } from "../../api";
-import { formatAmountDecimals, formatAmountDisplay, FormatTxnLink } from "../../lib/functions/format";
-import { getMoveName, getWalletName, getWalletAddress } from "../../lib/functions/wallets";
+import { FormatTxnLink, formatAmountDecimals, formatAmountDisplay } from "../../lib/functions/format";
 import { formatTime, getHistoricalPrice } from "../../lib/functions/time";
-import { allWallets as wallets, teamWallets, memberWallets, ignoreWallets, tokenContractAddresses } from "../../lib/data/wallets";
+import { getERC20TxnsArb, getERC20TxnsBsc, getERC20TxnsEth, getNormalTxnsArb, getNormalTxnsBsc, getNormalTxnsEth } from "../../api";
+import { getMoveName, getWalletAddress, getWalletName } from "../../lib/functions/wallets";
+import { ignoreWallets, memberWallets, teamWallets, tokenContractAddresses, allWallets as wallets } from "../../lib/data/wallets";
 
 // erc20 transactions to fetch
 export const stableCoinsToFetch = { 
