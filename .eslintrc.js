@@ -5,6 +5,9 @@
 /* eslint @stylistic/migrate/migrate-ts: "error" */
 
 module.exports = {
+  extends: [
+    'plugin:react/recommended'
+  ],
   plugins: [
     '@stylistic/jsx',
     '@stylistic/migrate'
@@ -22,6 +25,7 @@ module.exports = {
         vars: 'local',
       },
     ],
+    'react/prop-types': 0,
     'no-use-before-define': 'error',
     'object-shorthand': 1,
     'prefer-arrow-callback': 1,
