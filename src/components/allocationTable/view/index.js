@@ -1,10 +1,10 @@
 import "@fontsource/inter-tight";
 import { Dialog, DialogContent, Paper, TableContainer } from "@mui/material";
-import HeaderTemplate from "./header";
+import { GenerationDateTemplate, TableTitleTemplate, WalletSummariesTemplate } from "./summary";
 import FooterTemplate from "./footer";
-import { TableTitleTemplate, WalletSummariesTemplate, GenerationDateTemplate } from "./summary";
-import SummaryTableTemplate from "./body";
+import HeaderTemplate from "./header";
 import SaveTableSnackbar from "../../../elements/snackbars";
+import SummaryTableTemplate from "./body";
 
 const AllocationTable = (props = {}) => {
 

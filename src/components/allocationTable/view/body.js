@@ -1,6 +1,6 @@
-import { Table, TableRow, TableHead, TableBody } from '@mui/material';
-import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from './styles';
-import { shortenAddress, formatAmountDisplay, formatChainData, formatAggregatedData, formatChainMap } from '../../../lib/functions/format';
+import { StyledTableCell, StyledTableRow, WideStyledTableCell, totalRowStyle, totalRowStyleWithBorder } from './styles';
+import { Table, TableBody, TableHead, TableRow } from '@mui/material';
+import { formatAggregatedData, formatAmountDisplay, formatChainData, formatChainMap, shortenAddress } from '../../../lib/functions/format';
 
 const SummaryTableHeaderTemplate = ({
     showMemberName, 

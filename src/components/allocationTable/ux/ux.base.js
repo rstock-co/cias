@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react';
-import { generateAllocationTableData, calculateTotals, generateSummaryData } from '../../../lib/functions/table';
+import { calculateTotals, generateAllocationTableData, generateSummaryData } from '../../../lib/functions/table';
+import { useEffect, useMemo, useState } from 'react';
 
 const BaseUX = ({ 
     tableData, 
