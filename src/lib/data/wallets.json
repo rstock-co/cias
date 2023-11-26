@@ -36,7 +36,9 @@
         ["metamask-swap-router (convert)", "0xc590175e458b83680867afd273527ff58f74c02b"],
         ["CircleSwap (convert)", "0x0000000000000000000000000000000000000000"],
         ["swift-allChain-bridge (convert)", "0x1ed5685f345b2fa564ea4a670de1fde39e484751"],
-        ["unknown-conversion-1 (convert]", "0xbaa5003b6cf3d8767f4d154693f036d67b5109ed"]
+        ["unknown-conversion-1 (convert]", "0xbaa5003b6cf3d8767f4d154693f036d67b5109ed"],
+        ["unknown-conversion-2-possibly-thorswap (convert]", "0xbd5946863d02215c518b3d8e87a0bb43e5f6fb52"]
+
     ],
 
     "membershipWallets": [
