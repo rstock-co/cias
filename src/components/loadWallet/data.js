@@ -84,8 +84,6 @@ const generateWalletDescription = (flow, to, from, moveName, fromMemberName, toM
 };
 
 
-
-
 /**
  * Generate the table data for the main table
  * @param {*} txn the raw txn data from the api call

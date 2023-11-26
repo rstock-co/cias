@@ -54,11 +54,7 @@ export const formatAmountDisplay = (value, txnType, chain) => {
 
     if (txnType === 'erc20') {
         return Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
-    } else {
-        // Determine the currency symbol based on the chain
-        const currencySymbol = chain === 'bsc' ? 'BNB' : 'ETH';
-        return `${value.toFixed(4)} ${currencySymbol}`; // 4 decimal points for 'normal' transactions
-    }
+    } 
 };
 
 export const shortenAddress = (address, startLength = 4, endLength = 6) => {

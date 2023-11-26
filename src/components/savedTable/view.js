@@ -1,7 +1,9 @@
 import "@fontsource/inter-tight";
 import { formatAggregatedData, formatAmountDisplay, formatChainData, formatChainMap, shortenAddress } from "../../lib/functions/format";
-import { totalRowStyle, totalRowStyleWithBorder } from "./styles";
-import { Paper } from "@mui/material";
+import { totalRowStyle, totalRowStyleWithBorder, WideStyledTableCell, StyledTableCell, StyledTableRow } from "./styles";
+import { Paper, Box, Typography, Table, TableHead, TableRow, TableBody, TableCell, TableContainer, InputLabel, InputAdornment, OutlinedInput, Switch, FormControl,} from "@mui/material";
+import { SortAllocationSelect } from "../../elements/dropdowns";
+
 
 const SavedTable = ({ 
     // separate props

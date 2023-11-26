@@ -1,5 +1,5 @@
 import { Table, TableRow, TableHead, TableBody } from '@mui/material';
-import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder } from './styles';
+import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, WideStyledTableCell } from './styles';
 import { shortenAddress, formatAmountDisplay, formatChainData, formatAggregatedData, formatChainMap } from '../../../lib/functions/format';
 
 const SummaryTableHeaderTemplate = ({
