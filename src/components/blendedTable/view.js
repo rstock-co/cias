@@ -6,7 +6,7 @@ import { getWalletName } from "../../lib/functions/wallets";
 import { memberWallets } from "../../lib/data/wallets";
 import { TransferWalletSummary, WalletSummary, TransfersTableCell, BaseWalletTableCell } from "../../elements/templates/tables";
 import { printBlendedTableToPDF } from "../../lib/functions/actions";
-import { CustomColorSwitch } from "../../elements/toggles/coloredToggle";
+import CustomColorToggle from "../../elements/toggles/coloredToggle";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, StyledTab, StyledTabs } from "./styles";
 
@@ -91,7 +91,7 @@ const BlendedAllocationTable = ({
                             <Typography component="div" sx={{ fontFamily: 'Inter Tight' }}>
                                 Show Totals Row
                             </Typography>
-                            <CustomColorSwitch
+                            <CustomColorToggle
                                 checked={showHeaderRow}
                                 onChange={handleToggleHeaderRow}
                                 inputProps={{ 'aria-label': 'Toggle Header Row' }}
@@ -103,7 +103,7 @@ const BlendedAllocationTable = ({
                             <Typography component="div" sx={{ fontFamily: 'Inter Tight' }}>
                                 Show Member Name
                             </Typography>
-                            <CustomColorSwitch
+                            <CustomColorToggle
                                 checked={showMemberName}
                                 onChange={handleToggleMemberName}
                                 color="primary"
