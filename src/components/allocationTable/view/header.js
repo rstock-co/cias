@@ -1,9 +1,13 @@
+import { Box, Chip, FormControl, InputAdornment, InputLabel, OutlinedInput, Typography } from '@mui/material';
+import { SortAllocationSelect } from '../../../elements/dropdowns';
+import CustomColorToggle from '../../../elements/toggles/coloredToggle';
+
 const ShowTotalsRowTemplate = ({ showHeaderRow, handleToggleHeaderRow }) => (
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
         <Typography component="div" sx={{ fontFamily: 'Inter Tight' }}>
             Show Totals Row
         </Typography>
-        <CustomColorSwitch
+        <CustomColorToggle
             checked={showHeaderRow}
             onChange={handleToggleHeaderRow}
             inputProps={{ 'aria-label': 'Toggle Header Row' }}
@@ -16,7 +20,7 @@ const ShowMemberNameTemplate = ({ showMemberName, handleToggleMemberName }) => (
         <Typography component="div" sx={{ fontFamily: 'Inter Tight' }}>
             Show Member Name
         </Typography>
-        <CustomColorSwitch
+        <CustomColorToggle
             checked={showMemberName}
             onChange={handleToggleMemberName}
             color="primary"

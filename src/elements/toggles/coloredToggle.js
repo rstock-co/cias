@@ -1,8 +1,8 @@
-// CustomColorSwitch.js
+// CustomColorToggle.js
 import Switch from '@mui/material/Switch';
 import { styled } from '@mui/material/styles';
 
-export const CustomColorSwitch = styled(Switch)(() => ({
+const CustomColorToggle = styled(Switch)(() => ({
   '& .MuiSwitch-switchBase': {
     color: '#f7f9fa', // thumb color when unchecked
     
@@ -18,3 +18,5 @@ export const CustomColorSwitch = styled(Switch)(() => ({
     backgroundColor: '#000000', // track color when unchecked
   },
 }));
+
+export default CustomColorToggle;
