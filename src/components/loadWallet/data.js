@@ -15,6 +15,7 @@ export const stableCoinsToFetch = {
     stableEth2: { address: getWalletAddress("usdt_eth"), name: "USDT", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },
     stableBsc: { address: getWalletAddress("busd_bep20"), name: "BUSD", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
     stableBsc2: { address: getWalletAddress("bsc-usd_bep20"), name: "BSC-USD", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
+    stableBsc3: { address: getWalletAddress("bsc-usdc_bep20"), name: "BSC-USDC", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
     // Add other stable coins as needed
 };
 

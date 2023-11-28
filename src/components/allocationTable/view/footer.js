@@ -1,5 +1,6 @@
 import { Button, DialogActions }  from "@mui/material";
 import { printBlendedTableToPDF, printTableToPDF } from "../../../lib/functions/actions";
+import { extractTitle } from "../../../lib/functions/format";
 
 const FooterTemplate = ({ 
     savedTableId, 
