@@ -1,4 +1,4 @@
-# Crypto Wallet Manager
+# Crypto Investment Accounting Software
 
 ### Running the app locally
 
