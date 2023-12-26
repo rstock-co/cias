@@ -1,4 +1,4 @@
-# Crypto Wallet Manager
+# Crypto Investment Accounting Software
 
 ### Running the app locally
 
@@ -56,29 +56,3 @@ which displays all moves and amounts and allocations for that member in a new di
 - add support for tracking move wallets and vc wallets
 - Allocation table:  Make PDF size smaller somehow
 - Allocation table:  add `Save as CSV` - would be nice if I need to do additional data work/verify things in Google Sheets
-
-
----------
-
-# Create React App
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).

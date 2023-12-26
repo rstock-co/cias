@@ -139,5 +139,3 @@ export const extractTitle = (tableTitle) => {
         .map(s => s.trim().replace(/-/g, ' '))
         .join(' | ');
 }
-
-
