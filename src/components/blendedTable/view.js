@@ -1,17 +1,15 @@
-import { Paper, Dialog, DialogTitle, DialogContent, TableContainer, Table, TableHead, 
-    TableRow, TableBody, DialogActions, Button, Box, Typography, 
-    FormControl, InputLabel, OutlinedInput, InputAdornment } from "@mui/material";
-import { formatAmountDisplay, shortenAddress, formatChainMap, formatChainData } from "../../lib/functions/format";
-import { getWalletName } from "../../lib/functions/wallets";
-import { memberWallets } from "../../lib/data/wallets";
-import { TransferWalletSummary, WalletSummary, TransfersTableCell, BaseWalletTableCell } from "../../elements/templates/tables";
-import { printBlendedTableToPDF } from "../../lib/functions/actions";
-import CustomColorToggle from "../../elements/toggles/coloredToggle";
+import "@fontsource/inter-tight";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputAdornment, InputLabel, 
+    OutlinedInput, Paper, Table, TableBody, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { formatAmountDisplay, formatChainMap, shortenAddress } from "../../lib/functions/format";
 import { SortAllocationSelect } from "../../elements/dropdowns/sortAllocationSelect";
 import { StyledTableCell, StyledTableRow, totalRowStyle, totalRowStyleWithBorder, StyledTab, StyledTabs } from "./styles";
-
+import { BaseWalletTableCell, TransferWalletSummary, TransfersTableCell, WalletSummary, formatLogoChainMap } from "../../elements/templates/tables";
+import CustomColorToggle from "../../elements/toggles/coloredToggle";
 import SavedTable from '../savedTable';
-import "@fontsource/inter-tight";
+import { getWalletName } from "../../lib/functions/wallets";
+import { memberWallets } from "../../lib/data/wallets";
+import { printBlendedTableToPDF } from "../../lib/functions/actions";
 
 const BlendedAllocationTable = ({ 
     dialogOpen, 
@@ -295,7 +293,7 @@ const BlendedAllocationTable = ({
                                         </StyledTableCell>
 
                                         <StyledTableCell align="center" style={totalRowStyle}>{totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
-                                        <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(aggregatedContributionsChainMap)}</StyledTableCell>
+                                        <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatLogoChainMap(formatChainMap(aggregatedContributionsChainMap))}</StyledTableCell>
                                         <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalRefundsAmount)}</StyledTableCell>
                                         <StyledTableCell align="center" style={totalRowStyle}>{formatChainMap(aggregatedRefundsChainMap)}</StyledTableCell>
                                     </TableRow>
@@ -331,13 +329,13 @@ const BlendedAllocationTable = ({
                                                 {baseWallet ? formatAmountDisplay(baseWallet.contributionsAmount) : formatAmountDisplay(0)}
                                             </StyledTableCell>
                                             <StyledTableCell align="center" sx={{borderRight: "1px solid #b8b8b8"}}>
-                                                {baseWallet ? formatChainData(baseWallet.contributionsChainMap) : formatChainData({})}
+                                                {baseWallet ? formatLogoChainMap(formatChainMap(baseWallet.contributionsChainMap)) : formatChainMap({})}
                                             </StyledTableCell>
                                             <StyledTableCell align="center">
                                                 {baseWallet ? formatAmountDisplay(baseWallet.refundsAmount) : formatAmountDisplay(0)}
                                             </StyledTableCell>
                                             <StyledTableCell align="center">
-                                                {baseWallet ? formatChainData(baseWallet.refundsChainMap) : formatChainData({})}
+                                                {baseWallet ? formatLogoChainMap(formatChainMap(baseWallet.refundsChainMap)) : formatChainMap({})}
                                             </StyledTableCell>
                                         </StyledTableRow>
                                     ))}

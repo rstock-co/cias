@@ -14,6 +14,8 @@ const FooterTemplate = ({
     sortedAllocationTableData, 
     totalTxns, 
     totalNetAmount, 
+    totalContributionsAmount,
+    totalRefundsAmount,
     aggregatedContributionsChainMap, 
     aggregatedRefundsChainMap, 
     aggregatedTxns, 
