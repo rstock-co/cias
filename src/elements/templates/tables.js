@@ -2,6 +2,7 @@ import "@fontsource/inter-tight";
 import { Box, Typography } from '@mui/material';
 import { FormatTxnLink, extractTitle, formatAmountDisplay, formatChainMap } from '../../lib/functions/format';
 import React from 'react';
+import "./styles.css";
 
 const logos = {
     arb: 'arb.png',
@@ -87,49 +88,39 @@ export const TransferWalletSummary = ({ transferTxnsToBlend, transferTotal, wall
     </Box>
 )};
 
-const formatLogoChainMap = (chainMapString) => {
+export const formatLogoChainMap = (chainMapArray) => {
     const logos = {
         arb: 'https://i.imgur.com/3kJricG.png',
         eth: 'https://i.imgur.com/iPqQBBB.png',
         bsc: 'https://i.imgur.com/a5V7FFD.png',
     };
 
-    // Check if chainMapString is a valid string
-    if (typeof chainMapString !== 'string' || chainMapString.trim() === '') {
-        return null;
-    }
+    return Array.isArray(chainMapArray) && chainMapArray.length > 0
+        ? chainMapArray.map((part, index) => {
+              const [chain, number] = part.split('(');
+              const count = number?.slice(0, -1);
+              const logoUrl = logos[chain];
 
-    return chainMapString.split(', ').map((part, index) => {
-        const parts = part.split('(');
-        
-        // Check if the split operation produced the expected array
-        if (parts.length < 2) {
-            console.error('Unexpected format:', part);
-            return null; // Or return a placeholder/fallback element
-        }
-
-        const [chain, number] = parts;
-        const count = number.slice(0, -1); // Remove closing parenthesis
-
-        // Check if the chain is recognized and has a logo
-        if (!logos[chain]) {
-            console.error('Logo not found for chain:', chain);
-            return <span key={index}>{chain} {count}</span>; // Fallback if no logo is available
-        }
-
-        return (
-            <span key={index} style={{ display: 'inline-flex', alignItems: 'center', marginRight: '5px' }}>
-                <img 
-                    src={logos[chain]} 
-                    alt={`${chain} logo`} 
-                    style={{ width: '20px', height: '20px', marginRight: '5px' }} 
-                />
-                {count}
-            </span>
-        );
-    }).filter(element => element !== null); // Filter out null elements
+              return (
+                  <span key={index} style={{ display: 'inline-flex', alignItems: 'center', marginRight: '5px' }}>
+                      {logoUrl && (
+                          <img
+                              src={logoUrl}
+                              alt={`${chain} logo`}
+                              className={`spinner-${chain.toLowerCase()}`} 
+                              style={{ 
+                                  width: '20px', 
+                                  height: '20px', 
+                                  marginRight: '5px',
+                              }}
+                          />
+                      )}
+                      {count}
+                  </span>
+              );
+          }).filter(Boolean)
+        : null;
 };
-
 
 
 export const WalletSummary = ({ 
@@ -137,8 +128,8 @@ export const WalletSummary = ({
     totalNetAmount, aggregatedContributionsChainMap, totalContributionsAmount, totalRefundsAmount, aggregatedRefundsChainMap, 
  } = {}) => {
 
-    const totalContributions = walletTitle === 'Blended' ? formatLogoChainMap(formatChainMap(aggregatedContributionsChainMap)) : formatLogoChainMap(aggregatedContributionsChainMap);
-    const totalRefunds = walletTitle === 'Blended' ? formatLogoChainMap(formatChainMap(aggregatedRefundsChainMap)) : formatLogoChainMap(aggregatedRefundsChainMap);
+    const totalContributions =  walletTitle.startsWith('Blended') ? formatLogoChainMap(formatChainMap(aggregatedContributionsChainMap)) : formatLogoChainMap(aggregatedContributionsChainMap);
+    const totalRefunds =  walletTitle.startsWith('Blended') ? formatLogoChainMap(formatChainMap(aggregatedRefundsChainMap)) : formatLogoChainMap(aggregatedRefundsChainMap);
     
     return (
 
@@ -188,7 +179,7 @@ export const TransfersTableCell = (memberData, transferTotals) => {
     const savedWallets = Object.entries(memberData)
         .filter(([key]) => key.startsWith('savedWallet'));
 
-    if (savedWallets.length === 0) return <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>No transfers available</Typography>;
+    if (savedWallets.length === 0) return <Typography variant="body2" sx={{ fontFamily: 'Inter Tight, sans-serif' }}>No transfers made</Typography>;
 
     let totalAmount = 0;
 

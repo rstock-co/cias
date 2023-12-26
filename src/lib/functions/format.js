@@ -90,27 +90,12 @@ export const shortenAddress = (address, startLength = 4, endLength = 6) => {
     return `${start} ... ${end}`;
 }
 
-export const formatChainData = (chainData) => {
-    if (chainData) {
-        return Object.entries(chainData)
-            .map(([chain, count]) => `${chain}(${count})`)
-            .join(", ");
-    }
-    return "";
-};
-
 export const formatChainDataString = (transactions, values) => Object.entries(transactions).map(([chain, count]) => `${chain.toUpperCase()}: ${count} transactions, $${values[chain].toFixed(2)} total`)
 
 export const formatChainMap = (chainMap) => 
     chainMap ? Object.entries(chainMap)
         .map(([chain, count]) => `${chain}(${count})`) 
         : "";
-
-export const formatChainArray = (chainMap) => chainMap 
-    ? Object.entries(chainMap)
-    .map(([key, value]) => `${key}(${value})`)
-    .join(", ")
-    : "";
 
 export const formatAggregatedData = (inputData) => {
     if (!inputData) {

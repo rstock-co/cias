@@ -1,7 +1,7 @@
 import "@fontsource/inter-tight";
 import { Box, FormControl , InputAdornment, InputLabel, OutlinedInput, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography  } from '@mui/material';
 import { StyledTableCell, StyledTableRow, WideStyledTableCell, totalRowStyle, totalRowStyleWithBorder } from "./styles";
-import { formatAggregatedData, formatAmountDisplay, formatChainData, formatChainMap, shortenAddress } from "../../lib/functions/format";
+import { formatAggregatedData, formatAmountDisplay, formatChainMap, shortenAddress } from "../../lib/functions/format";
 import { SortAllocationSelect } from "../../elements/dropdowns";
 import Switch from '@mui/material/Switch';
 
@@ -181,9 +181,9 @@ const SavedTable = ({
                                 <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).txns}</WideStyledTableCell>
                             )}
                             <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
-                            <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }} >{formatChainData(row.contributionsChainMap)}</StyledTableCell>
+                            <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }} >{formatChainMap(row.contributionsChainMap)}</StyledTableCell>
                             <StyledTableCell align="center">{formatAmountDisplay(row.refundsAmount)}</StyledTableCell>
-                            <StyledTableCell align="center">{formatChainData(row.refundsChainMap)}</StyledTableCell>
+                            <StyledTableCell align="center">{formatChainMap(row.refundsChainMap)}</StyledTableCell>
 
                         </StyledTableRow>
                     ))}
