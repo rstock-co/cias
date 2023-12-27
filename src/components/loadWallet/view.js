@@ -4,7 +4,7 @@ import { Box, IconButton, Paper, Snackbar, Table, TableBody, TableContainer, Tab
 import { ChainSelect, DateRangeSelect, DirectionSelect, FilterWalletSelect, MoveSelect, TypeSelect, WalletSelect } from '../../elements/dropdowns';
 import { ColorButton, FetchTypeSelect, ToggleChipButton } from '../../elements/buttons';
 import { StyledTableCell, StyledTableHead, StyledTableRow, loadWalletStyles, textGradientStyle } from './styles';
-import { moves, allWallets as wallets } from "../../lib/data";
+import { moves, allDisplayWallets as wallets } from "../../lib/data";
 import AllocationTable from '../allocationTable/';
 import BlendedAllocationTable from '../blendedTable/';
 import ChainCashFlowDialog from '../chainCashFlow/view';

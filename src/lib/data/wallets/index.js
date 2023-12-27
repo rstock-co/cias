@@ -26,6 +26,19 @@ export const {
     ignoreWallets 
 } = mappedWallets;
 
+const displayWallets = {
+    depositWallets,
+    teamWallets,
+    membershipWallets,
+    vcWallets,
+    investmentWallets,
+    contributionWallets,
+    velaWallets,
+    legacyWallets
+};
+
 
 export const allWallets = Object.values(mappedWallets).flat();
+
+export const allDisplayWallets = Object.values(displayWallets).flat(); 
 
