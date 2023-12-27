@@ -1,6 +1,7 @@
 import { StyledTableCell, StyledTableRow, WideStyledTableCell, totalRowStyle, totalRowStyleWithBorder } from './styles';
 import { Table, TableBody, TableHead, TableRow } from '@mui/material';
 import { formatAggregatedData, formatAmountDisplay, formatChainMap, shortenAddress } from '../../../lib/functions/format';
+import { formatLogoChainMap } from '../../../elements/templates/tables';
 
 const SummaryTableHeaderTemplate = ({
     showMemberName, 
@@ -78,9 +79,9 @@ const SummaryTableTotalsRowTemplate = ({
             )}
 
             <StyledTableCell align="center" style={totalRowStyle}>{totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
-            <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatChainMap(aggregatedContributionsChainMap)}</StyledTableCell>
+            <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatLogoChainMap(formatChainMap(aggregatedContributionsChainMap))}</StyledTableCell>
             <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalRefundsAmount)}</StyledTableCell>
-            <StyledTableCell align="center" style={totalRowStyle}>{formatChainMap(aggregatedRefundsChainMap)}</StyledTableCell>
+            <StyledTableCell align="center" style={totalRowStyle}>{formatLogoChainMap(formatChainMap(aggregatedRefundsChainMap))}</StyledTableCell>
         </TableRow>
     )
 
@@ -129,9 +130,9 @@ const SummaryTableTemplate = ({
                         <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).txns}</WideStyledTableCell>
                     )}
                     <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
-                    <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }} >{formatChainMap(row.contributionsChainMap)}</StyledTableCell>
+                    <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }} >{formatLogoChainMap(formatChainMap(row.contributionsChainMap))}</StyledTableCell>
                     <StyledTableCell align="center">{formatAmountDisplay(row.refundsAmount)}</StyledTableCell>
-                    <StyledTableCell align="center">{formatChainMap(row.refundsChainMap)}</StyledTableCell>
+                    <StyledTableCell align="center">{formatLogoChainMap(formatChainMap(row.refundsChainMap))}</StyledTableCell>
 
                 </StyledTableRow>
             ))}

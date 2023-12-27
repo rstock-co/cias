@@ -141,10 +141,8 @@ export const generateSummaryData = (tableData, selectedWallets, fetchType) => {
     Object.values(walletSummaries).forEach(summary => {
         summary.totalContributions = Object.entries(summary.contributionsChainMap)
             .map(([chain, count]) => `${chain}(${count})`)
-            .join(', ');
         summary.totalRefunds = Object.entries(summary.refundsChainMap)
             .map(([chain, count]) => `${chain}(${count})`)
-            .join(', ');
 
         // Remove the chain map objects as they are no longer needed
         delete summary.contributionsChainMap;

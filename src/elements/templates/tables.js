@@ -128,6 +128,8 @@ export const WalletSummary = ({
     totalNetAmount, aggregatedContributionsChainMap, totalContributionsAmount, totalRefundsAmount, aggregatedRefundsChainMap, 
  } = {}) => {
 
+    console.log("aggregatedContributionsChainMap", aggregatedContributionsChainMap)  // not blended:  'arb(73), eth(1), bsc(2)'
+
     const totalContributions =  walletTitle.startsWith('Blended') ? formatLogoChainMap(formatChainMap(aggregatedContributionsChainMap)) : formatLogoChainMap(aggregatedContributionsChainMap);
     const totalRefunds =  walletTitle.startsWith('Blended') ? formatLogoChainMap(formatChainMap(aggregatedRefundsChainMap)) : formatLogoChainMap(aggregatedRefundsChainMap);
     

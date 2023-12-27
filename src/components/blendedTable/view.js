@@ -295,7 +295,7 @@ const BlendedAllocationTable = ({
                                         <StyledTableCell align="center" style={totalRowStyle}>{totalContributionsAmount && formatAmountDisplay(totalContributionsAmount)}</StyledTableCell>
                                         <StyledTableCell align="center" style={totalRowStyleWithBorder}>{formatLogoChainMap(formatChainMap(aggregatedContributionsChainMap))}</StyledTableCell>
                                         <StyledTableCell align="center" style={totalRowStyle}>{formatAmountDisplay(totalRefundsAmount)}</StyledTableCell>
-                                        <StyledTableCell align="center" style={totalRowStyle}>{formatChainMap(aggregatedRefundsChainMap)}</StyledTableCell>
+                                        <StyledTableCell align="center" style={totalRowStyle}>{formatLogoChainMap(formatChainMap(aggregatedRefundsChainMap))}</StyledTableCell>
                                     </TableRow>
                                 )}
 
