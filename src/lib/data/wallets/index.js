@@ -26,19 +26,18 @@ export const {
     ignoreWallets 
 } = mappedWallets;
 
-const displayWallets = {
-    depositWallets,
-    teamWallets,
-    membershipWallets,
-    vcWallets,
-    investmentWallets,
-    contributionWallets,
-    velaWallets,
-    legacyWallets
+const noDisplayWallets = {
+    conversionServiceWallets,
+    stableCoinContracts,
+    tokenContractAddresses,
+    memberWallets,
+    ignoreWallets 
 };
 
+export const allWallets = Object.entries(mappedWallets)
+    .filter(([key]) => key !== 'memberWallets')
+    .flatMap(([, wallets]) => wallets);
 
-export const allWallets = Object.values(mappedWallets).flat();
-
-export const allDisplayWallets = Object.values(displayWallets).flat(); 
+export const displayWallets = allWallets.filter(wallet => 
+    !Object.values(noDisplayWallets).some(category => category.includes(wallet)));
 

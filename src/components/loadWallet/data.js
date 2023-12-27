@@ -65,26 +65,19 @@ const InFlow = {
     }
 };
 
-
 const generateWalletDescription = (flow, to, from, moveName, fromMemberName, toMemberName) => {
     const conditions = flow === 'Out' ? OutFlow : InFlow;
     const teamWallet = teamWallets.find(wallet => wallet.address === to);
     const tokenPurchase = tokenContractAddresses.find(wallet => wallet.address === to);
     const tokenSale = tokenContractAddresses.find(wallet => wallet.address === from);
 
-    for (const condition of Object.values(conditions)) {
-        const params = {
-            to, from, moveName, fromMemberName, toMemberName, teamWallet, tokenPurchase, tokenSale
-        };
-        const result = condition(params);
-        if (result) {
-            return result;
-        }
-    }
+    const params = {
+        to, from, moveName, fromMemberName, toMemberName, teamWallet, tokenPurchase, tokenSale
+    };
 
-    return ''; // Default description if no condition matched
+    const result = Object.values(conditions).find(condition => condition(params));
+    return result ? result(params) : ''; // Default description if no condition matched
 };
-
 
 /**
  * Generate the table data for the main table

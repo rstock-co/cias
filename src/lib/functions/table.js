@@ -155,7 +155,8 @@ export const generateSummaryData = (tableData, selectedWallets, fetchType) => {
 
 // BLENDED TABLE FUNCTIONS
 
-export const processBlendedTableData = (aggregateDataForBlendedTable, tableTransferTotals, grandTotalNet) => Object.entries(aggregateDataForBlendedTable)
+export const processBlendedTableData = (aggregateDataForBlendedTable, tableTransferTotals, grandTotalNet) => 
+    Object.entries(aggregateDataForBlendedTable)
         .map(([memberWallet, data]) => {
             const {baseWallet} = data; 
             const baseWalletContribution = baseWallet ? baseWallet.adjustedNetAmount : 0;
