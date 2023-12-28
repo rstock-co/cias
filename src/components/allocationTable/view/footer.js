@@ -1,6 +1,6 @@
 import { Button, DialogActions }  from "@mui/material";
-import { printBlendedTableToPDF, printTableToPDF } from "../../../lib/functions/actions";
 import { extractTitle } from "../../../lib/functions/format";
+import { printBlendedTableToPDF } from "../../../lib/functions/actions"; // printTableToPDF
 
 const FooterTemplate = ({ 
     savedTableId, 
@@ -51,19 +51,19 @@ const FooterTemplate = ({
                     Save Table
                 </Button>}
             <Button onClick={() => {
-                isAggregated 
-                    ? printBlendedTableToPDF(
+                // isAggregated 
+                    printBlendedTableToPDF(
                         'allocationTable', 
                         sortedAllocationTableData.length > 15 ? 'portrait' : 'landscape', 
                         sortedAllocationTableData.length > 15 ? 'tabloid' : 'letter', 
                         `${extractTitle(dialogTitle)}.pdf`
                     )
-                    : printTableToPDF(
-                        'allocationTable', 
-                        sortedAllocationTableData.length > 15 ? 'portrait' : 'landscape', 
-                        sortedAllocationTableData.length > 15 ? 'tabloid' : 'letter', 
-                        `${extractTitle(dialogTitle)}.pdf`
-                    )
+                    // : printTableToPDF(
+                    //     'allocationTable', 
+                    //     sortedAllocationTableData.length > 15 ? 'portrait' : 'landscape', 
+                    //     sortedAllocationTableData.length > 15 ? 'tabloid' : 'letter', 
+                    //     `${extractTitle(dialogTitle)}.pdf`
+                    // )
             }}>
                 Download PDF
             </Button>

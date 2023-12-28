@@ -15,6 +15,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { copyToClipboard } from '../../lib/functions/actions';
 import { isPoolInvestmentsWallet } from '../../lib/functions/wallets';
 import { propertyMap } from './data';
+import "./styles.css";
 
 const LoadWallet = ({
     // ux.init

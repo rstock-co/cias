@@ -111,6 +111,7 @@ export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrice
                 src={logos[chain]} 
                 alt={`${chain} logo`} 
                 style={{ width: '30px', height: '30px', margin: 'auto' }} 
+                className={`spinner-${chain.toLowerCase()}`} 
             />
         </div>
     );
