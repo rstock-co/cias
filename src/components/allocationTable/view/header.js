@@ -3,6 +3,19 @@ import CustomColorToggle from '../../../elements/toggles/coloredToggle';
 import { SortAllocationSelect } from '../../../elements/dropdowns';
 import { chipStyles } from './styles';
 
+const ShowConversionsTemplate = ({ showConversions, handleToggleConversions }) => (
+    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
+        <Typography component="div" sx={{ fontFamily: 'Inter Tight' }}>
+            Show Conversions
+        </Typography>
+        <CustomColorToggle
+            checked={showConversions}
+            onChange={handleToggleConversions}
+            inputProps={{ 'aria-label': 'Toggle Conversions' }}
+        />
+    </Box>
+)
+
 const ShowTotalsRowTemplate = ({ showHeaderRow, handleToggleHeaderRow }) => (
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
         <Typography component="div" sx={{ fontFamily: 'Inter Tight' }}>
@@ -67,6 +80,8 @@ const AdjustedNetTotalTemplate = ({adjustedNetTotal, handleAdjustedNetTotalChang
 
 const HeaderTemplate = ({
     savedTableId,
+    showConversions,
+    handleToggleConversions,
     showHeaderRow, 
     handleToggleHeaderRow, 
     showMemberName, 
@@ -88,6 +103,8 @@ const HeaderTemplate = ({
             </Box>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', ml: 2 }}>
+            {ShowConversionsTemplate({ showConversions, handleToggleConversions })}
+
             {ShowTotalsRowTemplate({ showHeaderRow, handleToggleHeaderRow })}
 
             {ShowMemberNameTemplate({showMemberName, handleToggleMemberName})}

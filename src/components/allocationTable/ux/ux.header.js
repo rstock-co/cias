@@ -9,6 +9,7 @@ const HeaderUX = ({
     ...props
 } = {}) => {   
 
+    const [showConversions, setShowConversions] = useState(false); 
     const [showMemberName, setShowMemberName] = useState(false);
     const [showHeaderRow, setShowHeaderRow] = useState(true);
     const [adjustedNetTotal, setAdjustedNetTotal] = useState("");
@@ -17,6 +18,10 @@ const HeaderUX = ({
     const [sortBy, setSortBy] = useState("Amount");
     const [isAggregated, setIsAggregated] = useState(false);
 
+    const handleToggleConversions = (event) => {
+        setShowConversions(event.target.checked);
+    };
+    
     const handleToggleMemberName = (event) => {
         setShowMemberName(event.target.checked);
     };
@@ -58,11 +63,13 @@ const HeaderUX = ({
         move,
         ...props,
 
+        showConversions,
         showMemberName,
         showHeaderRow,
         adjustedNetTotal,
         sortBy,
 
+        handleToggleConversions,
         handleToggleMemberName,
         handleToggleHeaderRow,
         handleAdjustedNetTotalChange,

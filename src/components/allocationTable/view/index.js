@@ -4,7 +4,7 @@ import { GenerationDateTemplate, TableTitleTemplate, WalletSummariesTemplate } f
 import FooterTemplate from "./footer";
 import HeaderTemplate from "./header";
 import SaveTableSnackbar from "../../../elements/snackbars";
-import SummaryTableTemplate from "./body";
+import AllocationTableTemplate from "./body";
 
 const AllocationTable = (props = {}) => {
 
@@ -43,7 +43,7 @@ const AllocationTable = (props = {}) => {
 
                         {GenerationDateTemplate({generatedDateString})}
 
-                        {SummaryTableTemplate(props)}
+                        {AllocationTableTemplate(props)}
 
                     </TableContainer>
                 </DialogContent>

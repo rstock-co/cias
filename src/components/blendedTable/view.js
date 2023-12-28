@@ -34,9 +34,11 @@ const BlendedAllocationTable = ({
     adjustedNetTotal,
     generatedDateString,
 
+    showConversions,
     showHeaderRow,
     showMemberName,
     sortBy,
+    handleToggleConversions,
     handleToggleMemberName,
     handleToggleHeaderRow,
     handleAdjustedNetTotalChange,
@@ -84,6 +86,19 @@ const BlendedAllocationTable = ({
                     {/* Hide these elements based on tabIndex (hide when blended table not selected) */}
                     {tabIndex >= filteredBlendedTableIds.length && (
                     <Box sx={{ display: 'flex', alignItems: 'center', ml: 2 }}>
+
+                        {/* Show Conversions */}
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
+                            <Typography component="div" sx={{ fontFamily: 'Inter Tight' }}>
+                                Show Conversions
+                            </Typography>
+                            <CustomColorToggle
+                                checked={showConversions}
+                                onChange={handleToggleConversions}
+                                inputProps={{ 'aria-label': 'Toggle Header Row' }}
+                            />
+                        </Box>
+
                         {/* Show Totals Row */}
                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
                             <Typography component="div" sx={{ fontFamily: 'Inter Tight' }}>

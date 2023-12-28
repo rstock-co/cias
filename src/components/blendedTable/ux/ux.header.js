@@ -12,6 +12,7 @@ const HeaderUX = ({
     ...props
 } = {}) => {   
 
+    const [showConversions, setShowConversions] = useState(false);
     const [showMemberName, setShowMemberName] = useState(false);
     const [showHeaderRow, setShowHeaderRow] = useState(true);
     const [adjustedNetTotal, setAdjustedNetTotal] = useState("");
@@ -35,6 +36,10 @@ const HeaderUX = ({
         const newFilteredIds = blendedTableList.filter(tableId => savedTableIds.includes(tableId));
         setFilteredBlendedTableIds(newFilteredIds);
     }, [blendedTableList, savedTables]); 
+
+    const handleToggleConversions = (event) => {
+        setShowConversions(event.target.checked);
+    }
 
     const handleToggleMemberName = (event) => {
         setShowMemberName(event.target.checked);
@@ -120,12 +125,14 @@ const HeaderUX = ({
         ...props,
         filteredBlendedTableIds,
 
+        showConversions,
         showMemberName,
         showHeaderRow,
         adjustedNetTotal,
         sortBy,
         tabIndex,
 
+        handleToggleConversions,
         handleToggleMemberName,
         handleToggleHeaderRow,
         handleAdjustedNetTotalChange,

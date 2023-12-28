@@ -40,6 +40,7 @@ const FooterTemplate = ({
                             numContributors: sortedAllocationTableData.length, 
                             state: {
                                 adjustedNetTotal: adjustedNetTotal !== "" ? Number(adjustedNetTotal) : totalNetAmount, 
+                                showConversions: false,
                                 showMemberName: false,
                                 showHeaderRow: false,
                                 sortBy: "Amount",

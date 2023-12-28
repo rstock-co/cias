@@ -3,7 +3,7 @@ import { Table, TableBody, TableHead, TableRow } from '@mui/material';
 import { formatAggregatedData, formatAmountDisplay, formatChainMap, shortenAddress } from '../../../lib/functions/format';
 import { formatLogoChainMap } from '../../../elements/templates/tables';
 
-const SummaryTableHeaderTemplate = ({
+const AllocationTableHeaderTemplate = ({
     showMemberName, 
     isAggregated 
 }) => (
@@ -42,7 +42,7 @@ const SummaryTableHeaderTemplate = ({
     </TableHead>
 )
 
-const SummaryTableTotalsRowTemplate = ({
+const AllocationTableTotalsRowTemplate = ({
     showHeaderRow, 
     showMemberName, 
     totalShare, 
@@ -85,9 +85,10 @@ const SummaryTableTotalsRowTemplate = ({
         </TableRow>
     )
 
-const SummaryTableTemplate = ({
+const AllocationTableTemplate = ({
+    isAggregated,
+    showConversions, 
     showMemberName, 
-    isAggregated, 
     showHeaderRow, 
     totalRowStyle, 
     totalShare, 
@@ -103,12 +104,12 @@ const SummaryTableTemplate = ({
     sortedAllocationTableData 
 }) => (
     <Table sx={{ border: 'none', tableLayout: 'auto' }} aria-label="member table">
-        {SummaryTableHeaderTemplate({showMemberName, isAggregated })}
+        {AllocationTableHeaderTemplate({showMemberName, isAggregated })}
 
         {}
         <TableBody>
 
-            {SummaryTableTotalsRowTemplate({showHeaderRow, totalRowStyle, showMemberName, totalShare, totalTxns, adjustedNetTotal, totalNetAmount, isAggregated, totalRowStyleWithBorder, aggregatedTxns, totalContributionsAmount, aggregatedContributionsChainMap, totalRefundsAmount, aggregatedRefundsChainMap})}
+            {AllocationTableTotalsRowTemplate({showHeaderRow, totalRowStyle, showMemberName, totalShare, totalTxns, adjustedNetTotal, totalNetAmount, isAggregated, totalRowStyleWithBorder, aggregatedTxns, totalContributionsAmount, aggregatedContributionsChainMap, totalRefundsAmount, aggregatedRefundsChainMap})}
 
             {sortedAllocationTableData && sortedAllocationTableData.map((row) => (
                 <StyledTableRow key={row.memberWallet} walletdescription={row.walletDescription}>
@@ -140,4 +141,4 @@ const SummaryTableTemplate = ({
     </Table>
 )
 
-export default SummaryTableTemplate;
+export default AllocationTableTemplate;
