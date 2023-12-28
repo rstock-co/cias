@@ -8,4 +8,44 @@
 
 .spinner-bsc {
     filter: drop-shadow(0 0 5px rgb(255, 224, 110)); /* More subtle glow */
+}
+
+/* conversion details */ 
+
+.allocation-summary {
+    font-family: 'Inter Tight', sans-serif; /* Use your preferred font */
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    text-align: right;
+  }
+  
+  .total-usd {
+    font-size: 14px; /* Large text size for total USD */
+    font-family: 'Inter Tight', sans-serif; /* Use your preferred font */
+    font-weight: 500; /* Make the total USD bold */
+    margin-bottom: 0px; /* Spacing below the total USD */
+    margin-top: 7px;
+    color: #000; /* Text color for total USD */
+  }
+  
+  .subtotal-usd {
+    margin-top: 4px;
+    margin-bottom: 0px;
+    font-size: 12px;
+    color: #000; /* Text color for subtotals and conversions */
+  }
+  .eth-conversion,
+  .bnb-conversion {
+    font-size: 12px; /* Text size for subtotals and conversions */
+    margin-top: 4px;
+    margin-bottom: 0px; /* Spacing between items */
+    color: #000; /* Text color for subtotals and conversions */
+  }
+  
+  .conversion-details {
+    font-size: 11px; /* Smaller text size for conversion details */
+    color: #666; /* Grey color for conversion details */
+    margin-top: 0px; /* Spacing above the conversion details */
+    margin-bottom: 7px;
   }

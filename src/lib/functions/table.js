@@ -10,6 +10,7 @@ const getInitialWalletData = () => ({
     refundsAmount: 0,
     refundsChainMap: {},
     walletTxns: {},
+    normalTxnData: []
 });
 
 const initialTotals = () => ({
@@ -25,14 +26,25 @@ const initialTotals = () => ({
 const dataIsNotAvailable = (tableData, selectedWallets) => (tableData.length === 0 || selectedWallets.length === 0);
 const txnIsNotRelevant = walletDescription => !walletDescription.startsWith('Member');
 
-const updateMemberWalletData = (data, flow, amount, chain) => {
+const updateMemberData = (data, flow, chain, amount) => {
+    const type = flow === 'In' ? 'contributions' : 'refunds';
+    data[type]++;
+    data[`${type}ChainMap`][chain] = (data[`${type}ChainMap`][chain] || 0) + 1;
+    data[`${type}Amount`] += amount;
+    data.netAmount += (type === 'contributions' ? amount : -amount);
+    data.txns++;
+};
 
-    const txnType = flow === 'In' ? 'contributions' : 'refunds';
-    data[txnType]++;
-    data[`${txnType}Amount`] += amount;
-    data[`${txnType}ChainMap`][chain] = (data[`${txnType}ChainMap`][chain] || 0) + 1;
-    data.netAmount += (flow === 'In' ? amount : -amount);
-    data.txns ++;
+const updateMemberNormalData = (data, currency, historicalPrice, timestamp, amount, convertedAmount) => {
+    const [conversionDate] = new Date(timestamp).toISOString().split('T'); // Convert timestamp to ISO date format
+
+    data.normalTxnData.push({
+        currency,
+        historicalPrice,
+        conversionDate,
+        amount,
+        convertedAmount
+    });
 };
 
 const updateInvestmentWalletData = (data, investmentWallet, selectedAddresses, selectedWallets, amount, flow) => {
@@ -50,18 +62,25 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
 
     const selectedAddresses = new Set(selectedWallets.map(wallet => wallet.address.toLowerCase()));
 
-    const allocationTableData = tableData.reduce((allocationData, { from, to, flow, walletDescription, amount, chain, memberName }) => {
+    const allocationTableData = tableData.reduce((allocationData, { from, to, flow, walletDescription, amount, chain, memberName, txnType, currency, historicalPrice, timestamp }) => {
         if (txnIsNotRelevant(walletDescription)) {
             return allocationData;
         }
 
         const [memberWallet, investmentWallet] = flow === 'In' ? [from, to] : [to, from];
+        
 
         const memberData = allocationData.find(entry => entry.memberWallet === memberWallet) || {...getInitialWalletData(), memberWallet, memberName};
 
-        updateMemberWalletData(memberData, flow, amount, chain);
-        updateInvestmentWalletData(memberData, investmentWallet, selectedAddresses, selectedWallets, amount, flow);
+        const convertedAmount = txnType === 'normal' ? amount * historicalPrice : amount;
 
+        if (txnType === 'normal') {
+            updateMemberNormalData(memberData, currency, historicalPrice, timestamp, amount, convertedAmount);
+        }
+        
+        updateMemberData(memberData, flow, chain, convertedAmount);
+        updateInvestmentWalletData(memberData, investmentWallet, selectedAddresses, selectedWallets, convertedAmount, flow);
+        
         if (!allocationData.some(entry => entry.memberWallet === memberWallet)) {
             allocationData.push(memberData);
         }
@@ -133,7 +152,7 @@ export const generateSummaryData = (tableData, selectedWallets, fetchType) => {
         const summary = walletSummaries[walletName];
 
         if (summary) {
-            updateMemberWalletData(summary, transaction.flow, transaction.amount, transaction.chain);
+            updateMemberData(summary, transaction.flow, transaction.chain, transaction.amount); 
         }
     });
 

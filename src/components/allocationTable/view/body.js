@@ -1,7 +1,7 @@
 import { StyledTableCell, StyledTableRow, WideStyledTableCell, totalRowStyle, totalRowStyleWithBorder } from './styles';
 import { Table, TableBody, TableHead, TableRow } from '@mui/material';
 import { formatAggregatedData, formatAmountDisplay, formatChainMap, shortenAddress } from '../../../lib/functions/format';
-import { formatLogoChainMap } from '../../../elements/templates/tables';
+import { formatLogoChainMap, ConversionDetailsTemplate } from '../../../elements/templates/tables';
 
 const AllocationTableHeaderTemplate = ({
     showMemberName, 
@@ -102,7 +102,9 @@ const AllocationTableTemplate = ({
     totalRefundsAmount, 
     aggregatedRefundsChainMap, 
     sortedAllocationTableData 
-}) => (
+}) => {
+    console.log("Allocation Table DATA: ", sortedAllocationTableData)
+    return (
     <Table sx={{ border: 'none', tableLayout: 'auto' }} aria-label="member table">
         {AllocationTableHeaderTemplate({showMemberName, isAggregated })}
 
@@ -122,7 +124,13 @@ const AllocationTableTemplate = ({
                         </StyledTableCell>
                     )}
                     <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
-                    <StyledTableCell align="center">{formatAmountDisplay(row.adjustedNetAmount)}</StyledTableCell>
+                    {showConversions ? (
+                        <ConversionDetailsTemplate
+                            totalUSD={row.adjustedNetAmount}
+                            normalTxnData={row.normalTxnData}
+                      />
+                    ) : (
+                    <StyledTableCell align="center">{formatAmountDisplay(row.adjustedNetAmount)}</StyledTableCell>)}
                     {isAggregated && (
                         <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).totalAmounts}</WideStyledTableCell>
                     )}
@@ -139,6 +147,6 @@ const AllocationTableTemplate = ({
             ))}
         </TableBody>
     </Table>
-)
+)}
 
 export default AllocationTableTemplate;
