@@ -250,14 +250,14 @@ export const ConversionDetailsTemplate = ({ totalUSD, contributionTxns, refundTx
             totalUSDAmount += sign * Number(txn.convertedAmount);
         });
 
-        if (totalCurrencyAmount <= 0) return null;
-
+        // Allow for negative total USD amounts
+        const averageHistoricalPrice = totalCurrencyAmount !== 0 ? (totalUSDAmount / totalCurrencyAmount).toFixed(2) : 0;
         const averageDateText = txns.length > 1 ? `(${txns.length} txns)` : `(${txns[0].conversionDate})`;
 
         return {
             totalUSDAmount: totalUSDAmount.toFixed(2),
             totalCurrencyAmount: totalCurrencyAmount.toFixed(4),
-            averageHistoricalPrice: (totalUSDAmount / totalCurrencyAmount).toFixed(2),
+            averageHistoricalPrice,
             averageDateText,
             currency: txns[0].currency
         };
@@ -277,12 +277,23 @@ export const ConversionDetailsTemplate = ({ totalUSD, contributionTxns, refundTx
         </div>
     );
 
+    const ethTotalUSDAmount = ethSummary ? Number(ethSummary.totalUSDAmount) : 0;
+    const bnbTotalUSDAmount = bnbSummary ? Number(bnbSummary.totalUSDAmount) : 0;
+
+    const erc20USDAmount = totalUSD - (ethTotalUSDAmount + bnbTotalUSDAmount);
+
     return (
         <>
             {ethSummary || bnbSummary ? (
                 <div className="allocation-summary">
                     <div className="total-usd">${totalUSD.toFixed(2)}</div>
                     <div className="details-box">
+                        {erc20USDAmount > 1 && (
+                            <div className="subtotal-usd">
+                                ${erc20USDAmount.toFixed(2)} USD
+                            </div>
+                        )}
+
                         {ethSummary && (
                             <div className="eth-conversion">
                                 <div>${ethSummary.totalUSDAmount} ETH</div>
