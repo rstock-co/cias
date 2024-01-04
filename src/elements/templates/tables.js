@@ -237,63 +237,70 @@ export const BaseWalletTableCell = (baseWallet) => (
     </Box>
 );
 
-export const ConversionDetailsTemplate = ({ totalUSD, normalTxnData }) => {
-    // Calculate the ERC20 total USD by subtracting the sum of normal transaction converted amounts from totalUSD
-    const totalNormalTxnUSD = normalTxnData
-      .reduce((total, txn) => total + txn.convertedAmount, 0);
+export const ConversionDetailsTemplate = ({ totalUSD, contributionTxns, refundTxns, type }) => {
 
-    const erc20TotalUSD = Number(totalUSD - totalNormalTxnUSD);
+    const calculateWeightedAverage = (txns) => {
+        if (!txns || txns.length === 0) return null;
 
-    const calculateWeightedAverage = (transactions, currency) => {
-      const filteredTransactions = transactions.filter(txn => txn.currency === currency);
-      if (filteredTransactions.length === 0) return null;
-      
-      let totalCurrencyAmount = 0;
-      let totalUSDAmount = 0;
-      filteredTransactions.forEach(txn => {
-        totalCurrencyAmount += txn.amount;
-        totalUSDAmount += txn.convertedAmount;
-      });
+        let totalCurrencyAmount = 0, totalUSDAmount = 0;
 
-      const averageHistoricalPrice = totalUSDAmount / totalCurrencyAmount;
-      const averageDateText = filteredTransactions.length > 1 ? `(${filteredTransactions.length} days avg)` : `(${filteredTransactions[0].conversionDate})`;
+        txns.forEach(txn => {
+            const sign = txn.type === 'refund' && type === 'all' ? -1 : 1;
+            totalCurrencyAmount += sign * Number(txn.amount);
+            totalUSDAmount += sign * Number(txn.convertedAmount);
+        });
 
-      return {
-        totalUSDAmount: totalUSDAmount.toFixed(2),
-        totalCurrencyAmount: totalCurrencyAmount.toFixed(4),
-        averageHistoricalPrice: averageHistoricalPrice.toFixed(2),
-        averageDateText,
-        currency
-      };
+        if (totalCurrencyAmount <= 0) return null;
+
+        const averageDateText = txns.length > 1 ? `(${txns.length} txns)` : `(${txns[0].conversionDate})`;
+
+        return {
+            totalUSDAmount: totalUSDAmount.toFixed(2),
+            totalCurrencyAmount: totalCurrencyAmount.toFixed(4),
+            averageHistoricalPrice: (totalUSDAmount / totalCurrencyAmount).toFixed(2),
+            averageDateText,
+            currency: txns[0].currency
+        };
     };
 
-    const ethSummary = calculateWeightedAverage(normalTxnData, 'ETH');
-    const bnbSummary = calculateWeightedAverage(normalTxnData, 'BNB');
+    const txnsToUse = type === 'contribution' ? contributionTxns : 
+                      type === 'refund' ? refundTxns : 
+                      [...(contributionTxns || []), ...(refundTxns || [])];
+
+    const ethSummary = calculateWeightedAverage(txnsToUse.filter(txn => txn.currency === 'ETH'));
+    const bnbSummary = calculateWeightedAverage(txnsToUse.filter(txn => txn.currency === 'BNB'));
+
+    const renderConversionDetails = (summary) => (
+        <div className="conversion-details">
+            {summary.totalCurrencyAmount} {summary.currency} @ ${summary.averageHistoricalPrice}
+            {type !== 'all' && ` ${summary.averageDateText}`}
+        </div>
+    );
 
     return (
-      <div className="allocation-summary">
-        <div className="total-usd">${totalUSD.toFixed(2)}</div>
-        {Number(erc20TotalUSD) !== totalUSD && (
-            <div className="subtotal-usd">${erc20TotalUSD.toFixed(2)} USD</div>
+        <>
+            {ethSummary || bnbSummary ? (
+                <div className="allocation-summary">
+                    <div className="total-usd">${totalUSD.toFixed(2)}</div>
+                    <div className="details-box">
+                        {ethSummary && (
+                            <div className="eth-conversion">
+                                <div>${ethSummary.totalUSDAmount} ETH</div>
+                                {renderConversionDetails(ethSummary)}
+                            </div>
+                        )}
+                        {bnbSummary && (
+                            <div className="bnb-conversion">
+                                <div>${bnbSummary.totalUSDAmount} BNB</div>
+                                {renderConversionDetails(bnbSummary)}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            ) : (
+                    <div>${totalUSD.toFixed(2)}</div>
             )}
-        {ethSummary && (
-          <div className="eth-conversion">
-            <div>${ethSummary.totalUSDAmount} ETH</div>
-            <div className="conversion-details">
-              {ethSummary.totalCurrencyAmount} ETH @ ${ethSummary.averageHistoricalPrice} {ethSummary.averageDateText}
-            </div>
-          </div>
-        )}
-        {bnbSummary && (
-          <div className="bnb-conversion">
-            <div>${bnbSummary.totalUSDAmount} BNB</div>
-            <div className="conversion-details">
-              {bnbSummary.totalCurrencyAmount} BNB @ ${bnbSummary.averageHistoricalPrice} {bnbSummary.averageDateText}
-            </div>
-          </div>
-        )}
-      </div>
+        </>
     );
 };
 
-  

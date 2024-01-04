@@ -1,7 +1,7 @@
+import { ConversionDetailsTemplate, formatLogoChainMap } from '../../../elements/templates/tables';
 import { StyledTableCell, StyledTableRow, WideStyledTableCell, totalRowStyle, totalRowStyleWithBorder } from './styles';
 import { Table, TableBody, TableHead, TableRow } from '@mui/material';
 import { formatAggregatedData, formatAmountDisplay, formatChainMap, shortenAddress } from '../../../lib/functions/format';
-import { formatLogoChainMap, ConversionDetailsTemplate } from '../../../elements/templates/tables';
 
 const AllocationTableHeaderTemplate = ({
     showMemberName, 
@@ -124,23 +124,53 @@ const AllocationTableTemplate = ({
                         </StyledTableCell>
                     )}
                     <StyledTableCell align="center">{(row.share * 100).toFixed(2)}%</StyledTableCell>
+
                     {showConversions ? (
+                        <StyledTableCell align="center">
                         <ConversionDetailsTemplate
                             totalUSD={row.adjustedNetAmount}
-                            normalTxnData={row.normalTxnData}
+                            refundTxns={row.normalRefundTxns}
+                            contributionTxns={row.normalContributionTxns}
+                            type={'all'}
                       />
-                    ) : (
-                    <StyledTableCell align="center">{formatAmountDisplay(row.adjustedNetAmount)}</StyledTableCell>)}
+                      </StyledTableCell>
+                    ) : ( <StyledTableCell align="center">{formatAmountDisplay(row.adjustedNetAmount)}</StyledTableCell>) }
+                    
                     {isAggregated && (
                         <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).totalAmounts}</WideStyledTableCell>
                     )}
+
                     <StyledTableCell align="center" style={{ borderRight: isAggregated ? "none" : "1px solid #b8b8b8" }}>{row.txns}</StyledTableCell>
+
                     {isAggregated && (
                         <WideStyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }}>{formatAggregatedData(row.walletTxns).txns}</WideStyledTableCell>
                     )}
-                    <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell>
+
+                    {showConversions ? (
+                        <StyledTableCell align="center">
+                        <ConversionDetailsTemplate
+                            totalUSD={row.contributionsAmount}
+                            normalRe={row.normalRefundTxns}
+                            contributionTxns={row.normalContributionTxns}
+                            type={'contribution'}
+                        />
+                        </StyledTableCell>
+                    ) : ( <StyledTableCell align="center">{formatAmountDisplay(row.contributionsAmount)}</StyledTableCell> ) }
+
                     <StyledTableCell align="center" style={{ borderRight: "1px solid #b8b8b8" }} >{formatLogoChainMap(formatChainMap(row.contributionsChainMap))}</StyledTableCell>
-                    <StyledTableCell align="center">{formatAmountDisplay(row.refundsAmount)}</StyledTableCell>
+
+                    {showConversions ? (
+                        <StyledTableCell align="center">
+                            {<ConversionDetailsTemplate
+                                totalUSD={row.refundsAmount}
+                                refundTxns={row.normalRefundTxns}
+                                contributionTxns={row.normalContributionTxns}
+                                type={'refund'}
+                            />}
+                        </StyledTableCell>
+                    
+                    ) : ( <StyledTableCell align="center">{formatAmountDisplay(row.refundsAmount)}</StyledTableCell> ) }
+
                     <StyledTableCell align="center">{formatLogoChainMap(formatChainMap(row.refundsChainMap))}</StyledTableCell>
 
                 </StyledTableRow>

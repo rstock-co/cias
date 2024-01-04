@@ -37,7 +37,7 @@ const AllocationTable = (props = {}) => {
                 <DialogContent style={{ overflowX: 'auto' }}>
                     <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none',  }}>
 
-                        {TableTitleTemplate({ dialogTitle })}
+                        {TableTitleTemplate({dialogTitle})}
 
                         {WalletSummariesTemplate({summaryData})}
 

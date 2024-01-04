@@ -17,15 +17,28 @@
     width: 100%;
     margin: 0 auto;
     padding: 0;
-    text-align: right;
+    text-align: center;
   }
+
+  .details-box {
+    background-color: #ffffff; /* Slight color */
+    border-radius: 8px; /* Rounded corners */
+    /* width: 77%; */
+    padding: 0 5px;
+    margin: 0 auto; /* Auto margins for horizontal centering */
+    margin-bottom: 10px; /* Keep the bottom margin as it was */
+    font-size: 16px; /* Adjust as necessary */
+    display: inline-block; 
+    border: 1px solid #dadada; /* Optional: adds a border */
+  }
+  
   
   .total-usd {
     font-size: 14px; /* Large text size for total USD */
     font-family: 'Inter Tight', sans-serif; /* Use your preferred font */
     font-weight: 500; /* Make the total USD bold */
-    margin-bottom: 0px; /* Spacing below the total USD */
-    margin-top: 7px;
+    margin-bottom: 5px; /* Spacing below the total USD */
+    margin-top: 10px;
     color: #000; /* Text color for total USD */
   }
   
@@ -48,4 +61,26 @@
     color: #666; /* Grey color for conversion details */
     margin-top: 0px; /* Spacing above the conversion details */
     margin-bottom: 7px;
+  }
+
+  .parent-container {
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Vertical alignment */
+    justify-content: center; /* Horizontal alignment */
+    min-height: 100%;
+  }
+
+  .regular-font {
+    display: flex; /* Enables flexbox */
+    align-items: center; /* Vertical alignment */
+    justify-content: center; /* Horizontal alignment */
+    font-size: 14px; /* Adjust as necessary */
+    font-weight: normal; /* Regular font weight */
+    font-family: 'Inter Tight, sans-serif';
+    color: #000; /* Text color */
+    text-align: center; /* Center the text */
+    width: 100%; /* Ensure it fills the width of its parent if necessary */
+    height: 100%; /* Ensure it fills the height of its parent if necessary */
+    line-height: 1.1;
+    padding: '13px 22px';
   }
