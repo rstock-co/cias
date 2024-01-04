@@ -26,7 +26,7 @@
     /* width: 77%; */
     padding: 0 5px;
     margin: 0 auto; /* Auto margins for horizontal centering */
-    margin-bottom: 10px; /* Keep the bottom margin as it was */
+    margin-bottom: 0px; /* Keep the bottom margin as it was */
     font-size: 16px; /* Adjust as necessary */
     display: inline-block; 
     border: 1px solid #dadada; /* Optional: adds a border */
@@ -38,7 +38,7 @@
     font-family: 'Inter Tight', sans-serif; /* Use your preferred font */
     font-weight: 500; /* Make the total USD bold */
     margin-bottom: 5px; /* Spacing below the total USD */
-    margin-top: 10px;
+    margin-top: 0px;
     color: #000; /* Text color for total USD */
   }
   
