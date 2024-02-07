@@ -1,10 +1,10 @@
 import "@fontsource/inter-tight";
 import { Dialog, DialogContent, Paper, TableContainer } from "@mui/material";
 import { GenerationDateTemplate, TableTitleTemplate, WalletSummariesTemplate } from "./summary";
+import AllocationTableTemplate from "./body";
 import FooterTemplate from "./footer";
 import HeaderTemplate from "./header";
 import SaveTableSnackbar from "../../../elements/snackbars";
-import AllocationTableTemplate from "./body";
 
 const AllocationTable = (props = {}) => {
 
@@ -35,7 +35,7 @@ const AllocationTable = (props = {}) => {
                 {HeaderTemplate(props)}
 
                 <DialogContent style={{ overflowX: 'auto' }}>
-                    <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none',  }}>
+                    <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none' }}>
 
                         {TableTitleTemplate({dialogTitle})}
 

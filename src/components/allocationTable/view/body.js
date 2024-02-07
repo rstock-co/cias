@@ -106,9 +106,9 @@ const AllocationTableTemplate = ({
     console.log("Allocation Table DATA: ", sortedAllocationTableData)
     return (
     <Table sx={{ border: 'none', tableLayout: 'auto' }} aria-label="member table">
+        
         {AllocationTableHeaderTemplate({showMemberName, isAggregated })}
 
-        {}
         <TableBody>
 
             {AllocationTableTotalsRowTemplate({showHeaderRow, totalRowStyle, showMemberName, totalShare, totalTxns, adjustedNetTotal, totalNetAmount, isAggregated, totalRowStyleWithBorder, aggregatedTxns, totalContributionsAmount, aggregatedContributionsChainMap, totalRefundsAmount, aggregatedRefundsChainMap})}

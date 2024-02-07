@@ -122,8 +122,51 @@ export const calculateTotals = (data) => {
     }, initialTotals());
 };
 
-export const generateSummaryData = (tableData, selectedWallets, fetchType) => {
+// export const generateSummaryData = (tableData, selectedWallets, fetchType) => {
 
+//     // Initialize summaries for each selected wallet
+//     const walletSummaries = selectedWallets.reduce((acc, wallet) => {
+//         acc[wallet.name] = {
+//             walletName: wallet.name,
+//             fetchType,
+//             netAmount: 0,
+//             contributions: 0,
+//             contributionsAmount: 0,
+//             contributionsChainMap: {},
+//             refunds: 0,
+//             refundsAmount: 0,
+//             refundsChainMap: {},
+//             txns: 0
+//         };
+//         return acc;
+//     }, {});
+
+//     // Process each transaction
+//     tableData.forEach(transaction => {
+//         if (txnIsNotRelevant(transaction.walletDescription)) return;
+
+//         const {walletName} = transaction;
+//         const summary = walletSummaries[walletName];
+
+//         if (summary) updateMemberData(summary, transaction.flow, transaction.chain, transaction.amount); 
+//     });
+
+//     // Convert chain map counts to strings
+//     Object.values(walletSummaries).forEach(summary => {
+//         summary.totalContributions = Object.entries(summary.contributionsChainMap)
+//             .map(([chain, count]) => `${chain}(${count})`)
+//         summary.totalRefunds = Object.entries(summary.refundsChainMap)
+//             .map(([chain, count]) => `${chain}(${count})`)
+
+//         // Remove the chain map objects as they are no longer needed
+//         delete summary.contributionsChainMap;
+//         delete summary.refundsChainMap;
+//     });
+
+//     return Object.values(walletSummaries);
+// }
+
+export const generateSummaryData = (tableData, selectedWallets, fetchType) => {
     // Initialize summaries for each selected wallet
     const walletSummaries = selectedWallets.reduce((acc, wallet) => {
         acc[wallet.name] = {
@@ -145,26 +188,36 @@ export const generateSummaryData = (tableData, selectedWallets, fetchType) => {
     tableData.forEach(transaction => {
         if (txnIsNotRelevant(transaction.walletDescription)) return;
 
-        const {walletName} = transaction;
+        const { walletName, flow, chain, amount, currency, historicalPrice, txnType } = transaction;
         const summary = walletSummaries[walletName];
 
-        if (summary) updateMemberData(summary, transaction.flow, transaction.chain, transaction.amount); 
+        if (!summary) return;
+
+        // Calculate USD amount for "normal" transactions using historicalPrice
+        const isNormalTransaction = txnType === "normal" && currency !== "USD";
+        const usdAmount = isNormalTransaction && historicalPrice ? amount * historicalPrice : amount;
+
+        // Update the summary for the corresponding wallet
+        const type = flow === 'In' ? 'contributions' : 'refunds';
+        summary[type]++;
+        summary[`${type}ChainMap`][chain] = (summary[`${type}ChainMap`][chain] || 0) + 1;
+        summary[`${type}Amount`] += usdAmount;
+        summary.netAmount += (flow === 'In' ? usdAmount : -usdAmount);
+        summary.txns++;
     });
 
     // Convert chain map counts to strings
     Object.values(walletSummaries).forEach(summary => {
         summary.totalContributions = Object.entries(summary.contributionsChainMap)
-            .map(([chain, count]) => `${chain}(${count})`)
+            .map(([chain, count]) => `${chain}(${count})`).join(', ');
         summary.totalRefunds = Object.entries(summary.refundsChainMap)
-            .map(([chain, count]) => `${chain}(${count})`)
-
-        // Remove the chain map objects as they are no longer needed
-        delete summary.contributionsChainMap;
-        delete summary.refundsChainMap;
+            .map(([chain, count]) => `${chain}(${count})`).join(', ');
     });
 
     return Object.values(walletSummaries);
-}
+};
+
+
 
 
 // BLENDED TABLE FUNCTIONS

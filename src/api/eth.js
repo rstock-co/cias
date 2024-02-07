@@ -7,7 +7,7 @@ const ETH = {
     chain: 'eth',
     txnDateRange: {
         startDate: '2023-01-01',
-        endDate: '2023-12-31'
+        endDate: '2024-02-07'
     },
     conversionCurrency: 'usd',
     currencyName: 'eth',

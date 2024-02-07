@@ -21,7 +21,6 @@ const logos = {
     </Box>
 );
 
-
 export const TransferWalletSummary = ({ transferTxnsToBlend, transferTotal, walletTitle, walletNumber }) => {
 
     const filterTxns = (tableId, transferTxnsToBlend) => Object.entries(transferTxnsToBlend)
@@ -134,48 +133,47 @@ export const WalletSummary = ({
     const totalRefunds =  walletTitle.startsWith('Blended') ? formatLogoChainMap(formatChainMap(aggregatedRefundsChainMap)) : formatLogoChainMap(aggregatedRefundsChainMap);
     
     return (
+        <Box sx={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '16px', marginRight: '40px', marginBottom: 0 }}>
+            <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'flex-start' }}>
+                {walletType === 'Blended' ? 'Base Wallet' : `Wallet # ${id + 1}`}
+                {walletTitle.includes('|') && (
+                    <Typography 
+                        component="span" 
+                        sx={{ 
+                            fontFamily: 'Inter Tight, sans-serif', 
+                            color: "#808080", 
+                            fontSize: '0.6em', 
+                            marginLeft: '0.5em', 
+                            alignSelf: 'flex-start',
+                            textShadow: `0 0 10px #097c8f, 0 0 20px #097c8f` // Adjust the glow effect here
+                    }}>
+                        [*Aggregated]
+                    </Typography>
+                
+                )}
+            </Typography>
 
-    <Box sx={{ fontFamily: 'Inter Tight, sans-serif', fontSize: '16px', marginRight: '40px', marginBottom: 0 }}>
-        <Typography variant="h5" component="h1" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'flex-start' }}>
-            {walletType === 'Blended' ? 'Base Wallet' : `Wallet # ${id + 1}`}
-            {walletTitle.includes('|') && (
-                <Typography 
-                    component="span" 
-                    sx={{ 
-                        fontFamily: 'Inter Tight, sans-serif', 
-                        color: "#808080", 
-                        fontSize: '0.6em', 
-                        marginLeft: '0.5em', 
-                        alignSelf: 'flex-start',
-                        textShadow: `0 0 10px #097c8f, 0 0 20px #097c8f` // Adjust the glow effect here
-                }}>
-                    [*Aggregated]
-                </Typography>
-            
-            )}
-        </Typography>
+            <Typography sx={{ fontSize: '20px', color: '#097c8f', fontFamily: 'Inter Tight, sans-serif'}}>
+                {extractTitle(walletTitle)}
+            </Typography>
 
-        <Typography sx={{ fontSize: '20px', color: '#097c8f', fontFamily: 'Inter Tight, sans-serif'}}>
-            {extractTitle(walletTitle)}
-        </Typography>
+            <Typography sx={{ mb: 2, fontSize: '18px', fontFamily: 'Inter Tight, sans-serif' }}>
+                Total Net Amount:&nbsp;&nbsp;
+                <span style={{ color: '#097c8f' }}>
+                    {formatAmountDisplay(totalNetAmount, fetchType)}
+                </span>
+            </Typography>
 
-        <Typography sx={{ mb: 2, fontSize: '18px', fontFamily: 'Inter Tight, sans-serif' }}>
-            Total Net Amount:&nbsp;&nbsp;
-            <span style={{ color: '#097c8f' }}>
-                {formatAmountDisplay(totalNetAmount, fetchType)}
-            </span>
-        </Typography>
+            <Box mb={2} mt={2}>
+                <SummaryLine label="Total Contribution Txns:" value={totalContributions} />
+                <SummaryLine label="Total Contributions Amount:" value={formatAmountDisplay(totalContributionsAmount, fetchType)} />
+                <SummaryLine label="Total Refund Txns:" value={totalRefunds ? totalRefunds : 0} />
+                <SummaryLine label="Total Refunds Amount:" value={formatAmountDisplay(totalRefundsAmount, fetchType)} />
 
-        <Box mb={2} mt={2}>
-            <SummaryLine label="Total Contribution Txns:" value={totalContributions} />
-            <SummaryLine label="Total Contributions Amount:" value={formatAmountDisplay(totalContributionsAmount, fetchType)} />
-            <SummaryLine label="Total Refund Txns:" value={totalRefunds ? totalRefunds : 0} />
-            <SummaryLine label="Total Refunds Amount:" value={formatAmountDisplay(totalRefundsAmount, fetchType)} />
-
+            </Box>
         </Box>
-    </Box>
-);
-            };
+    );
+};
 
 export const TransfersTableCell = (memberData, transferTotals) => {
     const savedWallets = Object.entries(memberData)
