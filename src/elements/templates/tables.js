@@ -241,19 +241,20 @@ export const ConversionDetailsTemplate = ({ totalUSD, contributionTxns, refundTx
 
     const calculateWeightedAverage = (txns) => {
         if (!txns || txns.length === 0) return null;
-
+    
         let totalCurrencyAmount = 0, totalUSDAmount = 0;
-
+    
         txns.forEach(txn => {
             const sign = txn.type === 'refund' && type === 'all' ? -1 : 1;
             totalCurrencyAmount += sign * Number(txn.amount);
-            totalUSDAmount += sign * Number(txn.convertedAmount);
+            totalUSDAmount += sign * Number(txn.usdAmount); // Ensure this uses the correct property as per your data
         });
-
-        // Allow for negative total USD amounts
-        const averageHistoricalPrice = totalCurrencyAmount !== 0 ? (totalUSDAmount / totalCurrencyAmount).toFixed(2) : 0;
+    
+        if (totalUSDAmount === 0) return null; // Return null if there's no meaningful USD amount
+    
+        const averageHistoricalPrice = totalCurrencyAmount !== 0 ? (totalUSDAmount / totalCurrencyAmount).toFixed(2) : 'N/A';
         const averageDateText = txns.length > 1 ? `(${txns.length} txns)` : `(${txns[0].conversionDate})`;
-
+    
         return {
             totalUSDAmount: totalUSDAmount.toFixed(2),
             totalCurrencyAmount: totalCurrencyAmount.toFixed(4),
