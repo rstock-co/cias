@@ -128,6 +128,7 @@ export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrice
     const memberName = fromMemberName || toMemberName;
 
     const historicalPrice = txnType === 'normal' ? getHistoricalPrice(currency, timestamp, historicalBNBPrices, historicalETHPrices) : 'n/a';
+    const convertedAmount = txnType === 'normal' ? parseFloat(amount) * parseFloat(historicalPrice) : 'n/a';
 
     return {
 
@@ -152,7 +153,8 @@ export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrice
         amount,
         memberName,
         moveName,
-        historicalPrice
+        historicalPrice,
+        convertedAmount
     }
 };
 

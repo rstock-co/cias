@@ -270,18 +270,18 @@ export const ConversionDetailsTemplate = ({ totalUSD, contributionTxns, refundTx
     const ethSummary = calculateWeightedAverage(txnsToUse.filter(txn => txn.currency === 'ETH'));
     const bnbSummary = calculateWeightedAverage(txnsToUse.filter(txn => txn.currency === 'BNB'));
 
+    const ethTotalUSDAmount = ethSummary ? Number(ethSummary.totalUSDAmount) : 0;
+    const bnbTotalUSDAmount = bnbSummary ? Number(bnbSummary.totalUSDAmount) : 0;
+    
+    const erc20USDAmount = totalUSD - (ethTotalUSDAmount + bnbTotalUSDAmount);
+    
     const renderConversionDetails = (summary) => (
         <div className="conversion-details">
             {summary.totalCurrencyAmount} {summary.currency} @ ${summary.averageHistoricalPrice}
             {type !== 'all' && ` ${summary.averageDateText}`}
         </div>
     );
-
-    const ethTotalUSDAmount = ethSummary ? Number(ethSummary.totalUSDAmount) : 0;
-    const bnbTotalUSDAmount = bnbSummary ? Number(bnbSummary.totalUSDAmount) : 0;
-
-    const erc20USDAmount = totalUSD - (ethTotalUSDAmount + bnbTotalUSDAmount);
-
+    
     return (
         <>
             {ethSummary || bnbSummary ? (
