@@ -239,37 +239,37 @@ export const BaseWalletTableCell = (baseWallet) => (
 
 export const ConversionDetailsTemplate = ({ totalUSD, contributionTxns, refundTxns, type }) => {
 
-    const calculateWeightedAverage = (txns) => {
-        if (!txns || txns.length === 0) return null;
+    const calculateWeightedAverageForCurrency = (currency) => {
+        const txns = [...(contributionTxns || []), ...(refundTxns || [])].filter(txn => txn.currency === currency);
+        if (!txns.length) return null;
 
         let totalCurrencyAmount = 0, totalUSDAmount = 0;
 
         txns.forEach(txn => {
             const sign = txn.type === 'refund' && type === 'all' ? -1 : 1;
             totalCurrencyAmount += sign * Number(txn.amount);
-            totalUSDAmount += sign * Number(txn.convertedAmount);
+            totalUSDAmount += sign * Number(txn.usdAmount);
         });
 
-        // Allow for negative total USD amounts
-        const averageHistoricalPrice = totalCurrencyAmount !== 0 ? (totalUSDAmount / totalCurrencyAmount).toFixed(2) : 0;
-        const averageDateText = txns.length > 1 ? `(${txns.length} txns)` : `(${txns[0].conversionDate})`;
+        if (totalUSDAmount === 0) return null;
 
         return {
             totalUSDAmount: totalUSDAmount.toFixed(2),
             totalCurrencyAmount: totalCurrencyAmount.toFixed(4),
-            averageHistoricalPrice,
-            averageDateText,
-            currency: txns[0].currency
+            averageHistoricalPrice: totalCurrencyAmount !== 0 ? (totalUSDAmount / totalCurrencyAmount).toFixed(2) : 'N/A',
+            averageDateText: txns.length > 1 ? `(${txns.length} txns)` : `(${txns[0].conversionDate})`,
+            currency
         };
     };
 
-    const txnsToUse = type === 'contribution' ? contributionTxns : 
-                      type === 'refund' ? refundTxns : 
-                      [...(contributionTxns || []), ...(refundTxns || [])];
+    // Dynamically calculate summaries for all involved currencies
+    const currencies = ['ETH', 'BNB']; // Extend this array to include other currencies as needed
+    const summaries = currencies.map(calculateWeightedAverageForCurrency).filter(Boolean);
 
-    const ethSummary = calculateWeightedAverage(txnsToUse.filter(txn => txn.currency === 'ETH'));
-    const bnbSummary = calculateWeightedAverage(txnsToUse.filter(txn => txn.currency === 'BNB'));
+    const totalOtherUSDAmount = summaries.reduce((acc, summary) => acc + Number(summary.totalUSDAmount), 0);
+    const erc20USDAmount = totalUSD - totalOtherUSDAmount;
 
+    // Render conversion details for a given summary
     const renderConversionDetails = (summary) => (
         <div className="conversion-details">
             {summary.totalCurrencyAmount} {summary.currency} @ ${summary.averageHistoricalPrice}
@@ -277,41 +277,24 @@ export const ConversionDetailsTemplate = ({ totalUSD, contributionTxns, refundTx
         </div>
     );
 
-    const ethTotalUSDAmount = ethSummary ? Number(ethSummary.totalUSDAmount) : 0;
-    const bnbTotalUSDAmount = bnbSummary ? Number(bnbSummary.totalUSDAmount) : 0;
-
-    const erc20USDAmount = totalUSD - (ethTotalUSDAmount + bnbTotalUSDAmount);
-
     return (
         <>
-            {ethSummary || bnbSummary ? (
+            {summaries.length ? (
                 <div className="allocation-summary">
                     <div className="total-usd">${totalUSD.toFixed(2)}</div>
                     <div className="details-box">
-                        {erc20USDAmount > 1 && (
-                            <div className="subtotal-usd">
-                                ${erc20USDAmount.toFixed(2)} USD
+                        {erc20USDAmount > 1 && <div className="subtotal-usd">${erc20USDAmount.toFixed(2)} USD</div>}
+                        {summaries.map(summary => (
+                            <div key={summary.currency} className={`${summary.currency.toLowerCase()}-conversion`}>
+                                <div>${summary.totalUSDAmount} {summary.currency}</div>
+                                {renderConversionDetails(summary)}
                             </div>
-                        )}
-
-                        {ethSummary && (
-                            <div className="eth-conversion">
-                                <div>${ethSummary.totalUSDAmount} ETH</div>
-                                {renderConversionDetails(ethSummary)}
-                            </div>
-                        )}
-                        {bnbSummary && (
-                            <div className="bnb-conversion">
-                                <div>${bnbSummary.totalUSDAmount} BNB</div>
-                                {renderConversionDetails(bnbSummary)}
-                            </div>
-                        )}
+                        ))}
                     </div>
                 </div>
             ) : (
-                    <div>${totalUSD.toFixed(2)}</div>
+                <div>${totalUSD.toFixed(2)}</div>
             )}
         </>
     );
 };
-

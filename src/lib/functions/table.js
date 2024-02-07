@@ -36,53 +36,20 @@ const updateMemberData = (data, flow, chain, amount) => {
     data.txns++;
 };
 
-const updateMemberNormalData = (memberData, currency, historicalPrice, timestamp, amount, convertedAmount, type) => {
+const updateMemberNormalData = (memberData, currency, historicalPrice, timestamp, amount, usdAmount, type) => {
     const conversionDate = new Date(timestamp).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
     const transaction = {
         currency,
         historicalPrice,
         conversionDate,
         amount,
-        convertedAmount,
+        usdAmount,
         type
     };
 
-    console.log("=====  XXXXXX  ======");
-    console.log("transaction: ", transaction);
-
     const key = type === 'contribution' ? 'normalContributionTxns' : 'normalRefundTxns';
     memberData[key].push(transaction);
-    console.log("memberData: ", memberData);
 };
-
-// const updateMemberNormalData = (memberData, currency, historicalPrice, timestamp, amount, convertedAmount, type) => {
-//     // Ensure type is either 'contribution' or 'refund'
-//     if (type !== 'contribution' && type !== 'refund') {
-//         console.error('Invalid transaction type:', type);
-//         return;
-//     }
-
-//     const conversionDate = new Date(timestamp).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-//     const transaction = {
-//         currency,
-//         historicalPrice,
-//         conversionDate,
-//         amount,
-//         convertedAmount,
-//         type
-//     };
-
-//     // Debugging output
-//     console.log(`Adding transaction to ${type}:`, transaction);
-
-//     memberData[`normal${type}Txns`] = memberData[`normal${type}Txns`] || [];
-//     memberData[`normal${type}Txns`].push(transaction);
-
-//     // Debugging output
-//     console.log(`Updated member data for ${type}:`, memberData[`${type}Txns`]);
-// };
-
-
 
 const updateInvestmentWalletData = (data, investmentWallet, selectedAddresses, selectedWallets, amount, flow) => {
     if (selectedAddresses.has(investmentWallet)) {
@@ -99,19 +66,19 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
 
     const selectedAddresses = new Set(selectedWallets.map(wallet => wallet.address.toLowerCase()));
 
-    const allocationTableData = tableData.reduce((allocationData, { from, to, flow, walletDescription, amount, chain, memberName, txnType, currency, historicalPrice, timestamp }) => {
+    const allocationTableData = tableData.reduce((allocationData, { from, to, flow, walletDescription, amount, chain, memberName, txnType, currency, historicalPrice, convertedAmount, timestamp }) => {
         if (txnIsNotRelevant(walletDescription)) return allocationData;
 
         const [memberWallet, investmentWallet] = flow === 'In' ? [from, to] : [to, from];
         
         const memberData = allocationData.find(entry => entry.memberWallet === memberWallet) || {...getInitialWalletData(), memberWallet, memberName};
 
-        const convertedAmount = txnType === 'normal' ? amount * historicalPrice : amount;
+        const usdAmount = txnType === 'normal' ? convertedAmount : amount;
 
-        if (txnType === 'normal') updateMemberNormalData(memberData, currency, historicalPrice, timestamp, amount, convertedAmount, flow === 'In' ? 'contribution' : 'refund');
+        if (txnType === 'normal') updateMemberNormalData(memberData, currency, historicalPrice, timestamp, amount, usdAmount, flow === 'In' ? 'contribution' : 'refund');
         
-        updateMemberData(memberData, flow, chain, convertedAmount);
-        updateInvestmentWalletData(memberData, investmentWallet, selectedAddresses, selectedWallets, convertedAmount, flow);
+        updateMemberData(memberData, flow, chain, usdAmount);
+        updateInvestmentWalletData(memberData, investmentWallet, selectedAddresses, selectedWallets, usdAmount, flow);
         
         if (!allocationData.some(entry => entry.memberWallet === memberWallet)) allocationData.push(memberData);
 
