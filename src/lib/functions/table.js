@@ -122,50 +122,6 @@ export const calculateTotals = (data) => {
     }, initialTotals());
 };
 
-// export const generateSummaryData = (tableData, selectedWallets, fetchType) => {
-
-//     // Initialize summaries for each selected wallet
-//     const walletSummaries = selectedWallets.reduce((acc, wallet) => {
-//         acc[wallet.name] = {
-//             walletName: wallet.name,
-//             fetchType,
-//             netAmount: 0,
-//             contributions: 0,
-//             contributionsAmount: 0,
-//             contributionsChainMap: {},
-//             refunds: 0,
-//             refundsAmount: 0,
-//             refundsChainMap: {},
-//             txns: 0
-//         };
-//         return acc;
-//     }, {});
-
-//     // Process each transaction
-//     tableData.forEach(transaction => {
-//         if (txnIsNotRelevant(transaction.walletDescription)) return;
-
-//         const {walletName} = transaction;
-//         const summary = walletSummaries[walletName];
-
-//         if (summary) updateMemberData(summary, transaction.flow, transaction.chain, transaction.amount); 
-//     });
-
-//     // Convert chain map counts to strings
-//     Object.values(walletSummaries).forEach(summary => {
-//         summary.totalContributions = Object.entries(summary.contributionsChainMap)
-//             .map(([chain, count]) => `${chain}(${count})`)
-//         summary.totalRefunds = Object.entries(summary.refundsChainMap)
-//             .map(([chain, count]) => `${chain}(${count})`)
-
-//         // Remove the chain map objects as they are no longer needed
-//         delete summary.contributionsChainMap;
-//         delete summary.refundsChainMap;
-//     });
-
-//     return Object.values(walletSummaries);
-// }
-
 export const generateSummaryData = (tableData, selectedWallets, fetchType) => {
     // Initialize summaries for each selected wallet
     const walletSummaries = selectedWallets.reduce((acc, wallet) => {

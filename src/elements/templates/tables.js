@@ -237,17 +237,13 @@ export const BaseWalletTableCell = (baseWallet) => (
 
 export const ConversionDetailsTemplate = ({ totalUSD, contributionTxns, refundTxns, type }) => {
 
-    const calculateWeightedAverageForCurrency = (currency) => {
-        const txns = [...(contributionTxns || []), ...(refundTxns || [])].filter(txn => txn.currency === currency);
-        if (!txns.length) return null;
+    const processTxns = (txns, currency) => {
 
-        let totalCurrencyAmount = 0, totalUSDAmount = 0;
+        const filteredTxns = txns.filter(txn => txn.currency === currency);
+        if (filteredTxns.length === 0) return null;
 
-        txns.forEach(txn => {
-            const sign = txn.type === 'refund' && type === 'all' ? -1 : 1;
-            totalCurrencyAmount += sign * Number(txn.amount);
-            totalUSDAmount += sign * Number(txn.usdAmount);
-        });
+        const totalCurrencyAmount = filteredTxns.reduce((acc, txn) => acc + Number(txn.amount), 0);
+        const totalUSDAmount = filteredTxns.reduce((acc, txn) => acc + Number(txn.usdAmount), 0);
 
         if (totalUSDAmount === 0) return null;
 
@@ -262,12 +258,33 @@ export const ConversionDetailsTemplate = ({ totalUSD, contributionTxns, refundTx
 
     // Dynamically calculate summaries for all involved currencies
     const currencies = ['ETH', 'BNB']; // Extend this array to include other currencies as needed
-    const summaries = currencies.map(calculateWeightedAverageForCurrency).filter(Boolean);
 
-    const totalOtherUSDAmount = summaries.reduce((acc, summary) => acc + Number(summary.totalUSDAmount), 0);
-    const erc20USDAmount = totalUSD - totalOtherUSDAmount;
+    // Process transactions based on type
+    let contributions = type !== 'refund' ? currencies.map(currency => processTxns(contributionTxns, currency)).filter(Boolean) : [];
+    let refunds = type !== 'contribution' ? currencies.map(currency => processTxns(refundTxns, currency)).filter(Boolean) : [];
 
-    // Render conversion details for a given summary
+    // Calculate net totals if type is 'all'
+    if (type === 'all') {
+        contributions = contributions.map(contribution => {
+            const refund = refunds.find(ref => ref.currency === contribution.currency);
+            // Ensure both values are numbers before subtraction
+            const netAmount = refund ? 
+                (parseFloat(contribution.totalUSDAmount) - parseFloat(refund.totalUSDAmount)) : 
+                parseFloat(contribution.totalUSDAmount);
+            return { ...contribution, totalUSDAmount: netAmount.toFixed(2) };
+        });
+        // Exclude refunds as they have been accounted for in contributions
+        refunds = [];
+    }
+
+    const totalContributionsUSD = contributions.reduce((acc, summary) => acc + Number(summary.totalUSDAmount), 0);
+    const totalRefundsUSD = refunds.reduce((acc, summary) => acc + Number(summary.totalUSDAmount), 0);
+
+    // Calculate the net total for 'all' type, otherwise just contributions or refunds
+    const netTotalUSD = type === 'all' ? totalUSD : (type === 'contribution' ? totalContributionsUSD : -totalRefundsUSD);
+    const displayTotalUSD = type === 'all' ? netTotalUSD : totalUSD;
+
+    // Helper function to render conversion details
     const renderConversionDetails = (summary) => (
         <div className="conversion-details">
             {summary.totalCurrencyAmount} {summary.currency} @ ${summary.averageHistoricalPrice}
@@ -276,23 +293,22 @@ export const ConversionDetailsTemplate = ({ totalUSD, contributionTxns, refundTx
     );
 
     return (
-        <>
-            {summaries.length ? (
-                <div className="allocation-summary">
-                    <div className="total-usd">${totalUSD.toFixed(2)}</div>
-                    <div className="details-box">
-                        {erc20USDAmount > 1 && <div className="subtotal-usd">${erc20USDAmount.toFixed(2)} USD</div>}
-                        {summaries.map(summary => (
-                            <div key={summary.currency} className={`${summary.currency.toLowerCase()}-conversion`}>
-                                <div>${summary.totalUSDAmount} {summary.currency}</div>
-                                {renderConversionDetails(summary)}
-                            </div>
-                        ))}
+        <div className="allocation-summary">
+            <div className="total-usd">${type === 'all' ? displayTotalUSD.toFixed(2) : totalUSD.toFixed(2)}</div>
+            <div className="details-box">
+                {contributions.map(summary => (
+                    <div key={summary.currency} className={`${summary.currency.toLowerCase()}-conversion`}>
+                        <div>${summary.totalUSDAmount} {summary.currency}</div>
+                        {renderConversionDetails(summary)}
                     </div>
-                </div>
-            ) : (
-                <div>${totalUSD.toFixed(2)}</div>
-            )}
-        </>
+                ))}
+                {refunds.map(summary => (
+                    <div key={summary.currency} className={`${summary.currency.toLowerCase()}-conversion refund`}>
+                        <div>-${summary.totalUSDAmount} {summary.currency}</div>
+                        {renderConversionDetails(summary)}
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 };
