@@ -15,22 +15,24 @@ const WalletSummaryTemplate = ({
     totalRefunds, 
     refundsAmount,
     fetchType
-}, index) => (
+}, index) => {
+    const contributionsArray = totalContributions.split(', ').map(contribution => contribution.trim());
+    return (
     <Box mb={0} mt={2} ml={3}>
         <WalletSummary
             key={index}
             id={index}
             walletTitle={walletName}
             walletType="Allocation"
+            fetchType={fetchType}
             totalNetAmount={netAmount} 
-            aggregatedContributionsChainMap={totalContributions}
+            aggregatedContributionsChainMap={contributionsArray}
             totalContributionsAmount={contributionsAmount}
             totalRefundsAmount={refundsAmount}
             aggregatedRefundsChainMap={totalRefunds}
-            fetchType={fetchType}
         />
     </Box>
-);
+)};
 
 export const WalletSummariesTemplate = ({summaryData}) => summaryData && summaryData.length > 0 && (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}> 
