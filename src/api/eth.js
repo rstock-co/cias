@@ -1,5 +1,6 @@
 import { ETH_API_KEY } from '../lib/data';
 import { txnRequestsBuilder as createRequests } from './createRequests';
+import { getTodaysDate } from '../lib/functions/time';
 
 const ETH = {
     apiUri: 'https://api.etherscan.io/api',
@@ -7,7 +8,7 @@ const ETH = {
     chain: 'eth',
     txnDateRange: {
         startDate: '2023-01-01',
-        endDate: '2024-02-07'
+        endDate: getTodaysDate()
     },
     conversionCurrency: 'usd',
     currencyName: 'eth',

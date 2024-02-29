@@ -1,5 +1,6 @@
 import { BSC_API_KEY } from '../lib/data';
 import { txnRequestsBuilder as createRequests } from './createRequests';
+import { getTodaysDate } from '../lib/functions/time';
 
 const BSC = {
     apiUri: 'https://api.bscscan.com/api',
@@ -7,7 +8,7 @@ const BSC = {
     chain: 'bsc',
     txnDateRange: {
         startDate: '2023-01-01',
-        endDate: '2024-02-07'
+        endDate: getTodaysDate()
     },
     conversionCurrency: 'usd',
     currencyName: 'bnb',

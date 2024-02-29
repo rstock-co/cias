@@ -16,6 +16,14 @@ export const roundToNearest5Minutes = (date) => {
     return addMinutes(start, roundTo);
 };
 
+export const getTodaysDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // JavaScript months are 0-based.
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 export const getHistoricalPrice = (currency, timestamp, historicalBNBPrices, historicalETHPrices) => {
 
     if (!timestamp || isNaN(timestamp)) {
