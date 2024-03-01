@@ -94,7 +94,7 @@ const DistributionTokens = ({numberOfTokensToDistribute, handleNumberOfTokensToD
                 type="number"
                 value={numberOfTokensToDistribute}
                 onChange={handleNumberOfTokensToDistributeChange}
-                startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                startAdornment={<InputAdornment position="start">✪</InputAdornment>}
                 label="Tokens to Distribute"
                 placeholder="Enter # of tokens"
                 sx={{ margin: "none", maxWidth: 200, fontFamily: 'Inter Tight, sans-serif' }}
