@@ -20,6 +20,8 @@ export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
         setSelectOpen(true);
     };
 
+    // Sort wallets alphabetically by name
+    const sortedWallets = wallets.sort((a, b) => a.name.localeCompare(b.name));
 
     return (
         <ThemeProvider theme={autoCompleteTheme}>
@@ -38,7 +40,7 @@ export const WalletSelect = ({ wallets, selectedWallets, handleChange }) => {
                         onOpen={handleOpen}
                         onClose={handleClose}
                     >
-                        {wallets.map((wallet,index) => (
+                        {sortedWallets.map((wallet,index) => (
                             <MenuItem key={index} value={wallet.name}>
                                 <Checkbox checked={selectedWallets.some(sw => sw.name === wallet.name)} />
                                 <ListItemText primary={wallet.name} sx={{ fontFamily: 'Inter Tight, sans-serif' }} />
