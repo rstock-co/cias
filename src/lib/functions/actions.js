@@ -160,7 +160,7 @@ export const copyDistributionToClipboard = async (sortedAllocationTableData, tot
   // Prepare title, headers, and summary rows for the team and charity fees
   const titleString = `${formattedWalletName}\n\n`;
   const headerString = "Wallet Address\tMember Name\tTokens\tShare (%)\n";
-  const summaryString = `\tTotal # of tokens:\t${Number(totalTokens).toFixed(2)}\n\tTeam fee:\t${teamFee.toFixed(4)}\n\tCharity fee:\t${charityFee.toFixed(4)}\n\n\tTotal # of tokens distributed:\t${tokensToDistribute.toFixed(4)}\n\n`;
+  const summaryString = `Total # of tokens:\t${Number(totalTokens).toFixed(2)}\nTeam fee:\t${teamFee.toFixed(4)}\nCharity fee:\t${charityFee.toFixed(4)}\n\nTotal # of tokens distributed:\t${tokensToDistribute.toFixed(4)}\n\n`;
 
   // Serialize tableData to a string format suitable for spreadsheets
   const tableString = sortedAllocationTableData.map(({ memberWallet, memberName, share }) => {
