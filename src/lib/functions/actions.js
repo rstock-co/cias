@@ -157,17 +157,17 @@ export const copyDistributionToClipboard = async (sortedAllocationTableData, tot
   const charityFee = totalTokens * charityAllocation; // 1% for charity
   const tokensToDistribute = totalTokens - (teamFee + charityFee); // Calculate 92% of total tokens for distribution
 
-  // Prepare title and summary rows for the team and charity fees
+  // Prepare title, headers, and summary rows for the team and charity fees
   const titleString = `${formattedWalletName}\n\n`;
-  const headerString = "Wallet Address\tTokens\tShare (%)\n";
-  const summaryString = `Total # of tokens:\t${Number(totalTokens).toFixed(2)}\nTeam fee:\t${teamFee.toFixed(4)}\nCharity fee:\t${charityFee.toFixed(4)}\n\nTotal # of tokens distributed:\t${tokensToDistribute.toFixed(4)}\n\n`;
+  const headerString = "Wallet Address\tMember Name\tTokens\tShare (%)\n";
+  const summaryString = `\tTotal # of tokens:\t${Number(totalTokens).toFixed(2)}\n\tTeam fee:\t${teamFee.toFixed(4)}\n\tCharity fee:\t${charityFee.toFixed(4)}\n\n\tTotal # of tokens distributed:\t${tokensToDistribute.toFixed(4)}\n\n`;
 
   // Serialize tableData to a string format suitable for spreadsheets
-  const tableString = sortedAllocationTableData.map(row => {
-    const adjustedShare = row.share * tokensToDistribute; // Calculate the adjusted share for each wallet
-    const walletAddress = row.memberWallet; // Wallet address
-    const weightingPercentage = (row.share * 100).toFixed(8); // Weighting percentage
-    return `${walletAddress}\t${adjustedShare.toFixed(4)}\t${weightingPercentage}`;
+  const tableString = sortedAllocationTableData.map(({ memberWallet, memberName, share }) => {
+    const adjustedShare = share * tokensToDistribute; // Calculate the adjusted share for each wallet
+    const walletAddress = memberWallet; // Wallet address
+    const weightingPercentage = (share * 100).toFixed(8); // Weighting percentage
+    return `${walletAddress}\t${memberName ? memberName : ""}\t${adjustedShare.toFixed(4)}\t${weightingPercentage}`;
   }).join('\n'); // Join each row with a newline character
 
   // Combine the title, summary information, and the table data
