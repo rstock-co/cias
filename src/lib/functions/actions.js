@@ -1,4 +1,5 @@
 
+import { charityAllocation, teamAllocation } from '../../settings';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -142,3 +143,40 @@ export const copyToClipboard = async (text, handler) => {
     }
 };
 
+
+export const copyDistributionToClipboard = async (sortedAllocationTableData, totalTokens, walletName) => {
+  if (!navigator.clipboard) {
+    console.error('Clipboard API not available');
+    return;
+  }
+
+  const formattedWalletName = walletName.replace("Allocation Table", "Distribution").replace("' Wallet", "");
+
+  // Calculate team and charity fees
+  const teamFee = totalTokens * teamAllocation; // 7% for the team
+  const charityFee = totalTokens * charityAllocation; // 1% for charity
+  const tokensToDistribute = totalTokens - (teamFee + charityFee); // Calculate 92% of total tokens for distribution
+
+  // Prepare title and summary rows for the team and charity fees
+  const titleString = `${formattedWalletName}\n\n`;
+  const headerString = "Wallet Address\tTokens\tShare (%)\n";
+  const summaryString = `Total # of tokens:\t${totalTokens}\nTeam fee:\t${teamFee.toFixed(4)}\nCharity fee:\t${charityFee.toFixed(4)}\n\nTotal # of tokens distributed:\t${tokensToDistribute.toFixed(4)}\n\n`;
+
+  // Serialize tableData to a string format suitable for spreadsheets
+  const tableString = sortedAllocationTableData.map(row => {
+    const adjustedShare = row.share * tokensToDistribute; // Calculate the adjusted share for each wallet
+    const walletAddress = row.memberWallet; // Wallet address
+    const weightingPercentage = (row.share * 100).toFixed(8); // Weighting percentage
+    return `${walletAddress}\t${adjustedShare.toFixed(4)}\t${weightingPercentage}`;
+  }).join('\n'); // Join each row with a newline character
+
+  // Combine the title, summary information, and the table data
+  const finalString = titleString + summaryString + headerString + tableString;
+
+  try {
+    await navigator.clipboard.writeText(finalString);
+    alert('Distribution data copied to clipboard');
+  } catch (err) {
+    console.error('Failed to copy distribution data: ', err);
+  }
+};

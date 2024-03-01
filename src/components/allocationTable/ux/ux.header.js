@@ -13,6 +13,7 @@ const HeaderUX = ({
     const [showMemberName, setShowMemberName] = useState(false);
     const [showHeaderRow, setShowHeaderRow] = useState(true);
     const [adjustedNetTotal, setAdjustedNetTotal] = useState("");
+    const [numberOfTokensToDistribute, setNumberofTokensToDistribute] = useState(0); 
     const [generatedDateString, setGeneratedDateString] = useState("");
     const [generatedDateHTML, setGeneratedDateHTML] = useState("");
     const [sortBy, setSortBy] = useState("Amount");
@@ -32,6 +33,10 @@ const HeaderUX = ({
     
     const handleAdjustedNetTotalChange = (event) => {
         setAdjustedNetTotal(event.target.value);
+    };
+
+    const handleNumberOfTokensToDistributeChange = (event) => {
+        setNumberofTokensToDistribute(event.target.value);
     };
 
     const handleSortByChange = (value) => {
@@ -67,12 +72,14 @@ const HeaderUX = ({
         showMemberName,
         showHeaderRow,
         adjustedNetTotal,
+        numberOfTokensToDistribute,
         sortBy,
 
         handleToggleConversions,
         handleToggleMemberName,
         handleToggleHeaderRow,
         handleAdjustedNetTotalChange,
+        handleNumberOfTokensToDistributeChange,
         handleSortByChange,
 
         dialogTitle,

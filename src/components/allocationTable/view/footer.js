@@ -1,6 +1,6 @@
 import { Button, DialogActions }  from "@mui/material";
 import { extractTitle } from "../../../lib/functions/format";
-import { printBlendedTableToPDF } from "../../../lib/functions/actions"; // printTableToPDF
+import { printBlendedTableToPDF, copyDistributionToClipboard } from "../../../lib/functions/actions"; // printTableToPDF
 
 const FooterTemplate = ({ 
     savedTableId, 
@@ -21,9 +21,10 @@ const FooterTemplate = ({
     aggregatedRefundsChainMap, 
     aggregatedTxns, 
     totalShare, 
-    adjustedNetTotal}) => (
+    adjustedNetTotal,
+    numberOfTokensToDistribute}) => (
         <DialogActions>
-
+            {numberOfTokensToDistribute && <Button onClick={() => copyDistributionToClipboard(sortedAllocationTableData, numberOfTokensToDistribute, dialogTitle)}>Copy Distribution</Button>}
             {savedTableId && <Button onClick={() => deleteTableData(savedTableId)}>Delete Table</Button>}
             {!savedTableId && 
                 <Button 
