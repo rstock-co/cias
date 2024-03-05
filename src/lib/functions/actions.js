@@ -159,15 +159,15 @@ export const copyDistributionToClipboard = async (sortedAllocationTableData, tot
 
   // Prepare title, headers, and summary rows for the team and charity fees
   const titleString = `${formattedWalletName}\n\n`;
-  const headerString = "Wallet Address\tMember Name\tTokens\tShare (%)\n";
+  const headerString = "Wallet Address\tTokens\tShare (%)\n";  // // to add member name back in, insert this:     \tMember Name
   const summaryString = `Total # of tokens:\t${Number(totalTokens).toFixed(2)}\nTeam fee:\t${teamFee.toFixed(4)}\nCharity fee:\t${charityFee.toFixed(4)}\n\nTotal # of tokens distributed:\t${tokensToDistribute.toFixed(4)}\n\n`;
 
   // Serialize tableData to a string format suitable for spreadsheets
-  const tableString = sortedAllocationTableData.map(({ memberWallet, memberName, share }) => {
+  const tableString = sortedAllocationTableData.map(({ memberWallet, share }) => {  // memberName
     const adjustedShare = share * tokensToDistribute; // Calculate the adjusted share for each wallet
     const walletAddress = memberWallet; // Wallet address
-    const weightingPercentage = (share * 100).toFixed(8); // Weighting percentage
-    return `${walletAddress}\t${memberName ? memberName : ""}\t${adjustedShare.toFixed(4)}\t${weightingPercentage}`;
+    const weightingPercentage = (share).toFixed(8); // Weighting percentage
+    return `${walletAddress}\t${adjustedShare.toFixed(4)}\t${weightingPercentage}`; // to add member name back in, insert this:    \t${memberName ? memberName : ""}
   }).join('\n'); // Join each row with a newline character
 
   // Combine the title, summary information, and the table data
