@@ -259,6 +259,15 @@ export const autoCompleteTheme = createTheme({
                     fontSize: '15px',
                     color: '#6DFAFE', // : '#08E2EA',
                 
+                },
+                deleteIcon: {
+                    color: '#46a7ab',
+                    '&:hover': {
+                        color: '#6DFAFE', 
+                    }
+                },
+                endAdornment: {
+                    color: '#46a7ab',
                 }
             }
         },
@@ -267,8 +276,22 @@ export const autoCompleteTheme = createTheme({
                 tag: {
                     marginTop: '9px',
                     marginBottom: '1px'
+                },
+                popupIndicator: {
+                    color: '#6DFAFE'
                 }
+            }
         },
+        MuiIconButton: {
+            styleOverrides: {
+                root: {
+                    color: '#6DFAFE',
+                    '&:hover': {
+                        color: '#6DFAFE',
+                    }
+                }
+            
+            }
         }
     },
 });
