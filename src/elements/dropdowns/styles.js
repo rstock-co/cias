@@ -180,7 +180,7 @@ export const autoCompleteTheme = createTheme({
                     borderRadius: "10px",
                     background: 'linear-gradient(to right, #022027, #02343C)',
                     fontFamily: 'Inter Tight, sans-serif',
-                    height: "45px",
+                    minHeight: "45px",
                     "&:hover": {
                         borderColor: "#096B78",
                         "& .MuiOutlinedInput-notchedOutline": {
@@ -227,6 +227,37 @@ export const autoCompleteTheme = createTheme({
                     },
                 },
             },
+        },
+        MuiChip: {
+            styleOverrides: {
+                root: {
+                    fontFamily: 'Inter Tight, sans-serif',
+                    fontWeight: 'regular',
+                    fontSize: '15px',
+                    background: '-webkit-linear-gradient(left, #264aa6, #0b2566)', // : `linear-gradient(to right, #022027, #04373A)`,
+                    color: '#8fafff', // : '#08E2EA',
+                    border: '1px solid #5580ed !important', // : '1px solid #08E2EA !important',
+                    transform: 'translateY(-2px)',
+                    boxShadow: 'none', // : 'none',
+                    transition: 'box-shadow 0.3s ease-in-out, background 0.3s ease-in-out',
+                    marginTop: 12,
+                    '&:hover': {
+                        background: '#0b2566', // : '#0c546e',
+                        boxShadow: '0 0px 5px 0.5px #4672e0', // maintain the box shadow on hover
+                    },
+                    '&:focus, &:active, &:focus-visible': {
+                        border: '#3a61c2',
+                        background: '#0b2566', // : '#0c546e',
+                    },
+                },
+                label: {
+                    fontFamily: 'Inter Tight, sans-serif',
+                    fontWeight: 'regular',
+                    fontSize: '15px',
+                    color: '#8fafff', // : '#08E2EA',
+                
+                }
+            }
         },
     },
 });

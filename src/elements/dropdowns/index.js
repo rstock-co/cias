@@ -1,4 +1,5 @@
-export * from './walletSelect'
+export * from './walletSelect';
+export * from './walletSelectAuto';
 export * from './typeSelect';
 export * from './filterWalletSelect';
 export * from './chainSelect';

@@ -1,7 +1,7 @@
 import '@fontsource/plus-jakarta-sans';
 import '@fontsource/inter-tight';
 import { Box, IconButton, Paper, Snackbar, Table, TableBody, TableContainer, TableRow, Typography  } from '@mui/material';
-import { ChainSelect, DateRangeSelect, DirectionSelect, FilterWalletSelect, MoveSelect, TypeSelect, WalletSelect } from '../../elements/dropdowns';
+import { ChainSelect, DateRangeSelect, DirectionSelect, FilterWalletSelect, MoveSelect, TypeSelect, WalletSelectAuto } from '../../elements/dropdowns';
 import { ColorButton, FetchTypeSelect, ToggleChipButton } from '../../elements/buttons';
 import { StyledTableCell, StyledTableHead, StyledTableRow, loadWalletStyles, textGradientStyle } from './styles';
 import { moves, displayWallets as wallets } from "../../lib/data";
@@ -21,7 +21,7 @@ const LoadWallet = ({
     // ux.init
     stableCoins, selectedWallets, fetchType, setFetchType, historicalBNBPrices, historicalETHPrices,
     // ux.base
-    tableData, handleSelectedWalletChange,
+    tableData, handleMultiSelectWalletChange, // handleSelectedWalletChange, 
 
     // ux.saveTable
     savedTables, saveTableData, deleteTableData, setSavedTables, savedTableId, handleToggleChip, transferTxnsToBlend, isTxnBlended, getSavedTableIDFromDescription,
@@ -54,6 +54,7 @@ const LoadWallet = ({
     console.log("tableData: ", tableData);
     console.log("historicalBNBPrices: ", historicalBNBPrices);
     console.log("historicalETHPrices: ", historicalETHPrices);
+    console.log("WALLETS: ", wallets);
     
     return (
 
@@ -104,12 +105,14 @@ const LoadWallet = ({
                         fetchType={fetchType} 
                         setFetchType={setFetchType} 
                     />
+                    
                     <ColorButton onClick={handleGenerateChainFlow} buttonText="Saved Tables" />
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
    
                     <Box sx={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
-                        <WalletSelect wallets={wallets} selectedWallets={selectedWallets} handleChange={handleSelectedWalletChange} />
+                        {/* <WalletSelect wallets={wallets} selectedWallets={selectedWallets} handleChange={handleSelectedWalletChange} /> */}
+                        <WalletSelectAuto wallets={wallets} selectedWallets={selectedWallets} handleChange={handleMultiSelectWalletChange} />
                         <TypeSelect types={filterTypes} selectedType={filters.type} handleChange={handleFilterChange('type')} />
                         <ChainSelect chains={['arb', 'eth', 'bsc']} selectedChain={filters.chain} handleChange={handleFilterChange('chain')} />
                         <DirectionSelect directions={['In', 'Out']} selectedDirection={filters.direction} handleChange={handleFilterChange('direction')} />
@@ -121,7 +124,7 @@ const LoadWallet = ({
                         <ColorButton onClick={handleClearFilters} buttonText="Clear All Filters" />
                         <ColorButton onClick={handleGenerateAllocations} buttonText="Generate Allocations" />
                         <ColorButton onClick={handleGenerateChainFlow} buttonText="Chain Cash Flow" />
-                    {/* <SettingsIcon sx={{ fontSize: 40, color: '#095D6F' }} /> */}
+                        {/* <SettingsIcon sx={{ fontSize: 40, color: '#095D6F' }} /> */}
                     </Box>
                 </Box>
             </Box>
