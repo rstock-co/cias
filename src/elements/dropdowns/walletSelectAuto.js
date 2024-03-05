@@ -13,7 +13,7 @@ export const WalletSelectAuto = ({ wallets = [], handleChange}) => (
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        label="Filter By Wallet"
+                        label="Select Wallet(s)"
                         variant="outlined"
                         size="small"
                         InputProps={{

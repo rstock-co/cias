@@ -234,9 +234,9 @@ export const autoCompleteTheme = createTheme({
                     fontFamily: 'Inter Tight, sans-serif',
                     fontWeight: 'regular',
                     fontSize: '15px',
-                    background: '-webkit-linear-gradient(left, #264aa6, #0b2566)', // : `linear-gradient(to right, #022027, #04373A)`,
+                    background: '-webkit-linear-gradient(left, #01070D, #082a33)', // : `linear-gradient(to right, #022027, #04373A)`,
                     color: '#8fafff', // : '#08E2EA',
-                    border: '1px solid #5580ed !important', // : '1px solid #08E2EA !important',
+                    border: '1px solid #46a7ab !important', // : '1px solid #08E2EA !important',
                     transform: 'translateY(-2px)',
                     boxShadow: 'none', // : 'none',
                     transition: 'box-shadow 0.3s ease-in-out, background 0.3s ease-in-out',
@@ -245,8 +245,8 @@ export const autoCompleteTheme = createTheme({
                     alignContent: 'center',
                     justifyContent: 'center',
                     '&:hover': {
-                        background: '#0b2566', // : '#0c546e',
-                        boxShadow: '0 0px 5px 0.5px #4672e0', // maintain the box shadow on hover
+                        background: '#043f54', // : '#0c546e',
+                        boxShadow: '0 0px 5px 0.5px #0c546e', // maintain the box shadow on hover
                     },
                     '&:focus, &:active, &:focus-visible': {
                         border: '#3a61c2',
@@ -257,7 +257,7 @@ export const autoCompleteTheme = createTheme({
                     fontFamily: 'Inter Tight, sans-serif',
                     fontWeight: 'regular',
                     fontSize: '15px',
-                    color: '#8fafff', // : '#08E2EA',
+                    color: '#6DFAFE', // : '#08E2EA',
                 
                 }
             }
