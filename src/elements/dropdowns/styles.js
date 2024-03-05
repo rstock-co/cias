@@ -240,7 +240,10 @@ export const autoCompleteTheme = createTheme({
                     transform: 'translateY(-2px)',
                     boxShadow: 'none', // : 'none',
                     transition: 'box-shadow 0.3s ease-in-out, background 0.3s ease-in-out',
-                    marginTop: 12,
+                    marginTop: '18px',
+                    alightItems: 'center',
+                    alignContent: 'center',
+                    justifyContent: 'center',
                     '&:hover': {
                         background: '#0b2566', // : '#0c546e',
                         boxShadow: '0 0px 5px 0.5px #4672e0', // maintain the box shadow on hover
@@ -259,6 +262,14 @@ export const autoCompleteTheme = createTheme({
                 }
             }
         },
+        MuiAutocomplete: {
+            styleOverrides: {
+                tag: {
+                    marginTop: '9px',
+                    marginBottom: '1px'
+                }
+        },
+        }
     },
 });
 
