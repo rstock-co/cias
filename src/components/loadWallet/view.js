@@ -34,7 +34,7 @@ const LoadWallet = ({
     filterTypes, filterWallets,
     
     // ux.filter
-    filters, handleFilterValueChange, handleFilterChange, handleDateChange, handleClearFilters, isStartDateDefault, isEndDateDefault,
+    filters, handleFilterValueChange, handleFilterChange, handleDateChange, handleClearFilters, isStartDateComplete, isEndDateComplete,
 
     // ux.dialog
     allocationDialogOpen, setAllocationDialogOpen, blendedAllocationDialogOpen, setBlendedAllocationDialogOpen, handleGenerateAllocations,
@@ -54,7 +54,14 @@ const LoadWallet = ({
     console.log("tableData: ", tableData);
     console.log("historicalBNBPrices: ", historicalBNBPrices);
     console.log("historicalETHPrices: ", historicalETHPrices);
-    console.log("WALLETS: ", wallets);
+    // console.log("WALLETS: ", wallets);
+    console.log("FILTERS: ", filters);
+    console.log("=========== START DATE =============");
+    console.log("Start Date: ", filters.dateRange.startDate)
+    console.log("Start Date Complete? :", isStartDateComplete)
+    console.log("=========== END DATE =============");
+    console.log("End Date: ", filters.dateRange.endDate)
+    console.log("End Date Complete? :", isEndDateComplete)
     
     return (
 
@@ -69,7 +76,7 @@ const LoadWallet = ({
                     </Typography>
                     
                     <Box sx={{ marginRight: selectedWallets.length > 0 ? '89px' : '347px', marginTop: '10px' }}>
-                        <DateRangeSelect selectedDateRange={filters.dateRange} handleChange={handleDateChange} isStartDateDefault={isStartDateDefault} isEndDateDefault={isEndDateDefault} />
+                        <DateRangeSelect selectedDateRange={filters.dateRange} handleChange={handleDateChange} />
                     </Box>
 
                     

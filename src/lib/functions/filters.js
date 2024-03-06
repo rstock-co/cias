@@ -1,7 +1,20 @@
-export const filterByDateRange = (start, end, timestamp, useOffset) => {
-    const mstOffsetMillis = useOffset ? 7 * 60 * 60 * 1000 : 0;  // Offset in milliseconds for 7 hours (MST)
-    const startDate = new Date(new Date(start).getTime() + mstOffsetMillis).getTime();
-    const endDate = new Date(new Date(end).getTime() + mstOffsetMillis).getTime();
+const dayjs = require('dayjs');
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+const utc = require('dayjs/plugin/utc'); // UTC plugin is required for timezone plugin to work
+const timezone = require('dayjs/plugin/timezone');
+
+// Extend dayjs with the plugins
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+// Set the timezone to Mountain Standard Time
+dayjs.tz.setDefault("America/Denver");
+
+export const filterByDateRange = (start, end, timestamp) => { // useOffset
+
+    const startDate = dayjs.tz(start, 'YYYY-MM-DD hh:mm a', "America/Denver").valueOf();
+    const endDate = dayjs.tz(end, 'YYYY-MM-DD hh:mm a', "America/Denver").valueOf();
 
     return timestamp >= startDate && timestamp <= endDate;
 };

@@ -35,20 +35,28 @@ const FilterUX = ({
         }))
     );
 
-    const [isStartDateDefault, setIsStartDateDefault] = useState(true);
-    const [isEndDateDefault, setIsEndDateDefault] = useState(true);
+    const [isStartDateComplete, setIsStartDateComplete] = useState(false);
+    const [isEndDateComplete, setIsEndDateComplete] = useState(false);
 
     const handleDateChange = (newValue) => {
-        const formattedStartDate = newValue[0]?.format('YYYY-MM-DD') || '';
-        const formattedEndDate = newValue[1]?.format('YYYY-MM-DD') || '';
+        const dateFormatRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2} (am|pm)$/;
+
+        // Format the start and end dates
+        const formattedStartDate = newValue[0]?.format('YYYY-MM-DD hh:mm a') || '';
+        const formattedEndDate = newValue[1]?.format('YYYY-MM-DD hh:mm a') || '';
+
+        // Check if the formatted dates match the 'YYYY-MM-DD hh:mm a' format
+        const isStartDateFormatValid = dateFormatRegex.test(formattedStartDate);
+        const isEndDateFormatValid = dateFormatRegex.test(formattedEndDate);
+
         const handler = handleFilterValueChange('dateRange');
         handler({
             startDate: formattedStartDate,
             endDate: formattedEndDate
         });
 
-        setIsStartDateDefault(newValue[0] ? false : true);
-        setIsEndDateDefault(newValue[1] ? false : true);
+        setIsStartDateComplete(isStartDateFormatValid);
+        setIsEndDateComplete(isEndDateFormatValid);
     };
 
     const handleClearFilters = () => {
@@ -61,16 +69,16 @@ const FilterUX = ({
             direction: "",
             move: ""
         });
-        setIsStartDateDefault(true);
-        setIsEndDateDefault(true);
+        setIsStartDateComplete(false);
+        setIsEndDateComplete(false);
     };
 
     useEffect(() => {
         if (txns && txns.length > 0 && selectedWallets && selectedWallets.length > 0) {
             const selectedWalletAddresses = selectedWallets.map(wallet => wallet.address.toLowerCase());
-    
-            // Filter out transactions from ignored wallets and generate table data
-            const tableData = txns
+            
+            // Start by filtering transactions that are not from ignored wallets
+            let filteredTableData = txns
                 .filter(txn => !ignoreWallets.some(wallet => 
                     wallet.address.toLowerCase() === txn.from.toLowerCase() || 
                     wallet.address.toLowerCase() === txn.to.toLowerCase()
@@ -78,11 +86,20 @@ const FilterUX = ({
                 .map((txn, index) => generateTableData(txn, index, selectedWalletAddresses, historicalBNBPrices, historicalETHPrices))
                 .filter(row => row !== null); // Filter out null values
     
-            // Apply additional filters if necessary
-            const filteredTxns = filterTxns(tableData, filters);
-            setTableData(filteredTxns);
+            // Now, apply the date range filter only if both dates are complete
+            if (isStartDateComplete && isEndDateComplete) {
+                filteredTableData = filterTxns(filteredTableData, filters);
+            } else {
+                // Apply all filters except for the dateRange
+                // This assumes filterTxns can somehow ignore dateRange filtering
+                // or you adjust filterTxns logic to conditionally apply dateRange based on isStartDateComplete and isEndDateComplete
+                const filtersWithoutDateRange = {...filters, dateRange: {startDate: "", endDate: ""}};
+                filteredTableData = filterTxns(filteredTableData, filtersWithoutDateRange);
+            }
+            
+            setTableData(filteredTableData);
         }
-    }, [txns, selectedWallets, filters]);
+    }, [txns, selectedWallets, filters, isStartDateComplete, isEndDateComplete]);    
     
     return {
         filters,
@@ -90,8 +107,8 @@ const FilterUX = ({
         handleFilterChange,
         handleDateChange,
         handleClearFilters,
-        isStartDateDefault,
-        isEndDateDefault
+        isStartDateComplete,
+        isEndDateComplete
     };
 };
 
