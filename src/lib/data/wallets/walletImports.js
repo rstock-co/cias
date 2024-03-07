@@ -1,4 +1,3 @@
-import contributionWallets from './contributionWallets.json';
 import conversionServiceWallets from './conversionServiceWallets.json';
 import depositWallets from './depositWallets.json';
 import ignoreWallets from './ignoreWallets.json';
@@ -17,7 +16,6 @@ export default {
     investmentWallet: investmentWallet.investmentWallet,
 
     wallets: {
-        contributionWallets,
         conversionServiceWallets,
         depositWallets,
         ignoreWallets,
