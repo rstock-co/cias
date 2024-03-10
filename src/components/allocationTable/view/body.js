@@ -103,7 +103,8 @@ const AllocationTableTemplate = ({
     aggregatedRefundsChainMap, 
     sortedAllocationTableData 
 }) => {
-    console.log("Allocation Table DATA: ", sortedAllocationTableData)
+    console.log(" ")
+    // console.log("Allocation Table DATA: ", sortedAllocationTableData)
     return (
     <Table sx={{ border: 'none', tableLayout: 'auto' }} aria-label="member table">
         

@@ -25,7 +25,8 @@ const CoinTemplate = ([coinKey, { name, chain, loading, txns }]) => (
 )
 
 const LoadingScreen = ({ stableCoins, open = false }) => {
-  console.log("StableCoins from loading screen: ", stableCoins)
+  console.log("")
+  // console.log("StableCoins from loading screen: ", stableCoins)
   return (
     <StyledDialog 
       open={open}

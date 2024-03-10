@@ -50,18 +50,18 @@ const BlendedAllocationTable = ({
     tabTitle,
 
     // ux.blend
-    aggregateDataForBlendedTable,
+    // aggregateDataForBlendedTable,
     totalTransferAmount,
     grandTotalNet,
     blendedTableData
 
 } = {}) => {
-    
-    console.log("savedTables:", savedTables);
-    console.log("table transfer totals: ",tableTransferTotals)
-    console.log("savedTableDisplayData:", savedTableDisplayData);
-    console.log("transferTxnsToBlend:", transferTxnsToBlend)
-    console.log("aggregate data for blended table:", aggregateDataForBlendedTable)
+    console.log(" ")
+    // console.log("savedTables:", savedTables);
+    // console.log("table transfer totals: ",tableTransferTotals)
+    // console.log("savedTableDisplayData:", savedTableDisplayData);
+    // console.log("transferTxnsToBlend:", transferTxnsToBlend)
+    // console.log("aggregate data for blended table:", aggregateDataForBlendedTable)
 
     return (
         <>

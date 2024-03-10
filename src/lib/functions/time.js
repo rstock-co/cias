@@ -24,6 +24,27 @@ export const getTodaysDate = () => {
     return `${year}-${month}-${day}`;
 };
 
+export const getNowMST = () => {
+    // Create a new Date object
+    const now = new Date();
+  
+    // Convert the current time to MST assuming MST is UTC-7
+    const mstOffset = 7 * 60; // in minutes
+    const localOffset = now.getTimezoneOffset(); // in minutes
+    const mstTime = new Date(now.getTime() + (mstOffset + localOffset) * 60000);
+  
+    // Extract the components
+    const month = String(mstTime.getMonth() + 1).padStart(2, '0'); // getMonth() returns 0-11
+    const day = String(mstTime.getDate()).padStart(2, '0');
+    const year = mstTime.getFullYear();
+    const hours = String(mstTime.getHours()).padStart(2, '0');
+    const minutes = String(mstTime.getMinutes()).padStart(2, '0');
+  
+    // Format: "MM-DD-YYYY-HHMM"
+    // console.log(`NOW: ${month}-${day}-${year}-${hours}${minutes}`)
+    return `${month}-${day}-${year}-${hours}${minutes}`;
+  }
+  
 export const getHistoricalPrice = (currency, timestamp, historicalBNBPrices, historicalETHPrices) => {
 
     if (!timestamp || isNaN(timestamp)) {

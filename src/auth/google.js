@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => useContext(AuthContext);
 
 
-export const GoogleLoginButton = () => {
+export const loginToGoogle = () => {
     const { updateAccessToken } = useAuth();
   
     const login = useGoogleLogin({
@@ -35,10 +35,10 @@ export const GoogleLoginButton = () => {
       onError: () => {
         console.error('Google login failed');
       },
-      scope: 'email profile https://www.googleapis.com/auth/userinfo.email openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive',
+      scope: 'email profile https://www.googleapis.com/auth/userinfo.email openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/forms',
     });
   
-    return <button onClick={login}>Sign in with Google</button>;
+    return login;
   };
 
 

@@ -38,11 +38,22 @@ const getTxns = async (walletAddress,
 
     try {
         const response = await axios.get(apiUri, requestConfig);
-        return response.data.result.map(txn => ({
-            ...txn,
-            chain,
-            fetchType: txnType.fetchType
-        }));
+
+        // DEBUGGING LOG
+        console.log(`API response for wallet ${walletAddress} on chain ${chain.toUpperCase()}:`, response.data);
+
+         // Check if the result property exists and is an array before proceeding
+        if (response.data.result && Array.isArray(response.data.result)) {
+            return response.data.result.map(txn => ({
+                ...txn,
+                chain,
+                fetchType: txnType.fetchType
+            }));
+        } else {
+            // Log a warning if the result is not in the expected format
+            console.warn(`YYY: Unexpected format for 'result' in response for wallet ${walletAddress} on chain ${chain}:`, response.data.result);
+            return []; // Return an empty array to safely continue execution
+        }
     } catch (error) {
         console.error(`Error fetching ${chain} transactions:`, error);
         throw error; 

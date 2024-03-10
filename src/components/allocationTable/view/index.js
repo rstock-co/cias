@@ -9,15 +9,15 @@ import SaveTableSnackbar from "../../../elements/snackbars";
 const AllocationTable = (props = {}) => {
 
     const {
-        dialogOpen, setDialogOpen, selectedWallets, 
+        dialogOpen, setDialogOpen, // selectedWallets, 
         dialogTitle, generatedDateString, isAggregated,
-        sortedAllocationTableData, summaryData
+        summaryData, // sortedAllocationTableData
     } = props;
 
-    console.log("allocation table data: ", sortedAllocationTableData)
-    console.log("summary data: ", summaryData)
-    console.log("selected wallets: ", selectedWallets)
-    console.log("dialog title: ", dialogTitle)
+    // console.log("allocation table data: ", sortedAllocationTableData)
+    // console.log("summary data: ", summaryData)
+    // console.log("selected wallets: ", selectedWallets)
+    // console.log("dialog title: ", dialogTitle)
 
     return (
         <>

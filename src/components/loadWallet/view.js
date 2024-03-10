@@ -3,7 +3,7 @@ import '@fontsource/inter-tight';
 import { Box, IconButton, Paper, Snackbar, Table, TableBody, TableContainer, TableRow, Typography  } from '@mui/material';
 import { ChainSelect, DateRangeSelect, DirectionSelect, FilterWalletSelect, MoveSelect, TypeSelect, WalletSelectAuto } from '../../elements/dropdowns';
 import { ColorButton, FetchTypeSelect, ToggleChipButton } from '../../elements/buttons';
-import { GoogleLoginButton, useAuth } from '../../auth/google';
+import { useAuth } from '../../auth/google';
 import { StyledTableCell, StyledTableHead, StyledTableRow, loadWalletStyles, textGradientStyle } from './styles';
 import { moves, displayWallets as wallets } from "../../lib/data";
 import AllocationTable from '../allocationTable/';
@@ -20,7 +20,7 @@ import "./styles.css";
 
 const LoadWallet = ({
     // ux.init
-    stableCoins, selectedWallets, fetchType, setFetchType, historicalBNBPrices, historicalETHPrices,
+    stableCoins, selectedWallets, fetchType, setFetchType, // historicalBNBPrices, historicalETHPrices,
     // ux.base
     tableData, handleMultiSelectWalletChange, // handleSelectedWalletChange, 
 
@@ -35,10 +35,10 @@ const LoadWallet = ({
     filterTypes, filterWallets,
     
     // ux.filter
-    filters, handleFilterValueChange, handleFilterChange, handleDateChange, handleClearFilters, isStartDateComplete, isEndDateComplete,
+    filters, handleFilterValueChange, handleFilterChange, handleDateChange, handleClearFilters, // isStartDateComplete, isEndDateComplete,
 
     // ux.dialog
-    allocationDialogOpen, setAllocationDialogOpen, blendedAllocationDialogOpen, setBlendedAllocationDialogOpen, handleGenerateAllocations,
+    allocationDialogOpen, setAllocationDialogOpen, blendedAllocationDialogOpen, setBlendedAllocationDialogOpen, handleGenerateAllocations, handleGenerateCappedMove,
     chainDialogOpen, setChainDialogOpen, handleGenerateChainFlow,
     snackbarOpen, setSnackbarOpen, handleCloseSnackbar,
     loadingDialogOpen,
@@ -54,17 +54,17 @@ const LoadWallet = ({
     // console.log("SavedTables: ",savedTables)
     // console.log("BlendedTableList: ",  blendedTableList);
     // console.log("TransferTxnsToBlend: ", transferTxnsToBlend);
-    console.log("tableData: ", tableData);
-    console.log("historicalBNBPrices: ", historicalBNBPrices);
-    console.log("historicalETHPrices: ", historicalETHPrices);
-    // console.log("WALLETS: ", wallets);
-    console.log("FILTERS: ", filters);
-    console.log("=========== START DATE =============");
-    console.log("Start Date: ", filters.dateRange.startDate)
-    console.log("Start Date Complete? :", isStartDateComplete)
-    console.log("=========== END DATE =============");
-    console.log("End Date: ", filters.dateRange.endDate)
-    console.log("End Date Complete? :", isEndDateComplete)
+    // console.log("tableData: ", tableData);
+    // console.log("historicalBNBPrices: ", historicalBNBPrices);
+    // console.log("historicalETHPrices: ", historicalETHPrices);
+    // // console.log("WALLETS: ", wallets);
+    // console.log("FILTERS: ", filters);
+    // console.log("=========== START DATE =============");
+    // console.log("Start Date: ", filters.dateRange.startDate)
+    // console.log("Start Date Complete? :", isStartDateComplete)
+    // console.log("=========== END DATE =============");
+    // console.log("End Date: ", filters.dateRange.endDate)
+    // console.log("End Date Complete? :", isEndDateComplete)
     
     return (
 
@@ -80,7 +80,6 @@ const LoadWallet = ({
                     
                     <Box sx={{ marginRight: selectedWallets.length > 0 ? '89px' : '347px', marginTop: '10px' }}>
                         <DateRangeSelect selectedDateRange={filters.dateRange} handleChange={handleDateChange} />
-                        <GoogleLoginButton />
                     </Box>
 
                     
@@ -116,8 +115,11 @@ const LoadWallet = ({
                         fetchType={fetchType} 
                         setFetchType={setFetchType} 
                     />
+                    <Box sx={{ display: 'flex', gap: '15px'}}>
+                        <ColorButton onClick={handleGenerateCappedMove} buttonText="Generate Capped Move" />
+                        <ColorButton onClick={handleGenerateChainFlow} buttonText="Saved Tables" />
+                    </Box>
                     
-                    <ColorButton onClick={handleGenerateChainFlow} buttonText="Saved Tables" />
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
    
