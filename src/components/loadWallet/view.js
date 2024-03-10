@@ -3,6 +3,7 @@ import '@fontsource/inter-tight';
 import { Box, IconButton, Paper, Snackbar, Table, TableBody, TableContainer, TableRow, Typography  } from '@mui/material';
 import { ChainSelect, DateRangeSelect, DirectionSelect, FilterWalletSelect, MoveSelect, TypeSelect, WalletSelectAuto } from '../../elements/dropdowns';
 import { ColorButton, FetchTypeSelect, ToggleChipButton } from '../../elements/buttons';
+import { GoogleLoginButton, useAuth } from '../../auth/google';
 import { StyledTableCell, StyledTableHead, StyledTableRow, loadWalletStyles, textGradientStyle } from './styles';
 import { moves, displayWallets as wallets } from "../../lib/data";
 import AllocationTable from '../allocationTable/';
@@ -47,6 +48,8 @@ const LoadWallet = ({
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
 } = {}) => {
+
+    const { accessToken } = useAuth();
     
     // console.log("SavedTables: ",savedTables)
     // console.log("BlendedTableList: ",  blendedTableList);
@@ -77,6 +80,7 @@ const LoadWallet = ({
                     
                     <Box sx={{ marginRight: selectedWallets.length > 0 ? '89px' : '347px', marginTop: '10px' }}>
                         <DateRangeSelect selectedDateRange={filters.dateRange} handleChange={handleDateChange} />
+                        <GoogleLoginButton />
                     </Box>
 
                     
@@ -264,6 +268,8 @@ const LoadWallet = ({
                 saveTableSnackbarOpen={saveTableSnackbarOpen}
                 handleCloseSaveTableSnackbar={handleCloseSaveTableSnackbar}
                 fetchType={fetchType}
+                accessToken={accessToken}
+                cappedMoveAmount={1000}
             />
 
             <BlendedAllocationTable

@@ -6,6 +6,8 @@ const keys = [
     'BSC_API_KEY_1',
     'BSC_API_KEY_2',
     'BSC_API_KEY_3',
+    'GOOGLE_CLIENT_ID',
+    'GOOGLE_CLIENT_SECRET'
 ];
 
 export default keys.reduce((acc, val) => ({ ...acc, [val]: process.env[val] }), {});

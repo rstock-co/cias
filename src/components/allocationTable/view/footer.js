@@ -1,6 +1,7 @@
 import { Button, DialogActions }  from "@mui/material";
+import { copyDistributionToClipboard, printBlendedTableToPDF } from "../../../lib/functions/actions"; // printTableToPDF
+import { duplicateCappedMovesTemplate, generateCappedMoveData } from "../../../api/sheets";
 import { extractTitle } from "../../../lib/functions/format";
-import { printBlendedTableToPDF, copyDistributionToClipboard } from "../../../lib/functions/actions"; // printTableToPDF
 
 const FooterTemplate = ({ 
     savedTableId, 
@@ -22,8 +23,12 @@ const FooterTemplate = ({
     aggregatedTxns, 
     totalShare, 
     adjustedNetTotal,
-    numberOfTokensToDistribute}) => (
+    numberOfTokensToDistribute,
+    accessToken,
+    cappedMoveAmount}) => (
+
         <DialogActions>
+            {cappedMoveAmount && <Button onClick={() => duplicateCappedMovesTemplate(accessToken, generateCappedMoveData(sortedAllocationTableData, dialogTitle), 'test1', 'Raw Data')}>Generate Capped Move Sheet</Button>}
             {numberOfTokensToDistribute && <Button onClick={() => copyDistributionToClipboard(sortedAllocationTableData, numberOfTokensToDistribute, dialogTitle)}>Copy Distribution</Button>}
             {savedTableId && <Button onClick={() => deleteTableData(savedTableId)}>Delete Table</Button>}
             {!savedTableId && 
@@ -72,6 +77,6 @@ const FooterTemplate = ({
 
             <Button onClick={() => setDialogOpen(false)}>Close</Button>
         </DialogActions>
-    )
+    );
 
 export default FooterTemplate;
