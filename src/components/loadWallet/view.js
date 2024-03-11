@@ -3,7 +3,6 @@ import '@fontsource/inter-tight';
 import { Box, IconButton, Paper, Snackbar, Table, TableBody, TableContainer, TableRow, Typography  } from '@mui/material';
 import { ChainSelect, DateRangeSelect, DirectionSelect, FilterWalletSelect, MoveSelect, TypeSelect, WalletSelectAuto } from '../../elements/dropdowns';
 import { ColorButton, FetchTypeSelect, ToggleChipButton } from '../../elements/buttons';
-import { useAuth } from '../../auth/google';
 import { StyledTableCell, StyledTableHead, StyledTableRow, loadWalletStyles, textGradientStyle } from './styles';
 import { moves, displayWallets as wallets } from "../../lib/data";
 import AllocationTable from '../allocationTable/';
@@ -47,9 +46,12 @@ const LoadWallet = ({
     // ux.calculations
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
+    // ux.auth
+    handleCappedMoveExport
+
 } = {}) => {
 
-    const { accessToken } = useAuth();
+    console.log("")
     
     // console.log("SavedTables: ",savedTables)
     // console.log("BlendedTableList: ",  blendedTableList);
@@ -269,8 +271,8 @@ const LoadWallet = ({
                 saveTableSnackbarMessage={saveTableSnackbarMessage}
                 saveTableSnackbarOpen={saveTableSnackbarOpen}
                 handleCloseSaveTableSnackbar={handleCloseSaveTableSnackbar}
+                handleCappedMoveExport={handleCappedMoveExport}
                 fetchType={fetchType}
-                accessToken={accessToken}
                 cappedMoveAmount={1000}
             />
 

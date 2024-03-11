@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { format } from 'date-fns';
 import { generateAllocationTableTitle } from "../../../lib/functions/format";
 import { roundToNearest5Minutes } from '../../../lib/functions/time';
-import { format } from 'date-fns';
 
 const HeaderUX = ({
     selectedWallets, 
@@ -14,6 +14,7 @@ const HeaderUX = ({
     const [showHeaderRow, setShowHeaderRow] = useState(true);
     const [adjustedNetTotal, setAdjustedNetTotal] = useState("");
     const [numberOfTokensToDistribute, setNumberofTokensToDistribute] = useState(0); 
+    const [cappedMoveAmount, setCappedMoveAmount] = useState(0); 
     const [generatedDateString, setGeneratedDateString] = useState("");
     const [generatedDateHTML, setGeneratedDateHTML] = useState("");
     const [sortBy, setSortBy] = useState("Amount");
@@ -37,6 +38,10 @@ const HeaderUX = ({
 
     const handleNumberOfTokensToDistributeChange = (event) => {
         setNumberofTokensToDistribute(event.target.value);
+    };
+
+    const handleCappedMoveAmountChange = (event) => {
+        setCappedMoveAmount(event.target.value);
     };
 
     const handleSortByChange = (value) => {
@@ -73,6 +78,7 @@ const HeaderUX = ({
         showHeaderRow,
         adjustedNetTotal,
         numberOfTokensToDistribute,
+        cappedMoveAmount,
         sortBy,
 
         handleToggleConversions,
@@ -80,6 +86,7 @@ const HeaderUX = ({
         handleToggleHeaderRow,
         handleAdjustedNetTotalChange,
         handleNumberOfTokensToDistributeChange,
+        handleCappedMoveAmountChange,
         handleSortByChange,
 
         dialogTitle,

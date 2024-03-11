@@ -106,6 +106,34 @@ const DistributionTokens = ({numberOfTokensToDistribute, handleNumberOfTokensToD
     </Box>
 )
 
+const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => (
+    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
+        <FormControl fullWidth sx={{ m: 1 }}>
+            <InputLabel 
+                htmlFor="outlined-adornment-amount" 
+                style={{ fontWeight: 'bold', color: '#097c8f' }}
+            >
+                Capped Move Amount
+            </InputLabel>
+            <OutlinedInput
+                id="outlined-adornment-amount"
+                variant="outlined"
+                size="small"
+                type="number"
+                value={cappedMoveAmount}
+                onChange={handleCappedMoveAmountChange}
+                startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                label="Capped Move Amount"
+                placeholder="Enter capped move amount"
+                sx={{ margin: "none", maxWidth: 200, fontFamily: 'Inter Tight, sans-serif' }}
+                InputLabelProps={{
+                    style: { fontWeight: 'bold', color: '#097c8f' },
+                }}
+            />
+        </FormControl>
+    </Box>
+)
+
 const HeaderTemplate = ({
     savedTableId,
     showConversions,
@@ -120,6 +148,8 @@ const HeaderTemplate = ({
     handleAdjustedNetTotalChange,
     numberOfTokensToDistribute, 
     handleNumberOfTokensToDistributeChange,
+    cappedMoveAmount,
+    handleCappedMoveAmountChange
 }) => (
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '15px', marginRight: '25px' }}> 
         <Box> 
@@ -144,6 +174,8 @@ const HeaderTemplate = ({
             {AdjustedNetTotalTemplate({ adjustedNetTotal, handleAdjustedNetTotalChange })}
 
             {DistributionTokens({ numberOfTokensToDistribute, handleNumberOfTokensToDistributeChange })}
+
+            {CappedMoveAmount({ cappedMoveAmount, handleCappedMoveAmountChange })}
         </Box>
     </Box>
 )

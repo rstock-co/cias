@@ -8,6 +8,7 @@ import filterUX from "./ux.filter";
 import dialogUX from "./ux.dialog";
 import calculationsUX from "./ux.calculations";
 
+
 const InitUX = hoc(initUX);
 const BaseUX = hoc(baseUX);
 const SaveTableUX = hoc(saveTableUX);

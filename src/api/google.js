@@ -5,7 +5,6 @@ import {
   GOOGLE_DRIVE_API_URL, 
   GOOGLE_SS_API_URL, 
 } from '../lib/data';
-import { loginToGoogle } from '../auth/google';
 import axios from "axios";
 
 
@@ -70,13 +69,8 @@ export const createNewCappedMove = async (model) => {
   const {accessToken, data, dateTime, indexTabName, moveName, walletAddress, cappedMoveAmount } = model;
   const newSheetName = `${moveName}_${dateTime}`;
   const newTabName = `membership-weighting-${dateTime}`;
+  console.log("ACCESS TOKEN: ", accessToken)
   try {
-
-    // Step 0: Ensure the user is authenticated with Google
-    if (!accessToken) {
-      console.log('User is not authenticated, initiating login...');
-      loginToGoogle();
-    } 
 
     // Step 1a: Copy the template spreadsheet
     const copyResponse = await axios.post(

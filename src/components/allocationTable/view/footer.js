@@ -1,8 +1,6 @@
 import { Button, DialogActions }  from "@mui/material";
 import { copyDistributionToClipboard, printBlendedTableToPDF } from "../../../lib/functions/actions"; // printTableToPDF
-import { createNewCappedMove, generateCappedMoveData } from "../../../api/google";
 import { extractTitle } from "../../../lib/functions/format";
-import { getNowMST } from "../../../lib/functions/time";
 
 const FooterTemplate = ({ 
     savedTableId, 
@@ -25,27 +23,11 @@ const FooterTemplate = ({
     totalShare, 
     adjustedNetTotal,
     numberOfTokensToDistribute,
-    accessToken,
+    handleCappedMoveExport,
     cappedMoveAmount
-}) => {
-        
-    const dateTime = getNowMST();
-    const moveName = 'test-move'
-
-    return (
+}) => (
         <DialogActions>
-            {cappedMoveAmount && 
-                <Button onClick={() => createNewCappedMove({
-                    accessToken, 
-                    data: generateCappedMoveData(sortedAllocationTableData, dialogTitle, moveName, dateTime), 
-                    dateTime,
-                    indexSheetName: 'index',
-                    moveName,
-                    walletAddress: '0x13k4as983423klakl942032340934jk',
-                    cappedMoveAmount})}
-                >
-                    Generate Capped Move
-                </Button>}
+            {cappedMoveAmount && <Button onClick={handleCappedMoveExport}> Generate Capped Move </Button>}
             {numberOfTokensToDistribute && 
                 <Button onClick={() => copyDistributionToClipboard(sortedAllocationTableData, numberOfTokensToDistribute, dialogTitle)}>Copy Distribution</Button>}
             {savedTableId && 
@@ -90,7 +72,7 @@ const FooterTemplate = ({
 
             <Button onClick={() => setDialogOpen(false)}>Close</Button>
         </DialogActions>
-    );
-};
+);
+
 
 export default FooterTemplate;
