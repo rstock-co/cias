@@ -51,8 +51,11 @@ export const getHistoricalPrice = (currency, timestamp, historicalBNBPrices, his
         return 0;
     }
 
+    // Convert timestamp to MST by subtracting 7 hours (25200 seconds)
+    const mstTimestamp = new Date(timestamp - 25200 * 1000); // Convert seconds to milliseconds
+
     // Convert timestamp to date string
-    const [dateString] = new Date(timestamp).toISOString().split('T');
+    const [dateString] = new Date(mstTimestamp).toISOString().split('T');
 
     const historicalPrices = currency === 'ETH' ? historicalETHPrices : historicalBNBPrices;
 
