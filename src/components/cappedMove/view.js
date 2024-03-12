@@ -1,15 +1,35 @@
 import "@fontsource/inter-tight";
 import { Box, DialogContent, FormControl, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyledBox, StyledDialog, StyledTypography } from './styles';
 import { ColorButton } from '../../elements/buttons';
-import React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { WalletSelectAuto } from '../../elements/dropdowns';
 import { autoCompleteTheme } from '../../elements/dropdowns/styles';
+import { debounce } from '../../lib/functions/time';
 import { formatCurrency } from "../../lib/functions/format";
 
-const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => (
-  <ThemeProvider theme={autoCompleteTheme}>
+const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => {
+  // Local state to handle input value
+  const [inputValue, setInputValue] = useState(cappedMoveAmount);
+
+  // Debounced change handler
+  const debouncedHandleChange = useCallback(debounce((value) => {
+    handleCappedMoveAmountChange(value);
+}, 1000), []);
+
+  useEffect(() => {
+      // Update local state when the prop changes
+      setInputValue(cappedMoveAmount);
+  }, [cappedMoveAmount]);
+
+  const handleChange = (event) => {
+      const { value } = event.target;
+      setInputValue(value); // Update local state immediately
+      debouncedHandleChange(value); // Call debounced parent change handler
+  };
+
+  return (<ThemeProvider theme={autoCompleteTheme}>
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
         <FormControl fullWidth sx={{ m: 1 }}>
             <InputLabel 
@@ -23,8 +43,8 @@ const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => 
                 variant="outlined"
                 size="small"
                 type="number"
-                value={cappedMoveAmount}
-                onChange={handleCappedMoveAmountChange}
+                value={inputValue}
+                onChange={e => handleChange(e)}
                 startAdornment={<InputAdornment position="start" sx={{color: "#6DFAFE"}}>$</InputAdornment>}
                 label="Capped Move Amount"
                 placeholder="Enter capped move amount"
@@ -35,8 +55,8 @@ const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => 
             />
         </FormControl>
     </Box>
-  </ThemeProvider>
-)
+  </ThemeProvider>)
+}
 
 const CappedMoveDialog = ({ open = false, wallets, selectedWallets, handleMultiSelectWalletChange, cappedMoveAmount, handleCappedMoveAmountChange, setAllocationDialogOpen, setFinishCappedMoveDialogOpen }) => (
     <StyledDialog 

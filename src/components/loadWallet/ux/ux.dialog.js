@@ -69,8 +69,8 @@ const DialogUX = ({isLoading, tableData = [], blendedTableList, setSelectedWalle
         setSnackbarOpen(false);
     };
 
-    const handleCappedMoveAmountChange = (event) => {
-        setCappedMoveAmount(event.target.value);
+    const handleCappedMoveAmountChange = (value) => {
+        setCappedMoveAmount(value);
     };
 
     const handleMultiSelectCappedMoveWalletChange = (walletNames, reason) => {

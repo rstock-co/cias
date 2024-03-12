@@ -1,7 +1,9 @@
 import { Box, Chip, FormControl, InputAdornment, InputLabel, OutlinedInput, Typography } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
 import CustomColorToggle from '../../../elements/toggles/coloredToggle';
 import { SortAllocationSelect } from '../../../elements/dropdowns';
 import { chipStyles } from './styles';
+import { debounce } from '../../../lib/functions/time';
 
 const ShowConversionsTemplate = ({ showConversions, handleToggleConversions }) => (
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
@@ -106,7 +108,26 @@ const DistributionTokens = ({numberOfTokensToDistribute, handleNumberOfTokensToD
     </Box>
 )
 
-const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => (
+const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => { 
+    const [inputValue, setInputValue] = useState(cappedMoveAmount);
+
+    // Debounced change handler
+    const debouncedHandleChange = useCallback(debounce((value) => {
+        handleCappedMoveAmountChange(value);
+    }, 1000), []);
+
+    useEffect(() => {
+        // Update local state when the prop changes
+        setInputValue(cappedMoveAmount);
+    }, [cappedMoveAmount]);
+
+    const handleChange = (event) => {
+        const { value } = event.target;
+        setInputValue(value); // Update local state immediately
+        debouncedHandleChange(value); // Call debounced parent change handler
+    };
+    
+    return (
     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
         <FormControl fullWidth sx={{ m: 1 }}>
             <InputLabel 
@@ -120,8 +141,8 @@ const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => 
                 variant="outlined"
                 size="small"
                 type="number"
-                value={cappedMoveAmount}
-                onChange={handleCappedMoveAmountChange}
+                value={inputValue}
+                onChange={e => handleChange(e)}
                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
                 label="Capped Move Amount"
                 placeholder="Enter capped move amount"
@@ -132,7 +153,8 @@ const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => 
             />
         </FormControl>
     </Box>
-)
+    )
+}
 
 const HeaderTemplate = ({
     savedTableId,

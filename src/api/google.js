@@ -129,7 +129,7 @@ export const createNewCappedMove = async (model) => {
     console.log('Step 2: New sheet populated successfully:', updateResponse.data);
     
     // Step 3: Update the capped moves index file with the new spreadsheet metadata
-    const firstDataColumn = 'C';
+    const firstDataColumn = 'D';
 
     const rowIndexResponse = await axios.get(
       `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${indexTabName}!A1`,
