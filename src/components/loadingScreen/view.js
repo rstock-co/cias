@@ -24,10 +24,7 @@ const CoinTemplate = ([coinKey, { name, chain, loading, txns }]) => (
   </Box>
 )
 
-const LoadingScreen = ({ stableCoins, open = false }) => {
-  console.log("")
-  // console.log("StableCoins from loading screen: ", stableCoins)
-  return (
+const LoadingScreen = ({ stableCoins, open = false }) => (
     <StyledDialog 
       open={open}
     >
@@ -38,6 +35,5 @@ const LoadingScreen = ({ stableCoins, open = false }) => {
       </DialogContent>
     </StyledDialog>
   );
-};
 
 export default LoadingScreen;

@@ -7,6 +7,7 @@ import { StyledTableCell, StyledTableHead, StyledTableRow, loadWalletStyles, tex
 import { moves, displayWallets as wallets } from "../../lib/data";
 import AllocationTable from '../allocationTable/';
 import BlendedAllocationTable from '../blendedTable/';
+import CappedMoveDialog from '../cappedMove/view';
 import ChainCashFlowDialog from '../chainCashFlow/view';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import LoadingScreen from '../loadingScreen/view';
@@ -19,7 +20,7 @@ import "./styles.css";
 
 const LoadWallet = ({
     // ux.init
-    stableCoins, selectedWallets, fetchType, setFetchType, // historicalBNBPrices, historicalETHPrices,
+    stableCoins, selectedWallets, fetchType, setFetchType, historicalETHPrices, // historicalBNBPrices, 
     // ux.base
     tableData, handleMultiSelectWalletChange, // handleSelectedWalletChange, 
 
@@ -37,11 +38,12 @@ const LoadWallet = ({
     filters, handleFilterValueChange, handleFilterChange, handleDateChange, handleClearFilters, // isStartDateComplete, isEndDateComplete,
 
     // ux.dialog
-    allocationDialogOpen, setAllocationDialogOpen, blendedAllocationDialogOpen, setBlendedAllocationDialogOpen, handleGenerateAllocations, handleGenerateCappedMove,
+    allocationDialogOpen, setAllocationDialogOpen, blendedAllocationDialogOpen, setBlendedAllocationDialogOpen, handleGenerateAllocations, handleGenerateCappedMove, finishCappedMoveDialogOpen, setFinishCappedMoveDialogOpen, selectedCappedMoveWallets, handleMultiSelectCappedMoveWalletChange,
     chainDialogOpen, setChainDialogOpen, handleGenerateChainFlow,
     snackbarOpen, setSnackbarOpen, handleCloseSnackbar,
     loadingDialogOpen,
     memberSummaryDialogOpen, setMemberSummaryDialogOpen, handleMemberSummary, memberSummaryData,
+    isCappedMove, cappedMoveAmount, handleCappedMoveAmountChange,
 
     // ux.calculations
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
@@ -51,14 +53,14 @@ const LoadWallet = ({
 
 } = {}) => {
 
-    console.log("")
+    // console.log("isCappedMove: ", isCappedMove)
     
     // console.log("SavedTables: ",savedTables)
     // console.log("BlendedTableList: ",  blendedTableList);
     // console.log("TransferTxnsToBlend: ", transferTxnsToBlend);
-    // console.log("tableData: ", tableData);
+    console.log("tableData: ", tableData);
     // console.log("historicalBNBPrices: ", historicalBNBPrices);
-    // console.log("historicalETHPrices: ", historicalETHPrices);
+    console.log("historicalETHPrices: ", historicalETHPrices);
     // // console.log("WALLETS: ", wallets);
     // console.log("FILTERS: ", filters);
     // console.log("=========== START DATE =============");
@@ -118,8 +120,8 @@ const LoadWallet = ({
                         setFetchType={setFetchType} 
                     />
                     <Box sx={{ display: 'flex', gap: '15px'}}>
-                        <ColorButton onClick={handleGenerateCappedMove} buttonText="Generate Capped Move" />
-                        <ColorButton onClick={handleGenerateChainFlow} buttonText="Saved Tables" />
+                        {isCappedMove ? null : <ColorButton onClick={handleGenerateCappedMove} buttonText="Generate Capped Move" />}
+                        {/* <ColorButton onClick={handleGenerateChainFlow} buttonText="Saved Tables" /> */}
                     </Box>
                     
                 </Box>
@@ -137,7 +139,7 @@ const LoadWallet = ({
   
                     <Box sx={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
                         <ColorButton onClick={handleClearFilters} buttonText="Clear All Filters" />
-                        <ColorButton onClick={handleGenerateAllocations} buttonText="Generate Allocations" />
+                        <ColorButton onClick={handleGenerateAllocations} buttonText={isCappedMove ? "Finish Capped Move" : "Generate Allocations"} special={isCappedMove} />
                         <ColorButton onClick={handleGenerateChainFlow} buttonText="Chain Cash Flow" />
                         {/* <SettingsIcon sx={{ fontSize: 40, color: '#095D6F' }} /> */}
                     </Box>
@@ -273,7 +275,10 @@ const LoadWallet = ({
                 handleCloseSaveTableSnackbar={handleCloseSaveTableSnackbar}
                 handleCappedMoveExport={handleCappedMoveExport}
                 fetchType={fetchType}
-                cappedMoveAmount={1000}
+                isCappedMove={isCappedMove}
+                cappedMoveAmount={cappedMoveAmount}
+                handleCappedMoveAmountChange={handleCappedMoveAmountChange}
+                selectedCappedMoveWallets={selectedCappedMoveWallets}
             />
 
             <BlendedAllocationTable
@@ -311,6 +316,16 @@ const LoadWallet = ({
                 memberData={memberSummaryData} 
                 dialogOpen={memberSummaryDialogOpen} 
                 setDialogOpen={setMemberSummaryDialogOpen} 
+            />
+            <CappedMoveDialog
+                open={finishCappedMoveDialogOpen}
+                wallets={wallets}
+                selectedWallets={selectedCappedMoveWallets}
+                handleMultiSelectWalletChange={handleMultiSelectCappedMoveWalletChange} 
+                cappedMoveAmount={cappedMoveAmount}
+                handleCappedMoveAmountChange={handleCappedMoveAmountChange}
+                setAllocationDialogOpen={setAllocationDialogOpen}
+                setFinishCappedMoveDialogOpen={setFinishCappedMoveDialogOpen}
             />
         </Box>
     );

@@ -1,19 +1,20 @@
 import { Button, Chip } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-export const StyledColorButton = styled(Button)(() => ({
+export const StyledColorButton = styled(Button)(({ special }) => ({
     // background: '#04373A',
-    background: `linear-gradient(to right, #022027, #04373A)`,
+    background: special ? '#0A5067' : `linear-gradient(to right, #022027, #04373A)`,
     color: '#08E2EA',
     border: '1px solid #08E2EA',
     transform: 'translateY(-2px)',
-    boxShadow: '3.5px 3.5px 0 #095D6F',
+    boxShadow: special ? '0 0 3px 3px #b09946' : '3.5px 3.5px 0 #095D6F',
     transition: 'box-shadow 0.3s ease-in-out',
     marginTop: 12,
     '&:hover': {
+        color: special ? '#49afe3' : '#08E2EA',
         background: '#0A5067',
-        backgroundColor: '#0c546e',
-        boxShadow: '0 0 10px #08E2EA', // 0 0 20px #1D5AEF, 0 0 30px #1D5AEF, 0 0 40px #1D5AEF',
+        backgroundColor: special ? '#0c3769' : '#0A5067',
+        boxShadow: special ? '0 0 10px #7dbaff' : '0 0 10px #08E2EA', // 0 0 20px #1D5AEF, 0 0 30px #1D5AEF, 0 0 40px #1D5AEF',
     },
 }));
 

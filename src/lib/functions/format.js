@@ -139,3 +139,16 @@ export const extractTitle = (tableTitle) => {
         .map(s => s.trim().replace(/-/g, ' '))
         .join(' | ');
 }
+
+export const formatCurrency = (amount) => {
+    if (amount === undefined || amount === null || isNaN(amount) || Number(amount) === 0 || amount === '0') {
+        return "$0.00";
+    }
+
+    return amount.toLocaleString(undefined, {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+}

@@ -27,12 +27,12 @@ const FooterTemplate = ({
     cappedMoveAmount
 }) => (
         <DialogActions>
-            {cappedMoveAmount && <Button onClick={handleCappedMoveExport}> Generate Capped Move </Button>}
-            {numberOfTokensToDistribute && 
-                <Button onClick={() => copyDistributionToClipboard(sortedAllocationTableData, numberOfTokensToDistribute, dialogTitle)}>Copy Distribution</Button>}
-            {savedTableId && 
-                <Button onClick={() => deleteTableData(savedTableId)}>Delete Table</Button>}
-            {!savedTableId && 
+            {cappedMoveAmount ? <Button onClick={handleCappedMoveExport}> Export Capped Move </Button> : null}
+            {numberOfTokensToDistribute ?
+                <Button onClick={() => copyDistributionToClipboard(sortedAllocationTableData, numberOfTokensToDistribute, dialogTitle)}>Copy Distribution</Button> : null}
+            {savedTableId ?
+                <Button onClick={() => deleteTableData(savedTableId)}>Delete Table</Button> : null}
+            {!savedTableId ?
                 <Button onClick={() => saveTableData({
                     selectedWallets,
                     move,
@@ -53,7 +53,7 @@ const FooterTemplate = ({
                     }})}
                 >
                     Save Table
-                </Button>}
+                </Button> : null}
             <Button onClick={() => {printBlendedTableToPDF(
                 'allocationTable', 
                 sortedAllocationTableData.length > 15 ? 'portrait' : 'landscape', 

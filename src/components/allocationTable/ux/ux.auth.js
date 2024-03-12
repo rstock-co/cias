@@ -1,17 +1,18 @@
 import { createNewCappedMove, generateCappedMoveData } from '../../../api/google';
 import { useEffect, useState } from 'react';
-import { generateAllocationTableTitle } from "../../../lib/functions/format";
 import { getNowMST } from '../../../lib/functions/time';
 import { useAuth } from '../../../auth/google';
 
-const AuthUX = ({sortedAllocationTableData, selectedWallets, cappedMoveAmount }) => {
+const AuthUX = ({sortedAllocationTableData, cappedMoveAmount, selectedCappedMoveWallets, }) => {
 
     console.log("SORTED DATA: ", sortedAllocationTableData)
 
     const { accessToken, initiateGoogleLogin } = useAuth();
     const [isExporting, setIsExporting] = useState(false);
     const dateTime = getNowMST();
-    const moveName = 'test-move'
+    const { name, address } = selectedCappedMoveWallets.length > 0 ? selectedCappedMoveWallets[0] : {name: undefined, address: undefined};
+    console.log("NAME: ", name)
+    console.log("ADDRESS: ", address)
 
     useEffect(() => {
         console.log("USE EFFECT FOR GOOGLE AUTH TRIGGERED")
@@ -21,11 +22,11 @@ const AuthUX = ({sortedAllocationTableData, selectedWallets, cappedMoveAmount })
                 try {
                     await createNewCappedMove({
                         accessToken,
-                        data: generateCappedMoveData(sortedAllocationTableData, generateAllocationTableTitle(selectedWallets), moveName, dateTime), 
+                        data: generateCappedMoveData(sortedAllocationTableData, `Capped Move for ${name}`, dateTime), 
                         dateTime,
-                        indexTabName: 'index', // Assuming this is predefined or coming from props
-                        moveName,
-                        walletAddress: '0x13k4as983423klakl942032340934jk', // Adjust as needed
+                        indexTabName: 'index', 
+                        moveName: name,
+                        walletAddress: address,
                         cappedMoveAmount,
                     });
                 } catch (error) {
@@ -41,13 +42,11 @@ const AuthUX = ({sortedAllocationTableData, selectedWallets, cappedMoveAmount })
 
     const handleCappedMoveExport = () => {
         if (!accessToken) {
-            console.log('No access token available, initiating login.');
+            console.log('No Google OAuth 2.0 token found, initiating login..');
             initiateGoogleLogin();
-            setIsExporting(true); // Set the flag to indicate an export attempt is pending
-        } else {
-            setIsExporting(true); // If already logged in, immediately attempt to export
         }
-    };
+        setIsExporting(true); // Set the flag to indicate an export attempt is pending
+    };        
 
     return {
         isExporting,

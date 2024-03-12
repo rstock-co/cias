@@ -1,10 +1,16 @@
 import { Box, Typography } from '@mui/material';
 import { WalletSummary } from '../../../elements/templates/tables';
 
-export const TableTitleTemplate = ({ dialogTitle }) => (
-    <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none', marginTop: '15px', marginLeft: '20px', marginBottom: '10px' }}>
-        {dialogTitle}
-    </Typography>
+export const TableTitleTemplate = ({ dialogTitle, isCappedMove, selectedCappedMoveWallets }) => (
+    <>
+        {isCappedMove && selectedCappedMoveWallets && selectedCappedMoveWallets.length > 0 ? 
+            (<Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: '27px', border: 'none', marginTop: '15px', marginLeft: '20px', marginBottom: '10px' }}>
+                Capped Move: <span style={{ fontWeight: 600, fontSize: '29px', color: '#097c8f' }}>{selectedCappedMoveWallets[0].name}</span> 
+            </Typography>) : null}
+        <Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 'bold', fontSize: isCappedMove ? '24px' : '27px', border: 'none', marginTop: '15px', marginLeft: '20px', marginBottom: '10px' }}>
+            {dialogTitle}
+        </Typography>
+    </>
 );
 
 const WalletSummaryTemplate = ({ 

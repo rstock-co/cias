@@ -24,16 +24,16 @@ import axios from "axios";
  * formatted as a percentage string, and the USD amount formatted to four decimal places.
 */   
 
-export const generateCappedMoveData = (sortedAllocationTableData, walletName, moveName, dateTime) => {
-    const formattedWalletName = `${walletName.replace("Aggregated Allocation Table", "Membership Weightings").replace("' Wallet", "")} (to generate Capped Move allocation for ${moveName})`;
+export const generateCappedMoveData = (sortedAllocationTableData, moveName, dateTime) => {
   
     // Prepare title, headers
-    const titleRow = [formattedWalletName];
-    const spacerRow = [`generated on ${dateTime}`]; // One row space
+    const titleRow = [moveName];
+    const subTitleRow = [`generated on ${dateTime}`]; // One row space
+    const spacerRow = [``]; // One row space
     const headersRow = ['Wallet Address', 'Share %', 'USD Amount'];
   
     // Initialize the 2D array with the title, spacer, and headers
-    let tableDataArray = [titleRow, spacerRow, headersRow];
+    let tableDataArray = [titleRow, subTitleRow, spacerRow, headersRow];
   
     // Map over sortedAllocationTableData to format each row of data
     sortedAllocationTableData.forEach(({ memberWallet, share, adjustedNetAmount }) => {
@@ -132,7 +132,7 @@ export const createNewCappedMove = async (model) => {
     const firstDataColumn = 'C';
 
     const rowIndexResponse = await axios.get(
-      `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${indexSheetName}!A1`,
+      `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${indexTabName}!A1`,
       { headers: { 'Authorization': `Bearer ${accessToken}` } }
     );
 

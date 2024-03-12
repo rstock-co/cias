@@ -1,17 +1,22 @@
 
 import { useEffect, useState } from 'react';
 import { generateMemberSummaryTableData } from '../../memberSummary/data';
+import { getWalletAddress } from '../../../lib/functions/wallets';
 
 const DialogUX = ({isLoading, tableData = [], blendedTableList, setSelectedWallets, setFetchType }) => {
 
     // DIALOG BOX STATES
     const [allocationDialogOpen, setAllocationDialogOpen] = useState(false);
     const [blendedAllocationDialogOpen, setBlendedAllocationDialogOpen] = useState(false);
+    const [finishCappedMoveDialogOpen, setFinishCappedMoveDialogOpen] = useState(false);
     const [chainDialogOpen, setChainDialogOpen] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [loadingDialogOpen, setLoadingDialogOpen] = useState(false);
     const [memberSummaryDialogOpen, setMemberSummaryDialogOpen] = useState(false);
     const [memberSummaryData, setMemberSummaryData] = useState({});
+    const [isCappedMove, setIsCappedMove] = useState(false);
+    const [cappedMoveAmount, setCappedMoveAmount] = useState(0); 
+    const [selectedCappedMoveWallets, setSelectedCappedMoveWallets] = useState([]);
 
     // Loading screen dialog box
     useEffect(() => {
@@ -25,15 +30,19 @@ const DialogUX = ({isLoading, tableData = [], blendedTableList, setSelectedWalle
 
     // DIALOG HANDLERS
     const handleGenerateAllocations = () => {
-        if (blendedTableList.length > 0) {
-            setBlendedAllocationDialogOpen(true);
-        } else {
-            setAllocationDialogOpen(true);
+        if (isCappedMove) setFinishCappedMoveDialogOpen(true);
+        else {
+            if (blendedTableList.length > 0) {
+                setBlendedAllocationDialogOpen(true);
+            } else {
+                setAllocationDialogOpen(true);
+            }
         }
     };
 
     const handleGenerateCappedMove = () => {
         setFetchType('all');
+        setIsCappedMove(true);
         setTimeout(() => {
             setSelectedWallets([
               {
@@ -60,6 +69,20 @@ const DialogUX = ({isLoading, tableData = [], blendedTableList, setSelectedWalle
         setSnackbarOpen(false);
     };
 
+    const handleCappedMoveAmountChange = (event) => {
+        setCappedMoveAmount(event.target.value);
+    };
+
+    const handleMultiSelectCappedMoveWalletChange = (walletNames, reason) => {
+        console.log('reason', reason)
+        const walletAddresses = walletNames.map(name => getWalletAddress(name));
+        const selectedWallets = walletNames.map((name, i) => ({
+            name,
+            address: walletAddresses[i]
+        }));
+        setSelectedCappedMoveWallets(selectedWallets);
+    }
+
     const handleMemberSummary = (memberWallet) => {
         const [memberName, ...memberSummary] = generateMemberSummaryTableData(tableData, memberWallet);
         setMemberSummaryData({ memberName, memberSummary });
@@ -71,6 +94,8 @@ const DialogUX = ({isLoading, tableData = [], blendedTableList, setSelectedWalle
         setAllocationDialogOpen,
         blendedAllocationDialogOpen, 
         setBlendedAllocationDialogOpen,
+        finishCappedMoveDialogOpen,
+        setFinishCappedMoveDialogOpen,
         handleGenerateAllocations,
         handleGenerateCappedMove,
 
@@ -88,6 +113,13 @@ const DialogUX = ({isLoading, tableData = [], blendedTableList, setSelectedWalle
         setMemberSummaryDialogOpen,
         handleMemberSummary,
         memberSummaryData,
+
+        isCappedMove,
+        setIsCappedMove,
+        cappedMoveAmount,
+        handleCappedMoveAmountChange,
+        selectedCappedMoveWallets,
+        handleMultiSelectCappedMoveWalletChange,
     }
 }
 

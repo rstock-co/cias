@@ -228,6 +228,23 @@ export const autoCompleteTheme = createTheme({
                 },
             },
         },
+        MuiFormLabel: {
+            styleOverrides: {
+                root: {
+                    fontSize: "13px",
+                    color: "#e6c347",
+                    fontWeight: "bold",
+                    "&.Mui-focused": {
+                        fontSize: "13px",
+                        color: "#e6c347", // Update the color to yellow
+                    },
+                    "&.MuiInputLabel-shrink": {
+                        fontSize: "17px",
+                        left: "-5px",
+                    },
+                },
+            },
+        },
         MuiChip: {
             styleOverrides: {
                 root: {
@@ -291,6 +308,25 @@ export const autoCompleteTheme = createTheme({
                     }
                 }
             
+            }
+        },
+        MuiTypography: {
+            styleOverrides: {
+                root: {
+                    '&.MuiTypography-root':{
+                    fontFamily: 'Inter Tight, sans-serif',
+                    fontSize: '15px',
+                    color: '#6DFAFE',
+                    }
+                },
+                body1: {
+                    '&.MuiTypography-root.MuiTypography-body1': {
+                    fontFamily: 'Inter Tight, sans-serif',
+                    fontSize: '15px',
+                    color: '#6DFAFE',
+                    }
+                },
+
             }
         }
     },
