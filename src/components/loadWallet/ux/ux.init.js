@@ -14,7 +14,7 @@ const InitUX = () => {
 
     // TRANSACTIONS
     const [txns, setTxns] = useState([]);
-    const [fetchType, setFetchType] = useState('erc20'); // 'normal', 'erc20', 'all'
+    const [fetchType, setFetchType] = useState('all'); // 'normal', 'erc20', 'all'
     const [historicalBNBPrices, setHistoricalBNBPrices] = useState([]);
     const [historicalETHPrices, setHistoricalETHPrices] = useState([]);
 
