@@ -338,6 +338,7 @@ const LoadWallet = ({
             />
             <CappedMoveDialog
                 open={finishCappedMoveDialogOpen}
+                onClose={() => setFinishCappedMoveDialogOpen(false)}
                 wallets={wallets}
                 selectedWallets={selectedCappedMoveWallets}
                 handleMultiSelectWalletChange={handleMultiSelectCappedMoveWalletChange} 

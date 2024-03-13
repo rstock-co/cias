@@ -1,7 +1,8 @@
 import "@fontsource/inter-tight";
-import { Box, DialogContent, FormControl, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
+import { Box, DialogContent, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyledBox, StyledDialog, StyledTypography } from './styles';
+import CloseIcon from '@mui/icons-material/Close';
 import { ColorButton } from '../../elements/buttons';
 import { ThemeProvider } from '@mui/material/styles';
 import { WalletSelectAuto } from '../../elements/dropdowns';
@@ -58,11 +59,28 @@ const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => 
   </ThemeProvider>)
 }
 
-const CappedMoveDialog = ({ open = false, wallets, selectedWallets, handleMultiSelectWalletChange, cappedMoveAmount, handleCappedMoveAmountChange, setAllocationDialogOpen, setFinishCappedMoveDialogOpen }) => (
+const CappedMoveDialog = ({ open = false, onClose, wallets, selectedWallets, handleMultiSelectWalletChange, cappedMoveAmount, handleCappedMoveAmountChange, setAllocationDialogOpen, setFinishCappedMoveDialogOpen }) => (
     <StyledDialog 
       open={open}
     >
       <DialogContent>
+        <IconButton
+          aria-label="close"
+          onClick={onClose} // Use the onClose function to close the dialog
+          sx={{
+            position: 'absolute',
+            right: 35,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+            backgroundColor: '#05434d',
+            '&:hover': {
+              backgroundColor: '#05434d',
+              color: "#6DFAFE",
+            }
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
         <StyledBox>
           <StyledTypography sx={{marginBottom: '0px', lineHeight: 1}}>
             Select Capped Move
