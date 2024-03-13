@@ -63,8 +63,9 @@ const AuthUX = ({sortedAllocationTableData, cappedMoveAmount, selectedCappedMove
     }, [accessToken, isExporting, isImporting]);
 
     useEffect(() => {
-        if (selectedWallets.length === 0) setIsCappedMove(false);
-        if (selectedWallets.length !== 1) return;
+        if (![1, 3].includes(selectedWallets.length)) setIsCappedMove(false); // only 1 is allowed for update, only 3 is allowed for generate
+        if (selectedWallets.length !== 1) return;  // the rest is only for update
+        
         // Assuming selectedWallets always contains only one wallet
         const selectedWalletName = selectedWallets[0]?.name;
     
@@ -99,7 +100,8 @@ const AuthUX = ({sortedAllocationTableData, cappedMoveAmount, selectedCappedMove
         handleCappedMoveExport,
         handleCappedMoveImport,
         importedCappedMoveData,
-        isCappedWalletFound
+        isCappedWalletFound,
+        setExportType
     }
 
 };

@@ -13,6 +13,7 @@ const DialogUX = ({
     setCappedMoveAmount, 
     isCappedMove, 
     setIsCappedMove, 
+    setExportType,
     handleCappedMoveImport
 }) => {
 
