@@ -145,13 +145,22 @@ const LoadWallet = ({
   
                     <Box sx={{ display: 'flex', gap: '15px', marginBottom: '15px' }}>
                         <ColorButton onClick={handleClearFilters} buttonText="Clear All Filters" />
+                        {isCappedMove && !isCappedWalletFound && selectedWallets.length === 1 ? null :
                         <ColorButton
                             onClick={handleGenerateAllocations}
                             buttonText={
-                                isCappedMove ? (isCappedWalletFound && selectedWallets.length === 1 ? "Update Capped Move" : ((!isCappedWalletFound && selectedWallets.length === 1) ? "Capped Move Not Found" : "Finish Capped Move")) : "Generate Allocations"
+                                isCappedMove ? 
+                                    (isCappedWalletFound && selectedWallets.length === 1 ? 
+                                        "Update Capped Move" : 
+                                        ((!isCappedWalletFound && selectedWallets.length === 1) ? 
+                                            "Capped Move Not Found" : 
+                                            "Generate Capped Move"
+                                        )
+                                    ) : 
+                                "Generate Allocations"
                             }
-                            special={isCappedMove}
-                        />
+                            highlighted={isCappedMove && !(isCappedMove && !isCappedWalletFound && selectedWallets.length === 1)}
+                        />}
                         <ColorButton onClick={handleGenerateChainFlow} buttonText="Chain Cash Flow" />
                         {/* <SettingsIcon sx={{ fontSize: 40, color: '#095D6F' }} /> */}
                     </Box>

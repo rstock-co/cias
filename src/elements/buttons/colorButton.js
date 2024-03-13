@@ -1,12 +1,11 @@
 import { StyledColorButton } from "./styles";
 
-export const ColorButton = ({ onClick, buttonText, special = false, disabled = false, ...props }) => (
+export const ColorButton = ({ onClick, buttonText, highlighted = false, ...props }) => (
     <StyledColorButton
         {...props}
         variant="contained"
         onClick={onClick}
-        special={special}
-        disabled={disabled}
+        highlighted={highlighted}
     >
         {buttonText}
     </StyledColorButton>
