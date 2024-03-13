@@ -5,6 +5,7 @@ import saveTableUX from "./ux.saveTable";
 import blendUX from "./ux.blend";
 import selectUX from "./ux.select";
 import filterUX from "./ux.filter";
+import authUX from "../../loadWallet/ux/ux.auth";
 import dialogUX from "./ux.dialog";
 import calculationsUX from "./ux.calculations";
 
@@ -15,10 +16,11 @@ const SaveTableUX = hoc(saveTableUX);
 const BlendUX = hoc(blendUX);
 const SelectUX = hoc(selectUX);
 const FilterUX = hoc(filterUX);
+const AuthUX = hoc(authUX);
 const DialogUX = hoc(dialogUX);
 const CalculationsUX = hoc(calculationsUX);
 
 // left-to-right execution
-const uxPipeline = [InitUX, BaseUX, SaveTableUX, BlendUX, SelectUX, FilterUX, DialogUX, CalculationsUX];
+const uxPipeline = [InitUX, BaseUX, SaveTableUX, BlendUX, SelectUX, FilterUX, AuthUX, DialogUX, CalculationsUX];
 
 export default uxPipeline;

@@ -24,10 +24,14 @@ const FooterTemplate = ({
     adjustedNetTotal,
     numberOfTokensToDistribute,
     handleCappedMoveExport,
+    exportType,
     cappedMoveAmount
 }) => (
         <DialogActions>
-            {cappedMoveAmount ? <Button onClick={handleCappedMoveExport}> Export Capped Move </Button> : null}
+            {cappedMoveAmount ? (
+                exportType === 'new' ? <Button onClick={() => handleCappedMoveExport('new')}> Generate Capped Move </Button>
+                : <Button onClick={() => handleCappedMoveExport('existing')}> Update Capped Move </Button>
+                ) : null}
             {numberOfTokensToDistribute ?
                 <Button onClick={() => copyDistributionToClipboard(sortedAllocationTableData, numberOfTokensToDistribute, dialogTitle)}>Copy Distribution</Button> : null}
             {savedTableId ?

@@ -1,9 +1,20 @@
-
 import { useEffect, useState } from 'react';
 import { generateMemberSummaryTableData } from '../../memberSummary/data';
 import { getWalletAddress } from '../../../lib/functions/wallets';
 
-const DialogUX = ({isLoading, tableData = [], blendedTableList, setSelectedWallets, setFetchType }) => {
+const DialogUX = ({
+    isLoading, 
+    tableData = [], 
+    blendedTableList, 
+    setSelectedWallets, 
+    setSelectedCappedMoveWallets, 
+    setFetchType, 
+    cappedMoveAmount, 
+    setCappedMoveAmount, 
+    isCappedMove, 
+    setIsCappedMove, 
+    handleCappedMoveImport
+}) => {
 
     // DIALOG BOX STATES
     const [allocationDialogOpen, setAllocationDialogOpen] = useState(false);
@@ -14,9 +25,7 @@ const DialogUX = ({isLoading, tableData = [], blendedTableList, setSelectedWalle
     const [loadingDialogOpen, setLoadingDialogOpen] = useState(false);
     const [memberSummaryDialogOpen, setMemberSummaryDialogOpen] = useState(false);
     const [memberSummaryData, setMemberSummaryData] = useState({});
-    const [isCappedMove, setIsCappedMove] = useState(false);
-    const [cappedMoveAmount, setCappedMoveAmount] = useState(0); 
-    const [selectedCappedMoveWallets, setSelectedCappedMoveWallets] = useState([]);
+    
 
     // Loading screen dialog box
     useEffect(() => {
@@ -43,6 +52,7 @@ const DialogUX = ({isLoading, tableData = [], blendedTableList, setSelectedWalle
     const handleGenerateCappedMove = () => {
         setFetchType('all');
         setIsCappedMove(true);
+        setExportType('new');
         setTimeout(() => {
             setSelectedWallets([
               {
@@ -60,7 +70,12 @@ const DialogUX = ({isLoading, tableData = [], blendedTableList, setSelectedWalle
             ]);
           }, 1000);
     };
-    
+
+    const handleUpdateCappedMove = () => {
+        setIsCappedMove(true);
+        handleCappedMoveImport("update");
+    }
+
     const handleGenerateChainFlow = () => {
         setChainDialogOpen(true);
     };
@@ -118,8 +133,8 @@ const DialogUX = ({isLoading, tableData = [], blendedTableList, setSelectedWalle
         setIsCappedMove,
         cappedMoveAmount,
         handleCappedMoveAmountChange,
-        selectedCappedMoveWallets,
         handleMultiSelectCappedMoveWalletChange,
+        handleUpdateCappedMove,
     }
 }
 

@@ -7,6 +7,11 @@ import {
 } from '../lib/data';
 import axios from "axios";
 
+/** GOOGLE SHEET ROW AND COLUMN POSITIONS */
+const FIRST_ROW_INDEX = 3;
+const FIRST_COLUMN_INDEX = 'D';
+const LAST_COLUMN_INDEX = 'H';
+
 
 /**
  * Prepares a 2D array representing a table of data formatted for easy insertion into a Google Sheet. 
@@ -129,7 +134,6 @@ export const createNewCappedMove = async (model) => {
     console.log('Step 2: New sheet populated successfully:', updateResponse.data);
     
     // Step 3: Update the capped moves index file with the new spreadsheet metadata
-    const firstDataColumn = 'D';
 
     const rowIndexResponse = await axios.get(
       `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${indexTabName}!A1`,
@@ -137,7 +141,7 @@ export const createNewCappedMove = async (model) => {
     );
 
     const [[rowIndex]] = rowIndexResponse.data.values;
-    const metaDataRange = `${indexTabName}!${firstDataColumn}${rowIndex}`;
+    const metaDataRange = `${indexTabName}!${FIRST_COLUMN_INDEX}${rowIndex}`;
     
 
     const metaData = [
@@ -157,12 +161,62 @@ export const createNewCappedMove = async (model) => {
   }
 }
 
+/**
+ * Imports capped move metadata from a specified range in the Google Sheets index file and updates a React state variable.
+ * 
+ * This function fetches metadata starting from row 4, columns D to H, up to the last row number specified in cell A1 of the index sheet.
+ * The fetched data is stored in a 2D array and intended to be used to update a React state variable.
+ *
+ * @param {string} accessToken Google OAuth2.0 access token with required permissions to read data from the spreadsheet.
+ * @param {string} sheetId The ID of the Google Sheet from which to import the metadata.
+ * @param {string} indexTabName Name of the tab in the index sheet from which to import metadata.
+ * @param {Function} setStateCallback The React state setter function to update the state with the imported data.
+ * 
+ * @returns {void} This function does not return a value. It updates the React state directly via the setStateCallback.
+ */
 
-// Example usage
-// const data = [
-//   ['Header1', 'Header2', 'Header3'],
-//   [1, 2, 3],
-//   [4, 5, 6]
-// ];
-// copyAndPopulateSheet(data, 'New Spreadsheet Name', 'RawData');
+export const importCappedMoveData = async (model) => {
+
+  const {accessToken, indexTabName, setStateCallback} = model;
+
+  try {
+    // Step 1: Get the last row number from cell A1
+    const rowIndexResponse = await axios.get(
+      `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${indexTabName}!A1`,
+      { headers: { 'Authorization': `Bearer ${accessToken}` } }
+    );
+
+    const [[lastRow]] = rowIndexResponse.data.values;
+    const lastRowNumber = Number(lastRow);
+
+    if (!lastRowNumber || isNaN(lastRowNumber)) {
+      console.error('Invalid row index retrieved: ', lastRow);
+      return;
+    }
+
+    console.log(`Step 1: Last row number: '${lastRowNumber}' obtained successfully`);
+
+    // Step 2: Fetch the data from the constructed range
+    const dataRange = `${indexTabName}!${FIRST_COLUMN_INDEX}${FIRST_ROW_INDEX}:${LAST_COLUMN_INDEX}${lastRowNumber - 1}`;
+
+    const dataResponse = await axios.get(
+      `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${dataRange}`,
+      { headers: { 'Authorization': `Bearer ${accessToken}` } }
+    );
+
+    const data = dataResponse.data.values;
+
+    console.log('Step 2: Data obtained successfully: ', data);
+
+    // Step 3: Update the React state with the fetched data
+    if (data && Array.isArray(data)) {
+      setStateCallback(data);
+    } else {
+      console.error('No data found in the specified range:', dataRange);
+    }
+
+  } catch (error) {
+    console.error('Error importing data:', error.response ? error.response.data : error.message);
+  }
+};
 

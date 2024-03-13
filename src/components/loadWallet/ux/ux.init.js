@@ -12,6 +12,11 @@ const InitUX = () => {
     const [selectedWallets, setSelectedWallets] = useState([]);
     const [previousWallets, setPreviousWallets] = useState([]);
 
+    // CAPPED MOVE
+    const [selectedCappedMoveWallets, setSelectedCappedMoveWallets] = useState([]);
+    const [isCappedMove, setIsCappedMove] = useState(false);
+    const [cappedMoveAmount, setCappedMoveAmount] = useState(0); 
+    
     // TRANSACTIONS
     const [txns, setTxns] = useState([]);
     const [fetchType, setFetchType] = useState('all'); // 'normal', 'erc20', 'all'
@@ -137,9 +142,17 @@ const InitUX = () => {
         setFetchType,
         selectedWallets,
         setSelectedWallets,
+
         fetchTransactions,
         isLoading,
         stableCoins,
+
+        isCappedMove,
+        setIsCappedMove,
+        cappedMoveAmount,
+        setCappedMoveAmount,
+        selectedCappedMoveWallets,
+        setSelectedCappedMoveWallets,
 
         historicalBNBPrices,
         historicalETHPrices,

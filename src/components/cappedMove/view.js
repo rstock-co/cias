@@ -16,7 +16,7 @@ const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => 
   // Debounced change handler
   const debouncedHandleChange = useCallback(debounce((value) => {
     handleCappedMoveAmountChange(value);
-}, 1000), []);
+}, 350), []);
 
   useEffect(() => {
       // Update local state when the prop changes
