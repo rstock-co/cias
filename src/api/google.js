@@ -120,7 +120,15 @@ export const createNewCappedMove = async ({
     );
 
     console.log('Step 2: New sheet populated successfully:', updateResponse.data);
-    
+
+    // Step2b: Update the capped move amount in the calculations tab
+    const cappedMoveAmountRange = `calculations!L3`;
+    await axios.put(
+      `${GOOGLE_SS_API_URL}/${newSpreadsheetId}/values/${cappedMoveAmountRange}?valueInputOption=USER_ENTERED`,
+      { values: [[cappedMoveAmount]] },
+      { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+    );
+
     // Step 3: Update the capped moves index file with the new spreadsheet metadata
 
     const rowIndexResponse = await axios.get(
