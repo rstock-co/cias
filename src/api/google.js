@@ -70,10 +70,18 @@ export const generateCappedMoveData = (sortedAllocationTableData, moveName, date
  * @param {number} cappedMoveAmount Capped amount for the move
  */
 
-export const createNewCappedMove = async (model) => {
-  const {accessToken, data, dateTime, indexTabName, moveName, walletAddress, cappedMoveAmount } = model;
+export const createNewCappedMove = async ({
+    accessToken, 
+    data, 
+    dateTime, 
+    targetTabName, 
+    moveName, 
+    walletAddress, 
+    cappedMoveAmount 
+}) => {
+
   const newSheetName = `${moveName}_${dateTime}`;
-  const newTabName = `membership-weighting-${dateTime}`;
+  const txnTabName = "membership-weighting";
   console.log("ACCESS TOKEN: ", accessToken)
   try {
 
@@ -95,29 +103,9 @@ export const createNewCappedMove = async (model) => {
     console.log('Step 1a: New sheet created successfully:');
     const newSpreadsheetId = copyResponse.data.id; // ID of the newly created spreadsheet
 
-  // Step 1b: Create a new tab with the name 'newTabName'
-  await axios.post(
-    `${GOOGLE_SS_API_URL}/${newSpreadsheetId}:batchUpdate`,
-    {
-      requests: [{
-        addSheet: {
-          properties: {
-            title: newTabName
-          }
-        }
-      }]
-    },
-    {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      }
-    }
-  );
-  console.log(`Step 1b: New tab named '${newTabName}' created successfully`);
 
     // Step 2: Populate the specified sheet in the new spreadsheet with data
-    const range = `${newTabName}!A1`; // Starting cell to populate data
+    const range = `${txnTabName}!A1`; // Starting cell to populate data
     const updateResponse = await axios.put(
       `${GOOGLE_SS_API_URL}/${newSpreadsheetId}/values/${range}?valueInputOption=USER_ENTERED`,
       {
@@ -136,12 +124,12 @@ export const createNewCappedMove = async (model) => {
     // Step 3: Update the capped moves index file with the new spreadsheet metadata
 
     const rowIndexResponse = await axios.get(
-      `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${indexTabName}!A1`,
+      `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${targetTabName}!A1`,
       { headers: { 'Authorization': `Bearer ${accessToken}` } }
     );
 
     const [[rowIndex]] = rowIndexResponse.data.values;
-    const metaDataRange = `${indexTabName}!${FIRST_COLUMN_INDEX}${rowIndex}`;
+    const metaDataRange = `${targetTabName}!${FIRST_COLUMN_INDEX}${rowIndex}`;
     
 
     const metaData = [
@@ -162,6 +150,71 @@ export const createNewCappedMove = async (model) => {
 }
 
 /**
+ * Update a specified sheet within an existing spreadsheet with data, and update index file with metadata.
+ * 
+ * @param {string} accessToken Google Oauth2.0 access token with required permissions to update the spreadsheet and write data to it.
+ * @param {Array<Array<string|number>>} data 2D array of data to populate in the sheet.
+ * @param {string} dateTime Date and time of NOW (in MST), as a string to append to the updated data.
+ * @param {string} targetTabName Name of the tab in the target sheet to store data
+ * @param {string} moveName Name of the capped move
+ * @param {string} walletAddress Wallet address for the capped move
+ * @param {number} cappedMoveAmount Capped amount for the move
+ * @param {string} spreadsheetId ID of the spreadsheet to update.
+ */
+
+export const updateExistingCappedMove = async ({
+  accessToken,
+  data,
+  // dateTime,
+  targetTabName,
+  // moveName,
+  // walletAddress,
+  // cappedMoveAmount,
+  CAPPED_SSID
+}) => {
+
+  try {
+    // Step 1: Update the specified sheet with new data
+    const range = `${targetTabName}!A1`; // Starting cell to populate data
+    const updateResponse = await axios.put(
+      `${GOOGLE_SS_API_URL}/${CAPPED_SSID}/values/${range}?valueInputOption=USER_ENTERED`,
+      { values: data },
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    console.log('Step 1: Sheet updated successfully:', updateResponse.data);
+
+    // Step 2: Update the log sheet with the new metadata
+    // const rowIndexResponse = await axios.get(
+    //   `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${indexTabName}!A1`,
+    //   { headers: { 'Authorization': `Bearer ${accessToken}` } }
+    // );
+
+    // const [[rowIndex]] = rowIndexResponse.data.values;
+    // const metaDataRange = `${indexTabName}!A${parseInt(rowIndex) + 1}`; // Assuming you're appending to the end
+
+    // const metaData = [
+    //   [dateTime, moveName, cappedMoveAmount, walletAddress, spreadsheetId]
+    // ];
+
+    // await axios.put(
+    //   `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${metaDataRange}?valueInputOption=USER_ENTERED`,
+    //   { values: metaData },
+    //   { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+    // );
+
+    // console.log('Step 2: Index sheet updated successfully');
+  } catch (error) {
+    console.error('Error updating spreadsheet:', error.response ? error.response.data : error.message);
+  }
+}
+
+/**
  * Imports capped move metadata from a specified range in the Google Sheets index file and updates a React state variable.
  * 
  * This function fetches metadata starting from row 4, columns D to H, up to the last row number specified in cell A1 of the index sheet.
@@ -175,9 +228,7 @@ export const createNewCappedMove = async (model) => {
  * @returns {void} This function does not return a value. It updates the React state directly via the setStateCallback.
  */
 
-export const importCappedMoveData = async (model) => {
-
-  const {accessToken, indexTabName, setStateCallback} = model;
+export const importCappedMoveData = async ({accessToken, indexTabName, setStateCallback} ) => {
 
   try {
     // Step 1: Get the last row number from cell A1

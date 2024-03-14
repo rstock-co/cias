@@ -6,13 +6,14 @@ const BaseUX = ({
     adjustedNetTotal,
     selectedWallets, 
     sortBy,
-    fetchType
+    fetchType,
+    sortedAllocationTableData,
+    setSortedAllocationTableData
 } = {}) => {    
 
     const [allocationTableData, setAllocationTableData] = useState([]);
     const [totals, setTotals] = useState({});
     const [summaryData, setSummaryData] = useState({});
-    const [sortedAllocationTableData, setSortedAllocationTableData] = useState([]);
 
     useEffect(() => {
         const allocationData = generateAllocationTableData(tableData, selectedWallets);

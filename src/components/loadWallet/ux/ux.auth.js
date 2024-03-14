@@ -1,10 +1,10 @@
-import { createNewCappedMove, generateCappedMoveData, importCappedMoveData } from '../../../api/google';
+import { createNewCappedMove, generateCappedMoveData, importCappedMoveData, updateExistingCappedMove } from '../../../api/google';
 import { useEffect, useState } from 'react';
 import { curry } from '../../../lib/functions/fp';
 import { getNowMST } from '../../../lib/functions/time';
 import { useAuth } from '../../../auth/google';
 
-const AuthUX = ({sortedAllocationTableData, cappedMoveAmount, selectedCappedMoveWallets, selectedWallets, setIsCappedMove }) => { 
+const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWallets, selectedCappedMoveWallets, selectedWallets, setIsCappedMove, sortedAllocationTableData }) => { 
 
     const { accessToken, initiateGoogleLogin } = useAuth();
     const [isExporting, setIsExporting] = useState(false);
@@ -15,23 +15,25 @@ const AuthUX = ({sortedAllocationTableData, cappedMoveAmount, selectedCappedMove
     const dateTime = getNowMST();
     const { name, address } = selectedCappedMoveWallets.length > 0 ? selectedCappedMoveWallets[0] : {name: undefined, address: undefined};
 
-
     useEffect(() => {
         if (!accessToken || (!isExporting && !isImporting)) return;
 
+        const isNew = exportType === 'new';
+
         const exportData = async () => {
             if (isExporting) {
-                console.log(exportType === 'new' ? "attempting to CREATE NEW capped move" : "attempting to UPDATE EXISTING capped move");
-                const action = exportType === 'new' ? createNewCappedMove : updateExistingCappedMove;
+                console.log(isNew ? "attempting to CREATE NEW capped move" : "attempting to UPDATE EXISTING capped move");
+                const action = isNew ? createNewCappedMove : updateExistingCappedMove;
                 try {
                     await action({
                         accessToken,
                         data: generateCappedMoveData(sortedAllocationTableData, `Capped Move for ${name}`, dateTime),
                         dateTime,
-                        indexTabName: 'index',
+                        targetTabName: isNew ? 'index' : 'txn-data',
                         moveName: name,
                         walletAddress: address,
                         cappedMoveAmount,
+                        CAPPED_SSID: selectedCappedMoveWallets[0]?.ssid
                     });
                 } catch (error) {
                     console.error('Error exporting data:', error);
@@ -62,9 +64,14 @@ const AuthUX = ({sortedAllocationTableData, cappedMoveAmount, selectedCappedMove
         importData();
     }, [accessToken, isExporting, isImporting]);
 
-    useEffect(() => {
-        if (![1, 3].includes(selectedWallets.length)) setIsCappedMove(false); // only 1 is allowed for update, only 3 is allowed for generate
-        if (selectedWallets.length !== 1) return;  // the rest is only for update
+    useEffect(() => {  // matches the currently selected wallet to see if it is in the imported capped move metadata
+
+        if (![1, 3].includes(selectedWallets.length)) {   // reset:  only 1 wallet is allowed for update, only 3 wallets is allowed for generate
+            setIsCappedMove(false);
+            setCappedMoveAmount(0);
+        } 
+        
+        if (selectedWallets.length !== 1) return;  // the rest of this useEffect is only applicable to update
         
         // Assuming selectedWallets always contains only one wallet
         const selectedWalletName = selectedWallets[0]?.name;
@@ -72,15 +79,29 @@ const AuthUX = ({sortedAllocationTableData, cappedMoveAmount, selectedCappedMove
         // Normalize names for comparison (optional, based on your naming convention)
         const normalizeName = name => name.toLowerCase().replace(/\s+/g, '');
     
-        // Check if the selected wallet name exists in the imported data.
-        const walletFound = importedCappedMoveData.some(row => {
-            // Extract the wallet name from the row (assuming it's always in the same position).
-            const [, walletName] = row;
-            return normalizeName(walletName) === normalizeName(selectedWalletName);
+        let walletFound = false;
+        let cappedMoveAmount = 0; // Initialize with a default value
+
+        importedCappedMoveData.forEach(row => {
+            const [dateTime, name, dollarValue, address, ssid] = row;
+            if (normalizeName(name) === normalizeName(selectedWalletName)) {
+                walletFound = true;
+
+                // Extract numeric value from the dollar value string and convert it to a number
+                cappedMoveAmount = parseFloat(dollarValue.replace(/[$,]+/g, ''));
+
+                // Since the wallet is found, update selectedCappedMoveWallets
+                setSelectedCappedMoveWallets([{ dateTime, name, address, ssid }]);
+            }
         });
-    
+
         setIsCappedWalletFound(walletFound);
-    
+
+        // Set the dollar amount for the capped move. This value is only set if the wallet is found.
+        if (walletFound) {
+            setCappedMoveAmount(cappedMoveAmount);
+        }
+
     }, [importedCappedMoveData, selectedWallets]);
     
 
@@ -101,7 +122,9 @@ const AuthUX = ({sortedAllocationTableData, cappedMoveAmount, selectedCappedMove
         handleCappedMoveImport,
         importedCappedMoveData,
         isCappedWalletFound,
-        setExportType
+        setExportType,
+        exportType,
+        isImporting
     }
 
 };

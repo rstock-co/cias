@@ -16,6 +16,7 @@ const InitUX = () => {
     const [selectedCappedMoveWallets, setSelectedCappedMoveWallets] = useState([]);
     const [isCappedMove, setIsCappedMove] = useState(false);
     const [cappedMoveAmount, setCappedMoveAmount] = useState(0); 
+    const [sortedAllocationTableData, setSortedAllocationTableData] = useState([]);
     
     // TRANSACTIONS
     const [txns, setTxns] = useState([]);
@@ -153,6 +154,8 @@ const InitUX = () => {
         setCappedMoveAmount,
         selectedCappedMoveWallets,
         setSelectedCappedMoveWallets,
+        sortedAllocationTableData, 
+        setSortedAllocationTableData,
 
         historicalBNBPrices,
         historicalETHPrices,

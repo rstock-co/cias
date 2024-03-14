@@ -9,8 +9,8 @@ import SaveTableSnackbar from "../../../elements/snackbars";
 const AllocationTable = (props = {}) => {
 
     const {
-        dialogOpen, setDialogOpen, // selectedWallets, 
-        dialogTitle, generatedDateString, isAggregated, isCappedMove, selectedCappedMoveWallets,
+        dialogOpen, setDialogOpen, selectedWallets, 
+        dialogTitle, generatedDateString, isAggregated, isCappedMove, selectedCappedMoveWallets, isCappedWalletFound,
         summaryData, // sortedAllocationTableData
     } = props;
 
@@ -37,7 +37,7 @@ const AllocationTable = (props = {}) => {
                 <DialogContent style={{ overflowX: 'auto' }}>
                     <TableContainer component={Paper} id="allocationTable" sx={{ border: 'none' }}>
 
-                        {TableTitleTemplate({dialogTitle, isCappedMove, selectedCappedMoveWallets})}
+                        {TableTitleTemplate({dialogTitle, isCappedMove, isCappedWalletFound, selectedWallets, selectedCappedMoveWallets})}
 
                         {WalletSummariesTemplate({summaryData})}
 

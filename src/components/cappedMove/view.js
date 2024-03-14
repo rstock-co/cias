@@ -17,7 +17,7 @@ const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => 
   // Debounced change handler
   const debouncedHandleChange = useCallback(debounce((value) => {
     handleCappedMoveAmountChange(value);
-}, 350), []);
+}, 600), []);
 
   useEffect(() => {
       // Update local state when the prop changes
@@ -31,7 +31,7 @@ const CappedMoveAmount = ({cappedMoveAmount, handleCappedMoveAmountChange }) => 
   };
 
   return (<ThemeProvider theme={autoCompleteTheme}>
-    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 2 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mr: 1 }}>
         <FormControl fullWidth sx={{ m: 1 }}>
             <InputLabel 
                 htmlFor="outlined-adornment-amount" 

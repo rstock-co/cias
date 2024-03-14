@@ -6,6 +6,7 @@ const DialogUX = ({
     isLoading, 
     tableData = [], 
     blendedTableList, 
+    selectedWallets,
     setSelectedWallets, 
     setSelectedCappedMoveWallets, 
     setFetchType, 
@@ -13,6 +14,7 @@ const DialogUX = ({
     setCappedMoveAmount, 
     isCappedMove, 
     setIsCappedMove, 
+    isCappedWalletFound,
     setExportType,
     handleCappedMoveImport
 }) => {
@@ -40,7 +42,10 @@ const DialogUX = ({
 
     // DIALOG HANDLERS
     const handleGenerateAllocations = () => {
-        if (isCappedMove) setFinishCappedMoveDialogOpen(true);
+        if (isCappedMove && isCappedWalletFound && selectedWallets.length === 1) {
+            setAllocationDialogOpen(true);
+        }
+        else if (isCappedMove) setFinishCappedMoveDialogOpen(true);
         else {
             if (blendedTableList.length > 0) {
                 setBlendedAllocationDialogOpen(true);
@@ -74,7 +79,7 @@ const DialogUX = ({
 
     const handleUpdateCappedMove = () => {
         setIsCappedMove(true);
-        handleCappedMoveImport("update");
+        handleCappedMoveImport('existing');
     }
 
     const handleGenerateChainFlow = () => {

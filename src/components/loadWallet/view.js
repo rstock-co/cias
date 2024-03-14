@@ -21,7 +21,7 @@ import "./styles.css";
 
 const LoadWallet = ({
     // ux.init
-    stableCoins, selectedWallets, fetchType, setFetchType, historicalETHPrices, setIsCappedMove, // historicalBNBPrices, 
+    stableCoins, selectedWallets, fetchType, setFetchType, historicalETHPrices, setIsCappedMove, sortedAllocationTableData, setSortedAllocationTableData, // historicalBNBPrices, 
     // ux.base
     tableData, handleMultiSelectWalletChange, // handleSelectedWalletChange, 
 
@@ -51,7 +51,7 @@ const LoadWallet = ({
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
     // ux.auth
-    handleCappedMoveExport, handleCappedMoveImport, importedCappedMoveData, isCappedWalletFound
+    handleCappedMoveExport, handleCappedMoveImport, importedCappedMoveData, isCappedWalletFound, isImporting, exportType,
 
 } = {}) => {
 
@@ -63,6 +63,7 @@ const LoadWallet = ({
     // console.log("BlendedTableList: ",  blendedTableList);
     // console.log("TransferTxnsToBlend: ", transferTxnsToBlend);
     console.log("Imported from Google Sheet (index): ", importedCappedMoveData);
+    console.log("Export Type: ", exportType)
     console.log("isCappedWalletFound: ", isCappedWalletFound);
     // console.log("historicalBNBPrices: ", historicalBNBPrices);
     console.log("historicalETHPrices: ", historicalETHPrices);
@@ -165,11 +166,13 @@ const LoadWallet = ({
                         {/* <SettingsIcon sx={{ fontSize: 40, color: '#095D6F' }} /> */}
                     </Box>
                 </Box>
-                {accessToken && isCappedMove && !isCappedWalletFound && selectedWallets.length === 1 ? 
-                <Alert severity="error" variant="filled" onClose={() => setIsCappedMove(false)} sx={{marginBottom: '15px', marginTop: '0px', maxWidth: '445px'}}>
-                There was no capped move found for {selectedWallets.length > 0 && selectedWallets[0].name}. Please generate a new capped move for this wallet.
-                </Alert>
-            : null}
+
+                {accessToken && isCappedMove && !isImporting && !isCappedWalletFound && selectedWallets.length === 1 ? 
+                    <Alert severity="error" variant="filled" onClose={() => setIsCappedMove(false)} sx={{marginBottom: '15px', marginTop: '0px', maxWidth: '445px'}}>
+                    There was no capped move found for {selectedWallets.length > 0 && selectedWallets[0].name}. Please generate a new capped move for this wallet.
+                    </Alert>
+                : null}
+
             </Box>
             {/* HEADER END */}
 
@@ -301,11 +304,15 @@ const LoadWallet = ({
                 handleCloseSaveTableSnackbar={handleCloseSaveTableSnackbar}
                 fetchType={fetchType}
                 isCappedMove={isCappedMove}
+                isCappedWalletFound={isCappedWalletFound}
                 cappedMoveAmount={cappedMoveAmount}
                 handleCappedMoveAmountChange={handleCappedMoveAmountChange}
                 selectedCappedMoveWallets={selectedCappedMoveWallets}
                 handleCappedMoveExport={handleCappedMoveExport}
                 handleCappedMoveImport={handleCappedMoveImport}
+                exportType={exportType}
+                sortedAllocationTableData={sortedAllocationTableData} 
+                setSortedAllocationTableData={setSortedAllocationTableData}
             />
 
             <BlendedAllocationTable
