@@ -1,5 +1,6 @@
-import { createDistribution, createNewCappedMove, generateCappedMoveData, importCappedMoveData, updateExistingCappedMove } from '../../../api/google';
+import { createDistribution, createNewCappedMove, importCappedMoveData, updateExistingCappedMove } from '../../../api/google';
 import { useEffect, useState } from 'react';
+import { generateCappedMoveData } from '../../../lib/functions/google';
 // import { curry } from '../../../lib/functions/fp';
 import { getNowMST } from '../../../lib/functions/time';
 import { useAuth } from '../../../auth/google';
@@ -18,10 +19,11 @@ const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWal
     const { name, address } = selectedCappedMoveWallets.length > 0 ? selectedCappedMoveWallets[0] : {name: undefined, address: undefined};
 
     const exportActions = {
-        new: { action: createNewCappedMove, targetTabName: 'index', title: `Capped Move for ${name}` },
-        existing: { action: updateExistingCappedMove, targetTabName: 'txn-data', title: `Capped Move for ${name}` },
-        distribution: { action: createDistribution, targetTabName: 'distro-template', title: `Distribution for ${name}` } // Assuming distributeCappedMove is your distribution action function
+        new: { action: createNewCappedMove, title: `Capped Move for ${name}` },
+        existing: { action: updateExistingCappedMove, title: `Capped Move for ${name}` },
+        distribution: { action: createDistribution, title: `Distribution for ${name}` } 
     };
+
 
     useEffect(() => {
         if (!accessToken) return;
@@ -29,44 +31,39 @@ const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWal
         console.log("USE EFFECT TRIGGERED WITH ACCESS TOKEN: ", operation)
 
         const exportData = async () => {
-            if (operation.type === 'export') {
-                const exportConfig = exportActions[operation.subtype]; 
+            const exportConfig = exportActions[operation.subtype]; 
 
-                console.log("EXPORT initiated: ", exportConfig)
+            console.log("EXPORT initiated: ", exportConfig)
 
-                try {
-                    await exportConfig.action({
-                        accessToken,
-                        data: generateCappedMoveData(sortedAllocationTableData, exportConfig.title, dateTime),
-                        dateTime,
-                        targetTabName: exportConfig.targetTabName,
-                        moveName: operation.subtype === 'distribution' ? selectedWallets[0].name : name,
-                        walletAddress: address,
-                        amount: operation.subtype === 'distribution' && operation.data ? operation.data[0] : cappedMoveAmount,
-                        CAPPED_SSID: selectedCappedMoveWallets[0]?.ssid
-                    });
-                } catch (error) {
-                    console.error('Error exporting data:', error);
-                } finally {
-                    setOperation({ type: null, subtype: 'new', data: null }); 
-                }
+            try {
+                await exportConfig.action({
+                    accessToken,
+                    data: generateCappedMoveData(sortedAllocationTableData, exportConfig.title, dateTime),
+                    dateTime,
+                    moveName: operation.subtype === 'distribution' ? selectedWallets[0].name : name,
+                    walletAddress: address,
+                    amount: operation.subtype === 'distribution' && operation.data ? operation.data[0] : cappedMoveAmount,
+                    CAPPED_SSID: selectedCappedMoveWallets[0]?.ssid
+                });
+            } catch (error) {
+                console.error('Error exporting data:', error);
+            } finally {
+                setOperation({ type: null, subtype: 'new', data: null }); 
             }
         };
 
         const importData = async () => {
-            if (operation.type === 'import') {
-                console.log("attempting to IMPORT capped moves metadata");
-                try {
-                    await importCappedMoveData({
-                        accessToken, 
-                        indexTabName: 'index', 
-                        setStateCallback: setImportedCappedMoveData
-                    });
-                } catch (error) {
-                    console.error('Error importing data:', error);
-                } finally {
-                    setOperation({ type: null, subtype: 'new', data: null });
-                }
+            console.log("attempting to IMPORT capped moves metadata");
+            try {
+                await importCappedMoveData({
+                    accessToken, 
+                    indexTabName: 'index', 
+                    setStateCallback: setImportedCappedMoveData
+                });
+            } catch (error) {
+                console.error('Error importing data:', error);
+            } finally {
+                setOperation({ type: null, subtype: 'new', data: null });
             }
         };
 
@@ -77,6 +74,7 @@ const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWal
         }
     }, [accessToken, operation]);
 
+    
     useEffect(() => {  // matches the currently selected wallet to see if it is in the imported capped move metadata
 
         if (![1, 3].includes(selectedWallets.length)) {   // reset:  only 1 wallet is allowed for update, only 3 wallets is allowed for generate
@@ -84,7 +82,7 @@ const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWal
             setCappedMoveAmount(0);
         } 
         
-        if (selectedWallets.length !== 1) return;  // the rest of this useEffect is only applicable to update
+        if (selectedWallets.length !== 1) return;  // the rest of this useEffect is only applicable to capped move update
         
         // Assuming selectedWallets always contains only one wallet
         const selectedWalletName = selectedWallets[0]?.name;
