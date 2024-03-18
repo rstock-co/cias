@@ -1,4 +1,9 @@
+import {  
+    GOOGLE_DRIVE_API_URL, 
+    GOOGLE_SS_API_URL, 
+} from '../../lib/data';
 import axios from 'axios';
+
 
 /**
  * Prepares a 2D array representing a table of data formatted for easy insertion into a Google Sheet. 
@@ -53,7 +58,7 @@ export const generateCappedMoveData = (sortedAllocationTableData, moveName, date
 export const getTabIdByName = async (spreadsheetId, tabName, accessToken) => {
     try {
       const response = await axios.get(
-        `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties`,
+        `${GOOGLE_SS_API_URL}/${spreadsheetId}?fields=sheets.properties`,
         {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
@@ -86,7 +91,7 @@ export const getTabIdByName = async (spreadsheetId, tabName, accessToken) => {
  * @param {string} driveFolderId - The ID of the Google Drive folder where the new spreadsheet will be placed.
  * @returns {Promise<string>} - The ID of the newly created spreadsheet.
  */
-export const copySpreadsheetToFolder = async (
+export const createNewSpreadsheetFromTemplateAndSaveToFolder = async (
     accessToken, 
     templateSpreadsheetId, 
     newSpreadsheetName, 
@@ -107,8 +112,7 @@ export const copySpreadsheetToFolder = async (
           }
         );
     
-        console.log('Spreadsheet copied successfully:', response.data);
-        return response.data.id; // Return the ID of the newly created spreadsheet
+        return response.data.id; // Return the ID of the newly created spreadsheet for subsequent actions
       } catch (error) {
         console.error('Error copying spreadsheet:', error.response ? error.response.data : error.message);
         throw error; // Rethrow the error for handling by the caller

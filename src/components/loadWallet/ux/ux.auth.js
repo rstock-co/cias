@@ -48,7 +48,7 @@ const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWal
             } catch (error) {
                 console.error('Error exporting data:', error);
             } finally {
-                setOperation({ type: null, subtype: 'new', data: null }); 
+                setOperation({ type: null, subtype: null, data: null }); 
             }
         };
 
@@ -63,7 +63,7 @@ const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWal
             } catch (error) {
                 console.error('Error importing data:', error);
             } finally {
-                setOperation({ type: null, subtype: 'new', data: null });
+                setOperation({ type: null, subtype: null, data: null});  
             }
         };
 

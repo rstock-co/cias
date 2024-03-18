@@ -15,7 +15,7 @@ const DialogUX = ({
     isCappedMove, 
     setIsCappedMove, 
     isCappedWalletFound,
-    handleCappedMoveImport
+    handleLogin
 }) => {
 
     // DIALOG BOX STATES
@@ -77,7 +77,7 @@ const DialogUX = ({
 
     const handleUpdateCappedMove = () => {
         setIsCappedMove(true);
-        handleCappedMoveImport('existing');
+        handleLogin('import', 'existing');
     }
 
     const handleGenerateChainFlow = () => {

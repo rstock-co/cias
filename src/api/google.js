@@ -9,8 +9,8 @@ import {
   GOOGLE_SS_API_URL, 
 } from '../lib/data';
 
-import {
-  generateCappedMoveData,
+import { 
+  createNewSpreadsheetFromTemplateAndSaveToFolder,
   getTabIdByName,
 
 } from '../lib/functions/google';
@@ -106,18 +106,11 @@ export const createNewCappedMove = async ({
   const NEW_CAPPED_MOVE_SHEET_NAME = `${dateTime}_${moveName}`;
   try {
 
-    // Step 1: Copy the template spreadsheet
+    // Step 1: Copy the capped moves master template to create new capped move spreadsheet
 
-    const NEW_CAPPED_MOVE_SHEET_ID = await copySpreadsheetToFolder(
-      accessToken, 
-      CAPPED_MOVE_TEMPLATE_SSID, 
-      NEW_CAPPED_MOVE_SHEET_NAME, 
-      CAPPED_MOVE_DRIVE_FOLDER_ID
-    );
-
+    const NEW_CAPPED_MOVE_SHEET_ID = await createNewSpreadsheetFromTemplateAndSaveToFolder(accessToken, CAPPED_MOVE_TEMPLATE_SSID, NEW_CAPPED_MOVE_SHEET_NAME, CAPPED_MOVE_DRIVE_FOLDER_ID);
     console.log('Step 1 of 5: New sheet created successfully: ',  NEW_CAPPED_MOVE_SHEET_ID);
 
-    
     // Step 2: Populate the new sheet with membership weighting data
 
     const membership_data_range = `${MEMBERSHIP_TAB_NAME}!${MEMBERSHIP_FIRST_COLUMN_INDEX}${MEMBERSHIP_FIRST_ROW_INDEX}`; 

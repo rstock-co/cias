@@ -21,7 +21,7 @@ import "./styles.css";
 
 const LoadWallet = ({
     // ux.init
-    stableCoins, selectedWallets, fetchType, setFetchType, historicalETHPrices, setIsCappedMove, sortedAllocationTableData, setSortedAllocationTableData, // historicalBNBPrices, 
+    stableCoins, selectedWallets, fetchType, setFetchType, setIsCappedMove, sortedAllocationTableData, setSortedAllocationTableData, // historicalBNBPrices, historicalETHPrices,
     // ux.base
     tableData, handleMultiSelectWalletChange, // handleSelectedWalletChange, 
 
@@ -51,22 +51,27 @@ const LoadWallet = ({
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
     // ux.auth
-    handleLogin, importedCappedMoveData, isCappedWalletFound, operation
+    handleLogin, isCappedWalletFound, operation // importCappedMoveData,
 
 } = {}) => {
 
     const { accessToken } = useAuth();
 
-    // console.log("isCappedMove: ", isCappedMove)
+    console.log("=== TEST ERROR DIALOG ===")
+    console.log("accessToken: ", accessToken)
+    console.log("isCappedMove: ", isCappedMove)
+    console.log("Operation: ", operation);
+    console.log("isCappedWalletFound: ", isCappedWalletFound);
+    console.log("selectedWallets: ", selectedWallets);
+    console.log("show dialog?",accessToken && isCappedMove && !operation.type === 'import' && !isCappedWalletFound && selectedWallets.length === 1 )
+    console.log("======")
     
     // console.log("SavedTables: ",savedTables)
     // console.log("BlendedTableList: ",  blendedTableList);
     // console.log("TransferTxnsToBlend: ", transferTxnsToBlend);
-    console.log("Imported from Google Sheet (index): ", importedCappedMoveData);
-    console.log("Operation: ", operation);
-    console.log("isCappedWalletFound: ", isCappedWalletFound);
+    // console.log("Imported from Google Sheet (index): ", importedCappedMoveData);
     // console.log("historicalBNBPrices: ", historicalBNBPrices);
-    console.log("historicalETHPrices: ", historicalETHPrices);
+    // console.log("historicalETHPrices: ", historicalETHPrices);
     // // console.log("WALLETS: ", wallets);
     // console.log("FILTERS: ", filters);
     // console.log("=========== START DATE =============");
@@ -167,9 +172,9 @@ const LoadWallet = ({
                     </Box>
                 </Box>
 
-                {accessToken && isCappedMove && !isImporting && !isCappedWalletFound && selectedWallets.length === 1 ? 
+                {accessToken && isCappedMove && !operation.type && !isCappedWalletFound && selectedWallets.length === 1 ? 
                     <Alert severity="error" variant="filled" onClose={() => setIsCappedMove(false)} sx={{marginBottom: '15px', marginTop: '0px', maxWidth: '445px'}}>
-                    There was no capped move found for {selectedWallets.length > 0 && selectedWallets[0].name}. Please generate a new capped move for this wallet.
+                    There was no capped move found for {selectedWallets.length > 0 && selectedWallets[0].name}. Please generate a new capped move for this wallet, or search with a different wallet.
                     </Alert>
                 : null}
 
