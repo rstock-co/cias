@@ -1,6 +1,6 @@
 import { createDistribution, createNewCappedMove, importCappedMoveData, updateExistingCappedMove } from '../../../api/google';
+import { generateCappedMoveData, generateDistributionData } from '../../../lib/functions/google';
 import { useEffect, useState } from 'react';
-import { generateCappedMoveData } from '../../../lib/functions/google';
 // import { curry } from '../../../lib/functions/fp';
 import { getNowMST } from '../../../lib/functions/time';
 import { useAuth } from '../../../auth/google';
@@ -19,9 +19,9 @@ const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWal
     const { name, address } = selectedCappedMoveWallets.length > 0 ? selectedCappedMoveWallets[0] : {name: undefined, address: undefined};
 
     const exportActions = {
-        new: { action: createNewCappedMove, title: `Capped Move for ${name}` },
-        existing: { action: updateExistingCappedMove, title: `Capped Move for ${name}` },
-        distribution: { action: createDistribution, title: `Distribution for ${name}` } 
+        new: { action: createNewCappedMove, dataFn: generateCappedMoveData, title: `Capped Move for ${name}` },
+        existing: { action: updateExistingCappedMove, dataFn: generateCappedMoveData, title: `Capped Move for ${name}` },
+        distribution: { action: createDistribution, dataFn: generateDistributionData, title: `Distribution for ${name}` } 
     };
 
 
@@ -33,12 +33,13 @@ const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWal
         const exportData = async () => {
             const exportConfig = exportActions[operation.subtype]; 
 
+
             console.log("EXPORT initiated: ", exportConfig)
 
             try {
                 await exportConfig.action({
                     accessToken,
-                    data: generateCappedMoveData(sortedAllocationTableData, exportConfig.title, dateTime),
+                    data: exportConfig.dataFn(sortedAllocationTableData, exportConfig.title, dateTime),
                     dateTime,
                     moveName: operation.subtype === 'distribution' ? selectedWallets[0].name : name,
                     walletAddress: address,
