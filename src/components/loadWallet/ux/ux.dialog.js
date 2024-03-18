@@ -15,7 +15,6 @@ const DialogUX = ({
     isCappedMove, 
     setIsCappedMove, 
     isCappedWalletFound,
-    setExportType,
     handleCappedMoveImport
 }) => {
 
@@ -58,7 +57,6 @@ const DialogUX = ({
     const handleGenerateCappedMove = () => {
         setFetchType('all');
         setIsCappedMove(true);
-        setExportType('new');
         setTimeout(() => {
             setSelectedWallets([
               {
@@ -74,7 +72,7 @@ const DialogUX = ({
                 "address": "0xdf12edaae8acb58e09bab1ada1aa9e9bcdf5b45a"
               }
             ]);
-          }, 1000);
+          }, 300);
     };
 
     const handleUpdateCappedMove = () => {

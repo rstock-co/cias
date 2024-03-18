@@ -1,50 +1,60 @@
-import { createNewCappedMove, generateCappedMoveData, importCappedMoveData, updateExistingCappedMove } from '../../../api/google';
+import { createDistribution, createNewCappedMove, generateCappedMoveData, importCappedMoveData, updateExistingCappedMove } from '../../../api/google';
 import { useEffect, useState } from 'react';
-import { curry } from '../../../lib/functions/fp';
+// import { curry } from '../../../lib/functions/fp';
 import { getNowMST } from '../../../lib/functions/time';
 import { useAuth } from '../../../auth/google';
 
 const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWallets, selectedCappedMoveWallets, selectedWallets, setIsCappedMove, sortedAllocationTableData }) => { 
 
     const { accessToken, initiateGoogleLogin } = useAuth();
-    const [isExporting, setIsExporting] = useState(false);
-    const [isImporting, setIsImporting] = useState(false);
-    const [exportType, setExportType] = useState('new');
+    const [operation, setOperation] = useState({
+        type: null,
+        subtype: 'new',
+        data: null
+    });
     const [importedCappedMoveData, setImportedCappedMoveData] = useState([]);
     const [isCappedWalletFound, setIsCappedWalletFound] = useState(false);
     const dateTime = getNowMST();
     const { name, address } = selectedCappedMoveWallets.length > 0 ? selectedCappedMoveWallets[0] : {name: undefined, address: undefined};
 
-    useEffect(() => {
-        if (!accessToken || (!isExporting && !isImporting)) return;
+    const exportActions = {
+        new: { action: createNewCappedMove, targetTabName: 'index', title: `Capped Move for ${name}` },
+        existing: { action: updateExistingCappedMove, targetTabName: 'txn-data', title: `Capped Move for ${name}` },
+        distribution: { action: createDistribution, targetTabName: 'distro-template', title: `Distribution for ${name}` } // Assuming distributeCappedMove is your distribution action function
+    };
 
-        const isNew = exportType === 'new';
+    useEffect(() => {
+        if (!accessToken) return;
+
+        console.log("USE EFFECT TRIGGERED WITH ACCESS TOKEN: ", operation)
 
         const exportData = async () => {
-            if (isExporting) {
-                console.log(isNew ? "attempting to CREATE NEW capped move" : "attempting to UPDATE EXISTING capped move");
-                const action = isNew ? createNewCappedMove : updateExistingCappedMove;
+            if (operation.type === 'export') {
+                const exportConfig = exportActions[operation.subtype]; 
+
+                console.log("EXPORT initiated: ", exportConfig)
+
                 try {
-                    await action({
+                    await exportConfig.action({
                         accessToken,
-                        data: generateCappedMoveData(sortedAllocationTableData, `Capped Move for ${name}`, dateTime),
+                        data: generateCappedMoveData(sortedAllocationTableData, exportConfig.title, dateTime),
                         dateTime,
-                        targetTabName: isNew ? 'index' : 'txn-data',
-                        moveName: name,
+                        targetTabName: exportConfig.targetTabName,
+                        moveName: operation.subtype === 'distribution' ? selectedWallets[0].name : name,
                         walletAddress: address,
-                        cappedMoveAmount,
+                        amount: operation.subtype === 'distribution' && operation.data ? operation.data[0] : cappedMoveAmount,
                         CAPPED_SSID: selectedCappedMoveWallets[0]?.ssid
                     });
                 } catch (error) {
                     console.error('Error exporting data:', error);
                 } finally {
-                    setIsExporting(false); // Prevent infinite loop
+                    setOperation({ type: null, subtype: 'new', data: null }); 
                 }
             }
         };
 
         const importData = async () => {
-            if (isImporting) {
+            if (operation.type === 'import') {
                 console.log("attempting to IMPORT capped moves metadata");
                 try {
                     await importCappedMoveData({
@@ -55,14 +65,17 @@ const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWal
                 } catch (error) {
                     console.error('Error importing data:', error);
                 } finally {
-                    setIsImporting(false); // Prevent infinite loop
+                    setOperation({ type: null, subtype: 'new', data: null });
                 }
             }
         };
 
-        exportData();
-        importData();
-    }, [accessToken, isExporting, isImporting]);
+        if (operation.type === 'export') {
+            exportData();
+        } else if (operation.type === 'import') {
+            importData();
+        }
+    }, [accessToken, operation]);
 
     useEffect(() => {  // matches the currently selected wallet to see if it is in the imported capped move metadata
 
@@ -103,30 +116,25 @@ const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWal
         }
 
     }, [importedCappedMoveData, selectedWallets]);
-    
 
-    const handleLogin = curry((setter, type) => {
+    const handleLogin = (type, subtype, ...args) => {
         if (!accessToken) {
             console.log('No Google OAuth 2.0 token found, initiating login..');
             initiateGoogleLogin();
         }
-        setter(true); // Set the flag to indicate an operation attempt is pending
-        setExportType(type);
-    });
-    
-    const handleCappedMoveExport = handleLogin(setIsExporting)
-    const handleCappedMoveImport = handleLogin(setIsImporting);
+        setOperation({
+            type,
+            subtype,
+            data: args
+        }); // Set the flag to indicate an operation attempt is pending
+    };
     
     return {
-        handleCappedMoveExport,
-        handleCappedMoveImport,
+        handleLogin,
         importedCappedMoveData,
         isCappedWalletFound,
-        setExportType,
-        exportType,
-        isImporting
+        operation
     }
-
 };
 
 export default AuthUX;

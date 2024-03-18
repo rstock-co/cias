@@ -1,5 +1,5 @@
 import { Button, DialogActions }  from "@mui/material";
-import { copyDistributionToClipboard, printBlendedTableToPDF } from "../../../lib/functions/actions"; // printTableToPDF
+import { printBlendedTableToPDF } from "../../../lib/functions/actions"; // printTableToPDF, copyDistributionToClipboard, 
 import { extractTitle } from "../../../lib/functions/format";
 
 const FooterTemplate = ({ 
@@ -23,17 +23,17 @@ const FooterTemplate = ({
     totalShare, 
     adjustedNetTotal,
     numberOfTokensToDistribute,
-    handleCappedMoveExport,
-    exportType,
-    cappedMoveAmount
+    handleLogin,
+    cappedMoveAmount,
+    operation
 }) => (
         <DialogActions>
             {cappedMoveAmount ? (
-                exportType === 'new' ? <Button onClick={() => handleCappedMoveExport('new')}> Generate Capped Move </Button>
-                : <Button onClick={() => handleCappedMoveExport('existing')}> Update Capped Move </Button>
+                operation.subtype === 'new' ? <Button onClick={() => handleLogin('export', 'new')}> Generate Capped Move </Button>
+                : <Button onClick={() => handleLogin('export','existing')}> Update Capped Move </Button>
                 ) : null}
             {numberOfTokensToDistribute ?
-                <Button onClick={() => copyDistributionToClipboard(sortedAllocationTableData, numberOfTokensToDistribute, dialogTitle)}>Copy Distribution</Button> : null}
+                <Button onClick={() => handleLogin('export', 'distribution', numberOfTokensToDistribute)}>Generate Distribution</Button> : null}
             {savedTableId ?
                 <Button onClick={() => deleteTableData(savedTableId)}>Delete Table</Button> : null}
             {!savedTableId ?

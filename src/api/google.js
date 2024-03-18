@@ -2,6 +2,9 @@ import {
   CAPPED_MOVE_DRIVE_FOLDER_ID, 
   CAPPED_MOVE_INDEX_SSID, 
   CAPPED_MOVE_TEMPLATE_SSID, 
+  DISTRIBUTION_DRIVE_FOLDER_ID, 
+  // DISTRIBUTION_INDEX_SSID, 
+  DISTRIBUTION_TEMPLATE_SSID, 
   GOOGLE_DRIVE_API_URL, 
   GOOGLE_SS_API_URL, 
 } from '../lib/data';
@@ -52,11 +55,43 @@ export const generateCappedMoveData = (sortedAllocationTableData, moveName, date
       tableDataArray.push([walletAddress, `${weightingPercentage}%`, adjustedNetAmount.toFixed(2)]);
     });
 
-    console.log("TABLE ARRAY FOR CAPPED MOVE: ", tableDataArray)
+    console.log("TABLE ARRAY FOR EXPORT: ", tableDataArray)
   
     return tableDataArray;
   };
+
+/** 
+ * Utility function to get a sheet ID 
+*/
   
+// Assume accessToken and newSpreadsheetId are available from previous steps
+
+const getSheetIdByName = async (spreadsheetId, sheetName, accessToken) => {
+  try {
+    const response = await axios.get(
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}?fields=sheets.properties`,
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    const { sheets } = response.data;
+    const matchingSheet = sheets.find(sheet => sheet.properties.title === sheetName);
+
+    if (matchingSheet) {
+      return matchingSheet.properties.sheetId;
+    } else {
+      throw new Error(`Sheet named "${sheetName}" not found.`);
+    }
+  } catch (error) {
+    console.error('Error getting sheet ID:', error);
+    throw error; // Rethrow or handle as needed
+  }
+};
+
   
 /**
  * Copy a template spreadsheet and populate a specified sheet within the new spreadsheet with data, then update index file with metadata.
@@ -67,7 +102,7 @@ export const generateCappedMoveData = (sortedAllocationTableData, moveName, date
  * @param {string} indexTabName Name of the tab in the index sheet to store metadata
  * @param {string} moveName Name of the capped move
  * @param {string} walletAddress Wallet address for the capped move
- * @param {number} cappedMoveAmount Capped amount for the move
+ * @param {number} amount Capped amount for the move
  */
 
 export const createNewCappedMove = async ({
@@ -77,12 +112,11 @@ export const createNewCappedMove = async ({
     targetTabName, 
     moveName, 
     walletAddress, 
-    cappedMoveAmount 
+    amount 
 }) => {
 
-  const newSheetName = `${moveName}_${dateTime}`;
+  const newSheetName = `${dateTime}_${moveName}`;
   const txnTabName = "membership-weighting";
-  console.log("ACCESS TOKEN: ", accessToken)
   try {
 
     // Step 1a: Copy the template spreadsheet
@@ -125,12 +159,37 @@ export const createNewCappedMove = async ({
     const cappedMoveAmountRange = `calculations!L3`;
     await axios.put(
       `${GOOGLE_SS_API_URL}/${newSpreadsheetId}/values/${cappedMoveAmountRange}?valueInputOption=USER_ENTERED`,
-      { values: [[cappedMoveAmount]] },
+      { values: [[amount]] },
       { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
     );
 
-    // Step 3: Update the capped moves index file with the new spreadsheet metadata
+    console.log('Step 2b: Capped Move Amount updated successfully');
 
+    // Step2c: Update the export log
+    const logColumnIndex = 'C';
+    const logTabName = "export-log";
+    const rowIndexLogResponse = await axios.get(
+      `${GOOGLE_SS_API_URL}/${newSpreadsheetId}/values/${logTabName}!A1`,
+      { headers: { 'Authorization': `Bearer ${accessToken}` } }
+    );
+
+    const [[rowIndexLog]] = rowIndexLogResponse.data.values;
+    const logDataRange = `${logTabName}!${logColumnIndex}${rowIndexLog}`;
+    
+
+    const logData = [
+      [dateTime, amount]
+    ];
+
+    await axios.put(
+      `${GOOGLE_SS_API_URL}/${newSpreadsheetId}/values/${logDataRange}?valueInputOption=USER_ENTERED`,
+      { values: logData },
+      { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+    );
+
+    console.log('Step 2c: Export Log sheet updated successfully');
+
+    // Step 3: Update the capped moves index file with the new spreadsheet metadata
     const rowIndexResponse = await axios.get(
       `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${targetTabName}!A1`,
       { headers: { 'Authorization': `Bearer ${accessToken}` } }
@@ -141,7 +200,7 @@ export const createNewCappedMove = async ({
     
 
     const metaData = [
-      [dateTime, moveName, cappedMoveAmount, walletAddress, newSpreadsheetId]
+      [dateTime, moveName, amount, walletAddress, newSpreadsheetId]
     ];
 
     await axios.put(
@@ -155,6 +214,192 @@ export const createNewCappedMove = async ({
   } catch (error) {
     console.error('Error copying or populating spreadsheet:', error.response ? error.response.data : error.message);
   }
+}
+
+/**
+ * Copy a template spreadsheet and populate a specified sheet within the new spreadsheet with data, then update index file with metadata.
+ * 
+ * @param {string} accessToken Google Oauth2.0 access token with required permissions to create a new spreadsheet and write data to it.
+ * @param {Array<Array<string|number>>} data 2D array of data to populate in the sheet.
+ * @param {string} dateTime Date and time of NOW (in MST), as a string to append to the new spreadsheet name.
+ * @param {string} indexTabName Name of the tab in the index sheet to store metadata
+ * @param {string} moveName Name of the capped move
+ * @param {string} walletAddress Wallet address for the capped move
+ * @param {number} amount Amount of tokens to distribute
+ */
+
+export const createDistribution = async ({
+  accessToken, 
+  data, 
+  dateTime, 
+  targetTabName, 
+  moveName, 
+  walletAddress, 
+  amount 
+}) => {
+
+const newSheetName = `${dateTime}_${moveName}`;
+const distributionNumber = 1; // Assuming you have a way to determine this; replace with your actual logic
+const newTabName = `distro-${distributionNumber}-${dateTime}`;
+
+try {
+
+  // Step 1: Copy the template spreadsheet
+  const copyResponse = await axios.post(
+    `${GOOGLE_DRIVE_API_URL}/${DISTRIBUTION_TEMPLATE_SSID}/copy`,
+    { 
+      name: newSheetName, // Set the new spreadsheet's name
+      parents: [DISTRIBUTION_DRIVE_FOLDER_ID] // Set the parent folder ID, 
+    },
+    {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  );
+
+  console.log('Step 1a: New sheet created successfully:');
+  const newSpreadsheetId = copyResponse.data.id; // ID of the newly created spreadsheet
+
+  // Step 2: Copy the "distro-template" tab and then rename it
+  getSheetIdByName(newSpreadsheetId, targetTabName, accessToken)
+  .then(sheetId => {
+      console.log(`Found sheet ID for ${targetTabName}: ${sheetId}`);
+
+      // Request to copy the "distro-template" tab
+      return axios.post(
+          `https://sheets.googleapis.com/v4/spreadsheets/${newSpreadsheetId}:batchUpdate`,
+          {
+              requests: [
+                  {
+                      duplicateSheet: {
+                          sourceSheetId: sheetId,
+                          insertSheetIndex: 0, // You can specify the index where to insert the copied sheet
+                      },
+                  },
+              ],
+          },
+          {
+              headers: {
+                  'Authorization': `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json',
+              },
+          }
+      );
+  })
+  .then(response => {
+      // Extract the ID of the newly copied sheet
+      const copiedSheetId = response.data.replies[0].duplicateSheet.properties.sheetId;
+      
+
+      // Request to rename the newly copied sheet
+      return axios.post(
+          `https://sheets.googleapis.com/v4/spreadsheets/${newSpreadsheetId}:batchUpdate`,
+          {
+              requests: [
+                  {
+                      updateSheetProperties: {
+                          properties: {
+                              sheetId: copiedSheetId,
+                              title: newTabName,
+                          },
+                          fields: 'title',
+                      },
+                  },
+              ],
+          },
+          {
+              headers: {
+                  'Authorization': `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json',
+              },
+          }
+      );
+  })
+  .then(() => {
+
+    // Step 3: Populate the specified sheet in the new spreadsheet with data
+    const range = `${newTabName}!B12`; // Adjust the range to start at the correct cell in the newly renamed sheet
+    return axios.put(
+      `https://sheets.googleapis.com/v4/spreadsheets/${newSpreadsheetId}/values/${range}?valueInputOption=USER_ENTERED`,
+      {
+        values: data // Ensure 'data' variable is properly defined and accessible
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+  })
+  .then(updateResponse => {
+    console.log('Step 3: New sheet populated successfully:', updateResponse.data);
+  })
+  .catch(error => {
+    console.error('Error during sheet population:', error.response ? error.response.data : error.message);
+  });
+
+  // Step2b: Update the distribution amount in the calculations tab
+  const distributionAmountRange = `${newTabName}!D5`;
+  await axios.put(
+    `${GOOGLE_SS_API_URL}/${newSpreadsheetId}/values/${distributionAmountRange}?valueInputOption=USER_ENTERED`,
+    { values: [[amount]] },
+    { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+  );
+
+  console.log('Step 2b: Capped Move Amount updated successfully');
+
+  // Step2c: Update the export log
+  const logColumnIndex = 'C';
+  const logTabName = "export-log";
+  const rowIndexLogResponse = await axios.get(
+    `${GOOGLE_SS_API_URL}/${newSpreadsheetId}/values/${logTabName}!A1`,
+    { headers: { 'Authorization': `Bearer ${accessToken}` } }
+  );
+
+  const [[rowIndexLog]] = rowIndexLogResponse.data.values;
+  const logDataRange = `${logTabName}!${logColumnIndex}${rowIndexLog}`;
+  
+
+  const logData = [
+    [dateTime, amount]
+  ];
+
+  await axios.put(
+    `${GOOGLE_SS_API_URL}/${newSpreadsheetId}/values/${logDataRange}?valueInputOption=USER_ENTERED`,
+    { values: logData },
+    { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+  );
+
+  console.log('Step 2c: Export Log sheet updated successfully');
+
+  // Step 3: Update the capped moves index file with the new spreadsheet metadata
+  const rowIndexResponse = await axios.get(
+    `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${targetTabName}!A1`,
+    { headers: { 'Authorization': `Bearer ${accessToken}` } }
+  );
+
+  const [[rowIndex]] = rowIndexResponse.data.values;
+  const metaDataRange = `${targetTabName}!${FIRST_COLUMN_INDEX}${rowIndex}`;
+  
+
+  const metaData = [
+    [dateTime, moveName, amount, walletAddress, newSpreadsheetId]
+  ];
+
+  await axios.put(
+    `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${metaDataRange}?valueInputOption=USER_ENTERED`,
+    { values: metaData },
+    { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+  );
+
+  console.log('Step 3: Index sheet updated successfully');
+
+} catch (error) {
+  console.error('Error copying or populating spreadsheet:', error.response ? error.response.data : error.message);
+}
 }
 
 /**

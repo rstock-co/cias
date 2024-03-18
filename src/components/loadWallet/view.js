@@ -51,7 +51,7 @@ const LoadWallet = ({
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
     // ux.auth
-    handleCappedMoveExport, handleCappedMoveImport, importedCappedMoveData, isCappedWalletFound, isImporting, exportType,
+    handleLogin, importedCappedMoveData, isCappedWalletFound, operation
 
 } = {}) => {
 
@@ -63,7 +63,7 @@ const LoadWallet = ({
     // console.log("BlendedTableList: ",  blendedTableList);
     // console.log("TransferTxnsToBlend: ", transferTxnsToBlend);
     console.log("Imported from Google Sheet (index): ", importedCappedMoveData);
-    console.log("Export Type: ", exportType)
+    console.log("Operation: ", operation);
     console.log("isCappedWalletFound: ", isCappedWalletFound);
     // console.log("historicalBNBPrices: ", historicalBNBPrices);
     console.log("historicalETHPrices: ", historicalETHPrices);
@@ -308,11 +308,10 @@ const LoadWallet = ({
                 cappedMoveAmount={cappedMoveAmount}
                 handleCappedMoveAmountChange={handleCappedMoveAmountChange}
                 selectedCappedMoveWallets={selectedCappedMoveWallets}
-                handleCappedMoveExport={handleCappedMoveExport}
-                handleCappedMoveImport={handleCappedMoveImport}
-                exportType={exportType}
                 sortedAllocationTableData={sortedAllocationTableData} 
                 setSortedAllocationTableData={setSortedAllocationTableData}
+                handleLogin={handleLogin}
+                operation={operation}
             />
 
             <BlendedAllocationTable
