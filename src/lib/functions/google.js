@@ -199,11 +199,6 @@ export const populateCell = async (spreadsheetId, cellRange, value, accessToken)
   /**
  * Fetches the value of a specific cell or range from a Google Sheet.
  *
- * This function sends an HTTP GET request to the Google Sheets API to retrieve
- * the value(s) of a specified cell or range. It requires the spreadsheet ID,
- * the A1 notation of the cell or range to fetch, and a valid Google OAuth 2.0
- * access token with permissions to read from the spreadsheet.
- *
  * @param {string} spreadsheetId The unique identifier for the Google Spreadsheet.
  * @param {string} range The A1 notation of the cell or range to fetch.
  * @param {string} accessToken A valid Google OAuth 2.0 access token with permissions to read from the spreadsheet.
@@ -225,6 +220,33 @@ export const populateCell = async (spreadsheetId, cellRange, value, accessToken)
       throw error; // Rethrow the error for external handling
     }
   };
+
+/**
+ * Fetches the values of a specified range from a Google Sheet.
+ *
+ * @param {string} spreadsheetId The unique identifier for the Google Spreadsheet.
+ * @param {string} range The A1 notation of the range to fetch.
+ * @param {string} accessToken A valid Google OAuth 2.0 access token with permissions to read from the spreadsheet.
+ * @returns {Promise<Array<Array<string|number>>>} A promise that resolves to the values retrieved from the specified range, typically returned as a 2D array.
+ * @throws {Error} Throws an error if the request fails, including the error response from the Google Sheets API if available.
+ */
+export const fetchRange = async (spreadsheetId, range, accessToken) => {
+    try {
+      const response = await axios.get(
+        `${GOOGLE_SS_API_URL}/${spreadsheetId}/values/${range}`,
+        { headers: { 'Authorization': `Bearer ${accessToken}` } }
+      );
+  
+      return response.data.values; // Returns the values from the specified range
+    } catch (error) {
+      console.error('Error fetching range values:', error.response ? error.response.data : error.message);
+      throw error; // Rethrow the error for external handling
+    }
+  };
+  
+
+
+
 
   /**
  * Duplicates a tab within a Google Sheets spreadsheet.
@@ -267,6 +289,47 @@ export const duplicateTab = async (spreadsheetId, tabId, newTabIndex, accessToke
   };
 
   /**
+ * Unhides a specified tab within a Google Sheets spreadsheet.
+ *
+ * @param {string} spreadsheetId The unique identifier for the Google Spreadsheet.
+ * @param {number} sheetId The unique identifier (ID) of the sheet to be unhidden.
+ * @param {string} accessToken A valid Google OAuth 2.0 access token with permissions to modify the spreadsheet.
+ * @returns {Promise<void>} A promise that resolves when the sheet has been successfully unhidden.
+ * @throws {Error} Throws an error if the request fails, including the error response from the Google Sheets API if available.
+ */
+export const unhideTab = async (spreadsheetId, tabId, accessToken) => {
+    try {
+      await axios.post(
+        `${GOOGLE_SS_API_URL}/${spreadsheetId}:batchUpdate`,
+        {
+          requests: [
+            {
+              updateSheetProperties: {
+                properties: {
+                  sheetId: tabId,
+                  hidden: false, // Set the hidden property to false to unhide the sheet
+                },
+                fields: 'hidden', // Specify that only the hidden property should be updated
+              },
+            },
+          ],
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+    } catch (error) {
+      console.error('Error unhiding tab:', error.response ? error.response.data : error.message);
+      throw error; // Rethrow the error for external handling
+    }
+};
+
+
+  /**
  * Renames a tab within a Google Sheets spreadsheet.
  *
  * @param {string} spreadsheetId The unique identifier for the Google Spreadsheet.
@@ -276,6 +339,7 @@ export const duplicateTab = async (spreadsheetId, tabId, newTabIndex, accessToke
  * @returns {Promise<Object>} A promise that resolves to the response data from the Google Sheets API, indicating the result of the rename operation.
  * @throws {Error} Throws an error if the request fails, including the error response from the Google Sheets API if available.
  */
+
 export const renameTab = async (spreadsheetId, tabId, newTitle, accessToken) => {
     try {
       const response = await axios.post(
@@ -307,10 +371,3 @@ export const renameTab = async (spreadsheetId, tabId, newTitle, accessToken) => 
       throw error; // Rethrow the error for external handling
     }
   };
-  
-  
-  
-  
-    
-  
-  

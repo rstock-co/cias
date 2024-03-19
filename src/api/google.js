@@ -5,21 +5,19 @@ import {
   DISTRIBUTION_DRIVE_FOLDER_ID, 
   DISTRIBUTION_INDEX_SSID, 
   DISTRIBUTION_TEMPLATE_SSID, 
-  GOOGLE_SS_API_URL, 
 } from '../lib/data';
 
 import { 
   createNewSpreadsheetFromTemplateAndSaveToFolder,
   duplicateTab,
   fetchCell,
+  fetchRange,
   getTabIdByName,
   populateCell,
   populateRange,
   renameTab,
-
+  unhideTab,
 } from '../lib/functions/google';
-
-import axios from "axios";
 
 /** ====================================
  * GOOGLE SHEET MASTER TEMPLATES
@@ -44,6 +42,7 @@ const DISTRO_WALLETS_FIRST_COLUMN_INDEX = 'B';
 const DISTRO_SHARE_FIRST_COLUMN_INDEX = 'E';
 const DISTRO_FIRST_ROW_INDEX = 12;
 const DISTRO_TOKENS_AMOUNT_CELL = 'E5';
+const DISTRO_NUMBER_CELL = 'B2';
 
 const DISTRO_EXPORT_LOG_TAB_NAME = 'export-log';
 const DISTRO_EXPORT_LOG_FIRST_COLUMN_INDEX = 'C';
@@ -84,8 +83,71 @@ const CAPPED_MOVE_EXPORT_LOG_FIRST_COLUMN_INDEX = 'C';
 const EXPORT_EXISTING_CAPPED_MOVE_TAB_NAME = 'txn-data';
 
 
+/**
+ * Imports capped move metadata from a specified range in the Google Sheets index file and updates a React state variable.
+ * 
+ * The fetched data is stored in a 2D array and intended to be used to update a React state variable.
+ *
+ * @param {string} accessToken Google OAuth2.0 access token with required permissions to read data from the spreadsheet.
+ * @param {Function} setStateCallback The React state setter function to update the state with the imported data.
+ * 
+ * @returns {void} This function does not return a value. It updates the React state directly via the setStateCallback.
+ */
+
+export const importCappedMoveData = async ( {accessToken, setStateCallback} ) => {
+
+  try {
+
+    // Step 1: Fetch the index data for all capped moves from capped moves index spreadsheet
+
+    const CAPPED_MOVE_INDEX_LAST_ROW_INDEX = await fetchCell(CAPPED_MOVE_INDEX_SSID, `${CAPPED_MOVE_INDEX_TAB_NAME}!A1`, accessToken);
+    const import_capped_move_range = `${CAPPED_MOVE_INDEX_TAB_NAME}!${CAPPED_MOVE_INDEX_FIRST_COLUMN_INDEX}${CAPPED_MOVE_INDEX_FIRST_ROW_INDEX}:${CAPPED_MOVE_INDEX_LAST_COLUMN_INDEX}${CAPPED_MOVE_INDEX_LAST_ROW_INDEX}`;
+    const cappedMoveData = await fetchRange(CAPPED_MOVE_INDEX_SSID, import_capped_move_range, accessToken);
+
+    console.log('Step 1 of 2: Capped Move data obtained successfully: ', cappedMoveData);
+
+    // Step 2: Update the React state with the fetched data
+
+    if (cappedMoveData && Array.isArray(cappedMoveData)) {
+      setStateCallback(cappedMoveData);
+      console.log('Step 2 of 2: State updated successfully');
+    } else {
+      console.error('No data found in the specified range:', import_capped_move_range);
+    }
+
+  } catch (error) {
+    console.error('Error importing data:', error.response ? error.response.data : error.message);
+  }
+};
 
 
+/**
+ * Imports distribution metadata from a specified range in the Google Sheets index file.
+ *
+ * @param {string} accessToken Google OAuth2.0 access token with required permissions to read data from the spreadsheet.
+ * @returns {Promise<Array<Array<string|number>>>} A promise that resolves to the 2D array of fetched distribution data.
+ * @throws {Error} Throws an error if the data fetching process fails.
+ */
+
+export const importDistributionData = async ({accessToken}) => {
+  try {
+    // Step 1: Fetch the index data for all distributions from the distribution index spreadsheet
+    const DISTRIBUTION_INDEX_LAST_ROW_INDEX = await fetchCell(DISTRIBUTION_INDEX_SSID, `${DISTRIBUTION_INDEX_TAB_NAME}!A1`, accessToken);
+    if (!DISTRIBUTION_INDEX_LAST_ROW_INDEX) {
+      throw new Error('Failed to fetch the last row index of the distribution index.');
+    }
+    const import_distribution_range = `${DISTRIBUTION_INDEX_TAB_NAME}!${DISTRIBUTION_INDEX_FIRST_COLUMN_INDEX}${DISTRIBUTION_INDEX_FIRST_ROW_INDEX}:${DISTRIBUTION_INDEX_LAST_COLUMN_INDEX}${DISTRIBUTION_INDEX_LAST_ROW_INDEX}`;
+    const distributionData = await fetchRange(DISTRIBUTION_INDEX_SSID, import_distribution_range, accessToken);
+
+    console.log('Distribution data obtained successfully:', distributionData);
+
+    // Return the fetched distribution data
+    return distributionData;
+  } catch (error) {
+    console.error('Error importing distribution data:', error.response ? error.response.data : error.message);
+    throw error; // Allows the error to be handled by the caller
+  }
+};
 
 
 
@@ -178,7 +240,91 @@ export const createNewCappedMove = async ({
  * @param {number} amount Amount of tokens to distribute
  */
 
-export const createDistribution = async ({
+const performDistributionSheetUpdates = async ({
+  SSID,
+  NEW_DISTRIBUTION_TAB_NAME,
+  accessToken,
+  data,
+  dateTime,
+  moveName,
+  walletAddress,
+  amount
+}) => {
+  try {
+
+      // Step 2a: get the tab ID of the "distro-template" tab
+
+      const tabIdResponse = await getTabIdByName(SSID, DISTRO_TEMPLATE_TAB_NAME, accessToken);
+
+      console.log(`Step 2a of 7:  Found tab ID for ${DISTRO_TEMPLATE_TAB_NAME}: ${tabIdResponse}`);
+      
+  
+      // Step 2b: Copy the "distro-template" tab 
+  
+      const NEW_DISTRIBUTION_TAB_ID = await duplicateTab(SSID, tabIdResponse, 0, accessToken);
+  
+      console.log('Step 2b of 7: New distribution tab created successfully with ID:', NEW_DISTRIBUTION_TAB_ID);
+  
+  
+      // Step 2c: Unhide the newly created tab
+  
+      const unhideTabResponse = await unhideTab(SSID, NEW_DISTRIBUTION_TAB_ID, accessToken);
+  
+      console.log('Step 2c of 7: New distribution tab unhidden successfully:', unhideTabResponse);
+  
+  
+      // Step 3: Rename the newly created tab
+  
+      const renameTabResponse = await renameTab(SSID, NEW_DISTRIBUTION_TAB_ID, NEW_DISTRIBUTION_TAB_NAME, accessToken);
+  
+      console.log('Step 3 of 7: New distribution tab renamed successfully:', renameTabResponse);
+  
+  
+      // Step 4: Populate the new tab with distribution data
+  
+      const walletDataRange = `${NEW_DISTRIBUTION_TAB_NAME}!${DISTRO_WALLETS_FIRST_COLUMN_INDEX}${DISTRO_FIRST_ROW_INDEX}`; 
+      const updateWalletResponse = await populateRange(SSID, walletDataRange, data.walletsArray, accessToken);
+  
+      const shareDataRange = `${NEW_DISTRIBUTION_TAB_NAME}!${DISTRO_SHARE_FIRST_COLUMN_INDEX}${DISTRO_FIRST_ROW_INDEX}`; 
+      const updateShareResponse = await populateRange(SSID, shareDataRange, data.shareArray, accessToken);
+      
+      console.log('Step 4 of 7: Distribution data populated successfully: ', updateWalletResponse, updateShareResponse);
+  
+    
+      // Step 5: Update the distribution amount in the new distribution tab
+  
+      const token_amount_range = `${NEW_DISTRIBUTION_TAB_NAME}!${DISTRO_TOKENS_AMOUNT_CELL}`;
+      const updateCellResponse = await populateCell(SSID, token_amount_range, amount, accessToken); 
+  
+      console.log('Step 5 of 7: Number of tokens to distribute updated successfully: ', updateCellResponse);
+  
+      
+      // Step 6: Update the distribution export log
+  
+      const DISTRO_EXPORT_LOG_FIRST_ROW_INDEX = await fetchCell(SSID, `${DISTRO_EXPORT_LOG_TAB_NAME}!A1`, accessToken);
+      const distro_export_log_range = `${DISTRO_EXPORT_LOG_TAB_NAME}!${DISTRO_EXPORT_LOG_FIRST_COLUMN_INDEX}${DISTRO_EXPORT_LOG_FIRST_ROW_INDEX}`;
+      const distro_export_log_data = [[dateTime, amount]];
+      const updateDistroLogResponse = await populateRange(SSID, distro_export_log_range, distro_export_log_data, accessToken); 
+  
+      console.log('Step 6 of 7: Export Log sheet updated successfully: ', updateDistroLogResponse);
+  
+  
+      // Step 7: Update the distribution index file with the new spreadsheet metadata
+  
+      const DISTRIBUTION_INDEX_FIRST_ROW_INDEX = await fetchCell(DISTRIBUTION_INDEX_SSID, `${DISTRIBUTION_INDEX_TAB_NAME}!A1`, accessToken);
+      const distribution_index_range = `${DISTRIBUTION_INDEX_TAB_NAME}!${DISTRIBUTION_INDEX_FIRST_COLUMN_INDEX}${DISTRIBUTION_INDEX_FIRST_ROW_INDEX}`;
+      const distribution_index_data = [[dateTime, moveName, amount, walletAddress, SSID]];
+      const updateIndexResponse = await populateRange(DISTRIBUTION_INDEX_SSID, distribution_index_range, distribution_index_data, accessToken);
+  
+      console.log('Step 7 of 7: Distribution index sheet updated successfully: ', updateIndexResponse);
+  
+    } catch (error) {
+      console.error('Error copying or populating spreadsheet:', error.response ? error.response.data : error.message);
+    }
+}
+
+
+const createDistribution = async ({
   accessToken, 
   data, 
   dateTime, 
@@ -192,76 +338,125 @@ export const createDistribution = async ({
   const NEW_DISTRIBUTION_TAB_NAME = `distro-${DISTRO_NUM}  |  ${dateTime}`;
 
   try {
-    // Step 1: Create new distribution spreadsheet from the master template spreadsheet
+
+    // Create new distribution spreadsheet from the master template spreadsheet
     
     const NEW_DISTRIBUTION_SHEET_ID = await createNewSpreadsheetFromTemplateAndSaveToFolder(
       accessToken, DISTRIBUTION_TEMPLATE_SSID, NEW_DISTRIBUTION_SHEET_NAME, DISTRIBUTION_DRIVE_FOLDER_ID);
 
     console.log('Step 1 of 7: New distribution sheet created successfully: ',  NEW_DISTRIBUTION_SHEET_ID);
+
+    // Perform the rest of the updates
     
+    await performDistributionSheetUpdates({
+      SSID: NEW_DISTRIBUTION_SHEET_ID,
+      NEW_DISTRIBUTION_TAB_NAME,
+      accessToken,
+      data,
+      dateTime,
+      moveName,
+      walletAddress,
+      amount
+    });
+  } catch (error) {
+    console.error('Error copying or populating spreadsheet:', error.response ? error.response.data : error.message);
 
-    // Step 2a: get the tab ID of the "distro-template" tab
-
-    const tabIdResponse = await getTabIdByName(NEW_DISTRIBUTION_SHEET_ID, DISTRO_TEMPLATE_TAB_NAME, accessToken);
-
-    console.log(`Step 2a of 7:  Found tab ID for ${DISTRO_TEMPLATE_TAB_NAME}: ${tabIdResponse}`);
-    
-
-    // Step 2b: Copy the "distro-template" tab 
-
-    const NEW_DISTRIBUTION_TAB_ID = await duplicateTab(NEW_DISTRIBUTION_SHEET_ID, tabIdResponse, 0, accessToken);
-
-    console.log('Step 2b of 7: New distribution tab created successfully with ID:', NEW_DISTRIBUTION_TAB_ID);
-
-    // Step 3: Rename the newly copied tab
-
-    const renameTabResponse = await renameTab(NEW_DISTRIBUTION_SHEET_ID, NEW_DISTRIBUTION_TAB_ID, NEW_DISTRIBUTION_TAB_NAME, accessToken);
-
-    console.log('Step 3 of 7: New distribution tab renamed successfully:', renameTabResponse);
-
-
-    // Step 4: Populate the new tab with distribution data
-
-    const walletDataRange = `${NEW_DISTRIBUTION_TAB_NAME}!${DISTRO_WALLETS_FIRST_COLUMN_INDEX}${DISTRO_FIRST_ROW_INDEX}`; 
-    const updateWalletResponse = await populateRange(NEW_DISTRIBUTION_SHEET_ID, walletDataRange, data.walletsArray, accessToken);
-
-    const shareDataRange = `${NEW_DISTRIBUTION_TAB_NAME}!${DISTRO_SHARE_FIRST_COLUMN_INDEX}${DISTRO_FIRST_ROW_INDEX}`; 
-    const updateShareResponse = await populateRange(NEW_DISTRIBUTION_SHEET_ID, shareDataRange, data.shareArray, accessToken);
-    
-    console.log('Step 4 of 7: Distribution data populated successfully: ', updateWalletResponse, updateShareResponse);
-
-  
-  // Step 5: Update the distribution amount in the new distribution tab
-
-  const token_amount_range = `${NEW_DISTRIBUTION_TAB_NAME}!${DISTRO_TOKENS_AMOUNT_CELL}`;
-  const updateCellResponse = await populateCell(NEW_DISTRIBUTION_SHEET_ID, token_amount_range, amount, accessToken); 
-
-  console.log('Step 5 of 7: Number of tokens to distribute updated successfully: ', updateCellResponse);
-
-  
-  // Step 6: Update the distribution export log
-
-  const DISTRO_EXPORT_LOG_FIRST_ROW_INDEX = await fetchCell(NEW_DISTRIBUTION_SHEET_ID, `${DISTRO_EXPORT_LOG_TAB_NAME}!A1`, accessToken);
-  const distro_export_log_range = `${DISTRO_EXPORT_LOG_TAB_NAME}!${DISTRO_EXPORT_LOG_FIRST_COLUMN_INDEX}${DISTRO_EXPORT_LOG_FIRST_ROW_INDEX}`;
-  const distro_export_log_data = [[dateTime, amount]];
-  const updateDistroLogResponse = await populateRange(NEW_DISTRIBUTION_SHEET_ID, distro_export_log_range, distro_export_log_data, accessToken); 
-
-  console.log('Step 6 of 7: Export Log sheet updated successfully: ', updateDistroLogResponse);
-
-
-  // Step 7: Update the distribution index file with the new spreadsheet metadata
-
-  const DISTRIBUTION_INDEX_FIRST_ROW_INDEX = await fetchCell(DISTRIBUTION_INDEX_SSID, `${DISTRIBUTION_INDEX_TAB_NAME}!A1`, accessToken);
-  const distribution_index_range = `${DISTRIBUTION_INDEX_TAB_NAME}!${DISTRIBUTION_INDEX_FIRST_COLUMN_INDEX}${DISTRIBUTION_INDEX_FIRST_ROW_INDEX}`;
-  const distribution_index_data = [[dateTime, moveName, amount, walletAddress, NEW_DISTRIBUTION_SHEET_ID]];
-  const updateIndexResponse = await populateRange(DISTRIBUTION_INDEX_SSID, distribution_index_range, distribution_index_data, accessToken);
-
-  console.log('Step 7 of 7: Distribution index sheet updated successfully: ', updateIndexResponse);
-
-} catch (error) {
-  console.error('Error copying or populating spreadsheet:', error.response ? error.response.data : error.message);
+  }
 }
+
+const updateDistribution = async ({
+  accessToken, 
+  data, 
+  dateTime, 
+  moveName, 
+  walletAddress, 
+  amount,
+  DISTRIBUTION_MOVE_SSID
+}) => {
+
+  try {
+
+    // Get the distribution number
+    const DISTRO_NUM = await fetchCell(DISTRIBUTION_MOVE_SSID, `${DISTRO_EXPORT_LOG_TAB_NAME}!A2`, accessToken);
+    const NEW_DISTRIBUTION_TAB_NAME = `distro-${DISTRO_NUM}  |  ${dateTime}`;
+    
+    console.log('Step 1 of 7: Distribution number obtained successfully: ', DISTRO_NUM);
+
+    // Perform the rest of the updates
+      
+    await performDistributionSheetUpdates({
+      SSID: DISTRIBUTION_MOVE_SSID,
+      NEW_DISTRIBUTION_TAB_NAME,
+      accessToken,
+      data,
+      dateTime,
+      moveName,
+      walletAddress,
+      amount
+    });
+
+    // Update the distribution number in the new distribution tab
+
+    const distro_number_range = `${NEW_DISTRIBUTION_TAB_NAME}!${DISTRO_NUMBER_CELL}`;
+    const updateDistroNumberResponse = await populateCell(DISTRIBUTION_MOVE_SSID, distro_number_range, `Distribution # ${DISTRO_NUMBER}`, accessToken); 
+
+    console.log('Step 4b of 7: Distribution number populated successfully: ', updateDistroNumberResponse);
+  } catch (error) {
+    console.error('Error copying or populating spreadsheet:', error.response ? error.response.data : error.message);
+  }
 }
+
+export const createOrUpdateDistribution = async ({
+  accessToken,
+  data,
+  dateTime,
+  moveName,
+  walletAddress,
+  amount,
+}) => {
+  try {
+    const distributionData = await importDistributionData({ accessToken });
+
+    const foundDistribution = distributionData.find(row => {
+      const [, name, , , ssid] = row;
+      console.log('ssid: ', ssid) // avoid es-lint rule
+      return name.toLowerCase() === moveName.toLowerCase();
+    });
+    
+    if (foundDistribution) {
+      console.log(`Distribution for "${moveName}" already exists. Updating...`);
+      const [, , , , foundSSID] = foundDistribution;
+      console.log('foundSSID:', foundSSID);
+    
+      await updateDistribution({
+        accessToken,
+        data,
+        dateTime,
+        moveName,
+        walletAddress, 
+        amount, 
+        DISTRIBUTION_MOVE_SSID: foundSSID
+      });
+    } else {
+      console.log(`No distribution for "${moveName}" found. Creating new...`);
+      await createDistribution({
+        accessToken, 
+        data, 
+        dateTime, 
+        moveName, 
+        walletAddress, 
+        amount 
+      });
+    }
+  } catch (error) {
+    console.error('Error processing distribution:', error.response ? error.response.data : error.message);
+  }
+}
+
+
+
+
+
 
 
 
@@ -286,14 +481,14 @@ export const updateExistingCappedMove = async ({
   // moveName,
   // walletAddress,
   // cappedMoveAmount,
-  CAPPED_SSID
+  CAPPED_MOVE_SSID
 }) => {
 
   try {
 
     // Step 1: Update the specified sheet with new data
 
-    const updateResponse = populateRange(CAPPED_SSID, `${EXPORT_EXISTING_CAPPED_MOVE_TAB_NAME}!A1`, data, accessToken);
+    const updateResponse = populateRange(CAPPED_MOVE_SSID, `${EXPORT_EXISTING_CAPPED_MOVE_TAB_NAME}!A1`, data, accessToken);
     
     console.log('Step 1: Sheet updated successfully:', updateResponse);
 
@@ -323,104 +518,11 @@ export const updateExistingCappedMove = async ({
   }
 }
 
-/**
- * Imports capped move metadata from a specified range in the Google Sheets index file and updates a React state variable.
- * 
- * The fetched data is stored in a 2D array and intended to be used to update a React state variable.
- *
- * @param {string} accessToken Google OAuth2.0 access token with required permissions to read data from the spreadsheet.
- * @param {Function} setStateCallback The React state setter function to update the state with the imported data.
- * 
- * @returns {void} This function does not return a value. It updates the React state directly via the setStateCallback.
- */
-
-export const importCappedMoveData = async ( {accessToken, setStateCallback} ) => {
-
-  try {
-
-    // Step 1: Fetch the index data for all capped moves from capped moves index spreadsheet
-
-    const rowIndexResponse = await axios.get(
-      `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${CAPPED_MOVE_INDEX_TAB_NAME}!A1`,
-      { headers: { 'Authorization': `Bearer ${accessToken}` } }
-    );
-
-    const [[CAPPED_MOVE_INDEX_LAST_ROW_INDEX]] = rowIndexResponse.data.values;
-
-    const import_capped_move_range = `${CAPPED_MOVE_INDEX_TAB_NAME}!${CAPPED_MOVE_INDEX_FIRST_COLUMN_INDEX}${CAPPED_MOVE_INDEX_FIRST_ROW_INDEX}:${CAPPED_MOVE_INDEX_LAST_COLUMN_INDEX}${CAPPED_MOVE_INDEX_LAST_ROW_INDEX}`;
-
-    const dataResponse = await axios.get(
-      `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${import_capped_move_range}`,
-      { headers: { 'Authorization': `Bearer ${accessToken}` } }
-    );
-
-    const data = dataResponse.data.values;
-
-    console.log('Step 1 of 2: Capped Move data obtained successfully: ', data);
-
-
-    // Step 2: Update the React state with the fetched data
-
-    if (data && Array.isArray(data)) {
-      setStateCallback(data);
-      console.log('Step 2 of 2: State updated successfully');
-    } else {
-      console.error('No data found in the specified range:', dataRange);
-    }
-
-  } catch (error) {
-    console.error('Error importing data:', error.response ? error.response.data : error.message);
-  }
-};
 
 
 
-/**
- * Imports distribution metadata from a specified range in the Google Sheets index file and updates a React state variable.
- * 
- * The fetched data is stored in a 2D array and intended to be used to update a React state variable.
- *
- * @param {string} accessToken Google OAuth2.0 access token with required permissions to read data from the spreadsheet.
- * @param {Function} setStateCallback The React state setter function to update the state with the imported data.
- * 
- * @returns {void} This function does not return a value. It updates the React state directly via the setStateCallback.
- */
-
-export const importDistributionData = async ( {accessToken, setStateCallback} ) => {
-
-  try {
-
-    // Step 1: Fetch the index data for all capped moves from capped moves index spreadsheet
-    
-    const rowIndexResponse = await axios.get(
-      `${GOOGLE_SS_API_URL}/${DISTRIBUTION_INDEX_SSID}/values/${DISTRIBUTION_INDEX_TAB_NAME}!A1`,
-      { headers: { 'Authorization': `Bearer ${accessToken}` } }
-    );
-
-    const [[DISTRIBUTION_INDEX_LAST_ROW_INDEX]] = rowIndexResponse.data.values;
-
-    const import_distribution_range = `${DISTRIBUTION_INDEX_TAB_NAME}!${DISTRIBUTION_INDEX_FIRST_COLUMN_INDEX}${DISTRIBUTION_INDEX_FIRST_ROW_INDEX}:${DISTRIBUTION_INDEX_LAST_COLUMN_INDEX}${DISTRIBUTION_INDEX_LAST_ROW_INDEX}`;
-
-    const dataResponse = await axios.get(
-      `${GOOGLE_SS_API_URL}/${DISTRIBUTION_INDEX_SSID}/values/${import_distribution_range }`,
-      { headers: { 'Authorization': `Bearer ${accessToken}` } }
-    );
-
-    const data = dataResponse.data.values;
-
-    console.log('Step 1 of 2: Capped Move data obtained successfully: ', data);
 
 
-    // Step 2: Update the React state with the fetched distribution data
 
-    if (data && Array.isArray(data)) {
-      setStateCallback(data);
-      console.log('Step 2 of 2: State updated successfully');
-    } else {
-      console.error('No data found in the specified range:', dataRange);
-    }
 
-  } catch (error) {
-    console.error('Error importing data:', error.response ? error.response.data : error.message);
-  }
-};
+

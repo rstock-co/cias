@@ -1,16 +1,23 @@
-import { createDistribution, createNewCappedMove, importCappedMoveData, updateExistingCappedMove } from '../../../api/google';
+import { createNewCappedMove, createOrUpdateDistribution, importCappedMoveData, updateExistingCappedMove } from '../../../api/google';
 import { generateCappedMoveData, generateDistributionData } from '../../../lib/functions/google';
 import { useEffect, useState } from 'react';
-// import { curry } from '../../../lib/functions/fp';
 import { getNowMST } from '../../../lib/functions/time';
 import { useAuth } from '../../../auth/google';
 
-const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWallets, selectedCappedMoveWallets, selectedWallets, setIsCappedMove, sortedAllocationTableData }) => { 
+const AuthUX = ({
+    cappedMoveAmount, 
+    setCappedMoveAmount, 
+    setSelectedCappedMoveWallets, 
+    selectedCappedMoveWallets, 
+    selectedWallets, 
+    setIsCappedMove, 
+    sortedAllocationTableData 
+}) => { 
 
     const { accessToken, initiateGoogleLogin } = useAuth();
     const [operation, setOperation] = useState({
         type: null,
-        subtype: 'new',
+        subtype: null,
         data: null
     });
     const [importedCappedMoveData, setImportedCappedMoveData] = useState([]);
@@ -21,9 +28,8 @@ const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWal
     const exportActions = {
         new: { action: createNewCappedMove, dataFn: generateCappedMoveData, title: `Capped Move for ${name}` },
         existing: { action: updateExistingCappedMove, dataFn: generateCappedMoveData, title: `Capped Move for ${name}` },
-        distribution: { action: createDistribution, dataFn: generateDistributionData, title: `Distribution for ${name}` } 
+        distribution: { action: createOrUpdateDistribution, dataFn: generateDistributionData, title: `Distribution for ${name}` } 
     };
-
 
     useEffect(() => {
         if (!accessToken) return;
@@ -42,9 +48,9 @@ const AuthUX = ({cappedMoveAmount, setCappedMoveAmount, setSelectedCappedMoveWal
                     data: exportConfig.dataFn(sortedAllocationTableData, exportConfig.title, dateTime),
                     dateTime,
                     moveName: operation.subtype === 'distribution' ? selectedWallets[0].name : name,
-                    walletAddress: address,
+                    walletAddress: operation.subtype === 'distribution' ? selectedWallets[0].address : address,
                     amount: operation.subtype === 'distribution' && operation.data ? operation.data[0] : cappedMoveAmount,
-                    CAPPED_SSID: selectedCappedMoveWallets[0]?.ssid
+                    CAPPED_MOVE_SSID: selectedCappedMoveWallets[0]?.ssid,
                 });
             } catch (error) {
                 console.error('Error exporting data:', error);

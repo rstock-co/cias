@@ -14,6 +14,7 @@ const InitUX = () => {
 
     // CAPPED MOVE
     const [selectedCappedMoveWallets, setSelectedCappedMoveWallets] = useState([]);
+    const [selectedDistributionWallet, setSelectedDistributionWallet] = useState([]); 
     const [isCappedMove, setIsCappedMove] = useState(false);
     const [cappedMoveAmount, setCappedMoveAmount] = useState(0); 
     const [sortedAllocationTableData, setSortedAllocationTableData] = useState([]);
@@ -154,6 +155,8 @@ const InitUX = () => {
         setCappedMoveAmount,
         selectedCappedMoveWallets,
         setSelectedCappedMoveWallets,
+        selectedDistributionWallet, 
+        setSelectedDistributionWallet, 
         sortedAllocationTableData, 
         setSortedAllocationTableData,
 

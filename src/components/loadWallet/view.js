@@ -57,14 +57,14 @@ const LoadWallet = ({
 
     const { accessToken } = useAuth();
 
-    console.log("=== TEST ERROR DIALOG ===")
-    console.log("accessToken: ", accessToken)
-    console.log("isCappedMove: ", isCappedMove)
-    console.log("Operation: ", operation);
-    console.log("isCappedWalletFound: ", isCappedWalletFound);
-    console.log("selectedWallets: ", selectedWallets);
-    console.log("show dialog?",accessToken && isCappedMove && !operation.type === 'import' && !isCappedWalletFound && selectedWallets.length === 1 )
-    console.log("======")
+    // console.log("=== TEST ERROR DIALOG ===")
+    // console.log("accessToken: ", accessToken)
+    // console.log("isCappedMove: ", isCappedMove)
+    // console.log("Operation: ", operation);
+    // console.log("isCappedWalletFound: ", isCappedWalletFound);
+    // console.log("selectedWallets: ", selectedWallets);
+    // console.log("show dialog?",accessToken && isCappedMove && !operation.type === 'import' && !isCappedWalletFound && selectedWallets.length === 1 )
+    // console.log("======")
     
     // console.log("SavedTables: ",savedTables)
     // console.log("BlendedTableList: ",  blendedTableList);
