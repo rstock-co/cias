@@ -24,6 +24,17 @@ const AuthUX = ({
     const [isCappedWalletFound, setIsCappedWalletFound] = useState(false);
     const dateTime = getNowMST();
     const { name, address } = selectedCappedMoveWallets.length > 0 ? selectedCappedMoveWallets[0] : {name: undefined, address: undefined};
+    const [processMessage, setProcessMessage] = useState('');
+    const [processError, setProcessError] = useState('');
+
+    const updateProcessMessage = (message) => {
+        setProcessMessage(message);
+        setProcessError(''); // Reset error state on new message
+    };
+    
+    const updateProcessError = (errorMessage) => {
+        setProcessError(errorMessage);
+    };
 
     const exportActions = {
         new: { action: createNewCappedMove, dataFn: generateCappedMoveData, title: `Capped Move for ${name}` },
@@ -39,7 +50,7 @@ const AuthUX = ({
         const exportData = async () => {
             const exportConfig = exportActions[operation.subtype]; 
 
-
+            updateProcessMessage(`Export initiated...`); // Update process message
             console.log("EXPORT initiated: ", exportConfig)
 
             try {
@@ -51,8 +62,11 @@ const AuthUX = ({
                     walletAddress: operation.subtype === 'distribution' ? selectedWallets[0].address : address,
                     amount: operation.subtype === 'distribution' && operation.data ? operation.data[0] : cappedMoveAmount,
                     CAPPED_MOVE_SSID: selectedCappedMoveWallets[0]?.ssid,
+                    updateProcessMessage,
+                    updateProcessError
                 });
             } catch (error) {
+                setProcessError(`Error exporting data: ${error}`);
                 console.error('Error exporting data:', error);
             } finally {
                 setOperation({ type: null, subtype: null, data: null }); 
@@ -60,6 +74,7 @@ const AuthUX = ({
         };
 
         const importData = async () => {
+            updateProcessMessage(`Attempting to import capped moves metadata...`); // Update process message
             console.log("attempting to IMPORT capped moves metadata");
             try {
                 await importCappedMoveData({
@@ -124,6 +139,7 @@ const AuthUX = ({
 
     const handleLogin = (type, subtype, ...args) => {
         if (!accessToken) {
+            updateProcessMessage(`No Google OAuth 2.0 token found, initiating login..`);
             console.log('No Google OAuth 2.0 token found, initiating login..');
             initiateGoogleLogin();
         }
@@ -138,7 +154,13 @@ const AuthUX = ({
         handleLogin,
         importedCappedMoveData,
         isCappedWalletFound,
-        operation
+        operation,
+
+        updateProcessMessage,
+        updateProcessError,
+        processMessage,
+        processError
+
     }
 };
 

@@ -248,7 +248,9 @@ const performDistributionSheetUpdates = async ({
   dateTime,
   moveName,
   walletAddress,
-  amount
+  amount,
+  updateProcessMessage,
+  updateProcessError
 }) => {
   try {
 
@@ -256,6 +258,7 @@ const performDistributionSheetUpdates = async ({
 
       const tabIdResponse = await getTabIdByName(SSID, DISTRO_TEMPLATE_TAB_NAME, accessToken);
 
+      updateProcessMessage(`Step 2a of 7:  Found tab ID for ${DISTRO_TEMPLATE_TAB_NAME}`);
       console.log(`Step 2a of 7:  Found tab ID for ${DISTRO_TEMPLATE_TAB_NAME}: ${tabIdResponse}`);
       
   
@@ -263,6 +266,7 @@ const performDistributionSheetUpdates = async ({
   
       const NEW_DISTRIBUTION_TAB_ID = await duplicateTab(SSID, tabIdResponse, 0, accessToken);
   
+      updateProcessMessage(`Step 2b of 7: New distribution tab created successfully with ID: ${NEW_DISTRIBUTION_TAB_ID}`);
       console.log('Step 2b of 7: New distribution tab created successfully with ID:', NEW_DISTRIBUTION_TAB_ID);
   
   
@@ -270,6 +274,7 @@ const performDistributionSheetUpdates = async ({
   
       const unhideTabResponse = await unhideTab(SSID, NEW_DISTRIBUTION_TAB_ID, accessToken);
   
+      updateProcessMessage(`Step 2c of 7: New distribution tab unhidden successfully`);
       console.log('Step 2c of 7: New distribution tab unhidden successfully:', unhideTabResponse);
   
   
@@ -277,6 +282,7 @@ const performDistributionSheetUpdates = async ({
   
       const renameTabResponse = await renameTab(SSID, NEW_DISTRIBUTION_TAB_ID, NEW_DISTRIBUTION_TAB_NAME, accessToken);
   
+      updateProcessMessage(`Step 3 of 7: New distribution tab renamed successfully`);
       console.log('Step 3 of 7: New distribution tab renamed successfully:', renameTabResponse);
   
   
@@ -288,6 +294,7 @@ const performDistributionSheetUpdates = async ({
       const shareDataRange = `${NEW_DISTRIBUTION_TAB_NAME}!${DISTRO_SHARE_FIRST_COLUMN_INDEX}${DISTRO_FIRST_ROW_INDEX}`; 
       const updateShareResponse = await populateRange(SSID, shareDataRange, data.shareArray, accessToken);
       
+      updateProcessMessage(`Step 4 of 7: Distribution data populated successfully`);
       console.log('Step 4 of 7: Distribution data populated successfully: ', updateWalletResponse, updateShareResponse);
   
     
@@ -296,6 +303,7 @@ const performDistributionSheetUpdates = async ({
       const token_amount_range = `${NEW_DISTRIBUTION_TAB_NAME}!${DISTRO_TOKENS_AMOUNT_CELL}`;
       const updateCellResponse = await populateCell(SSID, token_amount_range, amount, accessToken); 
   
+      updateProcessMessage(`Step 5 of 7: No. tokens to distribute updated successfully`);
       console.log('Step 5 of 7: Number of tokens to distribute updated successfully: ', updateCellResponse);
   
       
@@ -306,6 +314,7 @@ const performDistributionSheetUpdates = async ({
       const distro_export_log_data = [[dateTime, amount]];
       const updateDistroLogResponse = await populateRange(SSID, distro_export_log_range, distro_export_log_data, accessToken); 
   
+      updateProcessMessage(`Step 6 of 7: Export Log sheet updated successfully`);
       console.log('Step 6 of 7: Export Log sheet updated successfully: ', updateDistroLogResponse);
   
   
@@ -316,9 +325,11 @@ const performDistributionSheetUpdates = async ({
       const distribution_index_data = [[dateTime, moveName, amount, walletAddress, SSID]];
       const updateIndexResponse = await populateRange(DISTRIBUTION_INDEX_SSID, distribution_index_range, distribution_index_data, accessToken);
   
+      updateProcessMessage(`Step 7 of 7: Distribution index sheet updated successfully`);
       console.log('Step 7 of 7: Distribution index sheet updated successfully: ', updateIndexResponse);
   
     } catch (error) {
+      updateProcessError(`Error copying or populating spreadsheet: ${(error.response ? error.response.data : error.message)}`);
       console.error('Error copying or populating spreadsheet:', error.response ? error.response.data : error.message);
     }
 }
@@ -330,7 +341,9 @@ const createDistribution = async ({
   dateTime, 
   moveName, 
   walletAddress, 
-  amount 
+  amount,
+  updateProcessMessage,
+  updateProcessError 
 }) => {
 
   const NEW_DISTRIBUTION_SHEET_NAME = `${dateTime}_${moveName}`;
@@ -344,6 +357,7 @@ const createDistribution = async ({
     const NEW_DISTRIBUTION_SHEET_ID = await createNewSpreadsheetFromTemplateAndSaveToFolder(
       accessToken, DISTRIBUTION_TEMPLATE_SSID, NEW_DISTRIBUTION_SHEET_NAME, DISTRIBUTION_DRIVE_FOLDER_ID);
 
+    updateProcessMessage(`Step 1 of 7: New distribution sheet created successfully: ${NEW_DISTRIBUTION_SHEET_ID}`);
     console.log('Step 1 of 7: New distribution sheet created successfully: ',  NEW_DISTRIBUTION_SHEET_ID);
 
     // Perform the rest of the updates
@@ -356,9 +370,12 @@ const createDistribution = async ({
       dateTime,
       moveName,
       walletAddress,
-      amount
+      amount,
+      updateProcessMessage,
+      updateProcessError
     });
   } catch (error) {
+    updateProcessError(`Error copying or populating spreadsheet: ${(error.response ? error.response.data : error.message)}`);
     console.error('Error copying or populating spreadsheet:', error.response ? error.response.data : error.message);
 
   }
@@ -371,7 +388,9 @@ const updateDistribution = async ({
   moveName, 
   walletAddress, 
   amount,
-  DISTRIBUTION_MOVE_SSID
+  DISTRIBUTION_MOVE_SSID,
+  updateProcessMessage,
+  updateProcessError
 }) => {
 
   try {
@@ -380,6 +399,7 @@ const updateDistribution = async ({
     const DISTRO_NUM = await fetchCell(DISTRIBUTION_MOVE_SSID, `${DISTRO_EXPORT_LOG_TAB_NAME}!A2`, accessToken);
     const NEW_DISTRIBUTION_TAB_NAME = `distro-${DISTRO_NUM}  |  ${dateTime}`;
     
+    updateProcessMessage(`Step 1 of 7: Distribution number obtained successfully: ${DISTRO_NUM}`);
     console.log('Step 1 of 7: Distribution number obtained successfully: ', DISTRO_NUM);
 
     // Perform the rest of the updates
@@ -392,16 +412,20 @@ const updateDistribution = async ({
       dateTime,
       moveName,
       walletAddress,
-      amount
+      amount,
+      updateProcessMessage,
+      updateProcessError
     });
 
     // Update the distribution number in the new distribution tab
 
     const distro_number_range = `${NEW_DISTRIBUTION_TAB_NAME}!${DISTRO_NUMBER_CELL}`;
-    const updateDistroNumberResponse = await populateCell(DISTRIBUTION_MOVE_SSID, distro_number_range, `Distribution # ${DISTRO_NUMBER}`, accessToken); 
+    const updateDistroNumberResponse = await populateCell(DISTRIBUTION_MOVE_SSID, distro_number_range, `Distribution # ${DISTRO_NUM}`, accessToken); 
 
-    console.log('Step 4b of 7: Distribution number populated successfully: ', updateDistroNumberResponse);
+    updateProcessMessage('Step 8 of 8: Distribution number populated successfully.');
+    console.log('Step 8 of 8: Distribution number populated successfully: ', updateDistroNumberResponse);
   } catch (error) {
+    updateProcessError(`Error copying or populating spreadsheet: ${(error.response ? error.response.data : error.message)}`);
     console.error('Error copying or populating spreadsheet:', error.response ? error.response.data : error.message);
   }
 }
@@ -413,6 +437,8 @@ export const createOrUpdateDistribution = async ({
   moveName,
   walletAddress,
   amount,
+  updateProcessMessage,
+  updateProcessError
 }) => {
   try {
     const distributionData = await importDistributionData({ accessToken });
@@ -426,6 +452,7 @@ export const createOrUpdateDistribution = async ({
     if (foundDistribution) {
       console.log(`Distribution for "${moveName}" already exists. Updating...`);
       const [, , , , foundSSID] = foundDistribution;
+      updateProcessMessage(`Distribution for "${moveName}" already exists. Found ID: ${foundSSID}, updating...`)
       console.log('foundSSID:', foundSSID);
     
       await updateDistribution({
@@ -435,7 +462,9 @@ export const createOrUpdateDistribution = async ({
         moveName,
         walletAddress, 
         amount, 
-        DISTRIBUTION_MOVE_SSID: foundSSID
+        DISTRIBUTION_MOVE_SSID: foundSSID,
+        updateProcessMessage,
+        updateProcessError
       });
     } else {
       console.log(`No distribution for "${moveName}" found. Creating new...`);
@@ -445,7 +474,9 @@ export const createOrUpdateDistribution = async ({
         dateTime, 
         moveName, 
         walletAddress, 
-        amount 
+        amount,
+        updateProcessMessage,
+        updateProcessError
       });
     }
   } catch (error) {

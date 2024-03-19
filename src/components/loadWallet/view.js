@@ -51,7 +51,7 @@ const LoadWallet = ({
     // totalTransactionsByChain, totalValueByChain, formattedChainDataString
 
     // ux.auth
-    handleLogin, isCappedWalletFound, operation // importCappedMoveData,
+    handleLogin, isCappedWalletFound, operation, updateProcessMessage, updateProcessError, processMessage, processError // importCappedMoveData,
 
 } = {}) => {
 
@@ -317,6 +317,10 @@ const LoadWallet = ({
                 setSortedAllocationTableData={setSortedAllocationTableData}
                 handleLogin={handleLogin}
                 operation={operation}
+                updateProcessMessage={updateProcessMessage}
+                updateProcessError={updateProcessError}
+                processMessage={processMessage}
+                processError={processError}
             />
 
             <BlendedAllocationTable

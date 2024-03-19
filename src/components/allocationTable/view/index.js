@@ -1,10 +1,10 @@
 import "@fontsource/inter-tight";
 import { Dialog, DialogContent, Paper, TableContainer } from "@mui/material";
+import { DistributionProcessSnackbar, SaveTableSnackbar } from "../../../elements/snackbars";
 import { GenerationDateTemplate, TableTitleTemplate, WalletSummariesTemplate } from "./summary";
 import AllocationTableTemplate from "./body";
 import FooterTemplate from "./footer";
 import HeaderTemplate from "./header";
-import SaveTableSnackbar from "../../../elements/snackbars";
 
 const AllocationTable = (props = {}) => {
 
@@ -53,6 +53,7 @@ const AllocationTable = (props = {}) => {
             </Dialog>
 
             {SaveTableSnackbar(props)}
+            {DistributionProcessSnackbar(props)}
         </>
     );
 };
