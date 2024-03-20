@@ -1,19 +1,28 @@
+import { Snackbar, SnackbarContent } from "@mui/material";
+import { ColorButton } from '../buttons';
 import React from 'react';
-import { Snackbar } from "@mui/material";
 
-export const DistributionProcessSnackbar = ({ updateProcessMessage, updateProcessError, processMessage, processError }) => {
-    // Define the onClose function
+export const DistributionProcessSnackbar = ({ 
+    updateProcessMessage, 
+    updateProcessError, 
+    processMessage: { message, showActionButton, actionButtonUrl }, 
+    processError,
+}) => {
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
-            // Do not close if the snackbar is clicked away
             return;
         }
-        // Clear the current messages to close the snackbar
+        updateProcessMessage(''); 
+        updateProcessError('');
+    };
+
+    const openUrlInNewWindow = (url) => {
+        window.open(url, '_blank');
+        // Close the Snackbar after opening the URL
         updateProcessMessage('');
         updateProcessError('');
     };
 
-    // Conditional styling based on processError
     const snackbarStyle = {
         '& .MuiSnackbarContent-root': {
             backgroundColor: processError ? '#d32f2f' : '#105c69', // Red for error, otherwise the original color
@@ -25,12 +34,24 @@ export const DistributionProcessSnackbar = ({ updateProcessMessage, updateProces
 
     return (
         <Snackbar
-            open={!!(processMessage || processError)}
-            message={processError || processMessage} // Show error if present, otherwise show the process message
-            autoHideDuration={3000} // Adjusted to give users more time to read the message, set to null to disable auto-hide
+            open={!!(message || processError)}
+            autoHideDuration={null} // Keep open indefinitely until an action occurs
             onClose={handleClose}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             sx={snackbarStyle}
-        />
+        >
+            <SnackbarContent
+                message={
+                    <div>
+                        {processError || message}
+                        {showActionButton && actionButtonUrl && (
+                            <div style={{ marginTop: '8px', display: 'flex', justifyContent: 'center' }}>
+                                <ColorButton onClick={() => openUrlInNewWindow(actionButtonUrl)} buttonText="Open Distribution Sheet" />
+                            </div>
+                        )}
+                    </div>
+                }
+            />
+        </Snackbar>
     );
-}
+};

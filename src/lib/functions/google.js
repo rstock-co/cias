@@ -371,3 +371,22 @@ export const renameTab = async (spreadsheetId, tabId, newTitle, accessToken) => 
       throw error; // Rethrow the error for external handling
     }
   };
+
+/** 
+ *  Utility function to generate a hyperlink for a Google sheet when given the spreadsheet ID.
+ */
+
+  export const createGoogleSheetHyperlink = (spreadsheetId) => {
+    // Base URL for Google Sheets
+    const baseUrl = "https://docs.google.com/spreadsheets/d/";
+
+    // Check if the spreadsheet ID is provided and not empty
+    if (!spreadsheetId) {
+        console.error('Spreadsheet ID is required.');
+        return null;
+    }
+
+    // Construct and return the full URL
+    return `${baseUrl}${spreadsheetId}/edit`;
+}
+

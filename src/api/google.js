@@ -8,6 +8,7 @@ import {
 } from '../lib/data';
 
 import { 
+  createGoogleSheetHyperlink,
   createNewSpreadsheetFromTemplateAndSaveToFolder,
   duplicateTab,
   fetchCell,
@@ -43,6 +44,7 @@ const DISTRO_SHARE_FIRST_COLUMN_INDEX = 'E';
 const DISTRO_FIRST_ROW_INDEX = 12;
 const DISTRO_TOKENS_AMOUNT_CELL = 'E5';
 const DISTRO_NUMBER_CELL = 'B2';
+const DISTRO_NAME_CELL = 'B3';
 
 const DISTRO_EXPORT_LOG_TAB_NAME = 'export-log';
 const DISTRO_EXPORT_LOG_FIRST_COLUMN_INDEX = 'C';
@@ -247,6 +249,7 @@ const performDistributionSheetUpdates = async ({
   data,
   dateTime,
   moveName,
+  moveNameBeforeParentheses,
   walletAddress,
   amount,
   updateProcessMessage,
@@ -303,8 +306,17 @@ const performDistributionSheetUpdates = async ({
       const token_amount_range = `${NEW_DISTRIBUTION_TAB_NAME}!${DISTRO_TOKENS_AMOUNT_CELL}`;
       const updateCellResponse = await populateCell(SSID, token_amount_range, amount, accessToken); 
   
-      updateProcessMessage(`Step 5 of 7: No. tokens to distribute updated successfully`);
-      console.log('Step 5 of 7: Number of tokens to distribute updated successfully: ', updateCellResponse);
+      updateProcessMessage(`Step 5a of 7: No. tokens to distribute updated successfully`);
+      console.log('Step 5a of 7: Number of tokens to distribute updated successfully: ', updateCellResponse);
+
+
+      // Step 5b: Update the distribution move name in the new distribution tab
+
+      const distro_name_range = `${NEW_DISTRIBUTION_TAB_NAME}!${DISTRO_NAME_CELL}`;
+      const updateNameResponse = await populateCell(SSID, distro_name_range, moveNameBeforeParentheses, accessToken); 
+  
+      updateProcessMessage(`Step 5b of 7: Distribution name updated successfully`);
+      console.log('Step 5b of 7: Distribution name updated successfully: ', updateNameResponse);
   
       
       // Step 6: Update the distribution export log
@@ -340,6 +352,7 @@ const createDistribution = async ({
   data, 
   dateTime, 
   moveName, 
+  moveNameBeforeParentheses,
   walletAddress, 
   amount,
   updateProcessMessage,
@@ -351,6 +364,7 @@ const createDistribution = async ({
   const NEW_DISTRIBUTION_TAB_NAME = `distro-${DISTRO_NUM}  |  ${dateTime}`;
 
   try {
+    updateProcessMessage(`Distribution not found, creating new distribution sheet...`);
 
     // Create new distribution spreadsheet from the master template spreadsheet
     
@@ -369,11 +383,18 @@ const createDistribution = async ({
       data,
       dateTime,
       moveName,
+      moveNameBeforeParentheses,
       walletAddress,
       amount,
       updateProcessMessage,
       updateProcessError
     });
+
+    // Update the snackbar with completion message, and open the new distribution sheet in a new window
+
+    const distroSheetURL = createGoogleSheetHyperlink(NEW_DISTRIBUTION_SHEET_ID);
+    updateProcessMessage(`Distribution # ${DISTRO_NUM} for ${moveNameBeforeParentheses} complete.  Opening new distribution sheet...`, distroSheetURL);
+
   } catch (error) {
     updateProcessError(`Error copying or populating spreadsheet: ${(error.response ? error.response.data : error.message)}`);
     console.error('Error copying or populating spreadsheet:', error.response ? error.response.data : error.message);
@@ -386,6 +407,7 @@ const updateDistribution = async ({
   data, 
   dateTime, 
   moveName, 
+  moveNameBeforeParentheses,
   walletAddress, 
   amount,
   DISTRIBUTION_MOVE_SSID,
@@ -411,6 +433,7 @@ const updateDistribution = async ({
       data,
       dateTime,
       moveName,
+      moveNameBeforeParentheses,
       walletAddress,
       amount,
       updateProcessMessage,
@@ -424,6 +447,13 @@ const updateDistribution = async ({
 
     updateProcessMessage('Step 8 of 8: Distribution number populated successfully.');
     console.log('Step 8 of 8: Distribution number populated successfully: ', updateDistroNumberResponse);
+
+    // Update the snackbar with completion message, and open the new distribution sheet in a new window
+
+    const distroSheetURL = createGoogleSheetHyperlink(DISTRIBUTION_MOVE_SSID);
+    updateProcessMessage(`Distribution # ${DISTRO_NUM} for ${moveNameBeforeParentheses} complete.  Opening new distribution sheet...`, distroSheetURL);
+
+
   } catch (error) {
     updateProcessError(`Error copying or populating spreadsheet: ${(error.response ? error.response.data : error.message)}`);
     console.error('Error copying or populating spreadsheet:', error.response ? error.response.data : error.message);
@@ -440,6 +470,7 @@ export const createOrUpdateDistribution = async ({
   updateProcessMessage,
   updateProcessError
 }) => {
+  const moveNameBeforeParentheses = moveName.match(/^(.+?)\s*\(/) ? moveName.match(/^(.+?)\s*\(/)[1] : moveName;
   try {
     const distributionData = await importDistributionData({ accessToken });
 
@@ -460,6 +491,7 @@ export const createOrUpdateDistribution = async ({
         data,
         dateTime,
         moveName,
+        moveNameBeforeParentheses,
         walletAddress, 
         amount, 
         DISTRIBUTION_MOVE_SSID: foundSSID,
@@ -473,6 +505,7 @@ export const createOrUpdateDistribution = async ({
         data, 
         dateTime, 
         moveName, 
+        moveNameBeforeParentheses,
         walletAddress, 
         amount,
         updateProcessMessage,

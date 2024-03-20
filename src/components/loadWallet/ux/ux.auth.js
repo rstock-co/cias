@@ -24,11 +24,19 @@ const AuthUX = ({
     const [isCappedWalletFound, setIsCappedWalletFound] = useState(false);
     const dateTime = getNowMST();
     const { name, address } = selectedCappedMoveWallets.length > 0 ? selectedCappedMoveWallets[0] : {name: undefined, address: undefined};
-    const [processMessage, setProcessMessage] = useState('');
+    const [processMessage, setProcessMessage] = useState({
+        message: '',
+        showActionButton: false,
+        actionButtonUrl: '',
+      });
     const [processError, setProcessError] = useState('');
 
-    const updateProcessMessage = (message) => {
-        setProcessMessage(message);
+    const updateProcessMessage = (message, url = '') => {
+        setProcessMessage({
+            message,
+            showActionButton: !!url, // This will be true if url is not an empty string
+            actionButtonUrl: url,
+        });
         setProcessError(''); // Reset error state on new message
     };
     
