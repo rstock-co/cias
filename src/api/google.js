@@ -20,13 +20,12 @@ import {
   unhideTab,
 } from '../lib/functions/google';
 
-/** ====================================
- * GOOGLE SHEET MASTER TEMPLATES
- * (row and column references) 
+/** ======================================
  * 
- * if the google sheets master templates are re-designed, these variables may need to be edited)
+ * GOOGLE SHEET MASTER TEMPLATE REFERENCES
+ * (if the google sheets master templates are re-designed, these variables may need to be edited)
  * 
- * ===================================== */
+ * ======================================= */
 
 /** ================
  *  A. DISTRIBUTIONS
@@ -108,6 +107,7 @@ export const importCappedMoveData = async ( {accessToken, setStateCallback} ) =>
 
     console.log('Step 1 of 2: Capped Move data obtained successfully: ', cappedMoveData);
 
+
     // Step 2: Update the React state with the fetched data
 
     if (cappedMoveData && Array.isArray(cappedMoveData)) {
@@ -133,6 +133,7 @@ export const importCappedMoveData = async ( {accessToken, setStateCallback} ) =>
 
 export const importDistributionData = async ({accessToken}) => {
   try {
+
     // Step 1: Fetch the index data for all distributions from the distribution index spreadsheet
     const DISTRIBUTION_INDEX_LAST_ROW_INDEX = await fetchCell(DISTRIBUTION_INDEX_SSID, `${DISTRIBUTION_INDEX_TAB_NAME}!A1`, accessToken);
     if (!DISTRIBUTION_INDEX_LAST_ROW_INDEX) {
@@ -145,6 +146,7 @@ export const importDistributionData = async ({accessToken}) => {
 
     // Return the fetched distribution data
     return distributionData;
+
   } catch (error) {
     console.error('Error importing distribution data:', error.response ? error.response.data : error.message);
     throw error; // Allows the error to be handled by the caller
@@ -155,7 +157,6 @@ export const importDistributionData = async ({accessToken}) => {
 
 
 
-  
 /**
  * Copy a template spreadsheet and populate a specified sheet within the new spreadsheet with data, then update index file with metadata.
  * 
@@ -174,10 +175,14 @@ export const createNewCappedMove = async ({
     dateTime, 
     moveName, 
     walletAddress, 
-    amount 
+    amount,
+    updateProcessMessage,
+    updateProcessError
 }) => {
 
   const NEW_CAPPED_MOVE_SHEET_NAME = `${dateTime}_${moveName}`;
+  const moveNameBeforeParentheses = moveName.match(/^(.+?)\s*\(/) ? moveName.match(/^(.+?)\s*\(/)[1] : moveName;
+
   try {
 
     // Step 1: Create new capped move spreadsheet from the master template spreadsheet
@@ -185,6 +190,7 @@ export const createNewCappedMove = async ({
     const NEW_CAPPED_MOVE_SHEET_ID = await createNewSpreadsheetFromTemplateAndSaveToFolder(
       accessToken, CAPPED_MOVE_TEMPLATE_SSID, NEW_CAPPED_MOVE_SHEET_NAME, CAPPED_MOVE_DRIVE_FOLDER_ID);
 
+    updateProcessMessage(`Step 1 of 5: New sheet created successfully: ${NEW_CAPPED_MOVE_SHEET_ID}`);
     console.log('Step 1 of 5: New sheet created successfully: ',  NEW_CAPPED_MOVE_SHEET_ID);
 
 
@@ -193,6 +199,7 @@ export const createNewCappedMove = async ({
     const membership_data_range = `${MEMBERSHIP_TAB_NAME}!${MEMBERSHIP_FIRST_COLUMN_INDEX}${MEMBERSHIP_FIRST_ROW_INDEX}`; 
     const updateSheetResponse = await populateRange(NEW_CAPPED_MOVE_SHEET_ID, membership_data_range, data, accessToken);
 
+    updateProcessMessage(`Step 2 of 5: Membership weightings populated successfully`);
     console.log('Step 2 of 5: Membership weightings populated successfully: ', updateSheetResponse);
 
 
@@ -201,16 +208,18 @@ export const createNewCappedMove = async ({
     const capped_move_amount_range = `${CALCULATIONS_TAB_NAME}!${CALCULATIONS_CAPPED_AMOUNT_CELL_INDEX}`;
     const updateCellResponse = await populateCell(NEW_CAPPED_MOVE_SHEET_ID, capped_move_amount_range, amount, accessToken); 
 
+    updateProcessMessage(`Step 3 of 5: Capped Move Amount updated successfully`);
     console.log('Step 3 of 5: Capped Move Amount updated successfully: ', updateCellResponse);
 
 
     // Step 4: Update the capped move export log
 
-    const CAPPED_MOVE_EXPORT_LOG_FIRST_ROW_INDEX = await fetchCell(NEW_CAPPED_MOVE_SHEET_ID, `${CAPPED_MOVE_EXPORT_LOG_TAB_NAME}A1`, accessToken);
+    const CAPPED_MOVE_EXPORT_LOG_FIRST_ROW_INDEX = await fetchCell(NEW_CAPPED_MOVE_SHEET_ID, `${CAPPED_MOVE_EXPORT_LOG_TAB_NAME}!A1`, accessToken);
     const export_log_range = `${CAPPED_MOVE_EXPORT_LOG_TAB_NAME}!${CAPPED_MOVE_EXPORT_LOG_FIRST_COLUMN_INDEX}${CAPPED_MOVE_EXPORT_LOG_FIRST_ROW_INDEX}`;
     const logData = [[dateTime, amount]];
     const updateLogResponse = await populateRange(NEW_CAPPED_MOVE_SHEET_ID, export_log_range, logData, accessToken); 
 
+    updateProcessMessage(`Step 4 of 5: Export Log sheet updated successfully`);
     console.log('Step 4 of 5: Export Log sheet updated successfully: ', updateLogResponse);
 
 
@@ -221,10 +230,78 @@ export const createNewCappedMove = async ({
     const capped_move_index_data = [[dateTime, moveName, amount, walletAddress, NEW_CAPPED_MOVE_SHEET_ID]];
     const updateIndexResponse = await populateRange(CAPPED_MOVE_INDEX_SSID, capped_move_index_range, capped_move_index_data, accessToken);
 
+    updateProcessMessage(`Step 5 of 5: Capped Move index sheet updated successfully`);
     console.log('Step 5 of 5: Capped Move index sheet updated successfully: ', updateIndexResponse);
 
+    
+    // Update the snackbar with completion message, and open the new distribution sheet in a new window
+
+    const cappedMoveSheetURL = createGoogleSheetHyperlink(NEW_CAPPED_MOVE_SHEET_ID);
+    updateProcessMessage(`Capped Move for ${moveNameBeforeParentheses} complete.  Opening new capped move sheet...`, 'capped', cappedMoveSheetURL);
+
+
   } catch (error) {
+    updateProcessError(`Error copying or populating spreadsheet: ${(error.response ? error.response.data : error.message)}`);
     console.error('Error copying or populating spreadsheet:', error.response ? error.response.data : error.message);
+  }
+}
+
+
+
+/**
+ * Update a specified sheet within an existing spreadsheet with data, and update index file with metadata.
+ * 
+ * @param {string} accessToken Google Oauth2.0 access token with required permissions to update the spreadsheet and write data to it.
+ * @param {Array<Array<string|number>>} data 2D array of data to populate in the sheet.
+ * @param {string} dateTime Date and time of NOW (in MST), as a string to append to the updated data.
+ * @param {string} targetTabName Name of the tab in the target sheet to store data
+ * @param {string} moveName Name of the capped move
+ * @param {string} walletAddress Wallet address for the capped move
+ * @param {number} cappedMoveAmount Capped amount for the move
+ * @param {string} spreadsheetId ID of the spreadsheet to update.
+ */
+
+export const updateExistingCappedMove = async ({
+  accessToken,
+  data,
+  // dateTime,
+  // moveName,
+  // walletAddress,
+  // cappedMoveAmount,
+  CAPPED_MOVE_SSID
+}) => {
+
+  try {
+
+    // Step 1: Update the specified sheet with new data
+
+    const updateResponse = populateRange(CAPPED_MOVE_SSID, `${EXPORT_EXISTING_CAPPED_MOVE_TAB_NAME}!A1`, data, accessToken);
+    
+    console.log('Step 1: Sheet updated successfully:', updateResponse);
+
+    // Step 2: Update the log sheet with the new metadata
+
+    // const rowIndexResponse = await axios.get(
+    //   `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${indexTabName}!A1`,
+    //   { headers: { 'Authorization': `Bearer ${accessToken}` } }
+    // );
+
+    // const [[rowIndex]] = rowIndexResponse.data.values;
+    // const metaDataRange = `${indexTabName}!A${parseInt(rowIndex) + 1}`; // Assuming you're appending to the end
+
+    // const metaData = [
+    //   [dateTime, moveName, cappedMoveAmount, walletAddress, spreadsheetId]
+    // ];
+
+    // await axios.put(
+    //   `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${metaDataRange}?valueInputOption=USER_ENTERED`,
+    //   { values: metaData },
+    //   { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+    // );
+
+    // console.log('Step 2: Index sheet updated successfully');
+  } catch (error) {
+    console.error('Error updating spreadsheet:', error.response ? error.response.data : error.message);
   }
 }
 
@@ -393,7 +470,7 @@ const createDistribution = async ({
     // Update the snackbar with completion message, and open the new distribution sheet in a new window
 
     const distroSheetURL = createGoogleSheetHyperlink(NEW_DISTRIBUTION_SHEET_ID);
-    updateProcessMessage(`Distribution # ${DISTRO_NUM} for ${moveNameBeforeParentheses} complete.  Opening new distribution sheet...`, distroSheetURL);
+    updateProcessMessage(`Distribution # ${DISTRO_NUM} for ${moveNameBeforeParentheses} complete.  Opening new distribution sheet...`, 'distro', distroSheetURL);
 
   } catch (error) {
     updateProcessError(`Error copying or populating spreadsheet: ${(error.response ? error.response.data : error.message)}`);
@@ -451,7 +528,7 @@ const updateDistribution = async ({
     // Update the snackbar with completion message, and open the new distribution sheet in a new window
 
     const distroSheetURL = createGoogleSheetHyperlink(DISTRIBUTION_MOVE_SSID);
-    updateProcessMessage(`Distribution # ${DISTRO_NUM} for ${moveNameBeforeParentheses} complete.  Opening new distribution sheet...`, distroSheetURL);
+    updateProcessMessage(`Distribution # ${DISTRO_NUM} for ${moveNameBeforeParentheses} complete.  Opening new distribution sheet...`, 'distro', distroSheetURL);
 
 
   } catch (error) {
@@ -516,77 +593,3 @@ export const createOrUpdateDistribution = async ({
     console.error('Error processing distribution:', error.response ? error.response.data : error.message);
   }
 }
-
-
-
-
-
-
-
-
-
-/**
- * Update a specified sheet within an existing spreadsheet with data, and update index file with metadata.
- * 
- * @param {string} accessToken Google Oauth2.0 access token with required permissions to update the spreadsheet and write data to it.
- * @param {Array<Array<string|number>>} data 2D array of data to populate in the sheet.
- * @param {string} dateTime Date and time of NOW (in MST), as a string to append to the updated data.
- * @param {string} targetTabName Name of the tab in the target sheet to store data
- * @param {string} moveName Name of the capped move
- * @param {string} walletAddress Wallet address for the capped move
- * @param {number} cappedMoveAmount Capped amount for the move
- * @param {string} spreadsheetId ID of the spreadsheet to update.
- */
-
-export const updateExistingCappedMove = async ({
-  accessToken,
-  data,
-  // dateTime,
-  // moveName,
-  // walletAddress,
-  // cappedMoveAmount,
-  CAPPED_MOVE_SSID
-}) => {
-
-  try {
-
-    // Step 1: Update the specified sheet with new data
-
-    const updateResponse = populateRange(CAPPED_MOVE_SSID, `${EXPORT_EXISTING_CAPPED_MOVE_TAB_NAME}!A1`, data, accessToken);
-    
-    console.log('Step 1: Sheet updated successfully:', updateResponse);
-
-    // Step 2: Update the log sheet with the new metadata
-
-    // const rowIndexResponse = await axios.get(
-    //   `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${indexTabName}!A1`,
-    //   { headers: { 'Authorization': `Bearer ${accessToken}` } }
-    // );
-
-    // const [[rowIndex]] = rowIndexResponse.data.values;
-    // const metaDataRange = `${indexTabName}!A${parseInt(rowIndex) + 1}`; // Assuming you're appending to the end
-
-    // const metaData = [
-    //   [dateTime, moveName, cappedMoveAmount, walletAddress, spreadsheetId]
-    // ];
-
-    // await axios.put(
-    //   `${GOOGLE_SS_API_URL}/${CAPPED_MOVE_INDEX_SSID}/values/${metaDataRange}?valueInputOption=USER_ENTERED`,
-    //   { values: metaData },
-    //   { headers: { 'Authorization': `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
-    // );
-
-    // console.log('Step 2: Index sheet updated successfully');
-  } catch (error) {
-    console.error('Error updating spreadsheet:', error.response ? error.response.data : error.message);
-  }
-}
-
-
-
-
-
-
-
-
-

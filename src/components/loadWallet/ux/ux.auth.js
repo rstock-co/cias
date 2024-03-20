@@ -17,7 +17,7 @@ const AuthUX = ({
     const { accessToken, initiateGoogleLogin } = useAuth();
     const [operation, setOperation] = useState({
         type: null,
-        subtype: null,
+        subtype: 'new',
         data: null
     });
     const [importedCappedMoveData, setImportedCappedMoveData] = useState([]);
@@ -26,18 +26,20 @@ const AuthUX = ({
     const { name, address } = selectedCappedMoveWallets.length > 0 ? selectedCappedMoveWallets[0] : {name: undefined, address: undefined};
     const [processMessage, setProcessMessage] = useState({
         message: '',
+        type: '',
         showActionButton: false,
         actionButtonUrl: '',
       });
     const [processError, setProcessError] = useState('');
 
-    const updateProcessMessage = (message, url = '') => {
+    const updateProcessMessage = (message, type = '', url = '') => {
         setProcessMessage({
             message,
-            showActionButton: !!url, // This will be true if url is not an empty string
+            type,
+            showActionButton: !!url, 
             actionButtonUrl: url,
         });
-        setProcessError(''); // Reset error state on new message
+        setProcessError(''); 
     };
     
     const updateProcessError = (errorMessage) => {
@@ -58,7 +60,7 @@ const AuthUX = ({
         const exportData = async () => {
             const exportConfig = exportActions[operation.subtype]; 
 
-            updateProcessMessage(`Export initiated...`); // Update process message
+            updateProcessMessage(`Successfully logged into Google, export initiated...`); // Update process message
             console.log("EXPORT initiated: ", exportConfig)
 
             try {

@@ -2,10 +2,10 @@ import { Snackbar, SnackbarContent } from "@mui/material";
 import { ColorButton } from '../buttons';
 import React from 'react';
 
-export const DistributionProcessSnackbar = ({ 
+export const ExportProcessSnackbar = ({ 
     updateProcessMessage, 
     updateProcessError, 
-    processMessage: { message, showActionButton, actionButtonUrl }, 
+    processMessage: { message, type, showActionButton, actionButtonUrl }, 
     processError,
 }) => {
     const handleClose = (event, reason) => {
@@ -25,13 +25,15 @@ export const DistributionProcessSnackbar = ({
 
     const snackbarStyle = {
         '& .MuiSnackbarContent-root': {
-            backgroundColor: processError ? '#d32f2f' : '#105c69', // Red for error, otherwise the original color
+            backgroundColor: processError ? '#d32f2f' : '#105c69',
             fontFamily: 'Inter Tight, sans-serif',
             fontSize: '20px',
-            boxShadow: '0 0 10px 3px #4ed3e6',
+            boxShadow: processError ? '0 0 10px 3px #54020d' : '0 0 10px 3px #4ed3e6',
         }
     };
 
+    const buttonText = type === 'distro' ? 'Open Distribution Sheet' : 'Open Capped Move Sheet';
+                       
     return (
         <Snackbar
             open={!!(message || processError)}
@@ -46,7 +48,7 @@ export const DistributionProcessSnackbar = ({
                         {processError || message}
                         {showActionButton && actionButtonUrl && (
                             <div style={{ marginTop: '8px', display: 'flex', justifyContent: 'center' }}>
-                                <ColorButton onClick={() => openUrlInNewWindow(actionButtonUrl)} buttonText="Open Distribution Sheet" />
+                                <ColorButton onClick={() => openUrlInNewWindow(actionButtonUrl)} buttonText={buttonText} />
                             </div>
                         )}
                     </div>
