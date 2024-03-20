@@ -549,7 +549,7 @@ export const createOrUpdateDistribution = async ({
 }) => {
   const moveNameBeforeParentheses = moveName.match(/^(.+?)\s*\(/) ? moveName.match(/^(.+?)\s*\(/)[1] : moveName;
   try {
-    const distributionData = await importDistributionData({ accessToken });
+    const distributionData = await importDistributionData({ accessToken }) || [];
 
     const foundDistribution = distributionData.find(row => {
       const [, name, , , ssid] = row;

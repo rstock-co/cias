@@ -109,7 +109,7 @@ const AuthUX = ({
     
     useEffect(() => {  // matches the currently selected wallet to see if it is in the imported capped move metadata
 
-        if (![1, 3].includes(selectedWallets.length)) {   // reset:  only 1 wallet is allowed for update, only 3 wallets is allowed for generate
+        if (![1, 3].includes(selectedWallets.length)) {   // reset if not 1 or 3 --> only 1 wallet is allowed for update, only 3 wallets is allowed for generate
             setIsCappedMove(false);
             setCappedMoveAmount(0);
         } 
@@ -119,7 +119,7 @@ const AuthUX = ({
         // Assuming selectedWallets always contains only one wallet
         const selectedWalletName = selectedWallets[0]?.name;
     
-        // Normalize names for comparison (optional, based on your naming convention)
+        // Normalize names for comparison
         const normalizeName = name => name.toLowerCase().replace(/\s+/g, '');
     
         let walletFound = false;

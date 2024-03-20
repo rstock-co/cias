@@ -18,7 +18,7 @@ export const ExportProcessSnackbar = ({
 
     const openUrlInNewWindow = (url) => {
         window.open(url, '_blank');
-        // Close the Snackbar after opening the URL
+
         updateProcessMessage('');
         updateProcessError('');
     };
