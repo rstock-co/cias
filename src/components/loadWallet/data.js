@@ -13,6 +13,7 @@ export const stableCoinsToFetch = {
     stableArb4: { address: getWalletAddress("usdt_arb"), name: "USDT", apiCall: getERC20TxnsArb, chain: "arb", loading: false, txns: 0 },
     stableEth: { address: getWalletAddress("usdc_eth"), name: "USDC", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },
     stableEth2: { address: getWalletAddress("usdt_eth"), name: "USDT", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },
+    stableEth3: { address: getWalletAddress("busd_eth"), name: "BUSD", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },  
     stableBsc: { address: getWalletAddress("busd_bep20"), name: "BUSD", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
     stableBsc2: { address: getWalletAddress("bsc-usd_bep20"), name: "BSC-USD", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
     stableBsc3: { address: getWalletAddress("bsc-usdc_bep20"), name: "BSC-USDC", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
@@ -117,7 +118,7 @@ export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrice
     );
     const dateTime = formatTime(timestamp, 'America/Denver');
     const link = <FormatTxnLink hash={hash} chain={chain} />;
-    const amount = formatAmountDecimals(chain, txn.value, txnType);
+    const amount = formatAmountDecimals(chain, txn.value, txnType, txn.tokenSymbol);
     const amountDisplay = formatAmountDisplay(amount, txnType);
    
     const flow = from && selectedAddresses.includes(from) ? 'Out' : 'In';

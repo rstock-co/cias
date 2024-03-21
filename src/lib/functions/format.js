@@ -40,11 +40,24 @@ export const generateAllocationTableTitle = (selectedWallets, move) => {
 };
 
 
-export const formatAmountDecimals = (chain, value, txnType) => 
-    txnType === 'erc20'
-        ? chain === 'bsc' ? value / 1e18 : value / 1e6
-        : value / 1e18 // Default to ETH conversion for 'normal' transactions
-;
+export const formatAmountDecimals = (chain, value, txnType, symbol) => {
+    // Check if the transaction is for the BUSD coin on the eth chain
+    const isBUSDETH = symbol === 'BUSD' && chain === 'eth';
+    
+    if (txnType === 'erc20') {
+      if (chain === 'bsc' || isBUSDETH) {
+        // BSC uses 1e18, and the BUSD on eth also uses 1e18
+        return value / 1e18;
+      } else {
+        // Other ERC20 tokens use 1e6, including other tokens on eth
+        return value / 1e6;
+      }
+    } else {
+      // Default conversion for 'normal' transactions, assuming 1e18 for simplicity
+      return value / 1e18;
+    }
+  };
+  
 
 
 export const formatAmountDisplay = (value, txnType = "erc20") => {
