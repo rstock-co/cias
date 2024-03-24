@@ -1,6 +1,7 @@
 import conversionServiceWallets from './conversionServiceWallets.json';
 import depositWallets from './depositWallets.json';
 import ignoreWallets from './ignoreWallets.json';
+import indexFundWallet from './indexFundWallet.json';
 import investmentWallet  from './investmentWallet.json';
 import investmentWallets from './investmentWallets.json';
 import legacyWallets from './legacyWallets.json';
@@ -14,6 +15,7 @@ import velaWallets from './velaWallets.json';
 
 export default {
     investmentWallet: investmentWallet.investmentWallet,
+    indexFundWallet: indexFundWallet.indexFundWallet,
 
     wallets: {
         conversionServiceWallets,

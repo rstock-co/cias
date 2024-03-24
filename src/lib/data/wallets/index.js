@@ -9,6 +9,7 @@ const mappedWallets = Object.entries(wallets.wallets)
     .reduce((acc, [key, value]) => ({ ...acc, [key]: value.map(createWallet)}) , {});
 
 export const INVESTMENT_WALLET = wallets.investmentWallet;
+export const INDEX_FUND_WALLET = wallets.indexFundWallet;
 
 export const {
     depositWallets,

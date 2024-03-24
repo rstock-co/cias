@@ -2,7 +2,7 @@ import { FormatTxnLink, formatAmountDecimals, formatAmountDisplay } from "../../
 import { formatTime, getHistoricalPrice } from "../../lib/functions/time";
 import { getERC20TxnsArb, getERC20TxnsBsc, getERC20TxnsEth, getNormalTxnsArb, getNormalTxnsBsc, getNormalTxnsEth } from "../../api";
 import { getMoveName, getWalletAddress, getWalletName } from "../../lib/functions/wallets";
-import { ignoreWallets, memberWallets, teamWallets, tokenContractAddresses, allWallets as wallets } from "../../lib/data/wallets";
+import { ignoreWallets, INDEX_FUND_WALLET, memberWallets, teamWallets, tokenContractAddresses, allWallets as wallets } from "../../lib/data/wallets";
 import { curry } from "../../lib/functions/fp";
 
 // erc20 transactions to fetch
@@ -46,7 +46,7 @@ export const propertyMap = {
 // TABLE DATA HELPER FUNCTIONS
 
 const OutFlow = {
-    fundingMove: ({ teamWallet, moveName }) => teamWallet ? `Funding "${moveName}" via "${teamWallet.name}"` : null,
+    fundingMove: ({ teamWallet, moveName }) => teamWallet ? `Funding "${moveName}" via "${teamWallet.name}"` : null,  // this needs updating, i think team wallets are not moves any more (need to target move walelts
     tokenPurchase: ({ tokenPurchase }) => tokenPurchase ? `Purchase "${tokenPurchase.name}" tokens` : null,
     internalTransfer: ({ to }) => getWalletName(wallets, to) ? `Transfer to ${getWalletName(wallets, to)}` : null,
     memberRefund: ({ toMemberName, moveName }) => {
@@ -57,7 +57,10 @@ const OutFlow = {
 };
 
 const InFlow = {
-    internalTransfer: ({ from }) => getWalletName(wallets, from) ? `Transfer from ${getWalletName(wallets, from)}` : null,
+    internalTransfer: ({ from }) => {
+        if (from === INDEX_FUND_WALLET.toLowerCase()) return null;  // don't treat index fund wallet contributions as internal transfers, treat them as member contributions
+        return getWalletName(wallets, from) ? `Transfer from ${getWalletName(wallets, from)}` : null;
+    },
     tokenSale: ({ tokenSale }) => tokenSale ? `Purchase "${tokenSale.name}" tokens` : null,
     memberContribution: ({ fromMemberName, moveName }) => {
         let description = fromMemberName ? `Member contribution (${fromMemberName})` : 'Member contribution';
