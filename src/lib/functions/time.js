@@ -83,3 +83,22 @@ export const debounce = (func, wait) => {
         timeout = setTimeout(later, wait);
     };
 }
+
+export const getNextDay = (dateStr) => {
+    const inputDate = new Date(dateStr);
+    const todayStr = getTodaysDate();
+    const today = new Date(todayStr);
+
+    // If the input date is today, return the same date without incrementing
+    if (inputDate.getTime() === today.getTime()) return dateStr; 
+
+    inputDate.setDate(inputDate.getDate() + 1);
+    return inputDate.toISOString().split('T')[0];
+};
+
+
+export const getLastDateFromData = (historicalData) => {
+    const lastDataDay = Object.keys(historicalData).pop();
+    return getNextDay(lastDataDay);
+}
+

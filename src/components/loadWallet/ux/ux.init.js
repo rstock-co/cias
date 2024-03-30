@@ -2,6 +2,7 @@ import { chainsToFetch, stableCoinsToFetch } from '../data';
 import { getAggregateTransactions, updateStatus } from '../../../api/transactions';
 import { getBNBPrices, getEtheriumPrices } from '../../../api';
 import { useEffect, useState } from 'react';
+import { historicalPrices } from '../../../lib/data';
 
 const InitUX = () => {
 
@@ -22,8 +23,8 @@ const InitUX = () => {
     // TRANSACTIONS
     const [txns, setTxns] = useState([]);
     const [fetchType, setFetchType] = useState('all'); // 'normal', 'erc20', 'all'
-    const [historicalBNBPrices, setHistoricalBNBPrices] = useState([]);
-    const [historicalETHPrices, setHistoricalETHPrices] = useState([]);
+    const [historicalBNBPrices, setHistoricalBNBPrices] = useState(historicalPrices.bnb);
+    const [historicalETHPrices, setHistoricalETHPrices] = useState(historicalPrices.eth);
 
     // LOADING SCREEN TRIGGER
     const [isLoading, setIsLoading] = useState(false);
@@ -120,14 +121,23 @@ const InitUX = () => {
     }, [stableCoins, loadingLocked]);
 
     // Fetch historical price data on load
+
     useEffect(() => {
         const fetchPrices = async () => {
             try {
                 const bnbPrices = await getBNBPrices();
                 const ethPrices = await getEtheriumPrices();
+
+                console.log('fetched BNB Prices:', bnbPrices);
+                console.log('fetched ETH Prices:', ethPrices);
     
-                setHistoricalBNBPrices(bnbPrices);
-                setHistoricalETHPrices(ethPrices);
+              // Check if new data was returned before attempting to update the state
+              if (bnbPrices && Object.keys(bnbPrices).length > 0) {
+                setHistoricalBNBPrices(prev => ({ ...prev, ...bnbPrices }));
+              }
+              if (ethPrices && Object.keys(ethPrices).length > 0) {
+                setHistoricalETHPrices(prev => ({ ...prev, ...ethPrices }));
+              }
             } catch (error) {
                 console.error('Error fetching prices:', error);
             }
@@ -135,8 +145,7 @@ const InitUX = () => {
     
         fetchPrices();
     }, []);
-    
-      
+  
     return {
         txns,
         setTxns,
@@ -166,116 +175,3 @@ const InitUX = () => {
 }
 
 export default InitUX;
-
-
-
-
-// // # 1
-
-// const fetchTransactions = async (walletsToFetch) => {
-//     const minLoadingTime = 3000; // Minimum loading time in milliseconds
-//     const startTime = Date.now();
-
-//     setLoadingLocked(true);
-//     setIsLoading(true);
-
-//     let allFetchPromises = [];
-
-//     // Iterate through each wallet and prepare fetch promises for both ERC20 and normal transactions
-//     walletsToFetch.forEach(wallet => {
-//         if (wallet && wallet.address) {
-//             allFetchPromises.push(
-//                 getAggregateERC20Txns(wallet.address)
-//                     .then(txns => ({ status: 'fulfilled', txns, wallet }))
-//                     .catch(error => ({ status: 'rejected', error, wallet }))
-//             );
-//             allFetchPromises.push(
-//                 getAggregateNormalTxns(wallet.address)
-//                     .then(txns => ({ status: 'fulfilled', txns, wallet }))
-//                     .catch(error => ({ status: 'rejected', error, wallet }))
-//             );
-//         }
-//     });
-
-//     try {
-//         // Wait for all transaction fetches to settle, handling each result as it comes
-//         const settledResults = await Promise.allSettled(allFetchPromises);
-//         const newTxns = settledResults.reduce((acc, result) => {
-//             if (result.status === 'fulfilled' && result.value.status === 'fulfilled') {
-//                 return [...acc, ...result.value.txns];
-//             } else if (result.value.status === 'rejected') {
-//                 console.error(`Error fetching transactions for wallet: ${result.value.wallet.name}`, result.value.error);
-//             }
-//             return acc;
-//         }, []);
-
-//         setTxns(prevTxns => [...prevTxns, ...newTxns]);
-//     } catch (error) {
-//         console.error('Error processing transactions fetch results:', error);
-//     } finally {
-//         // Calculate elapsed time and adjust loading state accordingly
-//         const elapsedTime = Date.now() - startTime;
-//         if (elapsedTime < minLoadingTime) {
-//             setTimeout(() => {
-//                 setIsLoading(false);
-//                 setLoadingLocked(false);
-//             }, minLoadingTime - elapsedTime);
-//         } else {
-//             setIsLoading(false);
-//             setLoadingLocked(false);
-//         }
-//     }
-// };
-
-
-// // # 2
-
-// const fetchTransactions = async (walletsToFetch) => {
-//     const startTime = Date.now();
-//     setLoadingLocked(true);
-//     setIsLoading(true);
-
-//     // Create an array of promises for all wallets and transaction types
-//     let fetchPromises = [];
-//     walletsToFetch.forEach(wallet => {
-//         if (wallet && wallet.address) {
-//             if (fetchType === 'erc20' || fetchType === 'all') {
-//                 fetchPromises.push(getAggregateERC20Txns(wallet.address)
-//                   .then(txns => ({ status: 'fulfilled', txns, wallet }))
-//                   .catch(error => ({ status: 'rejected', reason: error, wallet })));
-//             }
-//             if (fetchType === 'normal' || fetchType === 'all') {
-//                 fetchPromises.push(getAggregateNormalTxns(wallet.address)
-//                   .then(txns => ({ status: 'fulfilled', txns, wallet }))
-//                   .catch(error => ({ status: 'rejected', reason: error, wallet })));
-//             }
-//         }
-//     });
-
-//     // Execute all fetches in parallel and process the results
-//     const results = await Promise.allSettled(fetchPromises);
-//     const newTxns = results.reduce((acc, result) => {
-//         if (result.status === 'fulfilled' && result.value.status === 'fulfilled') {
-//             return acc.concat(result.value.txns);
-//         } else if (result.value.status === 'rejected') {
-//             console.error(`Error fetching transactions for wallet: ${result.value.wallet.name}`, result.value.reason);
-//         }
-//         return acc;
-//     }, []);
-
-//     // Update the transactions state
-//     setTxns(prevTxns => [...prevTxns, ...newTxns]);
-
-//     // Handle loading state based on the minimum loading time
-//     const elapsedTime = Date.now() - startTime;
-//     const minLoadingTime = 3000; // Minimum loading time in milliseconds
-//     if (elapsedTime < minLoadingTime) {
-//         setTimeout(() => {
-//             setIsLoading(false);
-//             setLoadingLocked(false);
-//         }, minLoadingTime - elapsedTime);
-//     } else {
-//         setIsLoading(false);
-//         setLoadingLocked(false);
-//     }
-// };

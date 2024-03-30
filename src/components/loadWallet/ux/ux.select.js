@@ -9,7 +9,7 @@ const SelectUX = ({
     const [filterTypes, setFilterTypes] = useState([]);
 
     useEffect(() => {
-        if (tableData.length > 0 && tableData.length < 900) {
+        if (tableData.length > 0) {
             setFilterWallets(getUniqueWallets(tableData));
             setFilterTypes(getUniqueTypes(tableData));
         }

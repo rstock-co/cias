@@ -7,12 +7,19 @@ const createGetERC20Txns = ({ apiUri, apiKey, chain, endblock }) => async (walle
 
 
 const createGetPrices = ({ conversionCurrency, currencyName, currencyDisplayName, txnDateRange }) => async () => {
+    // Check if the start date is the same as the end date (today), indicating the data is up-to-date
+    if (txnDateRange.startDate === txnDateRange.endDate) {
+        console.log(`${currencyDisplayName} prices are already up-to-date.`);
+        return; 
+    }
+
     try {
+        // Data is outdated, proceed with fetching new price data
         const prices = await fetchHistoricalPriceData(currencyName, conversionCurrency, txnDateRange);
         return prices;
     } catch (error) {
         console.error(`Error fetching ${currencyDisplayName} prices:`, error);
-        throw error; // Rethrow the error for handling in the component
+        throw error; // Rethrow the error for handling elsewhere
     }
 };
 

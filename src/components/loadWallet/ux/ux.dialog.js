@@ -31,7 +31,7 @@ const DialogUX = ({
 
     // Loading screen dialog box
     useEffect(() => {
-        if (isLoading || tableData.length > 900) {
+        if (isLoading) {
             setLoadingDialogOpen(true);
         } else {
             setLoadingDialogOpen(false);

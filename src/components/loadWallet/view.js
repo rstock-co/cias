@@ -195,7 +195,7 @@ const LoadWallet = ({
                     </StyledTableHead>
             
                     <TableBody>
-                        {tableData.length > 0 && tableData.length < 900 && tableData.map((row) => (
+                        {tableData.length > 0 && tableData.map((row) => (
                             <StyledTableRow
                                 key={row.id}
                                 walletdescription={row.walletDescription}

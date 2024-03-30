@@ -19,13 +19,17 @@ const getIdFromSymbol = (symbol) => {
     return currency ? currency.id : null;
 };
 
+export const getLastDateFromData = (historicalData) => Object.keys(historicalData).pop(); 
+
 export const fetchHistoricalPriceData = async (coinSymbol, conversionCurrency, {startDate, endDate}) => {
 
     const coinId = getIdFromSymbol(coinSymbol);
-    const from = new Date(startDate).getTime() / 1000;
-    const to = new Date(endDate).getTime() / 1000;
+    const from = new Date(startDate).setUTCHours(0, 0, 0, 0) / 1000;
+    const to = new Date(endDate).setUTCHours(23, 59, 59, 999) / 1000;
     
     const url = `${coinGeckoBaseUrl}/coins/${coinId}/market_chart/range`;
+
+    console.log("Coin gecko url", url)
 
     const requestConfig = {
         params: {
@@ -34,6 +38,8 @@ export const fetchHistoricalPriceData = async (coinSymbol, conversionCurrency, {
             to
         }
     };
+
+    console.log("Request config", requestConfig)
 
     try {
         const response = await axios.get(url, requestConfig);

@@ -1,13 +1,13 @@
-import { BSC_API_KEY } from '../lib/data';
+import { BSC_API_KEY, historicalPrices } from '../lib/data';
+import { getLastDateFromData, getTodaysDate } from '../lib/functions/time';
 import { txnRequestsBuilder as createRequests } from './createRequests';
-import { getTodaysDate } from '../lib/functions/time';
 
 const BSC = {
     apiUri: 'https://api.bscscan.com/api',
     apiKey: BSC_API_KEY,
     chain: 'bsc',
     txnDateRange: {
-        startDate: '2023-01-01',
+        startDate: getLastDateFromData(historicalPrices.bnb),
         endDate: getTodaysDate()
     },
     conversionCurrency: 'usd',
