@@ -1,3 +1,7 @@
+import { adjustments } from "../data/adjustments";
+import { mergeAdjustments } from "./adjustments";
+import { substitutions } from "../data/substitutions";
+
 // ALLOCATION TABLE FUNCTIONS
 
 const getInitialWalletData = () => ({
@@ -61,19 +65,73 @@ const updateInvestmentWalletData = (data, investmentWallet, selectedAddresses, s
     }
 };
 
+const applySubstitutions = (allocationData) => {
+    const substitutedData = [];
+    const mergedData = {};
+
+    allocationData.forEach(memberData => {
+        const oldWallet = memberData.memberWallet.toLowerCase();
+        const newWallet = substitutions[oldWallet]?.toLowerCase();
+
+        // If there's a substitution
+        if (newWallet) {
+            // Find if new wallet already exists in allocationData or mergedData
+            let newWalletData = allocationData.find(md => md.memberWallet.toLowerCase() === newWallet) || mergedData[newWallet];
+
+            // Prepare newWalletData if it doesn't exist
+            if (!newWalletData) {
+                newWalletData = {...getInitialWalletData(), memberWallet: newWallet};
+                mergedData[newWallet] = newWalletData;
+            }
+
+            // Merge data from old wallet to new wallet
+            ['contributions', 'refunds'].forEach(key => {
+                newWalletData[key] += memberData[key];
+                newWalletData[`${key}Amount`] += memberData[`${key}Amount`];
+                Object.entries(memberData[`${key}ChainMap`]).forEach(([chain, count]) => {
+                    newWalletData[`${key}ChainMap`][chain] = (newWalletData[`${key}ChainMap`][chain] || 0) + count;
+                });
+            });
+            newWalletData.txns += memberData.txns;
+            newWalletData.netAmount += memberData.netAmount;
+            newWalletData.adjustment += (memberData.adjustment || 0);
+            Object.entries(memberData.walletTxns).forEach(([name, {count, totalAmount}]) => {
+                if (!newWalletData.walletTxns[name]) newWalletData.walletTxns[name] = { count: 0, totalAmount: 0 };
+                newWalletData.walletTxns[name].count += count;
+                newWalletData.walletTxns[name].totalAmount += totalAmount;
+            });
+            // Add substitution info
+            newWalletData.substitution = oldWallet;
+
+            // Skip adding the old wallet data to substitutedData
+            return;
+        }
+        
+        // Add memberData to substitutedData if no substitution needed
+        substitutedData.push(memberData);
+    });
+
+    // Merge any newly created wallet data from substitutions into the final array
+    substitutedData.push(...Object.values(mergedData));
+
+    return substitutedData;
+};
+
 export const generateAllocationTableData = (tableData, selectedWallets) => {
+
     if (dataIsNotAvailable(tableData, selectedWallets)) return [];
+
+    // === Step 1: Generate allocation table data
 
     const selectedAddresses = new Set(selectedWallets.map(wallet => wallet.address.toLowerCase()));
 
-    const allocationTableData = tableData.reduce((allocationData, { from, to, flow, walletDescription, amount, chain, memberName, txnType, currency, historicalPrice, convertedAmount, timestamp }) => {
+    let allocationTableData = tableData.reduce((allocationData, { from, to, flow, walletDescription, amount, chain, memberName, txnType, currency, historicalPrice, convertedAmount, timestamp }) => {
         if (txnIsNotRelevant(walletDescription)) return allocationData;
 
         const [memberWallet, investmentWallet] = flow === 'In' ? [from, to] : [to, from];
-        
-        const memberData = allocationData.find(entry => entry.memberWallet === memberWallet) || {...getInitialWalletData(), memberWallet, memberName};
+        const memberData = allocationData.find(entry => entry.memberWallet === memberWallet) || {...getInitialWalletData(), memberWallet, memberName, adjustment: 0};
 
-        const usdAmount = txnType === 'normal' ? convertedAmount : amount;
+        let usdAmount = txnType === 'normal' ? convertedAmount : amount;
 
         if (txnType === 'normal') updateMemberNormalData(memberData, currency, historicalPrice, timestamp, amount, usdAmount, flow === 'In' ? 'contribution' : 'refund');
         
@@ -83,10 +141,51 @@ export const generateAllocationTableData = (tableData, selectedWallets) => {
         if (!allocationData.some(entry => entry.memberWallet === memberWallet)) allocationData.push(memberData);
 
         return allocationData;
-    }, [])
+    }, []);
 
-    return allocationTableData;
+    console.log("allocationTableData Step 1: ", allocationTableData);
+
+    
+    // === Step 2: Apply adjustments to the allocation table data
+
+    const allAdjustments = mergeAdjustments(adjustments);
+    console.log("allAdjustments: ", allAdjustments);
+
+    Object.entries(allAdjustments).forEach(([walletAddress, memberAdjustments]) => {
+
+        if (selectedAddresses.has(walletAddress.toLowerCase())) {
+
+            Object.entries(memberAdjustments).forEach(([memberWalletAddress, adjustmentAmount]) => {
+                let memberData = allocationTableData.find(member => member.memberWallet.toLowerCase() === memberWalletAddress.toLowerCase());
+                
+                // If the member doesn't exist in allocationTableData, create a new entry
+                if (!memberData) {
+                    memberData = { 
+                        ...getInitialWalletData(), 
+                        memberWallet: memberWalletAddress, 
+                        adjustment: adjustmentAmount
+                    };
+                    allocationTableData.push(memberData);
+                } else {
+                    memberData.adjustment += adjustmentAmount;
+                }
+            });
+        }
+    });
+
+    // === Step 3: Recalculate net Amount for each member including adjustments
+    allocationTableData.forEach(memberData => {
+        memberData.netAmount = (memberData.contributionsAmount || 0) + memberData.adjustment - (memberData.refundsAmount || 0);
+    });
+
+    // === Step 4: Apply wallet address substitutions
+    const finalAllocationData = applySubstitutions(allocationTableData);
+
+    console.log("finalAllocationData Step 4: ", finalAllocationData);
+
+    return finalAllocationData;
 };
+
 
 // Calculate totals for the allocation table header row
 
