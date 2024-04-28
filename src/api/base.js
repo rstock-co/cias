@@ -7,9 +7,9 @@ export const BASE = {
     chain: 'base',
     conversionCurrency: 'usd',
     currencyName: 'eth',
-    currencyDisplayName: 'Base',
+    currencyDisplayName: 'Ethereum',
     endblock: 'latest'
 };
 
-export const { normalTxns: getNormalTxnsBase, erc20Txns: getERC20TxnsBase } = createRequests(ARB);
+export const { normalTxns: getNormalTxnsBase, erc20Txns: getERC20TxnsBase } = createRequests(BASE);
 

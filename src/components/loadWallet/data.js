@@ -1,9 +1,10 @@
 import { FormatTxnLink, formatAmountDecimals, formatAmountDisplay } from "../../lib/functions/format";
 import { formatTime, getHistoricalPrice } from "../../lib/functions/time";
-import { getERC20TxnsArb, getERC20TxnsBsc, getERC20TxnsEth, getNormalTxnsArb, getNormalTxnsBsc, getNormalTxnsEth } from "../../api";
+import { getERC20TxnsArb, getERC20TxnsBase, getERC20TxnsBsc, getERC20TxnsEth, getNormalTxnsArb, getNormalTxnsBase, getNormalTxnsBsc, getNormalTxnsEth } from "../../api";
 import { getMoveName, getWalletAddress, getWalletName } from "../../lib/functions/wallets";
-import { ignoreWallets, INDEX_FUND_WALLET, memberWallets, teamWallets, tokenContractAddresses, allWallets as wallets } from "../../lib/data/wallets";
+import { INDEX_FUND_WALLET, ignoreWallets, memberWallets, teamWallets, tokenContractAddresses, allWallets as wallets } from "../../lib/data/wallets";
 import { curry } from "../../lib/functions/fp";
+import { logos } from "../../lib"
 
 // erc20 transactions to fetch
 export const stableCoinsToFetch = { 
@@ -14,6 +15,8 @@ export const stableCoinsToFetch = {
     stableEth: { address: getWalletAddress("usdc_eth"), name: "USDC", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },
     stableEth2: { address: getWalletAddress("usdt_eth"), name: "USDT", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },
     stableEth3: { address: getWalletAddress("busd_eth"), name: "BUSD", apiCall: getERC20TxnsEth, chain: "eth", loading: false, txns: 0 },  
+
+    stableBase: { address: getWalletAddress("usdc-base"), name: "USDC", apiCall: getERC20TxnsBase, chain: "base", loading: false, txns: 0 },
     stableBsc: { address: getWalletAddress("busd_bep20"), name: "BUSD", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
     stableBsc2: { address: getWalletAddress("bsc-usd_bep20"), name: "BSC-USD", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
     stableBsc3: { address: getWalletAddress("bsc-usdc_bep20"), name: "BSC-USDC", apiCall: getERC20TxnsBsc, chain: "bsc", loading: false, txns: 0 },
@@ -25,6 +28,7 @@ export const chainsToFetch = {
     normalEth: { name: "Ethereum", apiCall: getNormalTxnsEth, chain: "eth", loading: false, txns: 0 },
     normalBsc: { name: "Binance Smart Chain", apiCall: getNormalTxnsBsc, chain: "bsc", loading: false, txns: 0 },
     normalArb: { name: "Arbitrum", apiCall: getNormalTxnsArb, chain: "arb", loading: false, txns: 0 },
+    normalBase: { name: "Base", apiCall: getNormalTxnsBase, chain: "base", loading: false, txns: 0 },
     // Add other chains as needed
 };
 
@@ -91,12 +95,6 @@ const generateWalletDescription = (flow, to, from, moveName, fromMemberName, toM
  * @returns formatted txn data for the table
  */
 
-const logos = {
-    arb: 'https://i.imgur.com/3kJricG.png',
-    eth: 'https://i.imgur.com/iPqQBBB.png',
-    bsc: 'https://i.imgur.com/a5V7FFD.png',
-};
-
 export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrices, historicalETHPrices) => {
     const from = txn.from.toLowerCase();
     const to = txn.to.toLowerCase();
@@ -162,7 +160,7 @@ export const generateTableData = (txn, id, selectedAddresses, historicalBNBPrice
     }
 };
 
-const allChains = ['arb', 'bsc', 'eth'];
+const allChains = ['arb', 'base', 'bsc', 'eth'];
 
 const createChainReducerForTableRow = (tableData, tableDataMapper) =>
     (acc, chain) => ({ 

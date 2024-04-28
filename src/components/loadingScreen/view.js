@@ -3,12 +3,7 @@ import "./logos.css";
 import { Box, DialogContent } from '@mui/material';
 import { StyledBox, StyledDialog, StyledTypography } from './styles';
 import React from 'react';
-
-const logos = {
-  arb: 'https://i.imgur.com/3kJricG.png',
-  eth: 'https://i.imgur.com/iPqQBBB.png',
-  bsc: 'https://i.imgur.com/a5V7FFD.png',
-};
+import {logos} from '../../lib'
 
 const CoinTemplate = ([coinKey, { name, chain, loading, txns }]) => (
   <Box key={coinKey} sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>

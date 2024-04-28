@@ -3,6 +3,7 @@ export const FormatTxnLink = ({ hash, chain, style }) => {
         arb: `https://arbiscan.io/tx/${hash}`,
         bsc: `https://bscscan.com/tx/${hash}`,
         eth: `https://etherscan.io/tx/${hash}`,
+        base: `https://basescan.org/tx/${hash}`,
     };
 
     const link = chainUrls[chain];
